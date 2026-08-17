@@ -2109,13 +2109,67 @@ SIMPLE_RESULTS_HTML = r"""
     .story-change p {
       margin: 5px 0 0;
     }
+    .movement-glyph-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    .movement-glyph-legend strong {
+      color: var(--ink);
+    }
+    .glyph-line-key {
+      display: inline-block;
+      width: 22px;
+      border-top: 3px solid #176d4d;
+      margin-right: 5px;
+      vertical-align: 3px;
+    }
+    .glyph-line-key.start {
+      border-top: 2px dashed #215f9a;
+    }
     .phase-mini-visual {
       width: 100%;
-      height: 118px;
+      height: 132px;
       display: block;
       background: #f4f7fa;
       border-radius: 6px;
       margin-top: 7px;
+    }
+    .phase-mini-values {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 2px 10px;
+      align-items: baseline;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+    .phase-mini-values strong {
+      color: var(--ink);
+      font-size: 12px;
+    }
+    .phase-mini-values span {
+      display: block;
+      margin: 0;
+      font-weight: 700;
+      text-transform: none;
+    }
+    .phase-mini-values .phase-mini-delta {
+      grid-column: 2;
+      text-align: right;
+    }
+    .phase-mini-values.multi {
+      border-top: 1px solid var(--line);
+      padding-top: 6px;
+    }
+    .phase-mini-values.multi strong {
+      font-size: 11px;
+      text-align: right;
     }
     .phase-snapshots {
       display: grid;
@@ -2362,6 +2416,13 @@ SIMPLE_RESULTS_HTML = r"""
       <h2>Movement Story</h2>
       <p class="subtle" id="phaseStorySummary"></p>
       <div class="whole-movement-summary" id="wholeMovementSummary"></div>
+      <div class="movement-glyph-legend" aria-label="Movement diagram legend">
+        <strong>Movement diagrams</strong>
+        <span><i class="glyph-line-key start"></i>Blue dashed = phase start</span>
+        <span><i class="glyph-line-key"></i>Green solid = phase end</span>
+        <span>Arrow = direction of change</span>
+        <span>Arc = projected angle</span>
+      </div>
       <div class="phase-grid" id="phaseStoryGrid"></div>
     </section>
 
@@ -2881,9 +2942,10 @@ function phaseChangesHtml(phase, drivers, visualStory) {
     return '<div class="story-change">'
       + '<div class="story-change-heading"><strong>' + escapeHtml(storyCategoryPlainLabel(driver.key)) + '</strong>'
       + '<span class="status">' + escapeHtml(status) + escapeHtml(percentage) + '</span></div>'
-      + '<p>' + escapeHtml(storyCategoryChangeSummary(driver.key)) + '</p>'
+      + '<p>' + escapeHtml(storyCategoryChangeSummary(driver.key, phase)) + '</p>'
       + (hasVisual ? '<canvas class="phase-mini-visual" data-phase-mini="' + escapeHtml(phase.phase_id)
-        + '" data-story-category="' + escapeHtml(driver.key) + '" width="360" height="118"></canvas>' : '')
+        + '" data-story-category="' + escapeHtml(driver.key) + '" width="360" height="132"></canvas>' : '')
+      + phaseMeasurementSummaryHtml(phase, driver.key)
       + '</div>';
   }).join('') + '</div>';
 }
@@ -2943,8 +3005,16 @@ function phaseVisualAvailable(visualStory, category) {
       && phaseMetricPoints('injured_hka_angle_2d_deg', phase).some((point) => point.value !== null)
       && phaseMetricPoints('contralateral_hka_angle_2d_deg', phase).some((point) => point.value !== null);
   }
-  return ['trunk_pelvis', 'upper_body', 'hip_knee_ankle_chain']
-    .includes(category) && (visualStory.snapshot_frames || []).length >= 2;
+  if (category === 'hip_knee_ankle_chain') {
+    const phase = phaseForStory(visualStory);
+    const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
+    return [stat?.start_value, stat?.end_value].every((value) => Number.isFinite(Number(value)));
+  }
+  const phase = phaseForStory(visualStory);
+  if (category === 'trunk_pelvis') return canonicalTorsoState(phase, 'start_value', 360, 132) !== null
+    && canonicalTorsoState(phase, 'end_value', 360, 132) !== null;
+  if (category === 'upper_body') return upperBodySide(phase) !== null;
+  return false;
 }
 
 function storyCategoryPlainLabel(category) {
@@ -2969,13 +3039,45 @@ function storyCategoryAction(category) {
   }[category] || '';
 }
 
-function storyCategoryChangeSummary(category) {
+function storyCategoryChangeSummary(category, phase) {
+  if (category === 'hip_knee_ankle_chain') {
+    const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
+    const change = Number(stat?.change);
+    if (!Number.isFinite(change)) {
+      return 'The supported injured-side projected hip-knee-ankle configuration is shown for this phase.';
+    }
+    if (Math.abs(change) < 8) {
+      return 'The injured-side projected hip-knee-ankle configuration remained relatively stable through the phase.';
+    }
+    const magnitude = Math.abs(change) >= 20 ? ' substantially' : '';
+    return change > 0
+      ? 'The injured-side projected hip-knee-ankle configuration opened' + magnitude + ' through the phase.'
+      : 'The injured-side projected hip-knee-ankle configuration became'
+        + (magnitude ? ' substantially' : '') + ' more closed through the phase.';
+  }
+  if (category === 'trunk_pelvis') {
+    const changes = torsoMetricDefinitions().map((item) => (
+      Math.abs(Number(phaseMetricStat(phase, item.metric)?.change))
+    )).filter(Number.isFinite);
+    if (changes.length && Math.max(...changes) < 8) {
+      return 'The projected trunk, shoulder, and hip lines remained relatively stable through the phase.';
+    }
+    return 'The projected trunk, shoulder, and hip lines reoriented through the phase.';
+  }
+  if (category === 'upper_body') {
+    const side = upperBodySide(phase);
+    if (!side) return 'Supported projected arm geometry is shown for this phase.';
+    const changes = upperBodyMetricDefinitions(side).map((item) => (
+      Math.abs(Number(phaseMetricStat(phase, item.metric)?.change))
+    )).filter(Number.isFinite);
+    if (changes.length && Math.max(...changes) < 8) {
+      return 'The ' + side + ' projected arm configuration remained relatively stable through the phase.';
+    }
+    return 'The ' + side + ' projected arm orientation and elbow configuration changed through the phase.';
+  }
   return {
     movement_path: 'On-screen travel direction changed while speed relative to body size also shifted.',
-    hip_knee_ankle_chain: 'The injured-side projected hip–knee–ankle chain changed through the phase.',
     bilateral_limb_relationship: 'The injured and opposite-side projected hip–knee–ankle angles are compared through the phase.',
-    trunk_pelvis: 'The projected trunk, shoulder, and hip/pelvis lines reoriented through the phase.',
-    upper_body: 'The projected upper-arm and elbow configuration changed through the phase.',
     movement_timing: 'The supported interval defines when this movement pattern was visible.',
   }[category] || 'This supported movement component changed through the phase.';
 }
@@ -2998,7 +3100,7 @@ function drawPhaseStoryVisuals() {
 function drawPhaseStoryVisual(canvas, visualStory, category) {
   const scale = window.devicePixelRatio || 1;
   const width = Math.max(220, canvas.clientWidth || 360);
-  const height = 118;
+  const height = 132;
   canvas.width = Math.floor(width * scale);
   canvas.height = Math.floor(height * scale);
   const ctx = canvas.getContext('2d');
@@ -3011,6 +3113,14 @@ function drawPhaseStoryVisual(canvas, visualStory, category) {
   }
   if (category === 'hip_knee_ankle_chain') {
     drawPhaseInjuredHkaMini(ctx, width, height, visualStory);
+    return;
+  }
+  if (category === 'trunk_pelvis') {
+    drawPhaseTorsoMini(ctx, width, height, visualStory);
+    return;
+  }
+  if (category === 'upper_body') {
+    drawPhaseUpperBodyMini(ctx, width, height, visualStory);
     return;
   }
   drawPhasePoseMini(ctx, width, height, visualStory, category);
@@ -3029,40 +3139,312 @@ function phaseMetricPoints(metric, phase) {
   ));
 }
 
-function drawPhaseInjuredHkaMini(ctx, width, height, visualStory) {
-  const snapshots = visualStory?.snapshot_frames || [];
-  const first = snapshots[0]?.landmarks || {};
-  const last = snapshots[snapshots.length - 1]?.landmarks || {};
-  const side = String(result?.movement_visual_story?.laterality_mapping?.injured || 'right').toLowerCase();
-  drawMiniSingleLeg(ctx, first, side, {x: 8, y: 8, width: width / 2 - 12, height: height - 16}, '#215f9a');
-  drawMiniSingleLeg(ctx, last, side, {x: width / 2 + 4, y: 8, width: width / 2 - 12, height: height - 16}, '#176d4d');
-  ctx.fillStyle = '#627181';
-  ctx.font = '11px sans-serif';
-  ctx.fillText('Start · ' + side + ' injured', 12, 14);
-  ctx.fillText('End · ' + side + ' injured', width / 2 + 8, 14);
+function phaseMeasurementSummaryHtml(phase, category) {
+  if (category === 'hip_knee_ankle_chain') {
+    const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
+    if (![stat?.start_value, stat?.end_value, stat?.change].every((value) => Number.isFinite(Number(value)))) {
+      return '<div class="phase-mini-values"><span>Projected HKA angle</span><strong>Endpoint unavailable</strong></div>';
+    }
+    return '<div class="phase-mini-values">'
+      + '<span>Projected HKA angle</span><strong>' + formatDegrees(stat.start_value) + ' &rarr; '
+      + formatDegrees(stat.end_value) + '</strong>'
+      + '<span class="phase-mini-delta">Change ' + formatSignedDegrees(stat.change) + '</span>'
+      + '</div>';
+  }
+  if (category === 'trunk_pelvis') {
+    return phaseMetricRowsHtml(phase, torsoMetricDefinitions());
+  }
+  if (category === 'upper_body') {
+    const side = upperBodySide(phase);
+    return side ? phaseMetricRowsHtml(phase, upperBodyMetricDefinitions(side)) : '';
+  }
+  return '';
 }
 
-function drawMiniSingleLeg(ctx, landmarks, side, rect, color) {
-  const names = [`${side}_hip`, `${side}_knee`, `${side}_ankle`];
-  const raw = names.map((name) => landmarks?.[name]).filter((point) => (
-    Number.isFinite(Number(point?.x)) && Number.isFinite(Number(point?.y))
-  ));
-  if (raw.length !== names.length) return;
-  const minX = Math.min(...raw.map((point) => Number(point.x)));
-  const maxX = Math.max(...raw.map((point) => Number(point.x)));
-  const minY = Math.min(...raw.map((point) => Number(point.y)));
-  const maxY = Math.max(...raw.map((point) => Number(point.y)));
-  const projected = raw.map((point) => ({
-    x: rect.x + 12 + ((Number(point.x) - minX) / Math.max(1, maxX - minX)) * (rect.width - 24),
-    y: rect.y + 16 + ((Number(point.y) - minY) / Math.max(1, maxY - minY)) * (rect.height - 24),
-  }));
+function phaseMetricRowsHtml(phase, definitions) {
+  const rows = definitions.map((item) => ({...item, stat: phaseMetricStat(phase, item.metric)}))
+    .filter((item) => [item.stat?.start_value, item.stat?.end_value, item.stat?.change]
+      .every((value) => Number.isFinite(Number(value))));
+  if (!rows.length) return '';
+  return '<div class="phase-mini-values multi">' + rows.map((item) => (
+    '<span>' + escapeHtml(item.label) + '</span><strong>'
+    + formatDegrees(item.stat.start_value) + ' &rarr; ' + formatDegrees(item.stat.end_value)
+    + ' &middot; Change ' + formatSignedDegrees(item.stat.change) + '</strong>'
+  )).join('') + '</div>';
+}
+
+function torsoMetricDefinitions() {
+  return [
+    {metric: 'projected_trunk_axis_angle_deg', label: 'Trunk axis'},
+    {metric: 'projected_hip_line_angle_deg', label: 'Hip line'},
+    {metric: 'projected_shoulder_line_angle_deg', label: 'Shoulder line'},
+    {
+      metric: 'projected_shoulder_pelvis_orientation_difference_deg',
+      label: 'Shoulder-hip relationship',
+    },
+  ];
+}
+
+function upperBodyMetricDefinitions(side) {
+  const label = side.charAt(0).toUpperCase() + side.slice(1);
+  return [
+    {metric: `${side}_elbow_angle_2d_deg`, label: label + ' elbow angle'},
+    {metric: `${side}_upper_arm_orientation_2d_deg`, label: label + ' upper-arm orientation'},
+  ];
+}
+
+function upperBodySide(phase) {
+  const candidates = ['left', 'right'].map((side) => {
+    const stats = upperBodyMetricDefinitions(side).map((item) => phaseMetricStat(phase, item.metric));
+    const valid = stats.every((stat) => [stat?.start_value, stat?.end_value, stat?.change]
+      .every((value) => Number.isFinite(Number(value))));
+    return {
+      side,
+      valid,
+      magnitude: valid ? Math.max(...stats.map((stat) => Math.abs(Number(stat.change)))) : -1,
+    };
+  }).filter((item) => item.valid).sort((a, b) => b.magnitude - a.magnitude);
+  return candidates[0]?.side || null;
+}
+
+function formatDegrees(value) {
+  return Number(value).toFixed(1) + '&deg;';
+}
+
+function formatSignedDegrees(value) {
+  const number = Number(value);
+  return (number > 0 ? '+' : '') + number.toFixed(1) + '&deg;';
+}
+
+function injuredSide() {
+  const side = String(result?.movement_visual_story?.laterality_mapping?.injured || '').toLowerCase();
+  return ['left', 'right'].includes(side) ? side : 'right';
+}
+
+function drawPhaseInjuredHkaMini(ctx, width, height, visualStory) {
+  const phase = phaseForStory(visualStory);
+  const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
+  const side = injuredSide();
+  if (![stat?.start_value, stat?.end_value].every((value) => Number.isFinite(Number(value)))) return;
+  const start = canonicalHkaState(Number(stat.start_value), side, width, height);
+  const end = canonicalHkaState(Number(stat.end_value), side, width, height);
+  drawArticulatedState(ctx, start, '#215f9a', true, 2);
+  drawArticulatedState(ctx, end, '#176d4d', false, 3);
+  drawAngleArc(ctx, end[1], end[0], end[2], '#176d4d');
+  drawChangeArrow(ctx, start[2], end[2]);
+  drawJointLabels(ctx, end, ['H', 'K', 'A']);
+  ctx.fillStyle = '#627181';
+  ctx.font = '10px sans-serif';
+  ctx.fillText(side.charAt(0).toUpperCase() + side.slice(1) + ' injured limb', 9, 13);
+}
+
+function canonicalHkaState(angleDegrees, side, width, height) {
+  const direction = side === 'left' ? -1 : 1;
+  const knee = {
+    x: width * (side === 'left' ? 0.56 : 0.44),
+    y: height * 0.48,
+  };
+  const hipLength = Math.min(42, height * 0.32);
+  const ankleLength = Math.min(46, height * 0.35);
+  const hip = {x: knee.x, y: knee.y - hipLength};
+  const ankleAngle = -Math.PI / 2 + direction * Number(angleDegrees) * Math.PI / 180;
+  const ankle = {
+    x: knee.x + Math.cos(ankleAngle) * ankleLength,
+    y: knee.y + Math.sin(ankleAngle) * ankleLength,
+  };
+  return [hip, knee, ankle];
+}
+
+function orientationVector(angleDegrees, length) {
+  const angle = Number(angleDegrees) * Math.PI / 180;
+  return {x: Math.cos(angle) * length, y: -Math.sin(angle) * length};
+}
+
+function canonicalTorsoState(phase, endpoint, width, height) {
+  const trunk = phaseMetricStat(phase, 'projected_trunk_axis_angle_deg');
+  const hipLine = phaseMetricStat(phase, 'projected_hip_line_angle_deg');
+  const shoulderLine = phaseMetricStat(phase, 'projected_shoulder_line_angle_deg');
+  if (![trunk?.[endpoint], hipLine?.[endpoint], shoulderLine?.[endpoint]]
+    .every((value) => Number.isFinite(Number(value)))) return null;
+  const pelvisMid = {x: width * 0.50, y: height * 0.68};
+  const trunkVector = orientationVector(trunk[endpoint], Math.min(43, height * 0.34));
+  const shoulderMid = {x: pelvisMid.x + trunkVector.x, y: pelvisMid.y + trunkVector.y};
+  const hipVector = orientationVector(hipLine[endpoint], Math.min(31, width * 0.10));
+  const shoulderVector = orientationVector(shoulderLine[endpoint], Math.min(35, width * 0.11));
+  return {
+    pelvisMid,
+    shoulderMid,
+    leftHip: {x: pelvisMid.x - hipVector.x, y: pelvisMid.y - hipVector.y},
+    rightHip: {x: pelvisMid.x + hipVector.x, y: pelvisMid.y + hipVector.y},
+    leftShoulder: {x: shoulderMid.x - shoulderVector.x, y: shoulderMid.y - shoulderVector.y},
+    rightShoulder: {x: shoulderMid.x + shoulderVector.x, y: shoulderMid.y + shoulderVector.y},
+  };
+}
+
+function drawPhaseTorsoMini(ctx, width, height, visualStory) {
+  const phase = phaseForStory(visualStory);
+  const start = canonicalTorsoState(phase, 'start_value', width, height);
+  const end = canonicalTorsoState(phase, 'end_value', width, height);
+  if (!start || !end) return;
+  drawTorsoState(ctx, start, '#215f9a', true, 2);
+  drawTorsoState(ctx, end, '#176d4d', false, 3);
+  const candidates = [
+    [start.shoulderMid, end.shoulderMid],
+    [start.rightShoulder, end.rightShoulder],
+    [start.rightHip, end.rightHip],
+  ].sort((a, b) => pointDistance(b[0], b[1]) - pointDistance(a[0], a[1]));
+  drawChangeArrow(ctx, candidates[0][0], candidates[0][1]);
+  ctx.fillStyle = '#425466';
+  ctx.font = '9px sans-serif';
+  ctx.fillText('S shoulder · T trunk · H hip', 9, 13);
+  ctx.font = 'bold 9px sans-serif';
+  ctx.fillText('S', end.rightShoulder.x + 5, end.rightShoulder.y - 4);
+  ctx.fillText('T', end.shoulderMid.x + 5, (end.pelvisMid.y + end.shoulderMid.y) / 2);
+  ctx.fillText('H', end.rightHip.x + 5, end.rightHip.y + 10);
+}
+
+function drawTorsoState(ctx, state, color, dashed, lineWidth) {
+  ctx.save();
   ctx.strokeStyle = color;
-  ctx.lineWidth = 3;
+  ctx.lineWidth = lineWidth;
+  ctx.setLineDash(dashed ? [6, 5] : []);
+  ctx.lineCap = 'round';
+  [
+    [state.leftShoulder, state.rightShoulder],
+    [state.leftHip, state.rightHip],
+    [state.pelvisMid, state.shoulderMid],
+  ].forEach(([first, second]) => {
+    ctx.beginPath();
+    ctx.moveTo(first.x, first.y);
+    ctx.lineTo(second.x, second.y);
+    ctx.stroke();
+  });
+  ctx.setLineDash([]);
+  [state.leftShoulder, state.rightShoulder, state.leftHip, state.rightHip].forEach((point) => {
+    ctx.fillStyle = '#f4f7fa';
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, dashed ? 2.5 : 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function canonicalArmState(phase, endpoint, side, width, height) {
+  const elbowStat = phaseMetricStat(phase, `${side}_elbow_angle_2d_deg`);
+  const upperArmStat = phaseMetricStat(phase, `${side}_upper_arm_orientation_2d_deg`);
+  if (![elbowStat?.[endpoint], upperArmStat?.[endpoint]]
+    .every((value) => Number.isFinite(Number(value)))) return null;
+  const shoulder = {x: width * 0.50, y: height * 0.48};
+  const upperLength = Math.min(36, height * 0.28);
+  const forearmLength = Math.min(40, height * 0.31);
+  const upperVector = orientationVector(upperArmStat[endpoint], upperLength);
+  const elbow = {x: shoulder.x + upperVector.x, y: shoulder.y + upperVector.y};
+  const direction = side === 'left' ? -1 : 1;
+  const wristAngle = Number(upperArmStat[endpoint]) + 180
+    + direction * Number(elbowStat[endpoint]);
+  const forearmVector = orientationVector(wristAngle, forearmLength);
+  const wrist = {x: elbow.x + forearmVector.x, y: elbow.y + forearmVector.y};
+  return [shoulder, elbow, wrist];
+}
+
+function drawPhaseUpperBodyMini(ctx, width, height, visualStory) {
+  const phase = phaseForStory(visualStory);
+  const side = upperBodySide(phase);
+  if (!side) return;
+  const start = canonicalArmState(phase, 'start_value', side, width, height);
+  const end = canonicalArmState(phase, 'end_value', side, width, height);
+  if (!start || !end) return;
+  drawArticulatedState(ctx, start, '#215f9a', true, 2);
+  drawArticulatedState(ctx, end, '#176d4d', false, 3);
+  drawAngleArc(ctx, end[1], end[0], end[2], '#176d4d');
+  const movingJoint = pointDistance(start[2], end[2]) >= pointDistance(start[1], end[1]) ? 2 : 1;
+  drawChangeArrow(ctx, start[movingJoint], end[movingJoint]);
+  drawJointLabels(ctx, end, ['S', 'E', 'W']);
+  ctx.fillStyle = '#627181';
+  ctx.font = '10px sans-serif';
+  ctx.fillText(side.charAt(0).toUpperCase() + side.slice(1) + ' arm', 9, 13);
+}
+
+function pointDistance(first, second) {
+  return Math.hypot(second.x - first.x, second.y - first.y);
+}
+
+function drawArticulatedState(ctx, points, color, dashed, lineWidth) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.setLineDash(dashed ? [6, 5] : []);
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
   ctx.beginPath();
-  projected.forEach((point, index) => (
+  points.forEach((point, index) => (
     index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y)
   ));
   ctx.stroke();
+  ctx.setLineDash([]);
+  points.forEach((point) => {
+    ctx.fillStyle = '#f4f7fa';
+    ctx.beginPath();
+    ctx.arc(point.x, point.y, dashed ? 3 : 3.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.lineWidth = dashed ? 1.5 : 2;
+    ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function drawJointLabels(ctx, points, labels) {
+  ctx.save();
+  ctx.fillStyle = '#425466';
+  ctx.font = 'bold 9px sans-serif';
+  points.forEach((point, index) => ctx.fillText(labels[index], point.x + 6, point.y - 5));
+  ctx.restore();
+}
+
+function drawAngleArc(ctx, vertex, first, second, color) {
+  const start = Math.atan2(first.y - vertex.y, first.x - vertex.x);
+  const finish = Math.atan2(second.y - vertex.y, second.x - vertex.x);
+  let delta = finish - start;
+  while (delta > Math.PI) delta -= Math.PI * 2;
+  while (delta < -Math.PI) delta += Math.PI * 2;
+  const radius = 15;
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(vertex.x, vertex.y, radius, start, start + delta, delta < 0);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawChangeArrow(ctx, start, end) {
+  const dx = end.x - start.x;
+  const dy = end.y - start.y;
+  const length = Math.hypot(dx, dy);
+  if (length < 10) return;
+  const ux = dx / length;
+  const uy = dy / length;
+  const arrowStart = {x: start.x + ux * 5, y: start.y + uy * 5};
+  const arrowEnd = {x: end.x - ux * 7, y: end.y - uy * 7};
+  ctx.save();
+  ctx.strokeStyle = '#627181';
+  ctx.fillStyle = '#627181';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(arrowStart.x, arrowStart.y);
+  ctx.lineTo(arrowEnd.x, arrowEnd.y);
+  ctx.stroke();
+  const angle = Math.atan2(dy, dx);
+  ctx.beginPath();
+  ctx.moveTo(arrowEnd.x, arrowEnd.y);
+  ctx.lineTo(arrowEnd.x - 7 * Math.cos(angle - Math.PI / 6), arrowEnd.y - 7 * Math.sin(angle - Math.PI / 6));
+  ctx.lineTo(arrowEnd.x - 7 * Math.cos(angle + Math.PI / 6), arrowEnd.y - 7 * Math.sin(angle + Math.PI / 6));
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
 }
 
 function drawPhaseBilateralMini(ctx, width, height, visualStory) {
@@ -3074,12 +3456,13 @@ function drawPhaseBilateralMini(ctx, width, height, visualStory) {
     .map((point) => Number(point.value));
   if (!phase || values.length < 2) return;
   const mapping = result?.movement_visual_story?.laterality_mapping || {};
+  const bilateral = phase?.category_summaries?.bilateral_limb_relationship?.metrics || {};
   const minValue = Math.min(...values);
   const maxValue = Math.max(...values);
   const left = 12;
-  const top = 28;
+  const top = 30;
   const plotWidth = width - 24;
-  const plotHeight = height - 38;
+  const plotHeight = height - 50;
   const project = (point) => ({
     x: left + ((point.frame - Number(phase.start_frame))
       / Math.max(1, Number(phase.end_frame) - Number(phase.start_frame))) * plotWidth,
@@ -3087,13 +3470,55 @@ function drawPhaseBilateralMini(ctx, width, height, visualStory) {
   });
   drawPhaseMetricLine(ctx, injured, project, '#215f9a');
   drawPhaseMetricLine(ctx, opposite, project, '#176d4d');
+  [injured, opposite].forEach((series, index) => {
+    const finite = series.filter((point) => point.value !== null);
+    if (!finite.length) return;
+    drawTrajectoryPoint(ctx, project(finite[0]), index === 0 ? '#215f9a' : '#176d4d', 2.5);
+    drawTrajectoryPoint(ctx, project(finite[finite.length - 1]), index === 0 ? '#215f9a' : '#176d4d', 2.5);
+  });
+  const peakFrame = Number(bilateral.source_frame_of_maximum);
+  const injuredPeak = injured.find((point) => point.frame === peakFrame && point.value !== null);
+  const oppositePeak = opposite.find((point) => point.frame === peakFrame && point.value !== null);
+  if (injuredPeak && oppositePeak) {
+    const firstPeak = project(injuredPeak);
+    const secondPeak = project(oppositePeak);
+    ctx.save();
+    ctx.strokeStyle = '#627181';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([3, 3]);
+    ctx.beginPath();
+    ctx.moveTo(firstPeak.x, firstPeak.y);
+    ctx.lineTo(secondPeak.x, secondPeak.y);
+    ctx.stroke();
+    ctx.restore();
+    drawTrajectoryPoint(ctx, firstPeak, '#215f9a', 3.5);
+    drawTrajectoryPoint(ctx, secondPeak, '#176d4d', 3.5);
+  }
   ctx.font = '10px sans-serif';
   ctx.fillStyle = '#215f9a';
-  ctx.fillText('Injured (' + (mapping.injured || 'side') + ')', 12, 13);
+  ctx.fillText('Injured limb (' + (mapping.injured || 'side') + ')', 12, 13);
   ctx.fillStyle = '#176d4d';
-  ctx.fillText('Opposite (' + (mapping.contralateral || 'side') + ')', Math.max(width / 2, 112), 13);
+  ctx.fillText('Opposite limb (' + (mapping.contralateral || 'side') + ')', Math.max(width / 2, 112), 13);
   ctx.fillStyle = '#627181';
   ctx.fillText('HKA degrees', 12, 25);
+  ctx.fillText('Phase start', 12, height - 5);
+  const endLabel = 'Phase end';
+  ctx.fillText(endLabel, width - ctx.measureText(endLabel).width - 12, height - 5);
+  if (Number.isFinite(Number(bilateral.maximum_absolute_hka_difference_deg))) {
+    const callout = (width < 320 ? 'Peak ' : 'Peak gap ')
+      + Number(bilateral.maximum_absolute_hka_difference_deg).toFixed(1) + '° · f' + peakFrame;
+    ctx.fillText(callout, Math.max(70, (width - ctx.measureText(callout).width) / 2), height - 5);
+  }
+}
+
+function drawTrajectoryPoint(ctx, point, color, radius) {
+  ctx.fillStyle = '#f4f7fa';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
 }
 
 function drawPhaseMetricLine(ctx, points, project, color) {

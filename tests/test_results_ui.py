@@ -155,8 +155,22 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "'MOVEMENT PATH':" not in html
     assert "drawPhaseBilateralMini" in html
     assert "Injured vs opposite-side HKA" in html
-    assert "Start · " in html
-    assert " injured" in html
+    assert "Blue dashed = phase start" in html
+    assert "Green solid = phase end" in html
+    assert "drawPhaseInjuredHkaMini" in html
+    assert "drawAngleArc" in html
+    assert "Projected HKA angle" in html
+    assert "opened" in html
+    assert "more closed through the phase" in html
+    assert "drawPhaseTorsoMini" in html
+    assert "projected_trunk_axis_angle_deg" in html
+    assert "Shoulder line" in html
+    assert "drawPhaseUpperBodyMini" in html
+    assert "projected arm orientation and elbow configuration" in html
+    assert "Injured limb (" in html
+    assert "Opposite limb (" in html
+    assert "maximum_absolute_hka_difference_deg" in html
+    assert "Peak gap " in html
     assert "left_knee_ankle_distance_normalized" not in html
     assert "right_knee_ankle_distance_normalized" not in html
     removed_clutter = [
