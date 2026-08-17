@@ -1786,6 +1786,10 @@ SIMPLE_RESULTS_HTML = r"""
       margin-left: 8px;
       font-weight: 500;
     }
+    .header-line span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
     .subtle {
       color: var(--muted);
       font-size: 13px;
@@ -1911,7 +1915,42 @@ SIMPLE_RESULTS_HTML = r"""
     .description {
       color: var(--ink);
       font-size: 15px;
+      margin-bottom: 4px;
+    }
+    .technical-label {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
       margin-bottom: 10px;
+    }
+    .info-icon {
+      color: var(--accent);
+      cursor: help;
+      font-size: 15px;
+      margin-left: 4px;
+      vertical-align: 1px;
+    }
+    .measurement-heading {
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+    .measurement-heading h3 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+    .section-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      margin: 10px 0 6px;
+      text-transform: uppercase;
+    }
+    .trajectory-interpretation {
+      border-left: 4px solid var(--accent);
+      margin: 9px 0 0;
+      padding: 7px 0 7px 11px;
+      line-height: 1.4;
     }
     .headline-values {
       display: grid;
@@ -1992,14 +2031,14 @@ SIMPLE_RESULTS_HTML = r"""
     }
     .phase-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 8px;
-      margin-top: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 10px;
+      margin-top: 12px;
     }
     .phase-card {
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 10px;
+      padding: 12px;
       background: #fbfcfd;
     }
     .phase-card span {
@@ -2019,6 +2058,94 @@ SIMPLE_RESULTS_HTML = r"""
       font-size: 13px;
       line-height: 1.35;
       margin-bottom: 8px;
+    }
+    .whole-movement-summary {
+      border-left: 4px solid var(--accent);
+      padding: 8px 0 8px 12px;
+      margin-top: 10px;
+      max-width: 980px;
+    }
+    .whole-movement-summary h3 {
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+    .whole-movement-summary p {
+      line-height: 1.45;
+      margin-bottom: 0;
+    }
+    .phase-explanation {
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+      margin-top: 8px;
+    }
+    .phase-explanation strong {
+      color: var(--ink);
+      display: block;
+      font-size: 12px;
+      margin-bottom: 3px;
+    }
+    .story-change-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .story-change {
+      border-top: 1px solid var(--line);
+      padding-top: 8px;
+      min-width: 0;
+    }
+    .story-change-heading {
+      display: flex;
+      gap: 7px;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .story-change p {
+      margin: 5px 0 0;
+    }
+    .phase-mini-visual {
+      width: 100%;
+      height: 118px;
+      display: block;
+      background: #f4f7fa;
+      border-radius: 6px;
+      margin-top: 7px;
+    }
+    .phase-snapshots {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+      margin-top: 10px;
+    }
+    .phase-snapshot {
+      min-width: 0;
+      padding: 0;
+      text-align: left;
+      overflow: hidden;
+      background: #fff;
+    }
+    .phase-snapshot img {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: #101820;
+    }
+    .phase-snapshot span {
+      display: block;
+      padding: 6px 7px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.25;
+    }
+    .phase-snapshot.change-lower { border-color: #b8d9b4; }
+    .phase-snapshot.change-larger { border-color: #e7d98d; }
+    .phase-snapshot.change-largest { border-color: #e2a2a0; }
+    .movement-change-legend {
+      color: var(--muted);
+      font-size: 11px;
+      margin: 7px 0 0;
     }
     .operator-grid {
       display: grid;
@@ -2048,6 +2175,36 @@ SIMPLE_RESULTS_HTML = r"""
       font-size: 13px;
       line-height: 1.35;
       margin-bottom: 7px;
+    }
+    .support-overview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .support-overview strong {
+      font-size: 15px;
+    }
+    .support-copy {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+      margin: 0;
+    }
+    .support-details {
+      margin: 10px 0 0;
+      background: #fbfcfd;
+    }
+    .gap-item {
+      border-top: 1px solid var(--line);
+      padding: 9px 0;
+    }
+    .gap-item:first-child {
+      border-top: 0;
+    }
+    .gap-item p {
+      margin: 4px 0 0;
     }
     .operator-row {
       border-top: 1px solid var(--line);
@@ -2079,10 +2236,31 @@ SIMPLE_RESULTS_HTML = r"""
       margin-bottom: 0;
       background: #fff;
     }
+    .audit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .audit-section {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      min-width: 0;
+    }
+    .audit-section h3 {
+      font-size: 15px;
+      margin-bottom: 7px;
+    }
+    .audit-section-wide {
+      grid-column: 1 / -1;
+    }
     .technical {
       color: var(--muted);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       font-size: 12px;
+      max-width: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
       white-space: pre-wrap;
     }
     .unavailable {
@@ -2122,9 +2300,11 @@ SIMPLE_RESULTS_HTML = r"""
     }
     @media (max-width: 760px) {
       main { padding: 8px; }
-      .selector-grid, .headline-values, .stats-grid, .phase-grid, .operator-grid, .filmstrip {
+      .selector-grid, .headline-values, .stats-grid, .phase-grid, .operator-grid, .filmstrip,
+      .story-change-grid, .phase-snapshots, .audit-grid {
         grid-template-columns: 1fr;
       }
+      .audit-section-wide { grid-column: auto; }
       .view-row { align-items: stretch; }
       .readout { margin-left: 0; width: 100%; }
       .chart { height: 260px; }
@@ -2173,88 +2353,78 @@ SIMPLE_RESULTS_HTML = r"""
       </div>
     </section>
 
-    <section class="panel">
+    <section class="panel" id="phaseStoryPanel">
+      <h2>Movement Story</h2>
+      <p class="subtle" id="phaseStorySummary"></p>
+      <div class="whole-movement-summary" id="wholeMovementSummary"></div>
+      <div class="phase-grid" id="phaseStoryGrid"></div>
+    </section>
+
+    <section class="panel" id="featurePanel">
+      <h2>Selected Measurement</h2>
       <div class="selector-grid">
         <div>
           <label for="featureCategorySelect">Feature category</label>
           <select id="featureCategorySelect"></select>
         </div>
         <div>
-          <label for="featureSelect">Feature</label>
+          <label for="featureSelect">Measurement</label>
           <select id="featureSelect"></select>
         </div>
       </div>
       <p class="subtle" id="categoryAvailabilityNote"></p>
-    </section>
-
-    <section class="panel" id="phaseStoryPanel">
-      <h2>Movement phase story</h2>
-      <p class="subtle" id="phaseStorySummary"></p>
-      <div class="phase-grid" id="phaseStoryGrid"></div>
-    </section>
-
-    <details id="moreStatistics">
-      <summary>More statistics</summary>
-      <div class="stats-grid" id="moreStatisticsGrid"></div>
-    </details>
-
-    <section class="panel" id="featurePanel">
-      <h2 id="featureTitle">Feature</h2>
-      <p class="description" id="featureDescription"></p>
+      <div class="measurement-heading">
+        <h3 id="featureTitle">Feature</h3>
+        <p class="description" id="featureDescription"></p>
+        <p class="technical-label" id="featureTechnicalLabel"></p>
+      </div>
+      <p class="section-label">Movement change</p>
       <div class="headline-values" id="headlineValues"></div>
       <canvas id="featureGraph" class="chart" width="1100" height="260"></canvas>
       <div id="unavailableVisual" class="unavailable" hidden></div>
+      <p class="trajectory-interpretation" id="trajectoryInterpretation"></p>
       <div id="filmstrip" class="filmstrip"></div>
+      <details id="moreStatistics">
+        <summary>Descriptive statistics</summary>
+        <div class="stats-grid" id="moreStatisticsGrid"></div>
+      </details>
+      <div class="measurement-heading">
+        <h3>Phase comparison</h3>
+        <div id="phaseComparisonPanel"></div>
+      </div>
     </section>
 
     <section class="panel" id="operatorAnalyticsPanel">
-      <h2>Evidence support</h2>
-      <p class="subtle">Movement-first interpretation for the selected measurement and current frame/phase.</p>
-      <div class="operator-grid">
-        <div class="operator-card operator-card-wide">
-          <h3>Movement narrative</h3>
-          <div id="narrativePanel"></div>
-        </div>
-        <div class="operator-card">
-          <h3>Measurement support</h3>
-          <div id="supportPanel"></div>
-        </div>
-        <div class="operator-card">
-          <h3>What defines this phase?</h3>
-          <div id="whyPhasePanel"></div>
-        </div>
-        <div class="operator-card operator-card-wide">
-          <h3>Phase comparison</h3>
-          <div id="phaseComparisonPanel"></div>
-        </div>
-      </div>
-      <details class="advanced-details">
-        <summary>Advanced evidence details</summary>
-        <div class="operator-grid">
-          <div class="operator-card">
-            <h3>Gap reason drilldown</h3>
-            <div id="gapReasonPanel"></div>
-          </div>
-          <div class="operator-card">
-            <h3>Measurement provenance</h3>
-            <div id="dependencyPanel"></div>
-          </div>
-          <div class="operator-card operator-card-wide">
-            <h3>Cross-case readiness</h3>
-            <div id="caseTriagePanel"></div>
-          </div>
-        </div>
+      <h2>Measurement Support</h2>
+      <p class="subtle">How much of the selected trajectory is supported by defensible target and landmark evidence.</p>
+      <div id="supportPanel"></div>
+      <details class="support-details" id="unsupportedIntervalDetails">
+        <summary id="unsupportedIntervalSummary">Why are some frames unsupported?</summary>
+        <div id="gapReasonPanel"></div>
       </details>
     </section>
 
-    <details id="evidenceDetails">
-      <summary>Evidence</summary>
-      <p id="evidenceSummary" class="subtle"></p>
-    </details>
-
-    <details id="technicalDetails">
-      <summary>Technical details</summary>
-      <pre id="technicalText" class="technical"></pre>
+    <details id="advancedEvidenceDetails">
+      <summary>Advanced Evidence Details</summary>
+      <p class="subtle">Technical measurement dependencies, frame-level QC, raw status codes, and provenance.</p>
+      <div class="audit-grid">
+        <section class="audit-section">
+          <h3>Measurement provenance</h3>
+          <div id="dependencyPanel"></div>
+        </section>
+        <section class="audit-section">
+          <h3>Support aggregation</h3>
+          <p id="evidenceSummary" class="subtle"></p>
+        </section>
+        <section class="audit-section">
+          <h3>Selected-frame QC and raw status</h3>
+          <pre id="technicalText" class="technical"></pre>
+        </section>
+        <section class="audit-section">
+          <h3>Case and source provenance</h3>
+          <pre id="provenanceText" class="technical"></pre>
+        </section>
+      </div>
     </details>
   </main>
 
@@ -2635,24 +2805,288 @@ function renderPhaseStory() {
   }
   panel.hidden = false;
   $('phaseStorySummary').innerHTML = '<span class="status">' + escapeHtml(story.status || 'SUPPORTED') + '</span> '
-    + phases.length + ' evidence-backed phase descriptions over source frames '
+    + phases.length + ' evidence-backed phase' + (phases.length === 1 ? '' : 's') + ' across source frames '
     + result.movement_window.movement_start_frame + '-' + result.movement_window.movement_end_frame + '.';
+  $('wholeMovementSummary').innerHTML = '<h3>Whole Movement Summary</h3><p>'
+    + escapeHtml(wholeMovementSummary(story, phases)) + '</p>';
   $('phaseStoryGrid').innerHTML = phases.map((phase) => {
     const evidence = phase.evidence_summary?.evidence_status || 'EVIDENCE';
-    const observations = (phase.phase_observations || []).slice(0, 2).map(friendlyObservation);
-    const description = observations.length
-      ? observations.join(' ')
-      : 'Phase description is available from supported geometry and movement evidence.';
+    const drivers = phaseDrivers(phase).filter((driver) => driver.key !== 'movement_timing').slice(0, 4);
+    const visualStory = visualStoryForPhase(phase.phase_id);
+    const snapshots = phaseSalientFrames(phase, visualStory);
     return '<article class="phase-card">'
       + '<span>Phase ' + phase.phase_index + ' | frames ' + phase.start_frame + '-' + phase.end_frame + '</span>'
       + '<h3>' + escapeHtml(phase.title) + '</h3>'
       + '<p><strong class="status">' + escapeHtml(evidence) + '</strong></p>'
-      + '<p>' + escapeHtml(description) + '</p>'
-      + '<button type="button" data-phase-start="' + phase.start_frame + '">Open phase start</button>'
+      + '<div class="phase-explanation"><strong>What happened?</strong><p>'
+      + escapeHtml(phaseWhatHappened(phase, drivers)) + '</p></div>'
+      + '<div class="phase-explanation"><strong>What defines this phase?</strong><p>'
+      + escapeHtml(phaseBoundaryExplanation(phase, drivers)) + '</p></div>'
+      + '<div class="phase-explanation"><strong>Main movement changes</strong>'
+      + phaseChangesHtml(phase, drivers, visualStory) + '</div>'
+      + phaseSnapshotsHtml(phase, snapshots)
       + '</article>';
   }).join('');
-  [...document.querySelectorAll('[data-phase-start]')].forEach((button) => {
-    button.onclick = () => setFrame(Number(button.dataset.phaseStart));
+  [...document.querySelectorAll('[data-phase-frame]')].forEach((button) => {
+    button.onclick = () => setFrame(Number(button.dataset.phaseFrame));
+  });
+  requestAnimationFrame(drawPhaseStoryVisuals);
+}
+
+function wholeMovementSummary(story, phases) {
+  if (!phases.length) return 'A whole-movement description is unavailable for this case.';
+  const first = phases[0];
+  const last = phases[phases.length - 1];
+  const sequence = phases.length === 1
+    ? 'The observable sequence remained within one supported phase: ' + first.title.toLowerCase() + '.'
+    : 'The observable sequence developed across ' + phases.length + ' supported phases, beginning with '
+      + first.title.toLowerCase() + ' and ending with ' + last.title.toLowerCase() + '.';
+  if (phases.length === 1) return sequence;
+  const transition = phases[1];
+  const categories = naturalList(phaseDrivers(transition)
+    .filter((driver) => driver.key !== 'movement_timing')
+    .slice(0, 3)
+    .map((driver) => storyCategoryPlainLabel(driver.key)));
+  const change = categories
+    ? 'The clearest phase transition occurs near source frame ' + transition.start_frame + ', where ' + categories + ' change together.'
+    : 'The clearest phase transition occurs near source frame ' + transition.start_frame + '.';
+  return sequence + ' ' + change;
+}
+
+function phaseWhatHappened(phase, drivers) {
+  const actions = drivers.slice(0, 3).map((driver) => storyCategoryAction(driver.key)).filter(Boolean);
+  if (!actions.length) {
+    return 'The supported projected movement followed a consistent pattern through this interval.';
+  }
+  return 'During this interval, ' + naturalList(actions) + '.';
+}
+
+function phaseBoundaryExplanation(phase, drivers) {
+  const categories = naturalList(drivers.slice(0, 3).map((driver) => storyCategoryPlainLabel(driver.key)));
+  if (Number(phase.phase_index) === 1) {
+    return 'This is the opening continuous interval before the next supported multidimensional movement change'
+      + (categories ? ', led by ' + categories : '') + '.';
+  }
+  return 'This phase begins at source frame ' + phase.start_frame
+    + ', where the supported movement-change pattern separates from the preceding interval'
+    + (categories ? ', led by ' + categories : '') + '.';
+}
+
+function phaseChangesHtml(phase, drivers, visualStory) {
+  if (!drivers.length) return '<p>No supported movement family is available for this phase.</p>';
+  return '<div class="story-change-grid">' + drivers.map((driver) => {
+    const support = storyObservationSupport(visualStory, driver.key);
+    const status = support?.evidence_status || driver.status || 'EVIDENCE';
+    const fraction = support?.support?.supported_fraction;
+    const percentage = Number.isFinite(Number(fraction)) ? ' · ' + Math.round(Number(fraction) * 100) + '%' : '';
+    const hasVisual = phaseVisualAvailable(visualStory, driver.key);
+    return '<div class="story-change">'
+      + '<div class="story-change-heading"><strong>' + escapeHtml(storyCategoryPlainLabel(driver.key)) + '</strong>'
+      + '<span class="status">' + escapeHtml(status) + escapeHtml(percentage) + '</span></div>'
+      + '<p>' + escapeHtml(storyCategoryChangeSummary(driver.key)) + '</p>'
+      + (hasVisual ? '<canvas class="phase-mini-visual" data-phase-mini="' + escapeHtml(phase.phase_id)
+        + '" data-story-category="' + escapeHtml(driver.key) + '" width="360" height="118"></canvas>' : '')
+      + '</div>';
+  }).join('') + '</div>';
+}
+
+function phaseSnapshotsHtml(phase, snapshots) {
+  if (!snapshots.length) return '';
+  const hasChangeColour = snapshots.some((snapshot) => snapshot.change_intensity);
+  const cards = snapshots.map((snapshot) => (
+    '<button class="phase-snapshot' + (snapshot.change_intensity ? ' change-' + snapshot.change_intensity : '')
+    + '" type="button" data-phase-frame="' + snapshot.source_frame_index + '">'
+    + '<img alt="' + escapeHtml(snapshot.label) + ' source frame ' + snapshot.source_frame_index
+    + '" src="' + frameUrl(snapshot.source_frame_index, true) + '" />'
+    + '<span><strong>' + escapeHtml(snapshot.label) + '</strong><br />source frame '
+    + snapshot.source_frame_index + '</span></button>'
+  )).join('');
+  return '<div class="phase-explanation"><strong>Important frames</strong><div class="phase-snapshots">'
+    + cards + '</div>'
+    + (hasChangeColour
+      ? '<p class="movement-change-legend">Green/yellow/red indicates relative movement-change magnitude only, not evidence quality, severity, or risk.</p>'
+      : '')
+    + '</div>';
+}
+
+function phaseSalientFrames(phase, visualStory) {
+  const snapshots = visualStory?.snapshot_frames || [];
+  const chosen = snapshots.filter((snapshot) => (
+    snapshot.change_intensity
+    || ['Phase start', 'Phase end'].includes(snapshot.label)
+    || !['25%', '50%', '75%', 'Mid-phase'].includes(snapshot.label)
+  ));
+  const fallback = [
+    {label: 'Phase start', source_frame_index: phase.start_frame},
+    {label: 'Phase end', source_frame_index: phase.end_frame},
+  ];
+  const unique = [];
+  [...chosen, ...fallback].forEach((snapshot) => {
+    const frame = Number(snapshot.source_frame_index);
+    if (!Number.isFinite(frame) || unique.some((item) => item.source_frame_index === frame)) return;
+    unique.push({...snapshot, source_frame_index: frame});
+  });
+  return unique.sort((a, b) => a.source_frame_index - b.source_frame_index);
+}
+
+function visualStoryForPhase(phaseId) {
+  return (result?.movement_visual_story?.phases || []).find((item) => item.phase_id === phaseId) || null;
+}
+
+function storyObservationSupport(visualStory, category) {
+  return (visualStory?.observations || []).find((item) => item.category === category) || null;
+}
+
+function phaseVisualAvailable(visualStory, category) {
+  if (!visualStory) return false;
+  if (category === 'movement_path') {
+    return (visualStory.visuals || []).some((item) => item.visual_type === 'projected_path' && item.points?.length);
+  }
+  return ['trunk_pelvis', 'upper_body', 'hip_knee_ankle_chain', 'bilateral_limb_relationship']
+    .includes(category) && (visualStory.snapshot_frames || []).length >= 2;
+}
+
+function storyCategoryPlainLabel(category) {
+  return {
+    movement_path: 'Movement path',
+    hip_knee_ankle_chain: 'Hip–knee–ankle configuration',
+    bilateral_limb_relationship: 'Lower-limb comparison',
+    trunk_pelvis: 'Trunk & pelvis',
+    upper_body: 'Upper body',
+    movement_timing: 'Movement timing',
+  }[category] || categoryLabel(category);
+}
+
+function storyCategoryAction(category) {
+  return {
+    movement_path: 'the on-screen travel direction and speed relative to body size changed',
+    hip_knee_ankle_chain: 'the visible hip–knee–ankle configuration changed',
+    bilateral_limb_relationship: 'the projected relationship between the two lower limbs changed',
+    trunk_pelvis: 'the trunk, shoulder, and hip/pelvis lines reoriented',
+    upper_body: 'the projected arm positions changed',
+    movement_timing: 'the timing of the supported movement changed',
+  }[category] || '';
+}
+
+function storyCategoryChangeSummary(category) {
+  return {
+    movement_path: 'On-screen travel direction changed while speed relative to body size also shifted.',
+    hip_knee_ankle_chain: 'The visible hip–knee–ankle chain changed through the phase.',
+    bilateral_limb_relationship: 'The projected relationship between the two lower limbs changed through the phase.',
+    trunk_pelvis: 'The projected trunk, shoulder, and hip/pelvis lines reoriented through the phase.',
+    upper_body: 'The projected upper-arm and elbow configuration changed through the phase.',
+    movement_timing: 'The supported interval defines when this movement pattern was visible.',
+  }[category] || 'This supported movement component changed through the phase.';
+}
+
+function naturalList(items) {
+  const values = items.filter(Boolean);
+  if (!values.length) return '';
+  if (values.length === 1) return values[0];
+  if (values.length === 2) return values[0] + ' and ' + values[1];
+  return values.slice(0, -1).join(', ') + ', and ' + values[values.length - 1];
+}
+
+function drawPhaseStoryVisuals() {
+  [...document.querySelectorAll('[data-phase-mini]')].forEach((canvas) => {
+    const visualStory = visualStoryForPhase(canvas.dataset.phaseMini);
+    drawPhaseStoryVisual(canvas, visualStory, canvas.dataset.storyCategory);
+  });
+}
+
+function drawPhaseStoryVisual(canvas, visualStory, category) {
+  const scale = window.devicePixelRatio || 1;
+  const width = Math.max(220, canvas.clientWidth || 360);
+  const height = 118;
+  canvas.width = Math.floor(width * scale);
+  canvas.height = Math.floor(height * scale);
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
+  ctx.fillStyle = '#f4f7fa';
+  ctx.fillRect(0, 0, width, height);
+  if (category === 'movement_path') {
+    drawPhasePathMini(ctx, width, height, visualStory);
+    return;
+  }
+  drawPhasePoseMini(ctx, width, height, visualStory, category);
+}
+
+function drawPhasePathMini(ctx, width, height, visualStory) {
+  const points = (visualStory?.visuals || []).find((item) => item.visual_type === 'projected_path')?.points || [];
+  if (points.length < 2) return;
+  const xs = points.map((point) => Number(point.x));
+  const ys = points.map((point) => Number(point.y));
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const project = (point) => ({
+    x: 16 + ((Number(point.x) - minX) / Math.max(1e-9, maxX - minX)) * (width - 32),
+    y: 14 + ((Number(point.y) - minY) / Math.max(1e-9, maxY - minY)) * (height - 28),
+  });
+  ctx.strokeStyle = '#215f9a';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  points.forEach((point, index) => {
+    const item = project(point);
+    if (index === 0) ctx.moveTo(item.x, item.y);
+    else ctx.lineTo(item.x, item.y);
+  });
+  ctx.stroke();
+  [points[0], points[points.length - 1]].forEach((point, index) => {
+    const item = project(point);
+    ctx.fillStyle = index === 0 ? '#215f9a' : '#176d4d';
+    ctx.beginPath();
+    ctx.arc(item.x, item.y, 4.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawPhasePoseMini(ctx, width, height, visualStory, category) {
+  const snapshots = visualStory?.snapshot_frames || [];
+  const first = snapshots[0]?.landmarks || {};
+  const last = snapshots[snapshots.length - 1]?.landmarks || {};
+  drawMiniPoseHalf(ctx, first, {x: 8, y: 8, width: width / 2 - 12, height: height - 16}, category, '#215f9a');
+  drawMiniPoseHalf(ctx, last, {x: width / 2 + 4, y: 8, width: width / 2 - 12, height: height - 16}, category, '#176d4d');
+  ctx.fillStyle = '#627181';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('Start', 12, 14);
+  ctx.fillText('End', width / 2 + 8, 14);
+}
+
+function drawMiniPoseHalf(ctx, landmarks, rect, category, color) {
+  const names = category === 'upper_body'
+    ? ['left_shoulder', 'left_elbow', 'left_wrist', 'right_shoulder', 'right_elbow', 'right_wrist']
+    : category === 'trunk_pelvis'
+      ? ['left_shoulder', 'right_shoulder', 'left_hip', 'right_hip']
+      : ['left_hip', 'left_knee', 'left_ankle', 'right_hip', 'right_knee', 'right_ankle'];
+  const points = names.map((name) => landmarks[name]).filter((point) => Number.isFinite(Number(point?.x)) && Number.isFinite(Number(point?.y)));
+  if (!points.length) return;
+  const minX = Math.min(...points.map((point) => Number(point.x)));
+  const maxX = Math.max(...points.map((point) => Number(point.x)));
+  const minY = Math.min(...points.map((point) => Number(point.y)));
+  const maxY = Math.max(...points.map((point) => Number(point.y)));
+  const project = (name) => {
+    const point = landmarks[name];
+    if (!Number.isFinite(Number(point?.x)) || !Number.isFinite(Number(point?.y))) return null;
+    return {
+      x: rect.x + 12 + ((Number(point.x) - minX) / Math.max(1, maxX - minX)) * (rect.width - 24),
+      y: rect.y + 16 + ((Number(point.y) - minY) / Math.max(1, maxY - minY)) * (rect.height - 24),
+    };
+  };
+  const chains = category === 'upper_body'
+    ? [['left_shoulder', 'left_elbow', 'left_wrist'], ['right_shoulder', 'right_elbow', 'right_wrist']]
+    : category === 'trunk_pelvis'
+      ? [['left_shoulder', 'right_shoulder'], ['left_hip', 'right_hip'], ['left_shoulder', 'left_hip'], ['right_shoulder', 'right_hip']]
+      : [['left_hip', 'left_knee', 'left_ankle'], ['right_hip', 'right_knee', 'right_ankle']];
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  chains.forEach((chain) => {
+    const projected = chain.map(project);
+    if (!projected.every(Boolean)) return;
+    ctx.beginPath();
+    projected.forEach((point, index) => index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y));
+    ctx.stroke();
   });
 }
 
@@ -2686,7 +3120,7 @@ function renderFeatureOptions() {
   }
   featureSelect.disabled = false;
   $('featureSelect').innerHTML = features
-    .map((feature) => '<option value="' + feature.id + '">' + escapeHtml(feature.label) + '</option>')
+    .map((feature) => '<option value="' + feature.id + '">' + escapeHtml(featureOptionLabel(feature)) + '</option>')
     .join('');
   if (!features.some((feature) => feature.id === selectedFeatureId)) {
     selectedFeatureId = features[0].id;
@@ -2700,11 +3134,13 @@ function renderSelectedFeature() {
     const stats = unavailableStats();
     $('featureTitle').textContent = 'Measurement unavailable';
     $('featureDescription').textContent = 'No supported measurements are available for this category in the current case.';
+    $('featureTechnicalLabel').textContent = '';
     $('featureGraph').hidden = true;
     $('unavailableVisual').hidden = false;
     $('unavailableVisual').style.display = 'grid';
     $('unavailableVisual').textContent = 'No supported measurements are available for this category.';
     $('headlineValues').innerHTML = headlineHtml(stats);
+    $('trajectoryInterpretation').textContent = 'No supported trajectory is available for interpretation.';
     $('filmstrip').innerHTML = '';
     $('moreStatisticsGrid').innerHTML = '';
     $('evidenceSummary').innerHTML = '<span class="status unavailable">Unavailable</span> This category has no supported feature data for the selected case.';
@@ -2712,8 +3148,11 @@ function renderSelectedFeature() {
     renderOperatorAnalytics({label: 'Measurement unavailable', metrics: []}, stats);
     return;
   }
-  $('featureTitle').textContent = feature.label;
-  $('featureDescription').textContent = feature.description;
+  const presentation = featurePresentation(feature);
+  $('featureTitle').innerHTML = escapeHtml(presentation.name)
+    + '<span class="info-icon" title="' + escapeHtml(presentation.limitation) + '" aria-label="Measurement information">ⓘ</span>';
+  $('featureDescription').textContent = presentation.definition;
+  $('featureTechnicalLabel').textContent = presentation.technical;
 
   if (feature.visual === 'unavailable') {
     $('featureGraph').hidden = true;
@@ -2721,6 +3160,7 @@ function renderSelectedFeature() {
     $('unavailableVisual').style.display = 'grid';
     $('unavailableVisual').textContent = 'Movement path graph unavailable in this panel. Check the phase narrative for supported path evidence.';
     $('headlineValues').innerHTML = headlineHtml(unavailableStats());
+    $('trajectoryInterpretation').textContent = 'A chart-level movement-path trajectory is unavailable in this measurement panel.';
     $('filmstrip').innerHTML = '';
     $('moreStatisticsGrid').innerHTML = statsGridHtml(feature, unavailableStats());
     $('evidenceSummary').innerHTML = '<span class="status unavailable">Unavailable</span> Graph-level movement path is held back in this simplified measurement panel.';
@@ -2740,12 +3180,146 @@ function renderSelectedFeature() {
   $('technicalText').textContent = technicalDetails(feature, stats);
   renderFilmstrip(feature, stats);
   drawFeatureGraph(feature, stats);
+  $('trajectoryInterpretation').textContent = trajectoryInterpretation(feature, stats);
   renderOperatorAnalytics(feature, stats);
 }
 
 function selectedFeature() {
   return availableFeatures(FEATURE_CATEGORIES[selectedCategory] || [])
     .find((feature) => feature.id === selectedFeatureId) || firstAvailableFeature(FEATURE_CATEGORIES[selectedCategory] || []);
+}
+
+function featureOptionLabel(feature) {
+  const presentation = featurePresentation(feature);
+  const variants = {
+    injured_hka: 'injured side',
+    contralateral_hka: 'opposite side',
+    injured_hka_rate_change: 'supported change',
+    left_right_hka_pair: 'left / right',
+    hka_pair: 'injured / opposite',
+    hka_signed_difference: 'signed difference',
+    hka_absolute_difference: 'absolute difference',
+    bilateral_change: 'difference through time',
+    left_right_knee_line: 'left / right',
+    bilateral_knee_line: 'injured / opposite difference',
+    elbow_pair: 'left / right',
+    upper_arm_pair: 'left / right',
+  };
+  return presentation.name + (variants[feature.id] ? ' · ' + variants[feature.id] : '');
+}
+
+function featurePresentation(feature) {
+  const presentations = {
+    injured_hka: hkaPresentation('Projected injured-side HKA angle (°)'),
+    contralateral_hka: hkaPresentation('Projected contralateral HKA angle (°)'),
+    injured_hka_rate_change: hkaPresentation('Supported projected injured-side HKA change (°)'),
+    left_right_hka_pair: hkaPresentation('Left/right projected HKA angle (°)'),
+    hka_pair: hkaPresentation('Injured/contralateral projected HKA angle (°)'),
+    hka_signed_difference: bilateralHkaPresentation('Projected injured-minus-contralateral HKA difference (°)'),
+    hka_absolute_difference: bilateralHkaPresentation('Absolute projected HKA difference (°)'),
+    bilateral_change: bilateralHkaPresentation('Projected bilateral HKA difference through time (°)'),
+    knee_line_deviation: kneeRelationshipPresentation('Projected knee-line deviation · body-scale units'),
+    left_right_knee_line: kneeRelationshipPresentation('Left/right projected knee-line deviation · body-scale units'),
+    bilateral_knee_line: kneeRelationshipPresentation('Projected bilateral knee-line difference · body-scale units'),
+    knee_ankle_offset: {
+      name: 'Knee–ankle horizontal relationship',
+      definition: 'How the knee\'s projected horizontal position changes relative to the ankle through the movement.',
+      technical: 'Projected knee–ankle x-offset · body-scale units',
+      limitation: 'A video-derived image-plane relationship. It is not a true three-dimensional joint displacement.',
+    },
+    trunk_orientation: {
+      name: 'Upper-body orientation',
+      definition: 'How the projected direction of the player\'s trunk changes through the movement.',
+      technical: 'Projected trunk-axis orientation (°)',
+      limitation: 'A projected image-plane orientation, not true three-dimensional trunk flexion or lean.',
+    },
+    pelvis_orientation: {
+      name: 'Hip / pelvic orientation',
+      definition: 'How the projected orientation of the hip line changes through the movement.',
+      technical: 'Projected hip-line orientation (°)',
+      limitation: 'A projected image-plane orientation, not three-dimensional pelvic rotation.',
+    },
+    shoulder_orientation: {
+      name: 'Shoulder-line orientation',
+      definition: 'How the visible line between the shoulders reorients through the movement.',
+      technical: 'Projected shoulder-line orientation (°)',
+      limitation: 'A projected image-plane orientation, not three-dimensional torso rotation.',
+    },
+    shoulder_pelvis_relationship: {
+      name: 'Shoulder–pelvis relationship',
+      definition: 'How the projected shoulder line changes relative to the projected hip line.',
+      technical: 'Projected shoulder–pelvis orientation difference (°)',
+      limitation: 'This does not measure spinal or lumbar rotation.',
+    },
+    elbow_pair: {
+      name: 'Elbow configuration',
+      definition: 'How open or bent each visible shoulder–elbow–wrist chain appears through the movement.',
+      technical: 'Left/right projected elbow angle (°)',
+      limitation: 'A projected two-dimensional angle; camera perspective affects its appearance.',
+    },
+    upper_arm_pair: {
+      name: 'Upper-arm orientation',
+      definition: 'How each projected shoulder-to-elbow direction changes through the movement.',
+      technical: 'Left/right projected upper-arm orientation (°)',
+      limitation: 'A projected image-plane orientation, not three-dimensional shoulder rotation.',
+    },
+    wrist_relationship: {
+      name: 'Wrist–pelvis relationship',
+      definition: 'How the wrist\'s projected horizontal position changes relative to the pelvis.',
+      technical: 'Projected wrist–pelvis x-offset · body-scale units',
+      limitation: 'A body-scale-normalized image-plane relationship.',
+    },
+    movement_path_unavailable: {
+      name: 'Projected movement path',
+      definition: 'How the athlete\'s camera-compensated on-screen path changes through the movement.',
+      technical: 'Camera-compensated projected path',
+      limitation: 'Path evidence may be available in the Movement Story even when this chart view is unavailable.',
+    },
+    hka_extrema_timing: timingPresentation('Supported HKA minimum and maximum frames'),
+    hka_change_timing: timingPresentation('Largest supported frame-to-frame HKA change'),
+  };
+  return presentations[feature?.id] || {
+    name: feature?.label || 'Selected measurement',
+    definition: feature?.description || 'A supported video-derived projected measurement.',
+    technical: (feature?.metrics || []).join(', '),
+    limitation: 'Interpret this as projected image-plane evidence only.',
+  };
+}
+
+function hkaPresentation(technical) {
+  return {
+    name: 'Hip–knee–ankle configuration',
+    definition: 'How open or bent the visible hip–knee–ankle chain appears in the video.',
+    technical,
+    limitation: 'A projected two-dimensional angle. It is not automatically knee flexion, valgus, or a true three-dimensional joint angle.',
+  };
+}
+
+function bilateralHkaPresentation(technical) {
+  return {
+    name: 'Lower-limb comparison',
+    definition: 'How the projected hip–knee–ankle configurations differ between the two limbs.',
+    technical,
+    limitation: 'A projected bilateral difference, not a clinical asymmetry or risk score.',
+  };
+}
+
+function kneeRelationshipPresentation(technical) {
+  return {
+    name: 'Knee–ankle relationship',
+    definition: 'How the knee\'s projected position changes relative to the hip–ankle line.',
+    technical,
+    limitation: 'This projected relationship must not be interpreted automatically as true valgus or varus.',
+  };
+}
+
+function timingPresentation(technical) {
+  return {
+    name: 'Timing of supported movement',
+    definition: 'Where an important supported measurement moment occurs in source-frame time.',
+    technical,
+    limitation: 'This is measurement timing, not an estimate of the ACL injury instant.',
+  };
 }
 
 function firstAvailableFeature(features) {
@@ -2877,26 +3451,62 @@ function headlineHtml(stats) {
   return [
     ['Start', formatValue(stats.start, stats.unit)],
     ['End', formatValue(stats.end, stats.unit)],
-    ['Change', formatSigned(stats.change, stats.unit)],
-    ['Min-max', formatValue(stats.min, stats.unit) + ' - ' + formatValue(stats.max, stats.unit)]
+    ['Signed change', formatSigned(stats.change, stats.unit)],
+    ['Absolute change', formatValue(Math.abs(stats.change), stats.unit)]
   ].map(([label, value]) => '<div class="value-card"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
 }
 
 function statsGridHtml(feature, stats) {
   return [
-    ['Measurement', feature?.label || 'Selected feature'],
-    ['Unit', stats.unit || 'relative / unitless'],
-    ['Frame window', 'Frames ' + frameBounds().start + '-' + frameBounds().end],
     ['Mean', formatValue(stats.mean, stats.unit)],
     ['Median', formatValue(stats.median, stats.unit)],
     ['SD', formatValue(stats.sd, stats.unit)],
     ['Q1', formatValue(stats.q1, stats.unit)],
     ['Q3', formatValue(stats.q3, stats.unit)],
     ['IQR', formatValue(stats.iqr, stats.unit)],
+    ['Minimum', formatValue(stats.min, stats.unit)],
+    ['Maximum', formatValue(stats.max, stats.unit)],
     ['Range', formatValue(stats.range, stats.unit)],
-    ['Supported N', String(stats.supportedN ?? 0)],
-    ['Completeness', percent(stats.completeness)]
   ].map(([label, value]) => '<div class="value-card"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
+}
+
+function trajectoryInterpretation(feature, stats) {
+  const metric = feature.metrics?.[0];
+  if (!metric || stats.status === 'Unavailable') {
+    return 'No supported trajectory is available for interpretation.';
+  }
+  const primary = supportedSeries(metric).filter((point) => point.value !== null);
+  if (!primary.length) return 'No supported trajectory is available for interpretation.';
+  if (feature.metrics.length > 1) {
+    const secondary = supportedSeries(feature.metrics[1]).filter((point) => point.value !== null);
+    const common = primary.map((point) => {
+      const other = secondary.find((item) => item.frame === point.frame);
+      return other ? {frame: point.frame, difference: point.value - other.value} : null;
+    }).filter(Boolean);
+    if (common.length >= 2) {
+      const startDifference = Math.abs(common[0].difference);
+      const endDifference = Math.abs(common[common.length - 1].difference);
+      const tolerance = Math.max(1e-6, Math.abs(stats.range || 0) * 0.1);
+      const relationship = endDifference > startDifference + tolerance
+        ? 'moved farther apart'
+        : endDifference + tolerance < startDifference
+          ? 'moved closer together'
+          : 'remained broadly similar in separation';
+      return 'The paired projected trajectories ' + relationship + ' between the first and last supported frames. '
+        + gapSignalSentence(metric);
+    }
+  }
+  const direction = Number(stats.change) > 0 ? 'increased' : Number(stats.change) < 0 ? 'decreased' : 'remained stable';
+  const peak = largestChangeFrame(metric);
+  return 'Across supported frames, this projected measurement generally ' + direction
+    + (Number.isFinite(Number(peak)) ? '; its largest supported frame-to-frame change occurs near source frame ' + peak : '')
+    + '. ' + gapSignalSentence(metric);
+}
+
+function gapSignalSentence(metric) {
+  const count = gapIntervalsForMetric(metric).length;
+  if (!count) return 'The trajectory is supported across the displayed interval.';
+  return count + ' unsupported interval' + (count === 1 ? ' remains' : 's remain') + ' visible as a gap' + (count === 1 ? '' : 's') + '.';
 }
 
 function evidenceHtml(stats) {
@@ -2907,13 +3517,16 @@ function evidenceHtml(stats) {
 }
 
 function renderOperatorAnalytics(feature, stats) {
-  $('narrativePanel').innerHTML = movementNarrativeHtml(feature, stats);
   $('supportPanel').innerHTML = supportHtml(feature, stats);
-  $('whyPhasePanel').innerHTML = whyPhaseHtml();
-  $('gapReasonPanel').innerHTML = gapReasonHtml(feature);
+  const intervals = feature.metrics?.[0] ? gapIntervalsForMetric(feature.metrics[0]) : [];
+  $('unsupportedIntervalDetails').hidden = !intervals.length;
+  $('unsupportedIntervalSummary').textContent = intervals.length === 1
+    ? 'Why is 1 interval unsupported?'
+    : 'Why are ' + intervals.length + ' intervals unsupported?';
+  $('gapReasonPanel').innerHTML = gapReasonHtml(feature, intervals);
   $('dependencyPanel').innerHTML = dependencyHtml(feature);
   $('phaseComparisonPanel').innerHTML = phaseComparisonHtml(feature, stats);
-  $('caseTriagePanel').innerHTML = caseTriageHtml();
+  $('provenanceText').textContent = provenanceDetails();
 }
 
 function movementNarrativeHtml(feature, stats) {
@@ -3132,15 +3745,25 @@ function regionalSupport(phase, metrics) {
 
 function supportHtml(feature, stats) {
   const intervals = feature.metrics?.[0] ? gapIntervalsForMetric(feature.metrics[0]) : [];
-  const unsupported = Math.max(0, Number(stats.relevantN || 0) - Number(stats.supportedN || 0));
-  const supportLabel = stats.status === 'Unavailable' ? 'Unavailable' : 'Supported overall';
-  const intervalText = intervals.length === 1 ? '1 unsupported interval' : intervals.length + ' unsupported intervals';
-  return '<p><span class="status">' + escapeHtml(supportLabel) + '</span></p>'
-    + '<p class="subtle"><strong>' + (stats.supportedN ?? 0) + '/' + (stats.relevantN ?? 0)
-    + ' frames</strong> support ' + escapeHtml(feature.label) + ' (' + percent(stats.completeness) + ').</p>'
-    + '<p class="subtle">' + unsupported + ' frame(s) are unavailable for this selected measurement; '
-    + (intervals.length ? intervalText + ' are marked as yellow bands on the chart.' : 'no yellow gap bands are present for this selected measurement.')
-    + '</p>';
+  const level = measurementSupportLevel(stats);
+  const intervalText = intervals.length === 1
+    ? '1 unsupported or withheld interval'
+    : intervals.length + ' unsupported or withheld intervals';
+  const graphSentence = intervals.length
+    ? intervalText + ' ' + (intervals.length === 1 ? 'is' : 'are') + ' shown as yellow gaps on the trajectory.'
+    : 'No unsupported intervals are present in the displayed trajectory.';
+  return '<div class="support-overview"><span class="status">' + escapeHtml(level) + ' · '
+    + percent(stats.completeness) + ' supported</span>'
+    + '<strong>' + (stats.supportedN ?? 0) + ' / ' + (stats.relevantN ?? 0) + ' relevant frames</strong></div>'
+    + '<p class="support-copy">' + escapeHtml(graphSentence) + '</p>';
+}
+
+function measurementSupportLevel(stats) {
+  if (stats.status === 'Unavailable' || !Number(stats.supportedN || 0)) return 'UNAVAILABLE';
+  const coverage = Number(stats.completeness || 0);
+  if (coverage >= 0.80) return 'GOOD';
+  if (coverage >= 0.50) return 'MODERATE';
+  return 'LIMITED';
 }
 
 function whyPhaseHtml() {
@@ -3218,18 +3841,19 @@ function phaseDrivers(phase) {
     .sort((a, b) => b.score - a.score);
 }
 
-function gapReasonHtml(feature) {
+function gapReasonHtml(feature, suppliedIntervals = null) {
   const metric = feature.metrics?.[0];
   if (!metric) return '<p class="subtle">No plotted metric is available for gap drilldown.</p>';
-  const intervals = gapIntervalsForMetric(metric);
+  const intervals = suppliedIntervals || gapIntervalsForMetric(metric);
   if (!intervals.length) {
     return '<p class="subtle">No missing intervals for <strong>' + escapeHtml(feature.label)
       + '</strong>. The selected measurement is supported across the displayed frame window.</p>';
   }
   const rows = intervals.slice(0, 6).map((interval) => (
-    '<li><strong>' + frameRangeLabel(interval.start, interval.end) + '</strong>: '
-    + escapeHtml(interval.reason)
-    + ' <button type="button" data-gap-frame="' + interval.start + '">Show frame</button></li>'
+    '<div class="gap-item"><strong>' + frameRangeLabel(interval.start, interval.end) + '</strong>'
+    + '<p>' + escapeHtml(interval.reason) + '</p>'
+    + '<p class="technical">Technical status: ' + escapeHtml(interval.technical || 'feature sample unavailable') + '</p>'
+    + '<button type="button" data-gap-frame="' + interval.start + '">Show frame</button></div>'
   )).join('');
   const extra = intervals.length > 6
     ? '<p class="subtle">' + (intervals.length - 6) + ' additional gap interval(s) are hidden in this compact view.</p>'
@@ -3242,8 +3866,8 @@ function gapReasonHtml(feature) {
       };
     });
   }, 0);
-  return '<p class="subtle">Yellow chart bands explain unsupported intervals for <strong>'
-    + escapeHtml(feature.label) + '</strong>.</p><ul>' + rows + '</ul>' + extra;
+  return '<p class="subtle">These intervals correspond to the yellow gaps in <strong>'
+    + escapeHtml(featurePresentation(feature).name) + '</strong>.</p>' + rows + extra;
 }
 
 function gapIntervalsForMetric(metric) {
@@ -3253,26 +3877,58 @@ function gapIntervalsForMetric(metric) {
   rows.forEach((point) => {
     if (point.value !== null) {
       if (current) {
-        intervals.push({...current, reason: summarizeReasons(current.reasons)});
+        intervals.push({
+          ...current,
+          reason: summarizeReasons(current.reasons),
+          technical: summarizeReasons(current.technicalReasons),
+        });
         current = null;
       }
       return;
     }
-    if (!current) current = {start: point.frame, end: point.frame, reasons: []};
+    if (!current) current = {start: point.frame, end: point.frame, reasons: [], technicalReasons: []};
     current.end = point.frame;
     current.reasons.push(pointGapReason(point));
+    current.technicalReasons.push(pointTechnicalGapReason(point));
   });
-  if (current) intervals.push({...current, reason: summarizeReasons(current.reasons)});
+  if (current) {
+    intervals.push({
+      ...current,
+      reason: summarizeReasons(current.reasons),
+      technical: summarizeReasons(current.technicalReasons),
+    });
+  }
   return intervals;
 }
 
 function pointGapReason(point) {
+  const raw = pointTechnicalGapReason(point);
+  const upper = raw.toUpperCase();
+  if (upper.includes('TARGET_IDENTITY_UNCERTAIN') || upper.includes('TARGET OVERLAP')) {
+    return 'Target identity was uncertain because the annotated athlete overlapped another player or could not be distinguished reliably.';
+  }
+  if (upper.includes('INVALID_TRACK_SEGMENT')) {
+    return 'The target track could not be maintained reliably across this interval.';
+  }
+  if (upper.includes('TARGET_NOT_FOUND')) {
+    return 'The annotated athlete could not be located reliably in this interval.';
+  }
+  if (upper.includes('LOW_CONFIDENCE') || upper.includes('LOW POSE CONFIDENCE') || upper.includes('REQUIRED LANDMARK')) {
+    return 'One or more landmarks required for this measurement were not reliable enough.';
+  }
+  if (upper.includes('OUTSIDE THE SUPPORTED EVIDENCE INTERVAL')) {
+    return 'This interval falls outside the human-accepted evidence window.';
+  }
+  return 'The evidence required for this measurement was unavailable or insufficient.';
+}
+
+function pointTechnicalGapReason(point) {
   const reasons = [];
   if (point.reason) reasons.push(point.reason);
-  if (point.status && point.status !== 'SUPPORTED') reasons.push(humanStatus(point.status));
+  if (point.status && point.status !== 'SUPPORTED') reasons.push(point.status);
   if (!isInSupportedEvidenceRange(point.frame)) reasons.push('outside the supported evidence interval');
   if (!reasons.length) reasons.push('required landmark or feature evidence is missing');
-  return cleanGapReason(reasons.join(' | '));
+  return reasons.join(' | ');
 }
 
 function summarizeReasons(reasons) {
@@ -3281,7 +3937,10 @@ function summarizeReasons(reasons) {
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 2)
-    .map(([reason, count]) => count > 1 ? reason + ' (' + count + ' frames)' : reason)
+    .map(([reason, count]) => {
+      const clean = String(reason).replace(/[.;]+$/, '');
+      return count > 1 ? clean + ' (' + count + ' frames)' : clean;
+    })
     .join('; ');
 }
 
@@ -3318,22 +3977,6 @@ function phaseComparisonHtml(feature, stats) {
       + (phase.supported_n ?? 0) + '/' + (phase.relevant_n ?? 0)
       + '<br />' + percent(phase.completeness) + '</td></tr>'
     )).join('') + '</tbody></table>';
-}
-
-function caseTriageHtml() {
-  const story = result?.movement_story || {};
-  const analytics = result?.cross_case_analytics || {};
-  const unavailable = Object.values(analytics).filter((item) => item && item.available === false);
-  const messages = [
-    '<li><strong>Current case:</strong> phase story is ' + escapeHtml(story.status || 'unavailable') + '.</li>',
-    '<li><strong>Exact narrative matching:</strong> not certified until more human-validated videos run through this same pipeline.</li>',
-  ];
-  if (unavailable.length) {
-    const reason = unavailable[0].reason || 'Additional human-validated cases are required.';
-    messages.push('<li><strong>Cross-case analytics:</strong> ' + escapeHtml(reason) + '</li>');
-  }
-  messages.push('<li><strong>Operator next step:</strong> annotate another video, then compare phase titles, evidence status, and feature completeness before claiming a shared narrative.</li>');
-  return '<ul>' + messages.join('') + '</ul>';
 }
 
 function phaseForFrame(frame) {
@@ -3438,6 +4081,23 @@ function technicalDetails(feature, stats) {
   lines.push('Supported N: ' + stats.supportedN + ' / ' + stats.relevantN);
   lines.push('Completeness: ' + percent(stats.completeness));
   lines.push('Rejected/unsupported samples remain missing; unsupported gaps are not connected.');
+  return lines.join('\n');
+}
+
+function provenanceDetails() {
+  const lines = [];
+  lines.push('Case ID: ' + (result.case?.case_id || result.case?.slug || 'unavailable'));
+  lines.push('Source ID: ' + (result.case?.source_id || 'unavailable'));
+  lines.push('View ID: ' + (result.case?.view_id || result.view?.view_id || 'unavailable'));
+  lines.push('View perspective: ' + (result.view?.perspective || 'unknown'));
+  lines.push('Target annotation: ' + (result.target_annotation?.label || 'unavailable'));
+  lines.push('Current source frame: ' + currentFrame);
+  lines.push('Movement window: ' + frameBounds().start + '-' + frameBounds().end);
+  const sources = Object.entries(result.source_files || {});
+  if (sources.length) {
+    lines.push('Source files:');
+    sources.forEach(([name, path]) => lines.push('  ' + name + ': ' + path));
+  }
   return lines.join('\n');
 }
 

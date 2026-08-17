@@ -312,7 +312,8 @@ def smoke_test(
             "featureCategorySelect" in render_results_page()
             and "featureSelect" in render_results_page()
             and "featureGraph" in render_results_page()
-            and "Movement Story" not in render_results_page()
+            and "Movement Story" in render_results_page()
+            and "Selected Measurement" in render_results_page()
         ),
         "output_dir": str(output_dir),
         "writes_files": False,

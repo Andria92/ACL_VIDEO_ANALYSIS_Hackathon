@@ -107,6 +107,16 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "featureSelect" in html
     assert "featureGraph" in html
     assert "videoFrame" in html
+    assert "Movement Story" in html
+    assert "Whole Movement Summary" in html
+    assert "What happened?" in html
+    assert "What defines this phase?" in html
+    assert "Main movement changes" in html
+    assert "Important frames" in html
+    assert "Movement phase story" not in html
+    assert "Movement narrative" not in html
+    assert 'id="narrativePanel"' not in html
+    assert 'id="whyPhasePanel"' not in html
     assert "backFiveButton" in html
     assert "backOneButton" in html
     assert "playPauseButton" in html
@@ -114,9 +124,23 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "forwardFiveButton" in html
     assert "trimAnalysisButton" in html
     assert "End analysis here + regenerate" in html
-    assert "More statistics" in html
-    assert "Evidence" in html
-    assert "Technical details" in html
+    assert "Selected Measurement" in html
+    assert "Descriptive statistics" in html
+    assert "Hip–knee–ankle configuration" in html
+    assert "Knee–ankle relationship" in html
+    assert "Upper-body orientation" in html
+    assert "trajectoryInterpretation" in html
+    assert "Measurement Support" in html
+    assert "supported</span>" in html
+    assert "Why are some frames unsupported?" in html
+    assert "Target identity was uncertain because the annotated athlete overlapped another player" in html
+    assert "Technical status:" in html
+    assert "Evidence support" not in html
+    assert "Advanced Evidence Details" in html
+    assert "Selected-frame QC and raw status" in html
+    assert "Case and source provenance" in html
+    assert "Cross-case readiness" not in html
+    assert "Exact narrative matching" not in html
     assert "LOWER LIMB" in html
     assert "BILATERAL" in html
     assert "Left/right projected HKA" in html
@@ -144,7 +168,6 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
         "Clear frame regions",
         "Descriptive Statistics",
         "Evidence details",
-        "Movement Story",
         "Show why",
         "Supported evidence interval",
         "Clip evidence coverage",
@@ -241,11 +264,11 @@ def test_results_page_default_details_are_collapsed() -> None:
     html = render_results_page()
 
     assert '<details id="moreStatistics">' in html
-    assert "<summary>More statistics</summary>" in html
-    assert '<details id="evidenceDetails">' in html
-    assert "<summary>Evidence</summary>" in html
-    assert '<details id="technicalDetails">' in html
-    assert "<summary>Technical details</summary>" in html
+    assert "<summary>Descriptive statistics</summary>" in html
+    assert '<details id="advancedEvidenceDetails">' in html
+    assert "<summary>Advanced Evidence Details</summary>" in html
+    assert '<details id="evidenceDetails">' not in html
+    assert '<details id="technicalDetails">' not in html
     assert 'id="researchMeasurements"' not in html
     assert 'id="exploreMovement"' not in html
 
