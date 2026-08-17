@@ -129,7 +129,7 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "Descriptive statistics" in html
     assert "Hip–knee–ankle configuration" in html
     assert "Knee–ankle relationship" in html
-    assert "Upper-body orientation" in html
+    assert "Trunk orientation" in html
     assert "trajectoryInterpretation" in html
     assert "Measurement Support" in html
     assert "supported</span>" in html
@@ -154,12 +154,18 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "TIMING" in html
     assert "'MOVEMENT PATH':" not in html
     assert "drawPhaseBilateralMini" in html
-    assert "Injured vs opposite-side HKA" in html
+    assert 'data-phase-hka-view="' in html
+    assert "Hip–knee–ankle configuration" in html
+    assert "drawPhaseOppositeHkaMini" in html
+    assert "Injured" in html
+    assert "Opposite" in html
+    assert "Compare" in html
     assert "Blue dashed = phase start" in html
     assert "Green solid = phase end" in html
     assert "drawPhaseInjuredHkaMini" in html
     assert "drawAngleArc" in html
-    assert "Projected HKA angle" in html
+    assert "Injured projected HKA" in html
+    assert "Opposite projected HKA" in html
     assert "opened" in html
     assert "more closed through the phase" in html
     assert "drawPhaseTorsoMini" in html
@@ -169,8 +175,13 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "projected arm orientation and elbow configuration" in html
     assert "Injured limb (" in html
     assert "Opposite limb (" in html
-    assert "maximum_absolute_hka_difference_deg" in html
+    assert "hka_projected_bilateral_absolute_difference_deg" in html
     assert "Peak gap " in html
+    assert "Configuration = shape formed by connected hip, knee, and ankle segments" in html
+    assert "Shortest axial reorientation" in html
+    assert "positive image x-axis" in html
+    assert "counter-clockwise on screen" in html
+    assert "canonical_signed_change" in html
     assert "left_knee_ankle_distance_normalized" not in html
     assert "right_knee_ankle_distance_normalized" not in html
     removed_clutter = [

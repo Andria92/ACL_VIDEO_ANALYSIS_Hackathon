@@ -50,6 +50,37 @@ def test_selection_statistics_for_single_and_five_frame_window() -> None:
     assert len(window["frames"]) == 5
 
 
+@pytest.mark.parametrize(
+    ("metric_name", "values", "angle_type", "raw_change", "canonical_change"),
+    [
+        ("injured_hka_angle_2d_deg", [158.6, 85.5], "internal", -73.1, -73.1),
+        ("projected_trunk_axis_angle_deg", [-175.0, 178.0], "directed", 353.0, -7.0),
+        ("projected_hip_line_angle_deg", [-0.1, 173.9], "axis", 174.0, -6.0),
+    ],
+)
+def test_metric_statistics_add_canonical_display_change_without_altering_existing_change(
+    metric_name,
+    values,
+    angle_type,
+    raw_change,
+    canonical_change,
+) -> None:
+    rows = _metric_rows(values, ["SUPPORTED", "SUPPORTED"])
+    rows["metric_name"] = metric_name
+    rows["unit"] = "deg"
+
+    stats = metric_statistics(rows)
+
+    assert stats["start_value"] == pytest.approx(values[0])
+    assert stats["end_value"] == pytest.approx(values[1])
+    assert stats["change"] == pytest.approx(raw_change)
+    assert stats["raw_start_angle"] == pytest.approx(values[0])
+    assert stats["raw_end_angle"] == pytest.approx(values[1])
+    assert stats["angle_type"] == angle_type
+    assert stats["canonical_signed_change"] == pytest.approx(canonical_change)
+    assert stats["canonical_absolute_change"] == pytest.approx(abs(canonical_change))
+
+
 def test_visualisation_registry_covers_every_metric() -> None:
     dynamic = _dynamic_df()
     path = _path_df()
@@ -71,6 +102,7 @@ def test_visualisation_registry_covers_every_metric() -> None:
     assert "injured_hka_angle_2d_deg" in payload["angular_metric_names"]
     assert "dynamic_rate:injured_hka_angle_2d_deg" not in payload["angular_metric_names"]
     assert payload["metrics"]["injured_hka_angle_2d_deg"]["angular"] is True
+    assert payload["metrics"]["injured_hka_angle_2d_deg"]["angle_type"] == "internal"
     assert payload["metrics"]["dynamic_rate:injured_hka_angle_2d_deg"]["angular"] is False
     assert payload["metrics"]["injured_hka_angle_2d_deg"]["display_label"] == "Injured HKA angle"
     assert "change" in payload["angular_heatmap"]

@@ -100,6 +100,9 @@ def test_injured_contralateral_mapping_left_and_right():
     assert _feature(left_features, "hka_projected_bilateral_absolute_difference_deg", 0).feature_value == (
         pytest.approx(abs(left_hka - right_hka))
     )
+    right_injury_opposite = _feature(right_features, "contralateral_hka_angle_2d_deg", 0)
+    assert right_injury_opposite.metadata["source_feature_name"] == "left_hka_angle_2d_deg"
+    assert right_injury_opposite.landmarks_used == ["left_hip", "left_knee", "left_ankle"]
 
 
 def test_unknown_injury_side_does_not_invent_laterality_features():

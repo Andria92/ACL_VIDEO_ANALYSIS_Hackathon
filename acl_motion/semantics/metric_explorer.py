@@ -11,6 +11,10 @@ import numpy as np
 import pandas as pd
 
 from acl_motion.geometry.angles import wrapped_angle_difference_deg
+from acl_motion.geometry.angular_semantics import (
+    angle_type_for_metric,
+    angular_difference,
+)
 
 
 class SelectionMode(StrEnum):
@@ -35,6 +39,7 @@ class MetricVisualisationSpec:
     bilateral: bool
     distributional: bool
     angular: bool
+    angle_type: str | None
     unit: str
     preferred_visualisation: str
     no_visualisation_reason: str = ""
@@ -140,6 +145,7 @@ def metric_statistics(
     """Summarize supported metric values inside an optional frame interval."""
 
     subset = rows.copy()
+    metric_name = str(rows["metric_name"].iloc[0]) if not rows.empty else ""
     if start_frame is not None:
         subset = subset[subset["source_frame_index"].astype(int).ge(int(start_frame))]
     if end_frame is not None:
@@ -172,10 +178,14 @@ def metric_statistics(
             "maximum_frame": None,
             "peak_frame_to_frame_change": None,
             "peak_frame_to_frame_change_frame": None,
+            "raw_start_angle": None,
+            "raw_end_angle": None,
+            "angle_type": _angle_type_value(metric_name),
+            "canonical_signed_change": None,
+            "canonical_absolute_change": None,
         }
     first = supported.iloc[0]
     last = supported.iloc[-1]
-    metric_name = str(rows["metric_name"].iloc[0])
     q1 = values.quantile(0.25)
     q3 = values.quantile(0.75)
     min_row = supported.loc[pd.to_numeric(supported["value"], errors="coerce").idxmin()]
@@ -188,6 +198,12 @@ def metric_statistics(
         else None
     )
     change = _metric_change(metric_name, float(first["value"]), float(last["value"]))
+    display_fields = _canonical_change_fields(
+        metric_name,
+        float(first["value"]),
+        float(last["value"]),
+        change,
+    )
     return {
         "supported_n": len(values),
         "relevant_n": relevant_n,
@@ -216,6 +232,7 @@ def metric_statistics(
         "peak_frame_to_frame_change_frame": (
             int(peak_change_row["source_frame_index"]) if peak_change_row is not None else None
         ),
+        **display_fields,
     }
 
 
@@ -415,6 +432,7 @@ def _visualisation_spec(metric_name: str, rows: pd.DataFrame) -> MetricVisualisa
         bilateral=family == "bilateral_limb_relationship" or paired is not None,
         distributional=True,
         angular=_is_angular_metric(metric_name, unit),
+        angle_type=_angle_type_value(metric_name),
         unit=unit,
         preferred_visualisation=preferred,
         paired_metric_name=paired,
@@ -591,6 +609,32 @@ def _metric_change(metric_name: str, start_value: float, end_value: float) -> fl
     ):
         return wrapped_angle_difference_deg(end_value, start_value)
     return end_value - start_value
+
+
+def _angle_type_value(metric_name: str) -> str | None:
+    angle_type = angle_type_for_metric(metric_name)
+    return angle_type.value if angle_type is not None else None
+
+
+def _canonical_change_fields(
+    metric_name: str,
+    start_value: float,
+    end_value: float,
+    existing_change: float,
+) -> dict[str, float | str | None]:
+    angle_type = angle_type_for_metric(metric_name)
+    canonical_change = (
+        angular_difference(start_value, end_value, angle_type)
+        if angle_type is not None
+        else existing_change
+    )
+    return {
+        "raw_start_angle": start_value if angle_type is not None else None,
+        "raw_end_angle": end_value if angle_type is not None else None,
+        "angle_type": angle_type.value if angle_type is not None else None,
+        "canonical_signed_change": float(canonical_change),
+        "canonical_absolute_change": abs(float(canonical_change)),
+    }
 
 
 def _records_json(rows: pd.DataFrame) -> list[dict]:

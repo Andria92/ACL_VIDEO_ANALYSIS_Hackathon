@@ -2109,6 +2109,46 @@ SIMPLE_RESULTS_HTML = r"""
     .story-change p {
       margin: 5px 0 0;
     }
+    .phase-view-switch {
+      display: inline-grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 7px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .phase-view-switch button {
+      min-width: 74px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      border-radius: 0;
+      padding: 5px 9px;
+      background: #fff;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .phase-view-switch button:last-child { border-right: 0; }
+    .phase-view-switch button.active {
+      background: #e9f2fa;
+      color: #174f7d;
+    }
+    .phase-support-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px 10px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .angle-kind {
+      display: inline-block;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
     .movement-glyph-legend {
       display: flex;
       flex-wrap: wrap;
@@ -2422,6 +2462,7 @@ SIMPLE_RESULTS_HTML = r"""
         <span><i class="glyph-line-key"></i>Green solid = phase end</span>
         <span>Arrow = direction of change</span>
         <span>Arc = projected angle</span>
+        <span>H / K / A = hip / knee / ankle</span>
       </div>
       <div class="phase-grid" id="phaseStoryGrid"></div>
     </section>
@@ -2504,6 +2545,7 @@ let currentFrame = 0;
 let playTimer = null;
 let selectedCategory = 'LOWER LIMB';
 let selectedFeatureId = 'injured_hka';
+const phaseHkaViewModes = {};
 
 const FEATURE_CATEGORIES = {
   'LOWER LIMB': [
@@ -2868,7 +2910,7 @@ function renderPhaseStory() {
     + escapeHtml(wholeMovementSummary(story, phases)) + '</p>';
   $('phaseStoryGrid').innerHTML = phases.map((phase) => {
     const evidence = phase.evidence_summary?.evidence_status || 'EVIDENCE';
-    const drivers = phaseDrivers(phase)
+    const drivers = canonicalPhaseDrivers(phaseDrivers(phase))
       .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
       .slice(0, 4);
     const visualStory = visualStoryForPhase(phase.phase_id);
@@ -2889,6 +2931,12 @@ function renderPhaseStory() {
   [...document.querySelectorAll('[data-phase-frame]')].forEach((button) => {
     button.onclick = () => setFrame(Number(button.dataset.phaseFrame));
   });
+  [...document.querySelectorAll('[data-phase-hka-view]')].forEach((button) => {
+    button.onclick = () => {
+      phaseHkaViewModes[button.dataset.phaseId] = button.dataset.phaseHkaView;
+      renderPhaseStory();
+    };
+  });
   requestAnimationFrame(drawPhaseStoryVisuals);
 }
 
@@ -2902,7 +2950,7 @@ function wholeMovementSummary(story, phases) {
       + first.title.toLowerCase() + ' and ending with ' + last.title.toLowerCase() + '.';
   if (phases.length === 1) return sequence;
   const transition = phases[1];
-  const categories = naturalList(phaseDrivers(transition)
+  const categories = naturalList(canonicalPhaseDrivers(phaseDrivers(transition))
     .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
     .slice(0, 3)
     .map((driver) => storyCategoryPlainLabel(driver.key)));
@@ -2934,6 +2982,9 @@ function phaseBoundaryExplanation(phase, drivers) {
 function phaseChangesHtml(phase, drivers, visualStory) {
   if (!drivers.length) return '<p>No supported movement family is available for this phase.</p>';
   return '<div class="story-change-grid">' + drivers.map((driver) => {
+    if (driver.key === 'hip_knee_ankle_chain') {
+      return phaseHkaChangeHtml(phase, visualStory);
+    }
     const support = storyObservationSupport(visualStory, driver.key);
     const status = support?.evidence_status || driver.status || 'EVIDENCE';
     const fraction = support?.support?.supported_fraction;
@@ -2948,6 +2999,93 @@ function phaseChangesHtml(phase, drivers, visualStory) {
       + phaseMeasurementSummaryHtml(phase, driver.key)
       + '</div>';
   }).join('') + '</div>';
+}
+
+function canonicalPhaseDrivers(drivers) {
+  const hkaDrivers = drivers.filter((driver) => (
+    ['hip_knee_ankle_chain', 'bilateral_limb_relationship'].includes(driver.key)
+  ));
+  if (!hkaDrivers.length) return drivers;
+  const primary = hkaDrivers.find((driver) => driver.key === 'hip_knee_ankle_chain') || hkaDrivers[0];
+  const canonical = {
+    ...primary,
+    key: 'hip_knee_ankle_chain',
+    label: 'Hip–knee–ankle configuration',
+    score: Math.max(...hkaDrivers.map((driver) => Number(driver.score || 0))),
+  };
+  const output = drivers.filter((driver) => (
+    !['hip_knee_ankle_chain', 'bilateral_limb_relationship'].includes(driver.key)
+  ));
+  output.push(canonical);
+  return output.sort((a, b) => Number(b.score || 0) - Number(a.score || 0));
+}
+
+function phaseHkaMode(phase) {
+  return phaseHkaViewModes[phase.phase_id] || 'injured';
+}
+
+function phaseHkaChangeHtml(phase, visualStory) {
+  const mode = phaseHkaMode(phase);
+  const hasVisual = phaseVisualAvailable(visualStory, 'hip_knee_ankle_chain', mode);
+  return '<div class="story-change">'
+    + '<div class="story-change-heading"><strong>Hip–knee–ankle configuration</strong>'
+    + phaseHkaSupportBadges(phase, mode) + '</div>'
+    + '<div class="phase-view-switch" aria-label="HKA configuration view">'
+    + ['injured', 'opposite', 'compare'].map((item) => (
+      '<button type="button" class="' + (item === mode ? 'active' : '')
+      + '" data-phase-hka-view="' + item + '" data-phase-id="' + escapeHtml(phase.phase_id) + '">'
+      + (item === 'injured' ? 'Injured' : item === 'opposite' ? 'Opposite' : 'Compare') + '</button>'
+    )).join('') + '</div>'
+    + '<p>' + escapeHtml(hkaViewSummary(phase, mode)) + '</p>'
+    + (hasVisual ? '<canvas class="phase-mini-visual" data-phase-mini="' + escapeHtml(phase.phase_id)
+      + '" data-story-category="hip_knee_ankle_chain" data-hka-mode="' + mode
+      + '" width="360" height="132"></canvas>' : '')
+    + phaseMeasurementSummaryHtml(phase, 'hip_knee_ankle_chain', mode)
+    + (mode === 'compare' ? phaseHkaPeakSummary(phase) : '')
+    + '<div class="phase-support-row"><span>Configuration = shape formed by connected hip, knee, and ankle segments.</span></div>'
+    + '</div>';
+}
+
+function phaseHkaSupportBadges(phase, mode) {
+  const metrics = mode === 'compare'
+    ? [['Injured', 'injured_hka_angle_2d_deg'], ['Opposite', 'contralateral_hka_angle_2d_deg']]
+    : [[mode === 'injured' ? 'Injured' : 'Opposite', mode === 'injured'
+      ? 'injured_hka_angle_2d_deg' : 'contralateral_hka_angle_2d_deg']];
+  return '<span class="phase-support-row">' + metrics.map(([label, metric]) => {
+    const stat = phaseMetricStat(phase, metric);
+    return escapeHtml(label) + ' ' + escapeHtml(measurementSupportLabel(stat));
+  }).join(' · ') + '</span>';
+}
+
+function measurementSupportLabel(stat) {
+  const supported = Number(stat?.supported_n || 0);
+  const relevant = Number(stat?.relevant_n || 0);
+  if (!supported || !relevant) return 'UNAVAILABLE';
+  const coverage = Number(stat?.completeness || 0);
+  const level = coverage >= 0.80 ? 'GOOD' : coverage >= 0.50 ? 'MODERATE' : 'LIMITED';
+  return level + ' · ' + Math.round(coverage * 100) + '%';
+}
+
+function hkaViewSummary(phase, mode) {
+  if (mode === 'compare') {
+    return 'The injured and opposite-side projected HKA configurations are compared through this phase.';
+  }
+  const metric = mode === 'injured' ? 'injured_hka_angle_2d_deg' : 'contralateral_hka_angle_2d_deg';
+  const label = mode === 'injured' ? 'injured-side' : 'opposite-side';
+  const stat = phaseMetricStat(phase, metric);
+  const change = canonicalStatChange(stat);
+  if (!Number.isFinite(change)) return 'The ' + label + ' HKA configuration is unavailable at one or both phase endpoints.';
+  if (Math.abs(change) < 8) return 'The ' + label + ' projected HKA configuration remained relatively stable through the phase.';
+  return change > 0
+    ? 'The ' + label + ' projected HKA configuration became more open through the phase.'
+    : 'The ' + label + ' projected HKA configuration became more closed through the phase.';
+}
+
+function phaseHkaPeakSummary(phase) {
+  const stat = phaseMetricStat(phase, 'hka_projected_bilateral_absolute_difference_deg');
+  if (!Number.isFinite(Number(stat?.maximum))) return '';
+  return '<div class="phase-mini-values"><span>Peak absolute difference</span><strong>'
+    + formatDegrees(stat.maximum) + ' · source frame ' + stat.maximum_frame + '</strong></div>';
 }
 
 function phaseSnapshotsHtml(phase, snapshots) {
@@ -2997,7 +3135,7 @@ function storyObservationSupport(visualStory, category) {
   return (visualStory?.observations || []).find((item) => item.category === category) || null;
 }
 
-function phaseVisualAvailable(visualStory, category) {
+function phaseVisualAvailable(visualStory, category, hkaMode = 'injured') {
   if (!visualStory) return false;
   if (category === 'bilateral_limb_relationship') {
     const phase = phaseForStory(visualStory);
@@ -3007,8 +3145,17 @@ function phaseVisualAvailable(visualStory, category) {
   }
   if (category === 'hip_knee_ankle_chain') {
     const phase = phaseForStory(visualStory);
-    const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
-    return [stat?.start_value, stat?.end_value].every((value) => Number.isFinite(Number(value)));
+    if (hkaMode === 'compare') {
+      return ['injured_hka_angle_2d_deg', 'contralateral_hka_angle_2d_deg'].some((metric) => (
+        phaseMetricPoints(metric, phase).some((point) => point.value !== null)
+      ));
+    }
+    const metric = hkaMode === 'opposite'
+      ? 'contralateral_hka_angle_2d_deg'
+      : 'injured_hka_angle_2d_deg';
+    const stat = phaseMetricStat(phase, metric);
+    return [stat?.start_value, stat?.end_value]
+      .every((value) => Number.isFinite(Number(value)));
   }
   const phase = phaseForStory(visualStory);
   if (category === 'trunk_pelvis') return canonicalTorsoState(phase, 'start_value', 360, 132) !== null
@@ -3020,8 +3167,8 @@ function phaseVisualAvailable(visualStory, category) {
 function storyCategoryPlainLabel(category) {
   return {
     movement_path: 'Movement path',
-    hip_knee_ankle_chain: 'Injured-side hip–knee–ankle configuration',
-    bilateral_limb_relationship: 'Injured vs opposite-side HKA',
+    hip_knee_ankle_chain: 'Hip–knee–ankle configuration',
+    bilateral_limb_relationship: 'Hip–knee–ankle configuration',
     trunk_pelvis: 'Trunk & pelvis',
     upper_body: 'Upper body',
     movement_timing: 'Movement timing',
@@ -3042,7 +3189,7 @@ function storyCategoryAction(category) {
 function storyCategoryChangeSummary(category, phase) {
   if (category === 'hip_knee_ankle_chain') {
     const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
-    const change = Number(stat?.change);
+    const change = canonicalStatChange(stat);
     if (!Number.isFinite(change)) {
       return 'The supported injured-side projected hip-knee-ankle configuration is shown for this phase.';
     }
@@ -3057,7 +3204,7 @@ function storyCategoryChangeSummary(category, phase) {
   }
   if (category === 'trunk_pelvis') {
     const changes = torsoMetricDefinitions().map((item) => (
-      Math.abs(Number(phaseMetricStat(phase, item.metric)?.change))
+      Math.abs(Number(canonicalStatChange(phaseMetricStat(phase, item.metric))))
     )).filter(Number.isFinite);
     if (changes.length && Math.max(...changes) < 8) {
       return 'The projected trunk, shoulder, and hip lines remained relatively stable through the phase.';
@@ -3068,7 +3215,7 @@ function storyCategoryChangeSummary(category, phase) {
     const side = upperBodySide(phase);
     if (!side) return 'Supported projected arm geometry is shown for this phase.';
     const changes = upperBodyMetricDefinitions(side).map((item) => (
-      Math.abs(Number(phaseMetricStat(phase, item.metric)?.change))
+      Math.abs(Number(canonicalStatChange(phaseMetricStat(phase, item.metric))))
     )).filter(Number.isFinite);
     if (changes.length && Math.max(...changes) < 8) {
       return 'The ' + side + ' projected arm configuration remained relatively stable through the phase.';
@@ -3112,7 +3259,10 @@ function drawPhaseStoryVisual(canvas, visualStory, category) {
     return;
   }
   if (category === 'hip_knee_ankle_chain') {
-    drawPhaseInjuredHkaMini(ctx, width, height, visualStory);
+    const mode = canvas.dataset.hkaMode || 'injured';
+    if (mode === 'compare') drawPhaseBilateralMini(ctx, width, height, visualStory);
+    else if (mode === 'opposite') drawPhaseOppositeHkaMini(ctx, width, height, visualStory);
+    else drawPhaseInjuredHkaMini(ctx, width, height, visualStory);
     return;
   }
   if (category === 'trunk_pelvis') {
@@ -3139,16 +3289,26 @@ function phaseMetricPoints(metric, phase) {
   ));
 }
 
-function phaseMeasurementSummaryHtml(phase, category) {
+function phaseMeasurementSummaryHtml(phase, category, hkaMode = 'injured') {
   if (category === 'hip_knee_ankle_chain') {
-    const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
-    if (![stat?.start_value, stat?.end_value, stat?.change].every((value) => Number.isFinite(Number(value)))) {
-      return '<div class="phase-mini-values"><span>Projected HKA angle</span><strong>Endpoint unavailable</strong></div>';
+    if (hkaMode === 'compare') return '';
+    const metric = hkaMode === 'opposite'
+      ? 'contralateral_hka_angle_2d_deg'
+      : 'injured_hka_angle_2d_deg';
+    const label = hkaMode === 'opposite' ? 'Opposite projected HKA' : 'Injured projected HKA';
+    const stat = phaseMetricStat(phase, metric);
+    const change = canonicalStatChange(stat);
+    if (![stat?.start_value, stat?.end_value, change]
+      .every((value) => Number.isFinite(Number(value)))) {
+      return '<div class="phase-mini-values"><span>' + label
+        + '</span><strong>Start or end unavailable</strong></div>';
     }
     return '<div class="phase-mini-values">'
-      + '<span>Projected HKA angle</span><strong>' + formatDegrees(stat.start_value) + ' &rarr; '
+      + '<span><small class="angle-kind">Configuration</small><br />' + label
+      + '</span><strong>' + formatDegrees(stat.start_value) + ' &rarr; '
       + formatDegrees(stat.end_value) + '</strong>'
-      + '<span class="phase-mini-delta">Change ' + formatSignedDegrees(stat.change) + '</span>'
+      + '<span class="phase-mini-delta">Signed configuration change '
+      + formatSignedDegrees(change) + '</span>'
       + '</div>';
   }
   if (category === 'trunk_pelvis') {
@@ -3163,24 +3323,45 @@ function phaseMeasurementSummaryHtml(phase, category) {
 
 function phaseMetricRowsHtml(phase, definitions) {
   const rows = definitions.map((item) => ({...item, stat: phaseMetricStat(phase, item.metric)}))
-    .filter((item) => [item.stat?.start_value, item.stat?.end_value, item.stat?.change]
+    .filter((item) => [item.stat?.start_value, item.stat?.end_value, canonicalStatChange(item.stat)]
       .every((value) => Number.isFinite(Number(value))));
   if (!rows.length) return '';
   return '<div class="phase-mini-values multi">' + rows.map((item) => (
-    '<span>' + escapeHtml(item.label) + '</span><strong>'
+    '<span><small class="angle-kind">' + escapeHtml(item.kind) + '</small><br />'
+    + escapeHtml(item.label) + (item.tooltip ? ' <span class="info-icon" title="'
+      + escapeHtml(item.tooltip) + '" aria-label="Orientation definition">ⓘ</span>' : '')
+    + '</span><strong>'
     + formatDegrees(item.stat.start_value) + ' &rarr; ' + formatDegrees(item.stat.end_value)
-    + ' &middot; Change ' + formatSignedDegrees(item.stat.change) + '</strong>'
+    + ' &middot; ' + escapeHtml(changeLabel(item.stat)) + ' '
+    + formatSignedDegrees(canonicalStatChange(item.stat)) + '</strong>'
   )).join('') + '</div>';
 }
 
 function torsoMetricDefinitions() {
   return [
-    {metric: 'projected_trunk_axis_angle_deg', label: 'Trunk axis'},
-    {metric: 'projected_hip_line_angle_deg', label: 'Hip line'},
-    {metric: 'projected_shoulder_line_angle_deg', label: 'Shoulder line'},
+    {
+      metric: 'projected_trunk_axis_angle_deg',
+      label: 'Trunk-axis orientation',
+      kind: 'Directed orientation',
+      tooltip: orientationExplanation('projected_trunk_axis_angle_deg'),
+    },
+    {
+      metric: 'projected_hip_line_angle_deg',
+      label: 'Hip-line axis orientation',
+      kind: 'Axis orientation',
+      tooltip: orientationExplanation('projected_hip_line_angle_deg'),
+    },
+    {
+      metric: 'projected_shoulder_line_angle_deg',
+      label: 'Shoulder-line axis orientation',
+      kind: 'Axis orientation',
+      tooltip: orientationExplanation('projected_shoulder_line_angle_deg'),
+    },
     {
       metric: 'projected_shoulder_pelvis_orientation_difference_deg',
-      label: 'Shoulder-hip relationship',
+      label: 'Shoulder–hip signed relative orientation',
+      kind: 'Relative orientation',
+      tooltip: orientationExplanation('projected_shoulder_pelvis_orientation_difference_deg'),
     },
   ];
 }
@@ -3188,20 +3369,32 @@ function torsoMetricDefinitions() {
 function upperBodyMetricDefinitions(side) {
   const label = side.charAt(0).toUpperCase() + side.slice(1);
   return [
-    {metric: `${side}_elbow_angle_2d_deg`, label: label + ' elbow angle'},
-    {metric: `${side}_upper_arm_orientation_2d_deg`, label: label + ' upper-arm orientation'},
+    {
+      metric: `${side}_elbow_angle_2d_deg`,
+      label: label + ' elbow configuration',
+      kind: 'Configuration',
+      tooltip: 'The internal angle made by the projected shoulder–elbow–wrist chain.',
+    },
+    {
+      metric: `${side}_upper_arm_orientation_2d_deg`,
+      label: label + ' upper-arm orientation',
+      kind: 'Directed orientation',
+      tooltip: orientationExplanation(`${side}_upper_arm_orientation_2d_deg`),
+    },
   ];
 }
 
 function upperBodySide(phase) {
   const candidates = ['left', 'right'].map((side) => {
     const stats = upperBodyMetricDefinitions(side).map((item) => phaseMetricStat(phase, item.metric));
-    const valid = stats.every((stat) => [stat?.start_value, stat?.end_value, stat?.change]
+    const valid = stats.every((stat) => [stat?.start_value, stat?.end_value, canonicalStatChange(stat)]
       .every((value) => Number.isFinite(Number(value))));
     return {
       side,
       valid,
-      magnitude: valid ? Math.max(...stats.map((stat) => Math.abs(Number(stat.change)))) : -1,
+      magnitude: valid
+        ? Math.max(...stats.map((stat) => Math.abs(Number(canonicalStatChange(stat)))))
+        : -1,
     };
   }).filter((item) => item.valid).sort((a, b) => b.magnitude - a.magnitude);
   return candidates[0]?.side || null;
@@ -3222,9 +3415,33 @@ function injuredSide() {
 }
 
 function drawPhaseInjuredHkaMini(ctx, width, height, visualStory) {
+  drawPhaseHkaMini(
+    ctx,
+    width,
+    height,
+    visualStory,
+    'injured_hka_angle_2d_deg',
+    injuredSide(),
+    'injured limb',
+  );
+}
+
+function drawPhaseOppositeHkaMini(ctx, width, height, visualStory) {
+  const side = injuredSide() === 'left' ? 'right' : 'left';
+  drawPhaseHkaMini(
+    ctx,
+    width,
+    height,
+    visualStory,
+    'contralateral_hka_angle_2d_deg',
+    side,
+    'opposite limb',
+  );
+}
+
+function drawPhaseHkaMini(ctx, width, height, visualStory, metric, side, limbLabel) {
   const phase = phaseForStory(visualStory);
-  const stat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
-  const side = injuredSide();
+  const stat = phaseMetricStat(phase, metric);
   if (![stat?.start_value, stat?.end_value].every((value) => Number.isFinite(Number(value)))) return;
   const start = canonicalHkaState(Number(stat.start_value), side, width, height);
   const end = canonicalHkaState(Number(stat.end_value), side, width, height);
@@ -3235,7 +3452,7 @@ function drawPhaseInjuredHkaMini(ctx, width, height, visualStory) {
   drawJointLabels(ctx, end, ['H', 'K', 'A']);
   ctx.fillStyle = '#627181';
   ctx.font = '10px sans-serif';
-  ctx.fillText(side.charAt(0).toUpperCase() + side.slice(1) + ' injured limb', 9, 13);
+  ctx.fillText(side.charAt(0).toUpperCase() + side.slice(1) + ' ' + limbLabel, 9, 13);
 }
 
 function canonicalHkaState(angleDegrees, side, width, height) {
@@ -3456,7 +3673,7 @@ function drawPhaseBilateralMini(ctx, width, height, visualStory) {
     .map((point) => Number(point.value));
   if (!phase || values.length < 2) return;
   const mapping = result?.movement_visual_story?.laterality_mapping || {};
-  const bilateral = phase?.category_summaries?.bilateral_limb_relationship?.metrics || {};
+  const bilateral = phaseMetricStat(phase, 'hka_projected_bilateral_absolute_difference_deg') || {};
   const minValue = Math.min(...values);
   const maxValue = Math.max(...values);
   const left = 12;
@@ -3476,7 +3693,7 @@ function drawPhaseBilateralMini(ctx, width, height, visualStory) {
     drawTrajectoryPoint(ctx, project(finite[0]), index === 0 ? '#215f9a' : '#176d4d', 2.5);
     drawTrajectoryPoint(ctx, project(finite[finite.length - 1]), index === 0 ? '#215f9a' : '#176d4d', 2.5);
   });
-  const peakFrame = Number(bilateral.source_frame_of_maximum);
+  const peakFrame = Number(bilateral.maximum_frame);
   const injuredPeak = injured.find((point) => point.frame === peakFrame && point.value !== null);
   const oppositePeak = opposite.find((point) => point.frame === peakFrame && point.value !== null);
   if (injuredPeak && oppositePeak) {
@@ -3504,9 +3721,9 @@ function drawPhaseBilateralMini(ctx, width, height, visualStory) {
   ctx.fillText('Phase start', 12, height - 5);
   const endLabel = 'Phase end';
   ctx.fillText(endLabel, width - ctx.measureText(endLabel).width - 12, height - 5);
-  if (Number.isFinite(Number(bilateral.maximum_absolute_hka_difference_deg))) {
+  if (Number.isFinite(Number(bilateral.maximum))) {
     const callout = (width < 320 ? 'Peak ' : 'Peak gap ')
-      + Number(bilateral.maximum_absolute_hka_difference_deg).toFixed(1) + '° · f' + peakFrame;
+      + Number(bilateral.maximum).toFixed(1) + '° · f' + peakFrame;
     ctx.fillText(callout, Math.max(70, (width - ctx.measureText(callout).width) / 2), height - 5);
   }
 }
@@ -3680,8 +3897,13 @@ function renderSelectedFeature() {
     return;
   }
   const presentation = featurePresentation(feature);
+  const primaryMetric = feature.metrics?.[0] || '';
+  const orientationNote = metricSpec(primaryMetric)?.angle_type
+    ? ' ' + orientationExplanation(primaryMetric)
+    : '';
   $('featureTitle').innerHTML = escapeHtml(presentation.name)
-    + '<span class="info-icon" title="' + escapeHtml(presentation.limitation) + '" aria-label="Measurement information">ⓘ</span>';
+    + '<span class="info-icon" title="' + escapeHtml(presentation.limitation + orientationNote)
+    + '" aria-label="Measurement information">ⓘ</span>';
   $('featureDescription').textContent = presentation.definition;
   $('featureTechnicalLabel').textContent = presentation.technical;
 
@@ -3759,7 +3981,7 @@ function featurePresentation(feature) {
       limitation: 'A video-derived image-plane relationship. It is not a true three-dimensional joint displacement.',
     },
     trunk_orientation: {
-      name: 'Upper-body orientation',
+      name: 'Trunk orientation',
       definition: 'How the projected direction of the player\'s trunk changes through the movement.',
       technical: 'Projected trunk-axis orientation (°)',
       limitation: 'A projected image-plane orientation, not true three-dimensional trunk flexion or lean.',
@@ -3777,10 +3999,10 @@ function featurePresentation(feature) {
       limitation: 'A projected image-plane orientation, not three-dimensional torso rotation.',
     },
     shoulder_pelvis_relationship: {
-      name: 'Shoulder–pelvis relationship',
-      definition: 'How the projected shoulder line changes relative to the projected hip line.',
-      technical: 'Projected shoulder–pelvis orientation difference (°)',
-      limitation: 'This does not measure spinal or lumbar rotation.',
+      name: 'Shoulder–hip relative orientation',
+      definition: 'The signed difference between the projected shoulder-line and hip-line orientations.',
+      technical: 'Projected shoulder-line minus hip-line orientation (°)',
+      limitation: 'This preserves the existing left-to-right endpoint ordering. It does not measure spinal or lumbar rotation.',
     },
     elbow_pair: {
       name: 'Elbow configuration',
@@ -3919,6 +4141,7 @@ function isInSupportedEvidenceRange(frame) {
 
 function featureStats(feature) {
   const primaryMetric = feature.metrics[0];
+  const wholeStats = result.metric_explorer?.whole_movement_statistics?.[primaryMetric] || {};
   const primary = supportedSeries(primaryMetric);
   const supported = primary.filter((point) => point.value !== null);
   const values = supported.map((point) => point.value);
@@ -3929,12 +4152,19 @@ function featureStats(feature) {
   const sorted = [...values].sort((a, b) => a - b);
   const mean = values.reduce((total, value) => total + value, 0) / values.length;
   const variance = values.reduce((total, value) => total + Math.pow(value - mean, 2), 0) / values.length;
+  const sameEndpoints = Number(wholeStats.start_frame) === Number(start.frame)
+    && Number(wholeStats.end_frame) === Number(end.frame);
+  const canonicalChange = sameEndpoints ? canonicalStatChange(wholeStats) : null;
+  const change = Number.isFinite(Number(canonicalChange))
+    ? Number(canonicalChange)
+    : wholeStats.angle_type ? null : end.value - start.value;
   return {
     status: values.length >= 8 ? 'Supported' : 'Limited',
     unit,
     start: start.value,
     end: end.value,
-    change: end.value - start.value,
+    change,
+    angleType: wholeStats.angle_type || null,
     min: sorted[0],
     max: sorted[sorted.length - 1],
     mean,
@@ -3962,6 +4192,7 @@ function unavailableStats(unit = '', metric = '') {
     start: null,
     end: null,
     change: null,
+    angleType: null,
     min: null,
     max: null,
     mean: null,
@@ -3979,11 +4210,21 @@ function unavailableStats(unit = '', metric = '') {
 }
 
 function headlineHtml(stats) {
+  const signedLabel = stats.angleType === 'axis'
+    ? 'Shortest axial reorientation'
+    : stats.angleType === 'directed'
+      ? 'Shortest directed reorientation'
+      : stats.angleType === 'internal'
+        ? 'Signed configuration change'
+        : 'Signed change';
+  const absoluteLabel = stats.angleType === 'internal'
+    ? 'Absolute configuration change'
+    : stats.angleType ? 'Absolute reorientation' : 'Absolute change';
   return [
     ['Start', formatValue(stats.start, stats.unit)],
     ['End', formatValue(stats.end, stats.unit)],
-    ['Signed change', formatSigned(stats.change, stats.unit)],
-    ['Absolute change', formatValue(Math.abs(stats.change), stats.unit)]
+    [signedLabel, formatSigned(stats.change, stats.unit)],
+    [absoluteLabel, formatValue(stats.change === null ? null : Math.abs(stats.change), stats.unit)]
   ].map(([label, value]) => '<div class="value-card"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
 }
 
@@ -4026,6 +4267,12 @@ function trajectoryInterpretation(feature, stats) {
       return 'The paired projected trajectories ' + relationship + ' between the first and last supported frames. '
         + gapSignalSentence(metric);
     }
+  }
+  if (['directed', 'axis'].includes(stats.angleType)) {
+    const kind = stats.angleType === 'axis' ? 'axis' : 'directed segment';
+    return 'Across supported frames, the projected ' + kind + ' reoriented by '
+      + formatSigned(stats.change, stats.unit) + ' using its shortest signed convention. '
+      + gapSignalSentence(metric);
   }
   const direction = Number(stats.change) > 0 ? 'increased' : Number(stats.change) < 0 ? 'decreased' : 'remained stable';
   const peak = largestChangeFrame(metric);
@@ -4213,7 +4460,10 @@ function strongestAvailableSentence(phase, metricLabels) {
   const candidates = metricLabels
     .map(([metric, label]) => ({metric, label, stat: phaseMetricStat(phase, metric)}))
     .filter((item) => item.stat)
-    .sort((a, b) => Math.abs(Number(b.stat.change || 0)) - Math.abs(Number(a.stat.change || 0)));
+    .sort((a, b) => (
+      Math.abs(Number(canonicalStatChange(b.stat) || 0))
+      - Math.abs(Number(canonicalStatChange(a.stat) || 0))
+    ));
   const best = candidates[0];
   return best ? phaseMetricObjectSentence(best.stat, best.label) : '';
 }
@@ -4228,6 +4478,35 @@ function phaseMetricStat(phase, metric) {
   return rows.find((row) => Number(row.phase_index) === Number(phase.phase_index));
 }
 
+function canonicalStatChange(stat) {
+  const canonical = Number(stat?.canonical_signed_change);
+  if (Number.isFinite(canonical)) return canonical;
+  const existing = Number(stat?.change);
+  return Number.isFinite(existing) ? existing : null;
+}
+
+function changeLabel(stat) {
+  if (stat?.angle_type === 'axis') return 'Axial reorientation';
+  if (stat?.angle_type === 'directed') return 'Directed reorientation';
+  if (stat?.angle_type === 'internal') return 'Configuration change';
+  return 'Change';
+}
+
+function orientationExplanation(metric) {
+  if (metric === 'projected_shoulder_pelvis_orientation_difference_deg') {
+    return 'Signed shoulder-line orientation minus hip-line orientation. Both source segments are ordered from the athlete’s left landmark to right landmark. Positive means the shoulder line is counter-clockwise relative to the hip line in the image-plane convention; negative means clockwise.';
+  }
+  const angleType = metricSpec(metric)?.angle_type;
+  const reference = '0° points along the positive image x-axis (screen right). Image y is inverted for the calculation, so positive rotation is counter-clockwise on screen and negative rotation is clockwise.';
+  if (angleType === 'axis') {
+    return 'Undirected projected body axis. ' + reference + ' Orientations 180° apart describe the same line, so displayed change is the shortest signed axial reorientation from −90° to less than +90°.';
+  }
+  if (angleType === 'directed') {
+    return 'Directed projected segment. ' + reference + ' Displayed change is the shortest signed circular reorientation from −180° to less than +180°.';
+  }
+  return 'Configuration angle: the internal projected angle made by connected body segments. Change is end minus start; circular wrapping is not applied.';
+}
+
 function phaseMetricObjectSentence(stat, label) {
   const unit = displayUnit(stat.unit || '', '');
   const startFrame = stat.start_frame ?? stat.source_frame_start;
@@ -4237,7 +4516,8 @@ function phaseMetricObjectSentence(stat, label) {
   const maxFrame = stat.maximum_frame ? ', max f' + stat.maximum_frame : '';
   return label + ': ' + formatValue(stat.start_value, unit) + ' at f' + startFrame
     + ' to ' + formatValue(stat.end_value, unit) + ' at f' + endFrame
-    + ' (' + formatSigned(stat.change, unit) + ')' + minFrame + maxFrame + '.';
+    + ' (' + changeLabel(stat) + ' ' + formatSigned(canonicalStatChange(stat), unit) + ')'
+    + minFrame + maxFrame + '.';
 }
 
 function pairDifferenceSentence(phase, leftMetric, rightMetric, label) {
@@ -4300,13 +4580,13 @@ function measurementSupportLevel(stats) {
 function whyPhaseHtml() {
   const phase = phaseForFrame(currentFrame) || (result?.movement_story?.phases || [])[0];
   if (!phase) return '<p class="subtle">No supported phase story is available for this frame.</p>';
-  const drivers = phaseDrivers(phase).slice(0, 3);
+  const drivers = canonicalPhaseDrivers(phaseDrivers(phase)).slice(0, 3);
   const primary = drivers[0];
   const compact = primary ? phaseDefinitionSentence(phase, primary) : phaseFallbackSentence(phase);
   const details = drivers.length
     ? '<details class="advanced-details"><summary>Show measured details</summary><ul>' + drivers.map((driver) => (
       '<li><strong>' + escapeHtml(driver.label) + '</strong>: '
-      + escapeHtml(friendlyObservation(driver.summary))
+      + escapeHtml(phaseDefinitionSentence(phase, driver))
       + ' <span class="status">' + escapeHtml(driver.status) + '</span></li>'
     )).join('') + '</ul></details>'
     : '';
@@ -4330,10 +4610,18 @@ function phaseDefinitionSentence(phase, primary) {
     }
   }
   if (category === 'trunk_pelvis') {
-    return largestMetricChangeSentence(summaries.trunk_pelvis?.metrics, 'the trunk/pelvis relationship changed most clearly');
+    return largestMetricChangeSentence(
+      phase,
+      summaries.trunk_pelvis?.metrics,
+      'the trunk/pelvis relationship changed most clearly',
+    );
   }
   if (category === 'upper_body') {
-    return largestMetricChangeSentence(summaries.upper_body?.metrics, 'the arm positions changed most clearly');
+    return largestMetricChangeSentence(
+      phase,
+      summaries.upper_body?.metrics,
+      'the arm positions changed most clearly',
+    );
   }
   return friendlyObservation(primary.summary || phaseFallbackSentence(phase));
 }
@@ -4342,18 +4630,28 @@ function phaseFallbackSentence(phase) {
   return 'the supported movement evidence follows a consistent pattern across this interval.';
 }
 
-function largestMetricChangeSentence(metrics, fallback) {
+function largestMetricChangeSentence(phase, metrics, fallback) {
   const entries = Object.entries(metrics || {})
-    .filter(([, stat]) => Number.isFinite(Number(stat?.change)))
-    .sort((a, b) => Math.abs(Number(b[1].change)) - Math.abs(Number(a[1].change)));
+    .map(([metric, stat]) => [metric, phaseMetricStat(phase, metric) || stat])
+    .filter(([, stat]) => Number.isFinite(Number(canonicalStatChange(stat))))
+    .sort((a, b) => (
+      Math.abs(Number(canonicalStatChange(b[1])))
+      - Math.abs(Number(canonicalStatChange(a[1])))
+    ));
   const strongest = entries[0];
   const second = entries[1];
   if (!strongest) return fallback + '.';
-  const main = readableMetricName(strongest[0]) + ' changed by '
-    + formatSigned(strongest[1].change, displayUnit(strongest[1].unit || '', strongest[0]));
+  const main = readableMetricName(strongest[0]) + ' ' + changeLabel(strongest[1]).toLowerCase()
+    + ' was ' + formatSigned(
+      canonicalStatChange(strongest[1]),
+      displayUnit(strongest[1].unit || '', strongest[0]),
+    );
   const supporting = second
-    ? ', while ' + readableMetricName(second[0]) + ' changed by '
-      + formatSigned(second[1].change, displayUnit(second[1].unit || '', second[0]))
+    ? ', while ' + readableMetricName(second[0]) + ' ' + changeLabel(second[1]).toLowerCase()
+      + ' was ' + formatSigned(
+        canonicalStatChange(second[1]),
+        displayUnit(second[1].unit || '', second[0]),
+      )
     : '';
   return main + supporting + '.';
 }
@@ -4503,7 +4801,7 @@ function phaseComparisonHtml(feature, stats) {
     + phaseStats.map((phase) => (
       '<tr><td><strong>P' + phase.phase_index + '</strong><br />'
       + escapeHtml(phase.phase_title || '') + '</td><td>'
-      + formatSigned(phase.change, unit) + '</td><td>'
+      + formatSigned(canonicalStatChange(phase), unit) + '</td><td>'
       + formatValue(phase.mean, unit) + '</td><td>'
       + (phase.supported_n ?? 0) + '/' + (phase.relevant_n ?? 0)
       + '<br />' + percent(phase.completeness) + '</td></tr>'
