@@ -1,0 +1,42 @@
+{
+  "run_metadata": {
+    "run_id": "case_01_acl_candidate_signature_20260816T205141Z",
+    "generated_at": "2026-08-16T20:51:41.769637+00:00",
+    "case_id": "case_01_acl_candidate",
+    "source_id": "case_01_view_01",
+    "signature_version": "m5_9_1_case_movement_signature_v1",
+    "registry_version": "m5_9_1_clustering_feature_registry_v1",
+    "movement_window": {
+      "movement_start_frame": 120,
+      "movement_start_timestamp_ms": 4000.0,
+      "movement_end_frame": 237,
+      "movement_end_timestamp_ms": 7900.0,
+      "movement_duration_ms": 3900.0,
+      "confidence": "moderate",
+      "rationale": "",
+      "source": "human_ui_movement_window",
+      "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+    },
+    "path_quality_status": "SUPPORTED",
+    "missingness_policy": "unsupported descriptors remain NA; no zero filling or mean imputation",
+    "phase_alignment_policy": "phase numbers are within-case labels and are not cross-case alignment keys"
+  },
+  "summary": {
+    "candidate_descriptor_count": 18,
+    "eligible_descriptor_count": 18,
+    "unavailable_descriptor_count": 0,
+    "excluded_descriptor_count": 0,
+    "exclusion_counts": {},
+    "descriptor_counts_by_family": {
+      "HKA": 4,
+      "Bilateral": 4,
+      "Trunk/Pelvis": 3,
+      "Phase Structure": 3,
+      "Upper Body": 2,
+      "Movement Path": 2
+    }
+  },
+  "long_output": "data/signatures/human/case_01_case_movement_signature_long.csv",
+  "matrix_output": "data/signatures/human/case_01_case_movement_signature_matrix.csv",
+  "registry_output": "data/signatures/human/case_01_clustering_feature_registry.csv"
+}

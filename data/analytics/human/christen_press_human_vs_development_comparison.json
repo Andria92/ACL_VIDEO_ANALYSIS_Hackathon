@@ -1,0 +1,531 @@
+{
+  "roi_agreement": {
+    "frames_evaluated": 156,
+    "mean_iou": 0.3960882454440243,
+    "median_iou": 0.4462945999785396,
+    "minimum_iou": 0.0,
+    "low_agreement_frames": [
+      {
+        "frame_index": 29,
+        "iou": 0.48991094160370735
+      },
+      {
+        "frame_index": 30,
+        "iou": 0.45139129269132283
+      },
+      {
+        "frame_index": 31,
+        "iou": 0.4130417282458227
+      },
+      {
+        "frame_index": 32,
+        "iou": 0.37484997120189456
+      },
+      {
+        "frame_index": 33,
+        "iou": 0.3397397318534829
+      },
+      {
+        "frame_index": 34,
+        "iou": 0.30460203055319024
+      },
+      {
+        "frame_index": 35,
+        "iou": 0.2694263068323746
+      },
+      {
+        "frame_index": 36,
+        "iou": 0.27622884493413774
+      },
+      {
+        "frame_index": 37,
+        "iou": 0.28267771751472837
+      },
+      {
+        "frame_index": 38,
+        "iou": 0.2874858053382494
+      },
+      {
+        "frame_index": 39,
+        "iou": 0.2921808213953516
+      },
+      {
+        "frame_index": 40,
+        "iou": 0.29676324217919714
+      },
+      {
+        "frame_index": 41,
+        "iou": 0.3012336270580754
+      },
+      {
+        "frame_index": 42,
+        "iou": 0.35267600924445175
+      },
+      {
+        "frame_index": 43,
+        "iou": 0.4026220252352237
+      },
+      {
+        "frame_index": 44,
+        "iou": 0.45102048771871195
+      },
+      {
+        "frame_index": 45,
+        "iou": 0.49457246266654376
+      },
+      {
+        "frame_index": 55,
+        "iou": 0.46884468970791493
+      },
+      {
+        "frame_index": 56,
+        "iou": 0.4359406888878257
+      },
+      {
+        "frame_index": 57,
+        "iou": 0.40355388362000727
+      },
+      {
+        "frame_index": 58,
+        "iou": 0.3716689059781119
+      },
+      {
+        "frame_index": 59,
+        "iou": 0.3402709519729496
+      },
+      {
+        "frame_index": 60,
+        "iou": 0.3093457554616034
+      },
+      {
+        "frame_index": 61,
+        "iou": 0.2788795634848555
+      },
+      {
+        "frame_index": 62,
+        "iou": 0.2488591129424081
+      },
+      {
+        "frame_index": 63,
+        "iou": 0.2192716085218719
+      },
+      {
+        "frame_index": 64,
+        "iou": 0.19010470180347894
+      },
+      {
+        "frame_index": 65,
+        "iou": 0.16134647146796344
+      },
+      {
+        "frame_index": 66,
+        "iou": 0.16924901008056595
+      },
+      {
+        "frame_index": 67,
+        "iou": 0.17758411723096332
+      },
+      {
+        "frame_index": 68,
+        "iou": 0.1863876894956537
+      },
+      {
+        "frame_index": 69,
+        "iou": 0.19569970405215578
+      },
+      {
+        "frame_index": 70,
+        "iou": 0.20556481543899904
+      },
+      {
+        "frame_index": 71,
+        "iou": 0.2160330601972111
+      },
+      {
+        "frame_index": 72,
+        "iou": 0.2271606928532608
+      },
+      {
+        "frame_index": 73,
+        "iou": 0.23897413752750749
+      },
+      {
+        "frame_index": 74,
+        "iou": 0.25086410787542923
+      },
+      {
+        "frame_index": 75,
+        "iou": 0.2635323053592674
+      },
+      {
+        "frame_index": 76,
+        "iou": 0.2770587581836792
+      },
+      {
+        "frame_index": 94,
+        "iou": 0.4884869056124024
+      },
+      {
+        "frame_index": 95,
+        "iou": 0.4723998159846543
+      },
+      {
+        "frame_index": 96,
+        "iou": 0.45676632581333854
+      },
+      {
+        "frame_index": 97,
+        "iou": 0.44156871223836724
+      },
+      {
+        "frame_index": 98,
+        "iou": 0.4710039466993793
+      },
+      {
+        "frame_index": 108,
+        "iou": 0.45441486128808445
+      },
+      {
+        "frame_index": 109,
+        "iou": 0.3732300863048015
+      },
+      {
+        "frame_index": 110,
+        "iou": 0.30047168652508965
+      },
+      {
+        "frame_index": 111,
+        "iou": 0.2349518131388567
+      },
+      {
+        "frame_index": 112,
+        "iou": 0.17570050582918673
+      },
+      {
+        "frame_index": 113,
+        "iou": 0.12191841309221982
+      },
+      {
+        "frame_index": 114,
+        "iou": 0.1432600489029084
+      },
+      {
+        "frame_index": 115,
+        "iou": 0.16592215643044503
+      },
+      {
+        "frame_index": 116,
+        "iou": 0.18999781258947823
+      },
+      {
+        "frame_index": 117,
+        "iou": 0.24137530794137815
+      },
+      {
+        "frame_index": 118,
+        "iou": 0.29551674278943163
+      },
+      {
+        "frame_index": 119,
+        "iou": 0.3527105502226624
+      },
+      {
+        "frame_index": 120,
+        "iou": 0.41328154759002883
+      },
+      {
+        "frame_index": 121,
+        "iou": 0.47759730281097357
+      },
+      {
+        "frame_index": 124,
+        "iou": 0.47436501804656855
+      },
+      {
+        "frame_index": 125,
+        "iou": 0.3704357386667644
+      },
+      {
+        "frame_index": 126,
+        "iou": 0.2772609200124545
+      },
+      {
+        "frame_index": 127,
+        "iou": 0.19339458600801573
+      },
+      {
+        "frame_index": 128,
+        "iou": 0.11762928133683496
+      },
+      {
+        "frame_index": 129,
+        "iou": 0.048949718313170215
+      },
+      {
+        "frame_index": 130,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 131,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 132,
+        "iou": 0.002148745643520317
+      },
+      {
+        "frame_index": 133,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 134,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 135,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 136,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 137,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 138,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 139,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 140,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 141,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 142,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 143,
+        "iou": 0.010589037969021789
+      },
+      {
+        "frame_index": 144,
+        "iou": 0.02491831567203556
+      },
+      {
+        "frame_index": 145,
+        "iou": 0.03976507401275189
+      },
+      {
+        "frame_index": 146,
+        "iou": 0.05516015410921969
+      },
+      {
+        "frame_index": 147,
+        "iou": 0.029393959748008056
+      },
+      {
+        "frame_index": 148,
+        "iou": 0.004880547905440502
+      },
+      {
+        "frame_index": 149,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 150,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 151,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 152,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 153,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 154,
+        "iou": 0.0
+      },
+      {
+        "frame_index": 155,
+        "iou": 0.0
+      }
+    ]
+  },
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 155,
+    "movement_end_timestamp_ms": 5166.666666666667,
+    "movement_duration_ms": 5166.666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "migrated_from_human_visible_sequence_end",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "human_roi_keyframes": 26,
+  "human_provenance": {
+    "annotation_session_id": "f87f49be-9945-4c4a-a384-17c905b2b67f",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-16T09:22:02.562881+00:00",
+    "updated_at": "2026-08-16T09:41:00.006181+00:00",
+    "case_id": "christen_press_acl",
+    "source_id": "christen_press_view_01",
+    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/02_YvnMYc6OdT8_160s-166s.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "coverage": {
+    "human": {
+      "target_tracking_coverage": 0.7692,
+      "pose_frame_coverage": 1.0,
+      "processed_pose_rows": 2652,
+      "frame_status_counts": {
+        "INVALID_TRACK_SEGMENT": 4,
+        "LOW_POSE_CONFIDENCE": 2,
+        "TARGET_IDENTITY_UNCERTAIN": 30,
+        "VALID_TARGET": 120
+      },
+      "landmark_status_counts": {
+        "IDENTITY_UNCERTAIN": 510,
+        "LOW_CONFIDENCE": 207,
+        "OBSERVED_VALID": 1790,
+        "REJECTED": 68,
+        "TEMPORAL_OUTLIER": 77
+      },
+      "evidence_label": "LIMITED EVIDENCE",
+      "human_target_verified": true,
+      "supported_feature_count": 13,
+      "limited_feature_count": 23,
+      "unavailable_feature_count": 0,
+      "analytics_ready_feature_count": 9,
+      "geometry_ready": 36,
+      "dynamic_ready": 9,
+      "geometry_coverage_mean": 0.7724358974358974,
+      "dynamic_coverage_mean": 0.4124896907738398,
+      "eligibility_counts": {
+        "LOW_DYNAMIC_RELIABILITY": 23,
+        "ANALYTICS_READY": 9,
+        "GEOMETRY_ONLY": 4
+      },
+      "quality_counts": {
+        "LIMITED": 23,
+        "SUPPORTED": 13
+      }
+    },
+    "development": {
+      "target_tracking_coverage": 0.5056,
+      "pose_frame_coverage": 0.8111,
+      "processed_pose_rows": 3060,
+      "frame_status_counts": {
+        "INVALID_TRACK_SEGMENT": 12,
+        "LOW_POSE_CONFIDENCE": 25,
+        "TARGET_IDENTITY_UNCERTAIN": 18,
+        "TARGET_NOT_FOUND": 34,
+        "VALID_TARGET": 91
+      },
+      "landmark_status_counts": {
+        "IDENTITY_UNCERTAIN": 306,
+        "LOW_CONFIDENCE": 487,
+        "MISSING": 578,
+        "OBSERVED_VALID": 1402,
+        "REJECTED": 204,
+        "TEMPORAL_OUTLIER": 83
+      },
+      "evidence_label": "MODERATE EVIDENCE",
+      "human_target_verified": true,
+      "supported_feature_count": 31,
+      "limited_feature_count": 5,
+      "unavailable_feature_count": 0,
+      "analytics_ready_feature_count": 27,
+      "geometry_ready": 34,
+      "dynamic_ready": 27,
+      "geometry_coverage_mean": 0.5004629629629629,
+      "dynamic_coverage_mean": 0.49194265597432923,
+      "eligibility_counts": {
+        "ANALYTICS_READY": 27,
+        "GEOMETRY_ONLY": 4,
+        "LOW_DYNAMIC_RELIABILITY": 3,
+        "LIMITED_COVERAGE": 2
+      },
+      "quality_counts": {
+        "SUPPORTED": 31,
+        "LIMITED": 5
+      }
+    }
+  },
+  "both_analytics_ready_feature_count": 7,
+  "notable_differences": [
+    {
+      "feature_name": "contralateral_elbow_angle_2d_deg",
+      "mean_difference": 8.914397048782021,
+      "range_difference": 12.189630193427291,
+      "geometry_completeness_difference": 0.25470085470085474,
+      "dynamic_completeness_difference": 0.015282131661441989
+    },
+    {
+      "feature_name": "hka_projected_bilateral_absolute_difference_deg",
+      "mean_difference": 1.1827979438261202,
+      "range_difference": 6.482631136375957,
+      "geometry_completeness_difference": 0.2876068376068376,
+      "dynamic_completeness_difference": 0.07542825566402656
+    },
+    {
+      "feature_name": "hka_projected_bilateral_difference_deg",
+      "mean_difference": 4.111623836280587,
+      "range_difference": 10.454873089959648,
+      "geometry_completeness_difference": 0.2876068376068376,
+      "dynamic_completeness_difference": -0.005341683551298604
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_absolute_difference",
+      "mean_difference": 0.007351723927318532,
+      "range_difference": -0.05284150473959415,
+      "geometry_completeness_difference": 0.2876068376068376,
+      "dynamic_completeness_difference": -0.03812856879720028
+    },
+    {
+      "feature_name": "left_elbow_angle_2d_deg",
+      "mean_difference": 8.914397048782021,
+      "range_difference": 12.189630193427291,
+      "geometry_completeness_difference": 0.25470085470085474,
+      "dynamic_completeness_difference": 0.015282131661441989
+    },
+    {
+      "feature_name": "left_wrist_pelvis_distance_normalized",
+      "mean_difference": 0.04980626164705326,
+      "range_difference": 0.1495648037361057,
+      "geometry_completeness_difference": 0.25555555555555554,
+      "dynamic_completeness_difference": -0.08268510515701533
+    },
+    {
+      "feature_name": "projected_shoulder_pelvis_orientation_difference_deg",
+      "mean_difference": -1.3001324394767249,
+      "range_difference": 184.13099010906083,
+      "geometry_completeness_difference": 0.2876068376068376,
+      "dynamic_completeness_difference": -0.11374102044575418
+    }
+  ],
+  "cross_case_analytics": {
+    "similarity_run": false,
+    "umap_run": false,
+    "clustering_run": false,
+    "association_rules_run": false,
+    "reason": "Only one human-validated Movement Profile exists."
+  }
+}

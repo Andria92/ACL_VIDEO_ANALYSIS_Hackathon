@@ -1,0 +1,69 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 107,
+    "INSUFFICIENT_EVIDENCE": 1,
+    "UNSTABLE_TRANSFORM": 1
+  },
+  "supported_samples": 107,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 1.9522814904415946,
+  "minimum_normalized_projected_speed_per_s": 0.024672916685602522,
+  "time_minimum_projected_speed_ms": -2000.0,
+  "maximum_normalized_projected_speed_per_s": 5.86159428763616,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": 23.586988819243086,
+    "late_heading_deg": -109.52094888573727,
+    "projected_change_of_direction_angle_deg": -133.10793770498034,
+    "absolute_projected_change_of_direction_angle_deg": 133.10793770498034,
+    "source_frame_start": 122,
+    "source_frame_end": 235,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "SUPPORTED",
+    "window_start_ms": -500.0,
+    "mean_prior_projected_speed": 2.0442202863811634,
+    "mean_final_projected_speed": 1.3612463736872225,
+    "projected_speed_change": -0.6829739126939409,
+    "descriptor": "PROJECTED_SLOWDOWN"
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 0.981651376146789,
+    "path_segment_counts": {
+      "path_segment_002": 58,
+      "path_segment_003": 25,
+      "path_segment_004": 24
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 0.981651376146789,
+      "path_segment_counts": {
+        "path_segment_002": 58,
+        "path_segment_003": 25,
+        "path_segment_004": 24
+      }
+    },
+    "affine": {
+      "validation_status": "QA_REQUIRED",
+      "reason": "Projected path contains a large step relative to the median supported step.",
+      "supported_fraction": 1.0,
+      "maximum_to_median_step_ratio": 7.157528592135581,
+      "path_segment_counts": {
+        "path_segment_001": 60,
+        "path_segment_002": 25,
+        "path_segment_003": 24
+      }
+    },
+    "chosen_method": "translation"
+  }
+}

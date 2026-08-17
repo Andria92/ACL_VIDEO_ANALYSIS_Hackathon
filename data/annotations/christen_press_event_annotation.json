@@ -1,0 +1,18 @@
+{
+  "case_id": "christen_press_acl",
+  "source_id": "christen_press_view_01",
+  "view_id": "christen_press_view_01",
+  "analysis_start_frame": 0,
+  "analysis_end_frame": 179,
+  "initial_contact_frame": 110,
+  "critical_plant_frame": 111,
+  "estimated_event_start_frame": 106,
+  "estimated_event_end_frame": 130,
+  "event_anchor_frame": 111,
+  "event_anchor_type": "critical_plant",
+  "collapse_frame": 130,
+  "annotation_confidence": 0.7,
+  "annotation_method": "manual_frame_review",
+  "annotator": "Codex manual review of local source frames",
+  "notes": "Source frame 111 is used as the movement-event anchor because it shows the clearest visible plant/control step immediately before the defender's contact. This is an annotated movement reference, not a physiological ACL rupture frame."
+}

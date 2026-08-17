@@ -1,0 +1,44 @@
+{
+  "overall_status": "QA_REQUIRED",
+  "status_counts": {
+    "QA_REQUIRED": 108,
+    "LOW_BACKGROUND_FEATURE_COUNT": 3,
+    "INSUFFICIENT_EVIDENCE": 2
+  },
+  "reason": "Projected path contains a large step relative to the median supported step.",
+  "camera_compensation_method": "partial affine/RANSAC sparse optical flow with human ROI masked",
+  "validation": {
+    "validation_status": "QA_REQUIRED",
+    "reason": "Projected path contains a large step relative to the median supported step."
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "QA_REQUIRED",
+      "reason": "Projected path contains a large step relative to the median supported step.",
+      "supported_fraction": 0.6017699115044248,
+      "maximum_to_median_step_ratio": 24.226392489718865,
+      "path_segment_counts": {
+        "path_segment_001": 5,
+        "path_segment_003": 5,
+        "path_segment_004": 41,
+        "path_segment_005": 5,
+        "path_segment_011": 5,
+        "path_segment_017": 7
+      }
+    },
+    "affine": {
+      "validation_status": "QA_REQUIRED",
+      "reason": "Projected path contains a large step relative to the median supported step.",
+      "supported_fraction": 0.9557522123893806,
+      "maximum_to_median_step_ratio": 21.68179580112259,
+      "path_segment_counts": {
+        "path_segment_001": 5,
+        "path_segment_003": 5,
+        "path_segment_004": 82,
+        "path_segment_005": 9,
+        "path_segment_006": 7
+      }
+    },
+    "chosen_method": "affine_diagnostic_unavailable"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "case_id": null,
+  "source_id": null,
+  "valid_target_segments": [
+    {
+      "valid_segment_id": 1,
+      "start_source_frame": 0,
+      "end_source_frame": 96,
+      "frame_count": 97
+    },
+    {
+      "valid_segment_id": 2,
+      "start_source_frame": 100,
+      "end_source_frame": 108,
+      "frame_count": 9
+    },
+    {
+      "valid_segment_id": 3,
+      "start_source_frame": 130,
+      "end_source_frame": 136,
+      "frame_count": 7
+    }
+  ],
+  "status_intervals": [
+    {
+      "status": "VALID_TARGET",
+      "start_source_frame": 0,
+      "end_source_frame": 96,
+      "frame_count": 97
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 97,
+      "end_source_frame": 99,
+      "frame_count": 3
+    },
+    {
+      "status": "VALID_TARGET",
+      "start_source_frame": 100,
+      "end_source_frame": 108,
+      "frame_count": 9
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 109,
+      "end_source_frame": 114,
+      "frame_count": 6
+    },
+    {
+      "status": "INVALID_TRACK_SEGMENT",
+      "start_source_frame": 115,
+      "end_source_frame": 115,
+      "frame_count": 1
+    },
+    {
+      "status": "LOW_POSE_CONFIDENCE",
+      "start_source_frame": 116,
+      "end_source_frame": 117,
+      "frame_count": 2
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 118,
+      "end_source_frame": 123,
+      "frame_count": 6
+    },
+    {
+      "status": "INVALID_TRACK_SEGMENT",
+      "start_source_frame": 124,
+      "end_source_frame": 126,
+      "frame_count": 3
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 127,
+      "end_source_frame": 129,
+      "frame_count": 3
+    },
+    {
+      "status": "VALID_TARGET",
+      "start_source_frame": 130,
+      "end_source_frame": 136,
+      "frame_count": 7
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 137,
+      "end_source_frame": 137,
+      "frame_count": 1
+    },
+    {
+      "status": "INVALID_TRACK_SEGMENT",
+      "start_source_frame": 138,
+      "end_source_frame": 138,
+      "frame_count": 1
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 139,
+      "end_source_frame": 145,
+      "frame_count": 7
+    },
+    {
+      "status": "INVALID_TRACK_SEGMENT",
+      "start_source_frame": 146,
+      "end_source_frame": 148,
+      "frame_count": 3
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 149,
+      "end_source_frame": 149,
+      "frame_count": 1
+    },
+    {
+      "status": "INVALID_TRACK_SEGMENT",
+      "start_source_frame": 150,
+      "end_source_frame": 150,
+      "frame_count": 1
+    },
+    {
+      "status": "TARGET_IDENTITY_UNCERTAIN",
+      "start_source_frame": 151,
+      "end_source_frame": 155,
+      "frame_count": 5
+    }
+  ]
+}

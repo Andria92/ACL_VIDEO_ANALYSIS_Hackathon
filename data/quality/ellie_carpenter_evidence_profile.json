@@ -1,0 +1,55 @@
+{
+  "case_id": "ellie_carpenter_acl",
+  "source_id": "ellie_carpenter_view_01",
+  "view_id": "ellie_carpenter_view_01",
+  "target_annotation_method": "manual_frame_review",
+  "manual_roi_keyframe_count": 15,
+  "target_tracking_coverage": 0.1394,
+  "pose_frame_coverage": 0.6485,
+  "upper_body_landmark_coverage": 0.17778333333333332,
+  "core_landmark_coverage": 0.16515,
+  "lower_limb_landmark_coverage": 0.1505,
+  "geometry_feature_coverage": 0.212962962962963,
+  "dynamic_feature_coverage": 0.6288108064665727,
+  "interpolation_fraction": 0.0125,
+  "rejected_fraction": 0.8478,
+  "identity_uncertainty_fraction": 0.3393939393939394,
+  "target_loss_fraction": 0.3515151515151515,
+  "supported_feature_count": 0,
+  "limited_feature_count": 36,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 0,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 0,
+    "limited_features": 36,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.212962962962963,
+    "dynamic_coverage": 0.6288108064665727,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 15,
+    "overall_quality_label": "LIMITED EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.0,
+      "limited_fraction": 1.0,
+      "geometry_coverage": 0.212962962962963,
+      "dynamic_coverage": 0.6288108064665727
+    }
+  }
+}

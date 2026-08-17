@@ -1,0 +1,170 @@
+{
+  "provenance": {
+    "annotation_session_id": "52e32f75-6c87-4753-9e33-e9dc27deda52",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-16T20:43:24.869149+00:00",
+    "updated_at": "2026-08-16T20:43:26.952666+00:00",
+    "case_id": "case_01_acl_candidate",
+    "source_id": "case_01_view_01",
+    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/01_YXpvkHw2BP8_135s-145s.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 11,
+  "roi_keyframes": [
+    {
+      "frame_index": 120,
+      "bbox": {
+        "x": 88.65369649805447,
+        "y": 317.6470588235294,
+        "width": 314.7704280155642,
+        "height": 394.11764705882354
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 121,
+      "bbox": {
+        "x": 94.63035019455253,
+        "y": 277.6470588235294,
+        "width": 309.78988326848247,
+        "height": 441.17647058823536
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 129,
+      "bbox": {
+        "x": 139.45525291828793,
+        "y": 238.8235294117647,
+        "width": 301.8210116731518,
+        "height": 474.1176470588236
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 134,
+      "bbox": {
+        "x": 138.4591439688716,
+        "y": 217.64705882352942,
+        "width": 401.43190661478604,
+        "height": 450.5882352941177
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 148,
+      "bbox": {
+        "x": 285.8832684824903,
+        "y": 178.8235294117647,
+        "width": 432.31128404669255,
+        "height": 481.1764705882353
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 160,
+      "bbox": {
+        "x": 361.5875486381323,
+        "y": 175.2941176470588,
+        "width": 354.61478599221783,
+        "height": 487.0588235294118
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 166,
+      "bbox": {
+        "x": 357.6031128404669,
+        "y": 110.58823529411765,
+        "width": 393.4630350194552,
+        "height": 551.7647058823529
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 197,
+      "bbox": {
+        "x": 611.6108949416342,
+        "y": 51.76470588235294,
+        "width": 180.29571984435802,
+        "height": 327.05882352941177
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 203,
+      "bbox": {
+        "x": 659.4241245136187,
+        "y": 42.35294117647059,
+        "width": 228.1089494163424,
+        "height": 341.17647058823525
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 208,
+      "bbox": {
+        "x": 687.3151750972762,
+        "y": 36.470588235294116,
+        "width": 191.25291828793775,
+        "height": 402.3529411764706
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 215,
+      "bbox": {
+        "x": 725.1673151750973,
+        "y": 11.764705882352942,
+        "width": 279.90661478599213,
+        "height": 428.2352941176471
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 120,
+    "movement_start_timestamp_ms": 4000.0,
+    "movement_end_frame": 237,
+    "movement_end_timestamp_ms": 7900.0,
+    "movement_duration_ms": 3900.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "case_01_acl_candidate",
+    "source_id": "case_01_view_01",
+    "view_id": "case_01_view_01",
+    "analysis_start_frame": 120,
+    "analysis_end_frame": 237,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 237,
+    "event_anchor_frame": 237,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

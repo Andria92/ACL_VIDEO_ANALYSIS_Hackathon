@@ -1,0 +1,18 @@
+{
+  "case_id": "ellie_carpenter_acl",
+  "source_id": "ellie_carpenter_view_01",
+  "view_id": "ellie_carpenter_view_01",
+  "analysis_start_frame": 217,
+  "analysis_end_frame": 381,
+  "initial_contact_frame": 245,
+  "critical_plant_frame": null,
+  "estimated_event_start_frame": 245,
+  "estimated_event_end_frame": 266,
+  "event_anchor_frame": 252,
+  "event_anchor_type": "estimated_event_anchor",
+  "collapse_frame": 262,
+  "annotation_confidence": 0.6,
+  "annotation_method": "manual_frame_review",
+  "annotator": "Codex manual review of local source frames",
+  "notes": "Source frame 252 is used as a conservative event-reference anchor during the overlapping challenge. M2 marks the pose evidence at this frame as TARGET_IDENTITY_UNCERTAIN, so M4 should preserve t0 as an event reference while leaving unavailable geometry and dynamics unavailable."
+}

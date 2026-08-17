@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,108,118,0.9152542372881356,10,Frame status is TARGET_IDENTITY_UNCERTAIN.
+contralateral_hka_angle_2d_deg,95,118,0.8050847457627118,23,Required landmarks low confidence: ['right_ankle'].
+elbow_projected_bilateral_absolute_difference_deg,106,118,0.8983050847457628,12,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+elbow_projected_bilateral_difference_deg,106,118,0.8983050847457628,12,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+hka_projected_bilateral_absolute_difference_deg,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle']. | Required landmarks low confidence: ['right_ankle'].
+hka_projected_bilateral_difference_deg,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle']. | Required landmarks low confidence: ['right_ankle'].
+injured_elbow_angle_2d_deg,106,118,0.8983050847457628,12,Frame status is TARGET_IDENTITY_UNCERTAIN.
+injured_hka_angle_2d_deg,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle'].
+knee_line_deviation_bilateral_absolute_difference,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle']. | Required landmarks low confidence: ['right_ankle'].
+knee_line_deviation_bilateral_difference,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle']. | Required landmarks low confidence: ['right_ankle'].
+knee_line_deviation_normalized_bilateral_absolute_difference,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle']. | Required landmarks low confidence: ['right_ankle'].
+knee_line_deviation_normalized_bilateral_difference,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle']. | Required landmarks low confidence: ['right_ankle'].
+left_elbow_angle_2d_deg,106,118,0.8983050847457628,12,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_hka_angle_2d_deg,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle'].
+left_knee_ankle_distance_normalized,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle'].
+left_knee_ankle_x_offset_normalized,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle'].
+left_knee_line_deviation_2d,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle'].
+left_knee_line_deviation_normalized,93,118,0.788135593220339,25,Required landmarks low confidence: ['left_ankle'].
+left_upper_arm_orientation_2d_deg,107,118,0.9067796610169492,11,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_wrist_pelvis_distance_normalized,108,118,0.9152542372881356,10,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_wrist_pelvis_x_offset_normalized,108,118,0.9152542372881356,10,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_hip_line_angle_deg,110,118,0.9322033898305084,8,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_line_angle_deg,107,118,0.9067796610169492,11,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_pelvis_orientation_difference_deg,107,118,0.9067796610169492,11,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_pelvis_x_offset_normalized,107,118,0.9067796610169492,11,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_pelvis_x_offset_px,107,118,0.9067796610169492,11,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_trunk_axis_angle_deg,107,118,0.9067796610169492,11,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_elbow_angle_2d_deg,108,118,0.9152542372881356,10,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_hka_angle_2d_deg,95,118,0.8050847457627118,23,Required landmarks low confidence: ['right_ankle'].
+right_knee_ankle_distance_normalized,95,118,0.8050847457627118,23,Required landmarks low confidence: ['right_ankle'].
+right_knee_ankle_x_offset_normalized,95,118,0.8050847457627118,23,Required landmarks low confidence: ['right_ankle'].
+right_knee_line_deviation_2d,95,118,0.8050847457627118,23,Required landmarks low confidence: ['right_ankle'].
+right_knee_line_deviation_normalized,95,118,0.8050847457627118,23,Required landmarks low confidence: ['right_ankle'].
+right_upper_arm_orientation_2d_deg,109,118,0.923728813559322,9,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_wrist_pelvis_distance_normalized,108,118,0.9152542372881356,10,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_wrist_pelvis_x_offset_normalized,108,118,0.9152542372881356,10,Frame status is TARGET_IDENTITY_UNCERTAIN.

@@ -1,0 +1,212 @@
+{
+  "total_frames": 180,
+  "target_tracking_coverage": 0.5056,
+  "pose_frame_coverage": 0.8111,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 12,
+    "LOW_POSE_CONFIDENCE": 25,
+    "TARGET_IDENTITY_UNCERTAIN": 18,
+    "TARGET_NOT_FOUND": 34,
+    "VALID_TARGET": 91
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 31,
+      "end_frame": 38
+    },
+    {
+      "start_frame": 62,
+      "end_frame": 64
+    },
+    {
+      "start_frame": 66,
+      "end_frame": 66
+    },
+    {
+      "start_frame": 70,
+      "end_frame": 71
+    },
+    {
+      "start_frame": 74,
+      "end_frame": 76
+    },
+    {
+      "start_frame": 111,
+      "end_frame": 112
+    },
+    {
+      "start_frame": 139,
+      "end_frame": 139
+    },
+    {
+      "start_frame": 164,
+      "end_frame": 166
+    },
+    {
+      "start_frame": 171,
+      "end_frame": 172
+    }
+  ],
+  "target_loss_intervals": [
+    {
+      "start_frame": 65,
+      "end_frame": 65
+    },
+    {
+      "start_frame": 67,
+      "end_frame": 69
+    },
+    {
+      "start_frame": 131,
+      "end_frame": 134
+    },
+    {
+      "start_frame": 137,
+      "end_frame": 138
+    },
+    {
+      "start_frame": 140,
+      "end_frame": 140
+    },
+    {
+      "start_frame": 142,
+      "end_frame": 142
+    },
+    {
+      "start_frame": 150,
+      "end_frame": 163
+    },
+    {
+      "start_frame": 167,
+      "end_frame": 170
+    },
+    {
+      "start_frame": 173,
+      "end_frame": 175
+    },
+    {
+      "start_frame": 179,
+      "end_frame": 179
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 46,
+      "end_frame": 48
+    },
+    {
+      "start_frame": 100,
+      "end_frame": 102
+    },
+    {
+      "start_frame": 113,
+      "end_frame": 115
+    },
+    {
+      "start_frame": 125,
+      "end_frame": 127
+    },
+    {
+      "start_frame": 144,
+      "end_frame": 149
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 0,
+      "end_frame": 30,
+      "frame_count": 31
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 39,
+      "end_frame": 45,
+      "frame_count": 7
+    },
+    {
+      "segment_id": 3,
+      "start_frame": 49,
+      "end_frame": 61,
+      "frame_count": 13
+    },
+    {
+      "segment_id": 4,
+      "start_frame": 77,
+      "end_frame": 99,
+      "frame_count": 23
+    },
+    {
+      "segment_id": 5,
+      "start_frame": 103,
+      "end_frame": 110,
+      "frame_count": 8
+    },
+    {
+      "segment_id": 6,
+      "start_frame": 116,
+      "end_frame": 124,
+      "frame_count": 9
+    }
+  ],
+  "interpolated_frame_fraction": 0.2167,
+  "rejected_frame_fraction": 0.9889,
+  "interpolated_landmark_row_fraction": 0.031,
+  "rejected_landmark_row_fraction": 0.5108,
+  "processing_status_counts": {
+    "INTERPOLATED": 95,
+    "MISSING": 578,
+    "RAW_VALID": 183,
+    "REJECTED_IDENTITY_UNCERTAIN": 306,
+    "REJECTED_INVALID_TRACK_SEGMENT": 204,
+    "REJECTED_LOW_CONFIDENCE": 444,
+    "REJECTED_TEMPORAL_OUTLIER": 31,
+    "SMOOTHED": 1219
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 306,
+    "LOW_CONFIDENCE": 487,
+    "MISSING": 578,
+    "OBSERVED_VALID": 1402,
+    "REJECTED": 204,
+    "TEMPORAL_OUTLIER": 83
+  },
+  "left_ankle_coverage": 0.5333,
+  "left_ear_coverage": 0.4611,
+  "left_elbow_coverage": 0.5167,
+  "left_eye_coverage": 0.2056,
+  "left_hip_coverage": 0.5722,
+  "left_knee_coverage": 0.5833,
+  "left_shoulder_coverage": 0.5389,
+  "left_wrist_coverage": 0.5389,
+  "nose_coverage": 0.4222,
+  "right_ankle_coverage": 0.5278,
+  "right_ear_coverage": 0.3667,
+  "right_elbow_coverage": 0.5278,
+  "right_eye_coverage": 0.2556,
+  "right_hip_coverage": 0.5778,
+  "right_knee_coverage": 0.6111,
+  "right_shoulder_coverage": 0.5611,
+  "right_wrist_coverage": 0.5167,
+  "core_landmark_coverage": 0.5625,
+  "lower_limb_landmark_coverage": 0.5676,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/christen_press_raw_manual_roi.parquet"
+}

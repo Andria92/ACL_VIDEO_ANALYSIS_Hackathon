@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND.
+contralateral_hka_angle_2d_deg,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+elbow_projected_bilateral_absolute_difference_deg,32,165,0.19393939393939394,133,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+elbow_projected_bilateral_difference_deg,32,165,0.19393939393939394,133,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+hka_projected_bilateral_absolute_difference_deg,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+hka_projected_bilateral_difference_deg,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+injured_elbow_angle_2d_deg,38,165,0.23030303030303031,127,Frame status is TARGET_NOT_FOUND.
+injured_hka_angle_2d_deg,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_bilateral_absolute_difference,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_bilateral_difference,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_normalized_bilateral_absolute_difference,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_normalized_bilateral_difference,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+left_elbow_angle_2d_deg,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND.
+left_hka_angle_2d_deg,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+left_knee_ankle_distance_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+left_knee_ankle_x_offset_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+left_knee_line_deviation_2d,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+left_knee_line_deviation_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+left_upper_arm_orientation_2d_deg,36,165,0.21818181818181817,129,Frame status is TARGET_NOT_FOUND.
+left_wrist_pelvis_distance_normalized,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND.
+left_wrist_pelvis_x_offset_normalized,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND.
+projected_hip_line_angle_deg,37,165,0.22424242424242424,128,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_line_angle_deg,42,165,0.2545454545454545,123,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_pelvis_orientation_difference_deg,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_pelvis_x_offset_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_pelvis_x_offset_px,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+projected_trunk_axis_angle_deg,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+right_elbow_angle_2d_deg,38,165,0.23030303030303031,127,Frame status is TARGET_NOT_FOUND.
+right_hka_angle_2d_deg,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+right_knee_ankle_distance_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+right_knee_ankle_x_offset_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+right_knee_line_deviation_2d,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+right_knee_line_deviation_normalized,35,165,0.21212121212121213,130,Frame status is TARGET_NOT_FOUND.
+right_upper_arm_orientation_2d_deg,42,165,0.2545454545454545,123,Frame status is TARGET_NOT_FOUND.
+right_wrist_pelvis_distance_normalized,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND.
+right_wrist_pelvis_x_offset_normalized,34,165,0.20606060606060606,131,Frame status is TARGET_NOT_FOUND.

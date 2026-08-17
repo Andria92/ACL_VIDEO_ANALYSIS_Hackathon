@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "acl-movement-explorer"
+version = "0.1.0"
+description = "Milestone 1 pose feasibility prototype for ACL Movement Explorer."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+  "mediapipe>=0.10.14,<1",
+  "numpy>=1.26",
+  "opencv-python>=4.10",
+  "pandas>=2.2",
+  "pyarrow>=16",
+  "matplotlib>=3.9",
+  "ultralytics>=8.4",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2",
+  "ruff>=0.6",
+]
+
+[tool.setuptools.packages.find]
+include = ["acl_motion*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

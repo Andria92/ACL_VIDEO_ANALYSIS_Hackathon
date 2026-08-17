@@ -1,0 +1,16 @@
+frame_index,x,y,width,height,annotation_source,annotation_note
+217,110,130,430,540,human_manual,target athlete white kit during initial overlap
+223,80,125,410,540,human_manual,target athlete white kit, tighter than duel crop
+230,45,120,365,540,human_manual,target athlete white kit, opponent partly excluded
+238,45,115,350,540,human_manual,target athlete white kit, overlap correction
+245,40,115,340,540,human_manual,target athlete white kit, known false-valid frame correction
+252,135,140,240,500,human_manual,target athlete white kit, known false-valid frame correction tightened after overlay audit
+259,300,105,360,550,human_manual,target athlete white kit, foreground overlap
+260,330,105,340,550,human_manual,target athlete white kit, foreground overlap
+266,470,150,350,470,human_manual,target athlete entering fall
+272,590,250,330,380,human_manual,target athlete falling
+290,585,330,500,320,human_manual,target athlete on ground, other white player nearby
+310,500,260,420,300,human_manual,target athlete on ground
+326,0,280,260,240,human_manual,target athlete near left frame edge
+350,0,320,220,230,human_manual,target mostly out of frame
+381,0,320,220,230,human_manual,target mostly out of frame

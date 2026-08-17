@@ -1,0 +1,23 @@
+.DS_Store
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+venv/
+dist/
+build/
+*.egg-info/
+
+# Local/copyrighted footage and generated analysis products.
+data/videos/*
+data/models/*
+data/pose/*
+data/overlays/*
+data/diagnostics/*
+!data/videos/.gitkeep
+!data/models/.gitkeep
+!data/pose/.gitkeep
+!data/overlays/.gitkeep
+!data/diagnostics/.gitkeep

@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,88,180,0.4888888888888889,92,Frame status is TARGET_NOT_FOUND.
+contralateral_hka_angle_2d_deg,94,180,0.5222222222222223,86,Frame status is TARGET_NOT_FOUND.
+elbow_projected_bilateral_absolute_difference_deg,76,180,0.4222222222222222,104,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+elbow_projected_bilateral_difference_deg,76,180,0.4222222222222222,104,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+hka_projected_bilateral_absolute_difference_deg,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+hka_projected_bilateral_difference_deg,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+injured_elbow_angle_2d_deg,87,180,0.48333333333333334,93,Frame status is TARGET_NOT_FOUND.
+injured_hka_angle_2d_deg,92,180,0.5111111111111111,88,Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_bilateral_absolute_difference,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_bilateral_difference,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_normalized_bilateral_absolute_difference,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+knee_line_deviation_normalized_bilateral_difference,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND. | Frame status is TARGET_NOT_FOUND.
+left_elbow_angle_2d_deg,88,180,0.4888888888888889,92,Frame status is TARGET_NOT_FOUND.
+left_hka_angle_2d_deg,94,180,0.5222222222222223,86,Frame status is TARGET_NOT_FOUND.
+left_knee_ankle_distance_normalized,96,180,0.5333333333333333,84,Frame status is TARGET_NOT_FOUND.
+left_knee_ankle_x_offset_normalized,96,180,0.5333333333333333,84,Frame status is TARGET_NOT_FOUND.
+left_knee_line_deviation_2d,94,180,0.5222222222222223,86,Frame status is TARGET_NOT_FOUND.
+left_knee_line_deviation_normalized,94,180,0.5222222222222223,86,Frame status is TARGET_NOT_FOUND.
+left_upper_arm_orientation_2d_deg,91,180,0.5055555555555555,89,Frame status is TARGET_NOT_FOUND.
+left_wrist_pelvis_distance_normalized,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND.
+left_wrist_pelvis_x_offset_normalized,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND.
+projected_hip_line_angle_deg,102,180,0.5666666666666667,78,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_line_angle_deg,92,180,0.5111111111111111,88,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_pelvis_orientation_difference_deg,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_pelvis_x_offset_normalized,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND.
+projected_shoulder_pelvis_x_offset_px,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND.
+projected_trunk_axis_angle_deg,89,180,0.49444444444444446,91,Frame status is TARGET_NOT_FOUND.
+right_elbow_angle_2d_deg,87,180,0.48333333333333334,93,Frame status is TARGET_NOT_FOUND.
+right_hka_angle_2d_deg,92,180,0.5111111111111111,88,Frame status is TARGET_NOT_FOUND.
+right_knee_ankle_distance_normalized,95,180,0.5277777777777778,85,Frame status is TARGET_NOT_FOUND.
+right_knee_ankle_x_offset_normalized,95,180,0.5277777777777778,85,Frame status is TARGET_NOT_FOUND.
+right_knee_line_deviation_2d,92,180,0.5111111111111111,88,Frame status is TARGET_NOT_FOUND.
+right_knee_line_deviation_normalized,92,180,0.5111111111111111,88,Frame status is TARGET_NOT_FOUND.
+right_upper_arm_orientation_2d_deg,92,180,0.5111111111111111,88,Frame status is TARGET_NOT_FOUND.
+right_wrist_pelvis_distance_normalized,85,180,0.4722222222222222,95,Frame status is TARGET_NOT_FOUND.
+right_wrist_pelvis_x_offset_normalized,85,180,0.4722222222222222,95,Frame status is TARGET_NOT_FOUND.

@@ -1,0 +1,127 @@
+{
+  "provenance": {
+    "annotation_session_id": "50433b9a-d9eb-41f0-be55-598adb9a4507",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-17T11:19:23.029674+00:00",
+    "updated_at": "2026-08-17T12:11:29.000710+00:00",
+    "case_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate",
+    "source_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_view_01",
+    "view_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_view_01",
+    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_2.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 7,
+  "roi_keyframes": [
+    {
+      "frame_index": 15,
+      "bbox": {
+        "x": 696.2801556420234,
+        "y": 3.6323886510024996,
+        "width": 370.5525291828794,
+        "height": 710.7373793794891
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 34,
+      "bbox": {
+        "x": 644.4824902723735,
+        "y": 2.4215924340016666,
+        "width": 303.8132295719845,
+        "height": 704.683398294485
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 37,
+      "bbox": {
+        "x": 586.7081712062256,
+        "y": 3.6323886510024996,
+        "width": 324.7315175097276,
+        "height": 707.1049907284865
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 44,
+      "bbox": {
+        "x": 511.00389105058366,
+        "y": 13.318758387009165,
+        "width": 398.4435797665369,
+        "height": 698.6294172094807
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 57,
+      "bbox": {
+        "x": 399.4396887159533,
+        "y": 9.686369736006666,
+        "width": 442.272373540856,
+        "height": 708.3157869454874
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 436.29571984435796,
+        "y": 8.475573519005833,
+        "width": 408.40466926070036,
+        "height": 707.1049907284867
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 74,
+      "bbox": {
+        "x": 590.692607003891,
+        "y": 7.264777302004999,
+        "width": 273.9299610894942,
+        "height": 704.683398294485
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 15,
+    "movement_start_timestamp_ms": 500.0,
+    "movement_end_frame": 78,
+    "movement_end_timestamp_ms": 2600.0,
+    "movement_duration_ms": 2100.0,
+    "confidence": "moderate",
+    "rationale": "Post-injury occlusion and wrong-player reacquisition after frame 78; later frames excluded by human operator.",
+    "source": "human_results_analysis_boundary",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate",
+    "source_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_view_01",
+    "view_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_view_01",
+    "analysis_start_frame": 15,
+    "analysis_end_frame": 78,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 78,
+    "event_anchor_frame": 78,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "operator_flags": [],
+  "notes": "[2026-08-17T12:11:29.000700+00:00] Analysis window changed from end frame 124 to 78 via Results UI. Rationale: Post-injury occlusion and wrong-player reacquisition after frame 78; later frames excluded by human operator.",
+  "finalized": true
+}

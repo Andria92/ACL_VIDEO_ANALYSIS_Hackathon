@@ -1,0 +1,184 @@
+{
+  "total_frames": 165,
+  "target_tracking_coverage": 0.2242,
+  "pose_frame_coverage": 0.6667,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 6,
+    "LOW_POSE_CONFIDENCE": 16,
+    "TARGET_IDENTITY_UNCERTAIN": 51,
+    "TARGET_NOT_FOUND": 55,
+    "VALID_TARGET": 37
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 279,
+      "end_frame": 286
+    },
+    {
+      "start_frame": 294,
+      "end_frame": 294
+    },
+    {
+      "start_frame": 302,
+      "end_frame": 302
+    },
+    {
+      "start_frame": 323,
+      "end_frame": 323
+    },
+    {
+      "start_frame": 327,
+      "end_frame": 327
+    },
+    {
+      "start_frame": 329,
+      "end_frame": 329
+    },
+    {
+      "start_frame": 336,
+      "end_frame": 336
+    },
+    {
+      "start_frame": 346,
+      "end_frame": 347
+    }
+  ],
+  "target_loss_intervals": [
+    {
+      "start_frame": 278,
+      "end_frame": 278
+    },
+    {
+      "start_frame": 322,
+      "end_frame": 322
+    },
+    {
+      "start_frame": 324,
+      "end_frame": 326
+    },
+    {
+      "start_frame": 328,
+      "end_frame": 328
+    },
+    {
+      "start_frame": 330,
+      "end_frame": 335
+    },
+    {
+      "start_frame": 337,
+      "end_frame": 345
+    },
+    {
+      "start_frame": 348,
+      "end_frame": 381
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 217,
+      "end_frame": 219
+    },
+    {
+      "start_frame": 252,
+      "end_frame": 256
+    },
+    {
+      "start_frame": 262,
+      "end_frame": 264
+    },
+    {
+      "start_frame": 266,
+      "end_frame": 277
+    },
+    {
+      "start_frame": 288,
+      "end_frame": 293
+    },
+    {
+      "start_frame": 295,
+      "end_frame": 301
+    },
+    {
+      "start_frame": 304,
+      "end_frame": 306
+    },
+    {
+      "start_frame": 310,
+      "end_frame": 321
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 220,
+      "end_frame": 251,
+      "frame_count": 32
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 257,
+      "end_frame": 261,
+      "frame_count": 5
+    }
+  ],
+  "interpolated_frame_fraction": 0.1333,
+  "rejected_frame_fraction": 0.9515,
+  "interpolated_landmark_row_fraction": 0.0182,
+  "rejected_landmark_row_fraction": 0.7697,
+  "processing_status_counts": {
+    "INTERPOLATED": 51,
+    "MISSING": 935,
+    "RAW_VALID": 77,
+    "REJECTED_IDENTITY_UNCERTAIN": 867,
+    "REJECTED_INVALID_TRACK_SEGMENT": 102,
+    "REJECTED_LOW_CONFIDENCE": 233,
+    "REJECTED_TEMPORAL_OUTLIER": 22,
+    "SMOOTHED": 518
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 867,
+    "LOW_CONFIDENCE": 247,
+    "MISSING": 935,
+    "OBSERVED_VALID": 595,
+    "REJECTED": 102,
+    "TEMPORAL_OUTLIER": 59
+  },
+  "left_ankle_coverage": 0.2121,
+  "left_ear_coverage": 0.1212,
+  "left_elbow_coverage": 0.2303,
+  "left_eye_coverage": 0.2242,
+  "left_hip_coverage": 0.2303,
+  "left_knee_coverage": 0.2303,
+  "left_shoulder_coverage": 0.2545,
+  "left_wrist_coverage": 0.2485,
+  "nose_coverage": 0.2606,
+  "right_ankle_coverage": 0.2121,
+  "right_ear_coverage": 0.2061,
+  "right_elbow_coverage": 0.2545,
+  "right_eye_coverage": 0.2182,
+  "right_hip_coverage": 0.2364,
+  "right_knee_coverage": 0.2303,
+  "right_shoulder_coverage": 0.297,
+  "right_wrist_coverage": 0.2485,
+  "core_landmark_coverage": 0.2545,
+  "lower_limb_landmark_coverage": 0.2253,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/ellie_carpenter_raw_manual_roi_dense.parquet"
+}
