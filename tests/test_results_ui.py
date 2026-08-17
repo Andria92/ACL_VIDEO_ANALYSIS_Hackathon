@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from acl_motion.annotations.models import AnnotationCase
 from acl_motion.annotations.registry import default_annotation_cases, views_for_case
+from acl_motion.cases.models import InjurySide
 from acl_motion.ui.annotation import smoke_test
 from acl_motion.ui.results import (
     build_case_synthesis_payload,
@@ -150,9 +151,12 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "left-minus-right projected HKA difference" in html
     assert "TRUNK & PELVIS" in html
     assert "UPPER BODY" in html
-    assert "MOVEMENT PATH" in html
     assert "TIMING" in html
-    assert "Movement path graph unavailable in this panel" in html
+    assert "'MOVEMENT PATH':" not in html
+    assert "drawPhaseBilateralMini" in html
+    assert "Injured vs opposite-side HKA" in html
+    assert "Start · " in html
+    assert " injured" in html
     assert "left_knee_ankle_distance_normalized" not in html
     assert "right_knee_ankle_distance_normalized" not in html
     removed_clutter = [
@@ -302,6 +306,8 @@ def test_analysis_regeneration_plan_uses_selected_boundary_and_human_outputs() -
         source_id="case_trim_view_01",
         player_name="Player Trim",
         video_path="/tmp/source.mp4",
+        injured_side=InjurySide.RIGHT,
+        injury_laterality_source="human_operator_test",
     )
 
     commands = build_human_analysis_regeneration_commands(
@@ -316,6 +322,10 @@ def test_analysis_regeneration_plan_uses_selected_boundary_and_human_outputs() -
     assert any("scripts/extract_pose.py" in command and "--end-frame 78" in command for command in flattened)
     assert all("/human/" in command for command in flattened)
     assert any("scripts/compute_movement_phases.py" in command for command in flattened)
+    assert any(
+        "scripts/compute_geometry_features.py" in command and "--injured-side right" in command
+        for command in flattened
+    )
     assert any("scripts/render_qc_overlay.py" in command and "--end-frame 78" in command for command in flattened)
 
 

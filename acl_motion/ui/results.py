@@ -559,7 +559,12 @@ def build_human_analysis_regeneration_commands(
     path_features = root / "path" / "human" / f"{slug}_projected_movement_path.parquet"
     feature_summary = root / "quality" / "human" / f"{slug}_feature_summary.json"
     frame_quality = root / "quality" / "human" / f"{slug}_frame_quality.csv"
-    injured_side = _previous_injured_side(feature_summary)
+    annotated_injured_side = str(case.injured_side.value)
+    injured_side = (
+        annotated_injured_side
+        if annotated_injured_side in {"left", "right"}
+        else _previous_injured_side(feature_summary)
+    )
     exe = str(python_executable)
     return [
         [
@@ -2581,15 +2586,6 @@ const FEATURE_CATEGORIES = {
       visual: 'line'
     }
   ],
-  'MOVEMENT PATH': [
-    {
-      id: 'movement_path_unavailable',
-      label: 'Movement path',
-      metrics: [],
-      description: 'Graph-level movement path is not available in this simplified measurement panel; phase narratives may still include supported path evidence.',
-      visual: 'unavailable'
-    }
-  ],
   'TIMING': [
     {
       id: 'hka_extrema_timing',
@@ -2811,7 +2807,9 @@ function renderPhaseStory() {
     + escapeHtml(wholeMovementSummary(story, phases)) + '</p>';
   $('phaseStoryGrid').innerHTML = phases.map((phase) => {
     const evidence = phase.evidence_summary?.evidence_status || 'EVIDENCE';
-    const drivers = phaseDrivers(phase).filter((driver) => driver.key !== 'movement_timing').slice(0, 4);
+    const drivers = phaseDrivers(phase)
+      .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
+      .slice(0, 4);
     const visualStory = visualStoryForPhase(phase.phase_id);
     const snapshots = phaseSalientFrames(phase, visualStory);
     return '<article class="phase-card">'
@@ -2844,7 +2842,7 @@ function wholeMovementSummary(story, phases) {
   if (phases.length === 1) return sequence;
   const transition = phases[1];
   const categories = naturalList(phaseDrivers(transition)
-    .filter((driver) => driver.key !== 'movement_timing')
+    .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
     .slice(0, 3)
     .map((driver) => storyCategoryPlainLabel(driver.key)));
   const change = categories
@@ -2939,18 +2937,21 @@ function storyObservationSupport(visualStory, category) {
 
 function phaseVisualAvailable(visualStory, category) {
   if (!visualStory) return false;
-  if (category === 'movement_path') {
-    return (visualStory.visuals || []).some((item) => item.visual_type === 'projected_path' && item.points?.length);
+  if (category === 'bilateral_limb_relationship') {
+    const phase = phaseForStory(visualStory);
+    return phase !== null
+      && phaseMetricPoints('injured_hka_angle_2d_deg', phase).some((point) => point.value !== null)
+      && phaseMetricPoints('contralateral_hka_angle_2d_deg', phase).some((point) => point.value !== null);
   }
-  return ['trunk_pelvis', 'upper_body', 'hip_knee_ankle_chain', 'bilateral_limb_relationship']
+  return ['trunk_pelvis', 'upper_body', 'hip_knee_ankle_chain']
     .includes(category) && (visualStory.snapshot_frames || []).length >= 2;
 }
 
 function storyCategoryPlainLabel(category) {
   return {
     movement_path: 'Movement path',
-    hip_knee_ankle_chain: 'Hip–knee–ankle configuration',
-    bilateral_limb_relationship: 'Lower-limb comparison',
+    hip_knee_ankle_chain: 'Injured-side hip–knee–ankle configuration',
+    bilateral_limb_relationship: 'Injured vs opposite-side HKA',
     trunk_pelvis: 'Trunk & pelvis',
     upper_body: 'Upper body',
     movement_timing: 'Movement timing',
@@ -2971,8 +2972,8 @@ function storyCategoryAction(category) {
 function storyCategoryChangeSummary(category) {
   return {
     movement_path: 'On-screen travel direction changed while speed relative to body size also shifted.',
-    hip_knee_ankle_chain: 'The visible hip–knee–ankle chain changed through the phase.',
-    bilateral_limb_relationship: 'The projected relationship between the two lower limbs changed through the phase.',
+    hip_knee_ankle_chain: 'The injured-side projected hip–knee–ankle chain changed through the phase.',
+    bilateral_limb_relationship: 'The injured and opposite-side projected hip–knee–ankle angles are compared through the phase.',
     trunk_pelvis: 'The projected trunk, shoulder, and hip/pelvis lines reoriented through the phase.',
     upper_body: 'The projected upper-arm and elbow configuration changed through the phase.',
     movement_timing: 'The supported interval defines when this movement pattern was visible.',
@@ -3004,11 +3005,116 @@ function drawPhaseStoryVisual(canvas, visualStory, category) {
   ctx.setTransform(scale, 0, 0, scale, 0, 0);
   ctx.fillStyle = '#f4f7fa';
   ctx.fillRect(0, 0, width, height);
-  if (category === 'movement_path') {
-    drawPhasePathMini(ctx, width, height, visualStory);
+  if (category === 'bilateral_limb_relationship') {
+    drawPhaseBilateralMini(ctx, width, height, visualStory);
+    return;
+  }
+  if (category === 'hip_knee_ankle_chain') {
+    drawPhaseInjuredHkaMini(ctx, width, height, visualStory);
     return;
   }
   drawPhasePoseMini(ctx, width, height, visualStory, category);
+}
+
+function phaseForStory(visualStory) {
+  return (result?.movement_story?.phases || []).find((phase) => (
+    phase.phase_id === visualStory?.phase_id
+  )) || null;
+}
+
+function phaseMetricPoints(metric, phase) {
+  if (!phase) return [];
+  return supportedSeries(metric).filter((point) => (
+    point.frame >= Number(phase.start_frame) && point.frame <= Number(phase.end_frame)
+  ));
+}
+
+function drawPhaseInjuredHkaMini(ctx, width, height, visualStory) {
+  const snapshots = visualStory?.snapshot_frames || [];
+  const first = snapshots[0]?.landmarks || {};
+  const last = snapshots[snapshots.length - 1]?.landmarks || {};
+  const side = String(result?.movement_visual_story?.laterality_mapping?.injured || 'right').toLowerCase();
+  drawMiniSingleLeg(ctx, first, side, {x: 8, y: 8, width: width / 2 - 12, height: height - 16}, '#215f9a');
+  drawMiniSingleLeg(ctx, last, side, {x: width / 2 + 4, y: 8, width: width / 2 - 12, height: height - 16}, '#176d4d');
+  ctx.fillStyle = '#627181';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('Start · ' + side + ' injured', 12, 14);
+  ctx.fillText('End · ' + side + ' injured', width / 2 + 8, 14);
+}
+
+function drawMiniSingleLeg(ctx, landmarks, side, rect, color) {
+  const names = [`${side}_hip`, `${side}_knee`, `${side}_ankle`];
+  const raw = names.map((name) => landmarks?.[name]).filter((point) => (
+    Number.isFinite(Number(point?.x)) && Number.isFinite(Number(point?.y))
+  ));
+  if (raw.length !== names.length) return;
+  const minX = Math.min(...raw.map((point) => Number(point.x)));
+  const maxX = Math.max(...raw.map((point) => Number(point.x)));
+  const minY = Math.min(...raw.map((point) => Number(point.y)));
+  const maxY = Math.max(...raw.map((point) => Number(point.y)));
+  const projected = raw.map((point) => ({
+    x: rect.x + 12 + ((Number(point.x) - minX) / Math.max(1, maxX - minX)) * (rect.width - 24),
+    y: rect.y + 16 + ((Number(point.y) - minY) / Math.max(1, maxY - minY)) * (rect.height - 24),
+  }));
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  projected.forEach((point, index) => (
+    index === 0 ? ctx.moveTo(point.x, point.y) : ctx.lineTo(point.x, point.y)
+  ));
+  ctx.stroke();
+}
+
+function drawPhaseBilateralMini(ctx, width, height, visualStory) {
+  const phase = phaseForStory(visualStory);
+  const injured = phaseMetricPoints('injured_hka_angle_2d_deg', phase);
+  const opposite = phaseMetricPoints('contralateral_hka_angle_2d_deg', phase);
+  const values = [...injured, ...opposite]
+    .filter((point) => point.value !== null)
+    .map((point) => Number(point.value));
+  if (!phase || values.length < 2) return;
+  const mapping = result?.movement_visual_story?.laterality_mapping || {};
+  const minValue = Math.min(...values);
+  const maxValue = Math.max(...values);
+  const left = 12;
+  const top = 28;
+  const plotWidth = width - 24;
+  const plotHeight = height - 38;
+  const project = (point) => ({
+    x: left + ((point.frame - Number(phase.start_frame))
+      / Math.max(1, Number(phase.end_frame) - Number(phase.start_frame))) * plotWidth,
+    y: top + (1 - ((Number(point.value) - minValue) / Math.max(1, maxValue - minValue))) * plotHeight,
+  });
+  drawPhaseMetricLine(ctx, injured, project, '#215f9a');
+  drawPhaseMetricLine(ctx, opposite, project, '#176d4d');
+  ctx.font = '10px sans-serif';
+  ctx.fillStyle = '#215f9a';
+  ctx.fillText('Injured (' + (mapping.injured || 'side') + ')', 12, 13);
+  ctx.fillStyle = '#176d4d';
+  ctx.fillText('Opposite (' + (mapping.contralateral || 'side') + ')', Math.max(width / 2, 112), 13);
+  ctx.fillStyle = '#627181';
+  ctx.fillText('HKA degrees', 12, 25);
+}
+
+function drawPhaseMetricLine(ctx, points, project, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.25;
+  let drawing = false;
+  let previousFrame = null;
+  ctx.beginPath();
+  points.forEach((point) => {
+    if (point.value === null) {
+      drawing = false;
+      previousFrame = null;
+      return;
+    }
+    const item = project(point);
+    if (!drawing || point.frame !== previousFrame + 1) ctx.moveTo(item.x, item.y);
+    else ctx.lineTo(item.x, item.y);
+    drawing = true;
+    previousFrame = point.frame;
+  });
+  ctx.stroke();
 }
 
 function drawPhasePathMini(ctx, width, height, visualStory) {

@@ -9,6 +9,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from acl_motion.cases.annotations import AnchorType, EventAnnotation
+from acl_motion.cases.models import InjurySide
 from acl_motion.video.roi import BBox
 
 ANNOTATION_UI_VERSION = "m5_5_annotation_ui_v1"
@@ -65,6 +66,8 @@ class AnnotationCase:
     slow_motion: bool = False
     cropped_or_zoomed: bool = False
     real_time_scale: float | None = None
+    injured_side: InjurySide = InjurySide.UNKNOWN
+    injury_laterality_source: str = ""
     development_roi_path: Path | None = None
     development_event_path: Path | None = None
     notes: str = ""
@@ -85,6 +88,8 @@ class AnnotationCase:
             "slow_motion": self.slow_motion,
             "cropped_or_zoomed": self.cropped_or_zoomed,
             "real_time_scale": self.real_time_scale,
+            "injured_side": InjurySide(self.injured_side).value,
+            "injury_laterality_source": self.injury_laterality_source,
             "player_name": self.player_name,
             "video_path": str(self.video_path),
             "development_roi_available": self.development_roi_path is not None

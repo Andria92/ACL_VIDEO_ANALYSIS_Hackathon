@@ -13,9 +13,11 @@
       "slow_motion": true,
       "cropped_or_zoomed": true,
       "real_time_scale": null,
+      "injured_side": "right",
+      "injury_laterality_source": "human_operator_2026-08-17",
       "player_name": "Leah Williamson",
       "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_2.mp4",
-      "notes": "Human-annotated imported close sagittal-like replay. Injury laterality not yet supplied for this imported run."
+      "notes": "Human-annotated imported close sagittal-like replay. Right-knee injury laterality supplied by the human operator on 2026-08-17."
     }
   ]
 }

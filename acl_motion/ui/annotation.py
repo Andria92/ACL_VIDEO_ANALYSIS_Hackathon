@@ -38,6 +38,7 @@ from acl_motion.annotations.view_alignment import (
     load_view_alignment,
     save_view_alignment,
 )
+from acl_motion.cases.models import InjurySide
 from acl_motion.ui.results import (
     clear_result_mask_prompts,
     human_results_available,
@@ -499,6 +500,8 @@ def _imported_case_record(case: AnnotationCase) -> dict:
         "slow_motion": case.slow_motion,
         "cropped_or_zoomed": case.cropped_or_zoomed,
         "real_time_scale": case.real_time_scale,
+        "injured_side": InjurySide(case.injured_side).value,
+        "injury_laterality_source": case.injury_laterality_source,
         "player_name": case.player_name,
         "video_path": str(case.video_path),
         "notes": case.notes,
@@ -522,6 +525,8 @@ def _imported_case_from_record(record: dict, video_root: Path) -> AnnotationCase
         slow_motion=bool(record.get("slow_motion", False)),
         cropped_or_zoomed=bool(record.get("cropped_or_zoomed", False)),
         real_time_scale=record.get("real_time_scale"),
+        injured_side=InjurySide(record.get("injured_side", "unknown")),
+        injury_laterality_source=str(record.get("injury_laterality_source", "")),
         player_name=str(record.get("player_name", _label_from_filename(video_path.name))),
         video_path=video_path,
         notes=str(record.get("notes", "")),

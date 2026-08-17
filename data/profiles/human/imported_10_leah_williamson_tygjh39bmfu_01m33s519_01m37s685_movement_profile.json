@@ -2618,9 +2618,2651 @@
         "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
         "notes": "right wrist pelvis x offset normalized geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
       }
+    ],
+    "bilateral": [
+      {
+        "feature_name": "contralateral_elbow_angle_2d_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.640625,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 71.77907749480485,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "maximum": {
+          "value": 179.9569069558642,
+          "event_relative_ms": -1400.0,
+          "source_frame_index": 36,
+          "analysis_frame_index": 21,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+        },
+        "range": 108.17782946105936,
+        "mean": 139.53345982803057,
+        "value_at_t0": {
+          "value": 71.77907749480485,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 114.94701349830817,
+        "change_baseline_to_t0": -43.167936003503314,
+        "peak_robust_rate": {
+          "value": -1043.2577788694332,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 114.94701349830817,
+            "range": 21.68199110421763,
+            "change": 15.008074812056606,
+            "robust_max_rate": 125.60050241820083,
+            "time_robust_max_rate_ms": -433.3333333333335
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 114.52174993051183,
+            "range": 47.769508037359486,
+            "change": -7.277095817880607,
+            "robust_max_rate": 626.9568601319763,
+            "time_robust_max_rate_ms": -33.33333333333303
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 71.77907749480485,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 1043.2577788694332,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "left_shoulder",
+          "left_elbow",
+          "left_wrist"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "contralateral elbow angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "contralateral_hka_angle_2d_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.53125,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 86.93915015752924,
+          "event_relative_ms": -533.333333333333,
+          "source_frame_index": 62,
+          "analysis_frame_index": 47,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 178.1934985481158,
+          "event_relative_ms": -1466.6666666666667,
+          "source_frame_index": 34,
+          "analysis_frame_index": 19,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+        },
+        "range": 91.25434839058656,
+        "mean": 132.7065591361602,
+        "value_at_t0": {
+          "value": 118.84260205896094,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 105.31709733776293,
+        "change_baseline_to_t0": 13.525504721198004,
+        "peak_robust_rate": {
+          "value": -303.6599321933123,
+          "event_relative_ms": -1400.0,
+          "source_frame_index": 36,
+          "analysis_frame_index": 21,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 105.31709733776293,
+            "range": 17.030441109892237,
+            "change": 14.378115553745005,
+            "robust_max_rate": 132.33105866980463,
+            "time_robust_max_rate_ms": -466.6666666666665
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 122.52645175975009,
+            "range": 31.859561839149947,
+            "change": 6.751043441073875,
+            "robust_max_rate": 208.28406232312233,
+            "time_robust_max_rate_ms": -233.33333333333348
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 118.84260205896094,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 24.111858833416967,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "contralateral hka angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "elbow_projected_bilateral_absolute_difference_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.71875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 1.5042351544701944,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "maximum": {
+          "value": 134.52254592425317,
+          "event_relative_ms": -1166.6666666666667,
+          "source_frame_index": 43,
+          "analysis_frame_index": 28,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "range": 133.01831076978297,
+        "mean": 46.169541434073025,
+        "value_at_t0": {
+          "value": 31.160408743681437,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 18.789795172104302,
+        "change_baseline_to_t0": 12.370613571577135,
+        "peak_robust_rate": {
+          "value": -758.2271386322443,
+          "event_relative_ms": -966.6666666666667,
+          "source_frame_index": 49,
+          "analysis_frame_index": 34,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 18.789795172104302,
+            "range": 28.006984077040215,
+            "change": -4.980815978193306,
+            "robust_max_rate": 214.10940748222478,
+            "time_robust_max_rate_ms": -433.3333333333335
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 29.6550168005681,
+            "range": 87.62488418881127,
+            "change": 69.98605025089893,
+            "robust_max_rate": 515.3162558120883,
+            "time_robust_max_rate_ms": -33.33333333333303
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 31.160408743681437,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 405.9573284227697,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_shoulder",
+          "right_elbow",
+          "right_wrist",
+          "left_shoulder",
+          "left_elbow",
+          "left_wrist"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "elbow projected bilateral absolute difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "elbow_projected_bilateral_difference_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.796875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": -134.52254592425317,
+          "event_relative_ms": -1166.6666666666667,
+          "source_frame_index": 43,
+          "analysis_frame_index": 28,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 48.12168905144813,
+          "event_relative_ms": -1600.0,
+          "source_frame_index": 30,
+          "analysis_frame_index": 15,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "range": 182.6442349757013,
+        "mean": -33.24291967372902,
+        "value_at_t0": {
+          "value": -31.160408743681437,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 18.789795172104302,
+        "change_baseline_to_t0": -49.950203915785735,
+        "peak_robust_rate": {
+          "value": -1293.073351246515,
+          "event_relative_ms": -1533.3333333333333,
+          "source_frame_index": 32,
+          "analysis_frame_index": 17,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 18.789795172104302,
+            "range": 28.006984077040215,
+            "change": -4.980815978193306,
+            "robust_max_rate": 214.10940748222478,
+            "time_robust_max_rate_ms": -433.3333333333335
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": -2.5385333184321275,
+            "range": 129.11883063769483,
+            "change": -110.50115642705336,
+            "robust_max_rate": 683.0884688208365,
+            "time_robust_max_rate_ms": -66.66666666666697
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": -31.160408743681437,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 405.9573284227697,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_shoulder",
+          "right_elbow",
+          "right_wrist",
+          "left_shoulder",
+          "left_elbow",
+          "left_wrist"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "elbow projected bilateral difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "hka_projected_bilateral_absolute_difference_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.6875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 0.0446545932178708,
+          "event_relative_ms": -1400.0,
+          "source_frame_index": 36,
+          "analysis_frame_index": 21,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "maximum": {
+          "value": 36.55311377162964,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "range": 36.50845917841177,
+        "mean": 7.567167616915373,
+        "value_at_t0": {
+          "value": 4.69185384722681,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 8.67177284926999,
+        "change_baseline_to_t0": -3.9799190020431805,
+        "peak_robust_rate": {
+          "value": 194.79558583497476,
+          "event_relative_ms": -800.0,
+          "source_frame_index": 54,
+          "analysis_frame_index": 39,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 8.67177284926999,
+            "range": 21.161748290633483,
+            "change": -9.567578453511345,
+            "robust_max_rate": 163.5997152385826,
+            "time_robust_max_rate_ms": -500.0
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 7.942687496752837,
+            "range": 32.52106159709744,
+            "change": -1.2171767275173409,
+            "robust_max_rate": 76.15034996337522,
+            "time_robust_max_rate_ms": -166.66666666666697
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 4.69185384722681,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 64.51329909964385,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle",
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "hka projected bilateral absolute difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "hka_projected_bilateral_difference_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.6875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": -36.55311377162964,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 31.518955208616944,
+          "event_relative_ms": -533.333333333333,
+          "source_frame_index": 62,
+          "analysis_frame_index": 47,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "range": 68.07206898024658,
+        "mean": 1.1360641133980696,
+        "value_at_t0": {
+          "value": 4.69185384722681,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": -3.3058836234505566,
+        "change_baseline_to_t0": 7.997737470677366,
+        "peak_robust_rate": {
+          "value": 318.29369765286333,
+          "event_relative_ms": -833.3333333333335,
+          "source_frame_index": 53,
+          "analysis_frame_index": 38,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": -3.3058836234505566,
+            "range": 33.35953535304412,
+            "change": -33.35953535304412,
+            "robust_max_rate": 309.82744704772045,
+            "time_robust_max_rate_ms": -466.6666666666665
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": -5.466412840853808,
+            "range": 39.499452644393784,
+            "change": 5.3762517053855845,
+            "robust_max_rate": 155.19943564392506,
+            "time_robust_max_rate_ms": -166.66666666666697
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 4.69185384722681,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 76.24231631715972,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle",
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "hka projected bilateral difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "injured_elbow_angle_2d_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.578125,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 19.276029933458478,
+          "event_relative_ms": -1533.3333333333333,
+          "source_frame_index": 32,
+          "analysis_frame_index": 17,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 165.44689472749468,
+          "event_relative_ms": -1633.3333333333335,
+          "source_frame_index": 29,
+          "analysis_frame_index": 14,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "range": 146.1708647940362,
+        "mean": 106.29054015430155,
+        "value_at_t0": {
+          "value": 40.618668751123415,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 133.73680867041247,
+        "change_baseline_to_t0": -93.11813991928906,
+        "peak_robust_rate": {
+          "value": -1449.215107292203,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 133.73680867041247,
+            "range": 20.577463489191828,
+            "change": 10.0272588338633,
+            "robust_max_rate": 141.62390426442505,
+            "time_robust_max_rate_ms": -300.0
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 111.98321661207969,
+            "range": 117.77825224493397,
+            "change": -117.77825224493397,
+            "robust_max_rate": 255.71347651755698,
+            "time_robust_max_rate_ms": -200.0
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 40.618668751123415,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 1449.215107292203,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_shoulder",
+          "right_elbow",
+          "right_wrist"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "injured elbow angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "injured_hka_angle_2d_deg",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "deg",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.53125,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 85.48058502024683,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 175.12736752183318,
+          "event_relative_ms": -1500.0,
+          "source_frame_index": 33,
+          "analysis_frame_index": 18,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+        },
+        "range": 89.64678250158634,
+        "mean": 133.84262324955824,
+        "value_at_t0": {
+          "value": 123.53445590618774,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 102.01121371431239,
+        "change_baseline_to_t0": 21.523242191875354,
+        "peak_robust_rate": {
+          "value": 324.60788346030955,
+          "event_relative_ms": -666.6666666666667,
+          "source_frame_index": 58,
+          "analysis_frame_index": 43,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 102.01121371431239,
+            "range": 21.08569945436831,
+            "change": -18.98141979929912,
+            "robust_max_rate": 231.3337532685417,
+            "time_robust_max_rate_ms": -500.0
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 117.06003891889627,
+            "range": 12.12729514645946,
+            "change": 12.12729514645946,
+            "robust_max_rate": 142.9224378131058,
+            "time_robust_max_rate_ms": -233.33333333333348
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 123.53445590618774,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 52.1304574837432,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "injured hka angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "knee_line_deviation_bilateral_absolute_difference",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "px",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "NOT_DYNAMIC_FEATURE",
+        "dynamic_completeness": 0.0,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 0.1561654654459943,
+          "event_relative_ms": -400.0,
+          "source_frame_index": 66,
+          "analysis_frame_index": 51,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "NOT_DYNAMIC_FEATURE"
+        },
+        "maximum": {
+          "value": 62.112444043224414,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "NOT_DYNAMIC_FEATURE"
+        },
+        "range": 61.95627857777842,
+        "mean": 7.962751946488653,
+        "value_at_t0": {
+          "value": 6.675216609019557,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "NOT_DYNAMIC_FEATURE"
+        },
+        "baseline_value": 6.3475662253348295,
+        "change_baseline_to_t0": 0.32765038368472776,
+        "peak_robust_rate": {
+          "value": null,
+          "event_relative_ms": null,
+          "source_frame_index": null,
+          "analysis_frame_index": null,
+          "feature_status": "UNAVAILABLE",
+          "dynamic_status": "UNAVAILABLE"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 6.3475662253348295,
+            "range": 31.19793154640535,
+            "change": -26.55099218028588,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 7.475146138891607,
+            "range": 29.14652137123081,
+            "change": -1.449919256500941,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 6.675216609019557,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Feature is not configured for dynamic analysis.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle",
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "GEOMETRY_ONLY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": false,
+        "eligibility_reason": "Geometry is supported; feature is not configured for dynamics.",
+        "notes": "knee line deviation bilateral absolute difference geometry is measurable, but rate-of-change evidence is limited or unavailable."
+      },
+      {
+        "feature_name": "knee_line_deviation_bilateral_difference",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "px",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.671875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": -62.112444043224414,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 42.814896532909174,
+          "event_relative_ms": -533.333333333333,
+          "source_frame_index": 62,
+          "analysis_frame_index": 47,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "range": 104.92734057613359,
+        "mean": 1.829659770867234,
+        "value_at_t0": {
+          "value": 6.675216609019557,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 5.107748651081965,
+        "change_baseline_to_t0": 1.567467957937592,
+        "peak_robust_rate": {
+          "value": -348.60227739672587,
+          "event_relative_ms": -466.6666666666665,
+          "source_frame_index": 64,
+          "analysis_frame_index": 49,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 5.107748651081965,
+            "range": 36.15720184341681,
+            "change": -36.15720184341681,
+            "robust_max_rate": 348.60227739672587,
+            "time_robust_max_rate_ms": -466.6666666666665
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": -3.8821922561344024,
+            "range": 35.791622616335374,
+            "change": -1.449919256500941,
+            "robust_max_rate": 132.48848534208986,
+            "time_robust_max_rate_ms": -233.33333333333348
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 6.675216609019557,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 133.90221165991747,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle",
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "knee line deviation bilateral difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "knee_line_deviation_normalized_bilateral_absolute_difference",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "body_scale",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.71875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": 0.0009151033086786664,
+          "event_relative_ms": -400.0,
+          "source_frame_index": 66,
+          "analysis_frame_index": 51,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+        },
+        "maximum": {
+          "value": 0.3639684541761225,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "range": 0.36305335086744384,
+        "mean": 0.046660384430123505,
+        "value_at_t0": {
+          "value": 0.03911564434310255,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 0.03719566831419356,
+        "change_baseline_to_t0": 0.00191997602890899,
+        "peak_robust_rate": {
+          "value": -2.0317693552984535,
+          "event_relative_ms": -466.6666666666665,
+          "source_frame_index": 64,
+          "analysis_frame_index": 49,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 0.03719566831419356,
+            "range": 0.18281462102079882,
+            "change": -0.15558433949203365,
+            "robust_max_rate": 2.0317693552984535,
+            "time_robust_max_rate_ms": -466.6666666666665
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 0.04380309657465138,
+            "range": 0.17079370312196607,
+            "change": -0.008496282485705997,
+            "robust_max_rate": 0.6443313340293881,
+            "time_robust_max_rate_ms": -233.33333333333348
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 0.03911564434310255,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 0.38882493673630814,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle",
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "knee line deviation normalized bilateral absolute difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      },
+      {
+        "feature_name": "knee_line_deviation_normalized_bilateral_difference",
+        "body_region": "bilateral",
+        "feature_family": "bilateral",
+        "unit": "body_scale",
+        "geometry_status": "SUPPORTED",
+        "geometry_completeness": 1.0,
+        "dynamic_status": "SUPPORTED",
+        "dynamic_completeness": 0.671875,
+        "quality_category": "SUPPORTED",
+        "minimum": {
+          "value": -0.3639684541761225,
+          "event_relative_ms": -733.3333333333333,
+          "source_frame_index": 56,
+          "analysis_frame_index": 41,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "maximum": {
+          "value": 0.2508880780145939,
+          "event_relative_ms": -533.333333333333,
+          "source_frame_index": 62,
+          "analysis_frame_index": 47,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "TEMPORAL_OUTLIER"
+        },
+        "range": 0.6148565321907165,
+        "mean": 0.010721497901569534,
+        "value_at_t0": {
+          "value": 0.03911564434310255,
+          "event_relative_ms": 0.0,
+          "source_frame_index": 78,
+          "analysis_frame_index": 63,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "baseline_value": 0.029930546277662937,
+        "change_baseline_to_t0": 0.009185098065439615,
+        "peak_robust_rate": {
+          "value": -2.0427505950025973,
+          "event_relative_ms": -466.6666666666665,
+          "source_frame_index": 64,
+          "analysis_frame_index": 49,
+          "feature_status": "SUPPORTED",
+          "dynamic_status": "SUPPORTED"
+        },
+        "window_summaries": [
+          {
+            "window_name": "PRE_EARLY",
+            "window_start_ms": -500.0,
+            "window_end_ms": -250.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 0.029930546277662937,
+            "range": 0.21187510916692132,
+            "change": -0.21187510916692132,
+            "robust_max_rate": 2.0427505950025973,
+            "time_robust_max_rate_ms": -466.6666666666665
+          },
+          {
+            "window_name": "PRE_LATE",
+            "window_start_ms": -250.0,
+            "window_end_ms": 0.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": -0.022748992348400277,
+            "range": 0.20973287650792088,
+            "change": -0.008496282485705997,
+            "robust_max_rate": 0.7763601955920237,
+            "time_robust_max_rate_ms": -233.33333333333348
+          },
+          {
+            "window_name": "EARLY_POST",
+            "window_start_ms": 0.0,
+            "window_end_ms": 100.0,
+            "geometry_status": "SUPPORTED",
+            "geometry_completeness": 1.0,
+            "mean": 0.03911564434310255,
+            "range": 0.0,
+            "change": null,
+            "robust_max_rate": 0.7846443935567613,
+            "time_robust_max_rate_ms": 0.0
+          },
+          {
+            "window_name": "POST",
+            "window_start_ms": 100.0,
+            "window_end_ms": 200.0,
+            "geometry_status": "INSUFFICIENT_COMPLETENESS",
+            "geometry_completeness": 0.0,
+            "mean": null,
+            "range": null,
+            "change": null,
+            "robust_max_rate": null,
+            "time_robust_max_rate_ms": null
+          }
+        ],
+        "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+        "landmarks_used": [
+          "right_hip",
+          "right_knee",
+          "right_ankle",
+          "left_hip",
+          "left_knee",
+          "left_ankle"
+        ],
+        "analytics_eligibility": "ANALYTICS_READY",
+        "geometry_analytics_eligible": true,
+        "dynamic_analytics_eligible": true,
+        "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+        "notes": "knee line deviation normalized bilateral difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+      }
     ]
   },
   "trajectory_summaries": [
+    {
+      "feature_name": "contralateral_elbow_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.640625,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 71.77907749480485,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "maximum": {
+        "value": 179.9569069558642,
+        "event_relative_ms": -1400.0,
+        "source_frame_index": 36,
+        "analysis_frame_index": 21,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "range": 108.17782946105936,
+      "mean": 139.53345982803057,
+      "value_at_t0": {
+        "value": 71.77907749480485,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 114.94701349830817,
+      "change_baseline_to_t0": -43.167936003503314,
+      "peak_robust_rate": {
+        "value": -1043.2577788694332,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 114.94701349830817,
+          "range": 21.68199110421763,
+          "change": 15.008074812056606,
+          "robust_max_rate": 125.60050241820083,
+          "time_robust_max_rate_ms": -433.3333333333335
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 114.52174993051183,
+          "range": 47.769508037359486,
+          "change": -7.277095817880607,
+          "robust_max_rate": 626.9568601319763,
+          "time_robust_max_rate_ms": -33.33333333333303
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 71.77907749480485,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 1043.2577788694332,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "left_shoulder",
+        "left_elbow",
+        "left_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "contralateral elbow angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "contralateral_hka_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.53125,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 86.93915015752924,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 178.1934985481158,
+        "event_relative_ms": -1466.6666666666667,
+        "source_frame_index": 34,
+        "analysis_frame_index": 19,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "range": 91.25434839058656,
+      "mean": 132.7065591361602,
+      "value_at_t0": {
+        "value": 118.84260205896094,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 105.31709733776293,
+      "change_baseline_to_t0": 13.525504721198004,
+      "peak_robust_rate": {
+        "value": -303.6599321933123,
+        "event_relative_ms": -1400.0,
+        "source_frame_index": 36,
+        "analysis_frame_index": 21,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 105.31709733776293,
+          "range": 17.030441109892237,
+          "change": 14.378115553745005,
+          "robust_max_rate": 132.33105866980463,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 122.52645175975009,
+          "range": 31.859561839149947,
+          "change": 6.751043441073875,
+          "robust_max_rate": 208.28406232312233,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 118.84260205896094,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 24.111858833416967,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "contralateral hka angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "elbow_projected_bilateral_absolute_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.71875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 1.5042351544701944,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "maximum": {
+        "value": 134.52254592425317,
+        "event_relative_ms": -1166.6666666666667,
+        "source_frame_index": 43,
+        "analysis_frame_index": 28,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 133.01831076978297,
+      "mean": 46.169541434073025,
+      "value_at_t0": {
+        "value": 31.160408743681437,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 18.789795172104302,
+      "change_baseline_to_t0": 12.370613571577135,
+      "peak_robust_rate": {
+        "value": -758.2271386322443,
+        "event_relative_ms": -966.6666666666667,
+        "source_frame_index": 49,
+        "analysis_frame_index": 34,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 18.789795172104302,
+          "range": 28.006984077040215,
+          "change": -4.980815978193306,
+          "robust_max_rate": 214.10940748222478,
+          "time_robust_max_rate_ms": -433.3333333333335
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 29.6550168005681,
+          "range": 87.62488418881127,
+          "change": 69.98605025089893,
+          "robust_max_rate": 515.3162558120883,
+          "time_robust_max_rate_ms": -33.33333333333303
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 31.160408743681437,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 405.9573284227697,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_shoulder",
+        "right_elbow",
+        "right_wrist",
+        "left_shoulder",
+        "left_elbow",
+        "left_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "elbow projected bilateral absolute difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "elbow_projected_bilateral_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.796875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -134.52254592425317,
+        "event_relative_ms": -1166.6666666666667,
+        "source_frame_index": 43,
+        "analysis_frame_index": 28,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 48.12168905144813,
+        "event_relative_ms": -1600.0,
+        "source_frame_index": 30,
+        "analysis_frame_index": 15,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 182.6442349757013,
+      "mean": -33.24291967372902,
+      "value_at_t0": {
+        "value": -31.160408743681437,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 18.789795172104302,
+      "change_baseline_to_t0": -49.950203915785735,
+      "peak_robust_rate": {
+        "value": -1293.073351246515,
+        "event_relative_ms": -1533.3333333333333,
+        "source_frame_index": 32,
+        "analysis_frame_index": 17,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 18.789795172104302,
+          "range": 28.006984077040215,
+          "change": -4.980815978193306,
+          "robust_max_rate": 214.10940748222478,
+          "time_robust_max_rate_ms": -433.3333333333335
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -2.5385333184321275,
+          "range": 129.11883063769483,
+          "change": -110.50115642705336,
+          "robust_max_rate": 683.0884688208365,
+          "time_robust_max_rate_ms": -66.66666666666697
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -31.160408743681437,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 405.9573284227697,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_shoulder",
+        "right_elbow",
+        "right_wrist",
+        "left_shoulder",
+        "left_elbow",
+        "left_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "elbow projected bilateral difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "hka_projected_bilateral_absolute_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.6875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 0.0446545932178708,
+        "event_relative_ms": -1400.0,
+        "source_frame_index": 36,
+        "analysis_frame_index": 21,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "maximum": {
+        "value": 36.55311377162964,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 36.50845917841177,
+      "mean": 7.567167616915373,
+      "value_at_t0": {
+        "value": 4.69185384722681,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 8.67177284926999,
+      "change_baseline_to_t0": -3.9799190020431805,
+      "peak_robust_rate": {
+        "value": 194.79558583497476,
+        "event_relative_ms": -800.0,
+        "source_frame_index": 54,
+        "analysis_frame_index": 39,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 8.67177284926999,
+          "range": 21.161748290633483,
+          "change": -9.567578453511345,
+          "robust_max_rate": 163.5997152385826,
+          "time_robust_max_rate_ms": -500.0
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 7.942687496752837,
+          "range": 32.52106159709744,
+          "change": -1.2171767275173409,
+          "robust_max_rate": 76.15034996337522,
+          "time_robust_max_rate_ms": -166.66666666666697
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 4.69185384722681,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 64.51329909964385,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "hka projected bilateral absolute difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "hka_projected_bilateral_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.6875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -36.55311377162964,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 31.518955208616944,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "range": 68.07206898024658,
+      "mean": 1.1360641133980696,
+      "value_at_t0": {
+        "value": 4.69185384722681,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": -3.3058836234505566,
+      "change_baseline_to_t0": 7.997737470677366,
+      "peak_robust_rate": {
+        "value": 318.29369765286333,
+        "event_relative_ms": -833.3333333333335,
+        "source_frame_index": 53,
+        "analysis_frame_index": 38,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -3.3058836234505566,
+          "range": 33.35953535304412,
+          "change": -33.35953535304412,
+          "robust_max_rate": 309.82744704772045,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -5.466412840853808,
+          "range": 39.499452644393784,
+          "change": 5.3762517053855845,
+          "robust_max_rate": 155.19943564392506,
+          "time_robust_max_rate_ms": -166.66666666666697
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 4.69185384722681,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 76.24231631715972,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "hka projected bilateral difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "injured_elbow_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.578125,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 19.276029933458478,
+        "event_relative_ms": -1533.3333333333333,
+        "source_frame_index": 32,
+        "analysis_frame_index": 17,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 165.44689472749468,
+        "event_relative_ms": -1633.3333333333335,
+        "source_frame_index": 29,
+        "analysis_frame_index": 14,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "range": 146.1708647940362,
+      "mean": 106.29054015430155,
+      "value_at_t0": {
+        "value": 40.618668751123415,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 133.73680867041247,
+      "change_baseline_to_t0": -93.11813991928906,
+      "peak_robust_rate": {
+        "value": -1449.215107292203,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 133.73680867041247,
+          "range": 20.577463489191828,
+          "change": 10.0272588338633,
+          "robust_max_rate": 141.62390426442505,
+          "time_robust_max_rate_ms": -300.0
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 111.98321661207969,
+          "range": 117.77825224493397,
+          "change": -117.77825224493397,
+          "robust_max_rate": 255.71347651755698,
+          "time_robust_max_rate_ms": -200.0
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 40.618668751123415,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 1449.215107292203,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_shoulder",
+        "right_elbow",
+        "right_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "injured elbow angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "injured_hka_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.53125,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 85.48058502024683,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 175.12736752183318,
+        "event_relative_ms": -1500.0,
+        "source_frame_index": 33,
+        "analysis_frame_index": 18,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "range": 89.64678250158634,
+      "mean": 133.84262324955824,
+      "value_at_t0": {
+        "value": 123.53445590618774,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 102.01121371431239,
+      "change_baseline_to_t0": 21.523242191875354,
+      "peak_robust_rate": {
+        "value": 324.60788346030955,
+        "event_relative_ms": -666.6666666666667,
+        "source_frame_index": 58,
+        "analysis_frame_index": 43,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 102.01121371431239,
+          "range": 21.08569945436831,
+          "change": -18.98141979929912,
+          "robust_max_rate": 231.3337532685417,
+          "time_robust_max_rate_ms": -500.0
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 117.06003891889627,
+          "range": 12.12729514645946,
+          "change": 12.12729514645946,
+          "robust_max_rate": 142.9224378131058,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 123.53445590618774,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 52.1304574837432,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "injured hka angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "knee_line_deviation_bilateral_absolute_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "px",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "NOT_DYNAMIC_FEATURE",
+      "dynamic_completeness": 0.0,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 0.1561654654459943,
+        "event_relative_ms": -400.0,
+        "source_frame_index": 66,
+        "analysis_frame_index": 51,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "NOT_DYNAMIC_FEATURE"
+      },
+      "maximum": {
+        "value": 62.112444043224414,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "NOT_DYNAMIC_FEATURE"
+      },
+      "range": 61.95627857777842,
+      "mean": 7.962751946488653,
+      "value_at_t0": {
+        "value": 6.675216609019557,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "NOT_DYNAMIC_FEATURE"
+      },
+      "baseline_value": 6.3475662253348295,
+      "change_baseline_to_t0": 0.32765038368472776,
+      "peak_robust_rate": {
+        "value": null,
+        "event_relative_ms": null,
+        "source_frame_index": null,
+        "analysis_frame_index": null,
+        "feature_status": "UNAVAILABLE",
+        "dynamic_status": "UNAVAILABLE"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 6.3475662253348295,
+          "range": 31.19793154640535,
+          "change": -26.55099218028588,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 7.475146138891607,
+          "range": 29.14652137123081,
+          "change": -1.449919256500941,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 6.675216609019557,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Feature is not configured for dynamic analysis.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "GEOMETRY_ONLY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": false,
+      "eligibility_reason": "Geometry is supported; feature is not configured for dynamics.",
+      "notes": "knee line deviation bilateral absolute difference geometry is measurable, but rate-of-change evidence is limited or unavailable."
+    },
+    {
+      "feature_name": "knee_line_deviation_bilateral_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "px",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.671875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -62.112444043224414,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 42.814896532909174,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 104.92734057613359,
+      "mean": 1.829659770867234,
+      "value_at_t0": {
+        "value": 6.675216609019557,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 5.107748651081965,
+      "change_baseline_to_t0": 1.567467957937592,
+      "peak_robust_rate": {
+        "value": -348.60227739672587,
+        "event_relative_ms": -466.6666666666665,
+        "source_frame_index": 64,
+        "analysis_frame_index": 49,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 5.107748651081965,
+          "range": 36.15720184341681,
+          "change": -36.15720184341681,
+          "robust_max_rate": 348.60227739672587,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -3.8821922561344024,
+          "range": 35.791622616335374,
+          "change": -1.449919256500941,
+          "robust_max_rate": 132.48848534208986,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 6.675216609019557,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 133.90221165991747,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "knee line deviation bilateral difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_absolute_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "body_scale",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.71875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 0.0009151033086786664,
+        "event_relative_ms": -400.0,
+        "source_frame_index": 66,
+        "analysis_frame_index": 51,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "maximum": {
+        "value": 0.3639684541761225,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 0.36305335086744384,
+      "mean": 0.046660384430123505,
+      "value_at_t0": {
+        "value": 0.03911564434310255,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 0.03719566831419356,
+      "change_baseline_to_t0": 0.00191997602890899,
+      "peak_robust_rate": {
+        "value": -2.0317693552984535,
+        "event_relative_ms": -466.6666666666665,
+        "source_frame_index": 64,
+        "analysis_frame_index": 49,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.03719566831419356,
+          "range": 0.18281462102079882,
+          "change": -0.15558433949203365,
+          "robust_max_rate": 2.0317693552984535,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.04380309657465138,
+          "range": 0.17079370312196607,
+          "change": -0.008496282485705997,
+          "robust_max_rate": 0.6443313340293881,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.03911564434310255,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 0.38882493673630814,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "knee line deviation normalized bilateral absolute difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "body_scale",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.671875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -0.3639684541761225,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 0.2508880780145939,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 0.6148565321907165,
+      "mean": 0.010721497901569534,
+      "value_at_t0": {
+        "value": 0.03911564434310255,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 0.029930546277662937,
+      "change_baseline_to_t0": 0.009185098065439615,
+      "peak_robust_rate": {
+        "value": -2.0427505950025973,
+        "event_relative_ms": -466.6666666666665,
+        "source_frame_index": 64,
+        "analysis_frame_index": 49,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.029930546277662937,
+          "range": 0.21187510916692132,
+          "change": -0.21187510916692132,
+          "robust_max_rate": 2.0427505950025973,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -0.022748992348400277,
+          "range": 0.20973287650792088,
+          "change": -0.008496282485705997,
+          "robust_max_rate": 0.7763601955920237,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.03911564434310255,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 0.7846443935567613,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "knee line deviation normalized bilateral difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
     {
       "feature_name": "left_elbow_angle_2d_deg",
       "body_region": "upper_body",
@@ -5211,6 +7853,1326 @@
     }
   ],
   "temporal_dynamic_summaries": [
+    {
+      "feature_name": "contralateral_elbow_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.640625,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 71.77907749480485,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "maximum": {
+        "value": 179.9569069558642,
+        "event_relative_ms": -1400.0,
+        "source_frame_index": 36,
+        "analysis_frame_index": 21,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "range": 108.17782946105936,
+      "mean": 139.53345982803057,
+      "value_at_t0": {
+        "value": 71.77907749480485,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 114.94701349830817,
+      "change_baseline_to_t0": -43.167936003503314,
+      "peak_robust_rate": {
+        "value": -1043.2577788694332,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 114.94701349830817,
+          "range": 21.68199110421763,
+          "change": 15.008074812056606,
+          "robust_max_rate": 125.60050241820083,
+          "time_robust_max_rate_ms": -433.3333333333335
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 114.52174993051183,
+          "range": 47.769508037359486,
+          "change": -7.277095817880607,
+          "robust_max_rate": 626.9568601319763,
+          "time_robust_max_rate_ms": -33.33333333333303
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 71.77907749480485,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 1043.2577788694332,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "left_shoulder",
+        "left_elbow",
+        "left_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "contralateral elbow angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "contralateral_hka_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.53125,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 86.93915015752924,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 178.1934985481158,
+        "event_relative_ms": -1466.6666666666667,
+        "source_frame_index": 34,
+        "analysis_frame_index": 19,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "range": 91.25434839058656,
+      "mean": 132.7065591361602,
+      "value_at_t0": {
+        "value": 118.84260205896094,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 105.31709733776293,
+      "change_baseline_to_t0": 13.525504721198004,
+      "peak_robust_rate": {
+        "value": -303.6599321933123,
+        "event_relative_ms": -1400.0,
+        "source_frame_index": 36,
+        "analysis_frame_index": 21,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 105.31709733776293,
+          "range": 17.030441109892237,
+          "change": 14.378115553745005,
+          "robust_max_rate": 132.33105866980463,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 122.52645175975009,
+          "range": 31.859561839149947,
+          "change": 6.751043441073875,
+          "robust_max_rate": 208.28406232312233,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 118.84260205896094,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 24.111858833416967,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "contralateral hka angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "elbow_projected_bilateral_absolute_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.71875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 1.5042351544701944,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "maximum": {
+        "value": 134.52254592425317,
+        "event_relative_ms": -1166.6666666666667,
+        "source_frame_index": 43,
+        "analysis_frame_index": 28,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 133.01831076978297,
+      "mean": 46.169541434073025,
+      "value_at_t0": {
+        "value": 31.160408743681437,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 18.789795172104302,
+      "change_baseline_to_t0": 12.370613571577135,
+      "peak_robust_rate": {
+        "value": -758.2271386322443,
+        "event_relative_ms": -966.6666666666667,
+        "source_frame_index": 49,
+        "analysis_frame_index": 34,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 18.789795172104302,
+          "range": 28.006984077040215,
+          "change": -4.980815978193306,
+          "robust_max_rate": 214.10940748222478,
+          "time_robust_max_rate_ms": -433.3333333333335
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 29.6550168005681,
+          "range": 87.62488418881127,
+          "change": 69.98605025089893,
+          "robust_max_rate": 515.3162558120883,
+          "time_robust_max_rate_ms": -33.33333333333303
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 31.160408743681437,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 405.9573284227697,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_shoulder",
+        "right_elbow",
+        "right_wrist",
+        "left_shoulder",
+        "left_elbow",
+        "left_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "elbow projected bilateral absolute difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "elbow_projected_bilateral_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.796875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -134.52254592425317,
+        "event_relative_ms": -1166.6666666666667,
+        "source_frame_index": 43,
+        "analysis_frame_index": 28,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 48.12168905144813,
+        "event_relative_ms": -1600.0,
+        "source_frame_index": 30,
+        "analysis_frame_index": 15,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 182.6442349757013,
+      "mean": -33.24291967372902,
+      "value_at_t0": {
+        "value": -31.160408743681437,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 18.789795172104302,
+      "change_baseline_to_t0": -49.950203915785735,
+      "peak_robust_rate": {
+        "value": -1293.073351246515,
+        "event_relative_ms": -1533.3333333333333,
+        "source_frame_index": 32,
+        "analysis_frame_index": 17,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 18.789795172104302,
+          "range": 28.006984077040215,
+          "change": -4.980815978193306,
+          "robust_max_rate": 214.10940748222478,
+          "time_robust_max_rate_ms": -433.3333333333335
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -2.5385333184321275,
+          "range": 129.11883063769483,
+          "change": -110.50115642705336,
+          "robust_max_rate": 683.0884688208365,
+          "time_robust_max_rate_ms": -66.66666666666697
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -31.160408743681437,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 405.9573284227697,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_shoulder",
+        "right_elbow",
+        "right_wrist",
+        "left_shoulder",
+        "left_elbow",
+        "left_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "elbow projected bilateral difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "hka_projected_bilateral_absolute_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.6875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 0.0446545932178708,
+        "event_relative_ms": -1400.0,
+        "source_frame_index": 36,
+        "analysis_frame_index": 21,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "maximum": {
+        "value": 36.55311377162964,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 36.50845917841177,
+      "mean": 7.567167616915373,
+      "value_at_t0": {
+        "value": 4.69185384722681,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 8.67177284926999,
+      "change_baseline_to_t0": -3.9799190020431805,
+      "peak_robust_rate": {
+        "value": 194.79558583497476,
+        "event_relative_ms": -800.0,
+        "source_frame_index": 54,
+        "analysis_frame_index": 39,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 8.67177284926999,
+          "range": 21.161748290633483,
+          "change": -9.567578453511345,
+          "robust_max_rate": 163.5997152385826,
+          "time_robust_max_rate_ms": -500.0
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 7.942687496752837,
+          "range": 32.52106159709744,
+          "change": -1.2171767275173409,
+          "robust_max_rate": 76.15034996337522,
+          "time_robust_max_rate_ms": -166.66666666666697
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 4.69185384722681,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 64.51329909964385,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "hka projected bilateral absolute difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "hka_projected_bilateral_difference_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.6875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -36.55311377162964,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 31.518955208616944,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "range": 68.07206898024658,
+      "mean": 1.1360641133980696,
+      "value_at_t0": {
+        "value": 4.69185384722681,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": -3.3058836234505566,
+      "change_baseline_to_t0": 7.997737470677366,
+      "peak_robust_rate": {
+        "value": 318.29369765286333,
+        "event_relative_ms": -833.3333333333335,
+        "source_frame_index": 53,
+        "analysis_frame_index": 38,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -3.3058836234505566,
+          "range": 33.35953535304412,
+          "change": -33.35953535304412,
+          "robust_max_rate": 309.82744704772045,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -5.466412840853808,
+          "range": 39.499452644393784,
+          "change": 5.3762517053855845,
+          "robust_max_rate": 155.19943564392506,
+          "time_robust_max_rate_ms": -166.66666666666697
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 4.69185384722681,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 76.24231631715972,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "hka projected bilateral difference deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "injured_elbow_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.578125,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 19.276029933458478,
+        "event_relative_ms": -1533.3333333333333,
+        "source_frame_index": 32,
+        "analysis_frame_index": 17,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 165.44689472749468,
+        "event_relative_ms": -1633.3333333333335,
+        "source_frame_index": 29,
+        "analysis_frame_index": 14,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "range": 146.1708647940362,
+      "mean": 106.29054015430155,
+      "value_at_t0": {
+        "value": 40.618668751123415,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 133.73680867041247,
+      "change_baseline_to_t0": -93.11813991928906,
+      "peak_robust_rate": {
+        "value": -1449.215107292203,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 133.73680867041247,
+          "range": 20.577463489191828,
+          "change": 10.0272588338633,
+          "robust_max_rate": 141.62390426442505,
+          "time_robust_max_rate_ms": -300.0
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 111.98321661207969,
+          "range": 117.77825224493397,
+          "change": -117.77825224493397,
+          "robust_max_rate": 255.71347651755698,
+          "time_robust_max_rate_ms": -200.0
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 40.618668751123415,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 1449.215107292203,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_shoulder",
+        "right_elbow",
+        "right_wrist"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "injured elbow angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "injured_hka_angle_2d_deg",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "deg",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.53125,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 85.48058502024683,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 175.12736752183318,
+        "event_relative_ms": -1500.0,
+        "source_frame_index": 33,
+        "analysis_frame_index": 18,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "range": 89.64678250158634,
+      "mean": 133.84262324955824,
+      "value_at_t0": {
+        "value": 123.53445590618774,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 102.01121371431239,
+      "change_baseline_to_t0": 21.523242191875354,
+      "peak_robust_rate": {
+        "value": 324.60788346030955,
+        "event_relative_ms": -666.6666666666667,
+        "source_frame_index": 58,
+        "analysis_frame_index": 43,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 102.01121371431239,
+          "range": 21.08569945436831,
+          "change": -18.98141979929912,
+          "robust_max_rate": 231.3337532685417,
+          "time_robust_max_rate_ms": -500.0
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 117.06003891889627,
+          "range": 12.12729514645946,
+          "change": 12.12729514645946,
+          "robust_max_rate": 142.9224378131058,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 123.53445590618774,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 52.1304574837432,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "injured hka angle 2d deg geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "knee_line_deviation_bilateral_absolute_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "px",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "NOT_DYNAMIC_FEATURE",
+      "dynamic_completeness": 0.0,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 0.1561654654459943,
+        "event_relative_ms": -400.0,
+        "source_frame_index": 66,
+        "analysis_frame_index": 51,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "NOT_DYNAMIC_FEATURE"
+      },
+      "maximum": {
+        "value": 62.112444043224414,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "NOT_DYNAMIC_FEATURE"
+      },
+      "range": 61.95627857777842,
+      "mean": 7.962751946488653,
+      "value_at_t0": {
+        "value": 6.675216609019557,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "NOT_DYNAMIC_FEATURE"
+      },
+      "baseline_value": 6.3475662253348295,
+      "change_baseline_to_t0": 0.32765038368472776,
+      "peak_robust_rate": {
+        "value": null,
+        "event_relative_ms": null,
+        "source_frame_index": null,
+        "analysis_frame_index": null,
+        "feature_status": "UNAVAILABLE",
+        "dynamic_status": "UNAVAILABLE"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 6.3475662253348295,
+          "range": 31.19793154640535,
+          "change": -26.55099218028588,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 7.475146138891607,
+          "range": 29.14652137123081,
+          "change": -1.449919256500941,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 6.675216609019557,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Feature is not configured for dynamic analysis.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "GEOMETRY_ONLY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": false,
+      "eligibility_reason": "Geometry is supported; feature is not configured for dynamics.",
+      "notes": "knee line deviation bilateral absolute difference geometry is measurable, but rate-of-change evidence is limited or unavailable."
+    },
+    {
+      "feature_name": "knee_line_deviation_bilateral_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "px",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.671875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -62.112444043224414,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 42.814896532909174,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 104.92734057613359,
+      "mean": 1.829659770867234,
+      "value_at_t0": {
+        "value": 6.675216609019557,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 5.107748651081965,
+      "change_baseline_to_t0": 1.567467957937592,
+      "peak_robust_rate": {
+        "value": -348.60227739672587,
+        "event_relative_ms": -466.6666666666665,
+        "source_frame_index": 64,
+        "analysis_frame_index": 49,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 5.107748651081965,
+          "range": 36.15720184341681,
+          "change": -36.15720184341681,
+          "robust_max_rate": 348.60227739672587,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -3.8821922561344024,
+          "range": 35.791622616335374,
+          "change": -1.449919256500941,
+          "robust_max_rate": 132.48848534208986,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 6.675216609019557,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 133.90221165991747,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "knee line deviation bilateral difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_absolute_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "body_scale",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.71875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": 0.0009151033086786664,
+        "event_relative_ms": -400.0,
+        "source_frame_index": 66,
+        "analysis_frame_index": 51,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "LOW_DYNAMIC_CONFIDENCE"
+      },
+      "maximum": {
+        "value": 0.3639684541761225,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 0.36305335086744384,
+      "mean": 0.046660384430123505,
+      "value_at_t0": {
+        "value": 0.03911564434310255,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 0.03719566831419356,
+      "change_baseline_to_t0": 0.00191997602890899,
+      "peak_robust_rate": {
+        "value": -2.0317693552984535,
+        "event_relative_ms": -466.6666666666665,
+        "source_frame_index": 64,
+        "analysis_frame_index": 49,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.03719566831419356,
+          "range": 0.18281462102079882,
+          "change": -0.15558433949203365,
+          "robust_max_rate": 2.0317693552984535,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.04380309657465138,
+          "range": 0.17079370312196607,
+          "change": -0.008496282485705997,
+          "robust_max_rate": 0.6443313340293881,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.03911564434310255,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 0.38882493673630814,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "knee line deviation normalized bilateral absolute difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_difference",
+      "body_region": "bilateral",
+      "feature_family": "bilateral",
+      "unit": "body_scale",
+      "geometry_status": "SUPPORTED",
+      "geometry_completeness": 1.0,
+      "dynamic_status": "SUPPORTED",
+      "dynamic_completeness": 0.671875,
+      "quality_category": "SUPPORTED",
+      "minimum": {
+        "value": -0.3639684541761225,
+        "event_relative_ms": -733.3333333333333,
+        "source_frame_index": 56,
+        "analysis_frame_index": 41,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "maximum": {
+        "value": 0.2508880780145939,
+        "event_relative_ms": -533.333333333333,
+        "source_frame_index": 62,
+        "analysis_frame_index": 47,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "TEMPORAL_OUTLIER"
+      },
+      "range": 0.6148565321907165,
+      "mean": 0.010721497901569534,
+      "value_at_t0": {
+        "value": 0.03911564434310255,
+        "event_relative_ms": 0.0,
+        "source_frame_index": 78,
+        "analysis_frame_index": 63,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "baseline_value": 0.029930546277662937,
+      "change_baseline_to_t0": 0.009185098065439615,
+      "peak_robust_rate": {
+        "value": -2.0427505950025973,
+        "event_relative_ms": -466.6666666666665,
+        "source_frame_index": 64,
+        "analysis_frame_index": 49,
+        "feature_status": "SUPPORTED",
+        "dynamic_status": "SUPPORTED"
+      },
+      "window_summaries": [
+        {
+          "window_name": "PRE_EARLY",
+          "window_start_ms": -500.0,
+          "window_end_ms": -250.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.029930546277662937,
+          "range": 0.21187510916692132,
+          "change": -0.21187510916692132,
+          "robust_max_rate": 2.0427505950025973,
+          "time_robust_max_rate_ms": -466.6666666666665
+        },
+        {
+          "window_name": "PRE_LATE",
+          "window_start_ms": -250.0,
+          "window_end_ms": 0.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": -0.022748992348400277,
+          "range": 0.20973287650792088,
+          "change": -0.008496282485705997,
+          "robust_max_rate": 0.7763601955920237,
+          "time_robust_max_rate_ms": -233.33333333333348
+        },
+        {
+          "window_name": "EARLY_POST",
+          "window_start_ms": 0.0,
+          "window_end_ms": 100.0,
+          "geometry_status": "SUPPORTED",
+          "geometry_completeness": 1.0,
+          "mean": 0.03911564434310255,
+          "range": 0.0,
+          "change": null,
+          "robust_max_rate": 0.7846443935567613,
+          "time_robust_max_rate_ms": 0.0
+        },
+        {
+          "window_name": "POST",
+          "window_start_ms": 100.0,
+          "window_end_ms": 200.0,
+          "geometry_status": "INSUFFICIENT_COMPLETENESS",
+          "geometry_completeness": 0.0,
+          "mean": null,
+          "range": null,
+          "change": null,
+          "robust_max_rate": null,
+          "time_robust_max_rate_ms": null
+        }
+      ],
+      "primary_rejection_reason": "Local trajectory residuals are high relative to local movement.",
+      "landmarks_used": [
+        "right_hip",
+        "right_knee",
+        "right_ankle",
+        "left_hip",
+        "left_knee",
+        "left_ankle"
+      ],
+      "analytics_eligibility": "ANALYTICS_READY",
+      "geometry_analytics_eligible": true,
+      "dynamic_analytics_eligible": true,
+      "eligibility_reason": "Geometry and robust dynamics meet analysis-quality thresholds.",
+      "notes": "knee line deviation normalized bilateral difference geometry and robust rate-of-change evidence are supported by current analysis-quality rules."
+    },
     {
       "feature_name": "left_elbow_angle_2d_deg",
       "body_region": "upper_body",
@@ -7812,25 +11774,25 @@
     "core_landmark_coverage": 1.0,
     "lower_limb_landmark_coverage": 1.0,
     "geometry_feature_coverage": 1.0,
-    "dynamic_feature_coverage": 0.5481770833333334,
+    "dynamic_feature_coverage": 0.56640625,
     "interpolation_fraction": 0.0395,
     "rejected_fraction": 0.0919,
     "identity_uncertainty_fraction": 0.0,
     "target_loss_fraction": 0.0,
-    "supported_feature_count": 22,
+    "supported_feature_count": 34,
     "limited_feature_count": 2,
     "unavailable_feature_count": 0,
-    "analytics_ready_feature_count": 19,
+    "analytics_ready_feature_count": 30,
     "primary_evidence_limitations": [
       "Local trajectory residuals are high relative to local movement.",
       "Feature is not configured for dynamic analysis."
     ],
     "evidence_overview": {
-      "supported_features": 22,
+      "supported_features": 34,
       "limited_features": 2,
       "unavailable_features": 0,
       "geometry_coverage": 1.0,
-      "dynamic_coverage": 0.5481770833333334,
+      "dynamic_coverage": 0.56640625,
       "event_anchor_confidence": 0.6,
       "primary_limitations": [
         "Local trajectory residuals are high relative to local movement.",
@@ -7840,17 +11802,17 @@
       "manual_roi_corrections": 7,
       "overall_quality_label": "HIGH EVIDENCE",
       "component_breakdown": {
-        "supported_fraction": 0.9166666666666666,
-        "limited_fraction": 0.08333333333333333,
+        "supported_fraction": 0.9444444444444444,
+        "limited_fraction": 0.05555555555555555,
         "geometry_coverage": 1.0,
-        "dynamic_coverage": 0.5481770833333334
+        "dynamic_coverage": 0.56640625
       }
     }
   },
   "feature_availability": {
     "by_quality_category": {
       "LIMITED": 2,
-      "SUPPORTED": 22
+      "SUPPORTED": 34
     },
     "by_body_region": {
       "lower_limb": {
@@ -7863,6 +11825,9 @@
       },
       "upper_body": {
         "SUPPORTED": 8
+      },
+      "bilateral": {
+        "SUPPORTED": 12
       }
     }
   },
@@ -7876,11 +11841,23 @@
       "minimum_supported_dynamic_samples": 3
     },
     "by_state": {
-      "ANALYTICS_READY": 19,
-      "GEOMETRY_ONLY": 3,
+      "ANALYTICS_READY": 30,
+      "GEOMETRY_ONLY": 4,
       "LOW_DYNAMIC_RELIABILITY": 2
     },
     "geometry_analytics_ready_features": [
+      "contralateral_elbow_angle_2d_deg",
+      "contralateral_hka_angle_2d_deg",
+      "elbow_projected_bilateral_absolute_difference_deg",
+      "elbow_projected_bilateral_difference_deg",
+      "hka_projected_bilateral_absolute_difference_deg",
+      "hka_projected_bilateral_difference_deg",
+      "injured_elbow_angle_2d_deg",
+      "injured_hka_angle_2d_deg",
+      "knee_line_deviation_bilateral_absolute_difference",
+      "knee_line_deviation_bilateral_difference",
+      "knee_line_deviation_normalized_bilateral_absolute_difference",
+      "knee_line_deviation_normalized_bilateral_difference",
       "left_elbow_angle_2d_deg",
       "left_hka_angle_2d_deg",
       "left_knee_ankle_distance_normalized",
@@ -7907,6 +11884,17 @@
       "right_wrist_pelvis_x_offset_normalized"
     ],
     "dynamic_analytics_ready_features": [
+      "contralateral_elbow_angle_2d_deg",
+      "contralateral_hka_angle_2d_deg",
+      "elbow_projected_bilateral_absolute_difference_deg",
+      "elbow_projected_bilateral_difference_deg",
+      "hka_projected_bilateral_absolute_difference_deg",
+      "hka_projected_bilateral_difference_deg",
+      "injured_elbow_angle_2d_deg",
+      "injured_hka_angle_2d_deg",
+      "knee_line_deviation_bilateral_difference",
+      "knee_line_deviation_normalized_bilateral_absolute_difference",
+      "knee_line_deviation_normalized_bilateral_difference",
       "left_elbow_angle_2d_deg",
       "left_hka_angle_2d_deg",
       "left_knee_ankle_x_offset_normalized",
@@ -7928,6 +11916,7 @@
       "right_wrist_pelvis_x_offset_normalized"
     ],
     "excluded_from_default_dynamic_analytics": [
+      "knee_line_deviation_bilateral_absolute_difference",
       "left_knee_ankle_distance_normalized",
       "left_knee_line_deviation_2d",
       "projected_hip_line_angle_deg",
@@ -7937,7 +11926,7 @@
   },
   "provenance": {
     "profile_version": "m5_movement_profile_v1",
-    "generated_at": "2026-08-17T12:11:43.897959+00:00",
+    "generated_at": "2026-08-17T13:28:10.270795+00:00",
     "geometry_version": "m3_geometry_primitives_v1",
     "feature_set_version": "m3_projected_geometry_core_v1",
     "dynamic_reliability_version": "m4_1_dynamic_reliability_v1",
@@ -7952,8 +11941,8 @@
     "dynamic_quality_summary": "data/quality/human/imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_dynamic_quality_summary.json",
     "geometry_feature_summary": {
       "run_metadata": {
-        "run_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate_m3_20260817T121140Z",
-        "generated_at": "2026-08-17T12:11:40.155725+00:00",
+        "run_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate_m3_20260817T132805Z",
+        "generated_at": "2026-08-17T13:28:05.477803+00:00",
         "case_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate",
         "source_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_view_01",
         "processed_pose_input": "data/processed/human/imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_processed_pose.parquet",
@@ -7961,7 +11950,7 @@
         "pose_model": "Ultralytics YOLO pose",
         "geometry_version": "m3_geometry_primitives_v1",
         "feature_set_version": "m3_projected_geometry_core_v1",
-        "injured_side": "unknown",
+        "injured_side": "right",
         "normalisation_method": "median_torso_length_valid_processed_frames",
         "normalisation_reference": {
           "normalisation_method": "median_torso_length_valid_processed_frames",
@@ -8035,13 +12024,25 @@
           "frames_used_count": 64
         }
       },
-      "total_feature_rows": 1536,
-      "feature_count": 24,
+      "total_feature_rows": 2304,
+      "feature_count": 36,
       "frame_count": 64,
       "status_counts": {
-        "SUPPORTED": 1536
+        "SUPPORTED": 2304
       },
       "supported_counts_by_feature": {
+        "contralateral_elbow_angle_2d_deg": 64,
+        "contralateral_hka_angle_2d_deg": 64,
+        "elbow_projected_bilateral_absolute_difference_deg": 64,
+        "elbow_projected_bilateral_difference_deg": 64,
+        "hka_projected_bilateral_absolute_difference_deg": 64,
+        "hka_projected_bilateral_difference_deg": 64,
+        "injured_elbow_angle_2d_deg": 64,
+        "injured_hka_angle_2d_deg": 64,
+        "knee_line_deviation_bilateral_absolute_difference": 64,
+        "knee_line_deviation_bilateral_difference": 64,
+        "knee_line_deviation_normalized_bilateral_absolute_difference": 64,
+        "knee_line_deviation_normalized_bilateral_difference": 64,
         "left_elbow_angle_2d_deg": 64,
         "left_hka_angle_2d_deg": 64,
         "left_knee_ankle_distance_normalized": 64,
@@ -8068,6 +12069,18 @@
         "right_wrist_pelvis_x_offset_normalized": 64
       },
       "completeness_by_feature": {
+        "contralateral_elbow_angle_2d_deg": 1.0,
+        "contralateral_hka_angle_2d_deg": 1.0,
+        "elbow_projected_bilateral_absolute_difference_deg": 1.0,
+        "elbow_projected_bilateral_difference_deg": 1.0,
+        "hka_projected_bilateral_absolute_difference_deg": 1.0,
+        "hka_projected_bilateral_difference_deg": 1.0,
+        "injured_elbow_angle_2d_deg": 1.0,
+        "injured_hka_angle_2d_deg": 1.0,
+        "knee_line_deviation_bilateral_absolute_difference": 1.0,
+        "knee_line_deviation_bilateral_difference": 1.0,
+        "knee_line_deviation_normalized_bilateral_absolute_difference": 1.0,
+        "knee_line_deviation_normalized_bilateral_difference": 1.0,
         "left_elbow_angle_2d_deg": 1.0,
         "left_hka_angle_2d_deg": 1.0,
         "left_knee_ankle_distance_normalized": 1.0,
@@ -8094,6 +12107,18 @@
         "right_wrist_pelvis_x_offset_normalized": 1.0
       },
       "primary_rejection_reason_by_feature": {
+        "contralateral_elbow_angle_2d_deg": "",
+        "contralateral_hka_angle_2d_deg": "",
+        "elbow_projected_bilateral_absolute_difference_deg": "",
+        "elbow_projected_bilateral_difference_deg": "",
+        "hka_projected_bilateral_absolute_difference_deg": "",
+        "hka_projected_bilateral_difference_deg": "",
+        "injured_elbow_angle_2d_deg": "",
+        "injured_hka_angle_2d_deg": "",
+        "knee_line_deviation_bilateral_absolute_difference": "",
+        "knee_line_deviation_bilateral_difference": "",
+        "knee_line_deviation_normalized_bilateral_absolute_difference": "",
+        "knee_line_deviation_normalized_bilateral_difference": "",
         "left_elbow_angle_2d_deg": "",
         "left_hka_angle_2d_deg": "",
         "left_knee_ankle_distance_normalized": "",
@@ -8161,18 +12186,18 @@
     "missingness_policy": "Unavailable values remain null and are not interpolated for M5."
   },
   "movement_profile_summary": {
-    "movement_features_considered": 24,
-    "supported": 22,
+    "movement_features_considered": 36,
+    "supported": 34,
     "limited": 2,
     "unavailable": 0,
-    "analytics_ready": 19,
+    "analytics_ready": 30,
     "strongest_evidence_features": [
+      "elbow_projected_bilateral_difference_deg",
       "right_wrist_pelvis_distance_normalized",
       "right_wrist_pelvis_x_offset_normalized",
       "projected_shoulder_pelvis_orientation_difference_deg",
-      "left_wrist_pelvis_x_offset_normalized",
-      "right_upper_arm_orientation_2d_deg",
-      "left_upper_arm_orientation_2d_deg"
+      "elbow_projected_bilateral_absolute_difference_deg",
+      "knee_line_deviation_normalized_bilateral_absolute_difference"
     ],
     "primary_limitations": [
       "Local trajectory residuals are high relative to local movement.",

@@ -1,6 +1,6 @@
 {
-  "run_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate_m3_20260817T121140Z",
-  "generated_at": "2026-08-17T12:11:40.155725+00:00",
+  "run_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate_m3_20260817T132805Z",
+  "generated_at": "2026-08-17T13:28:05.477803+00:00",
   "case_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_acl_candidate",
   "source_id": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_view_01",
   "processed_pose_input": "data/processed/human/imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685_processed_pose.parquet",
@@ -8,7 +8,7 @@
   "pose_model": "Ultralytics YOLO pose",
   "geometry_version": "m3_geometry_primitives_v1",
   "feature_set_version": "m3_projected_geometry_core_v1",
-  "injured_side": "unknown",
+  "injured_side": "right",
   "normalisation_method": "median_torso_length_valid_processed_frames",
   "normalisation_reference": {
     "normalisation_method": "median_torso_length_valid_processed_frames",

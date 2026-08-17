@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from acl_motion.annotations.models import AnnotationCase
+from acl_motion.cases.models import InjurySide
 
 DEFAULT_VIDEO_ROOT = Path("/Users/andriagryffinpro/Desktop/injury_videos")
 DEFAULT_IMPORTED_CASES_PATH = Path("data/annotations/human/imported_video_cases_human.json")
@@ -56,6 +57,8 @@ def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tup
             perspective="oblique",
             occlusion_level="moderate",
             view_quality="contextual",
+            injured_side=InjurySide.RIGHT,
+            injury_laterality_source="human_operator_2026-08-17",
             player_name="Leah Williamson",
             video_path=root / "10_leah_williamson_view_01_broadcast_wide_0s-12s.mp4",
             notes=(
@@ -75,6 +78,8 @@ def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tup
             view_quality="short_landmark_candidate",
             slow_motion=True,
             cropped_or_zoomed=True,
+            injured_side=InjurySide.RIGHT,
+            injury_laterality_source="human_operator_2026-08-17",
             player_name="Leah Williamson",
             video_path=root / "10_leah_williamson_TygjH39bmfU_00m42s814_00m44s647.mp4",
             notes=(
@@ -95,6 +100,8 @@ def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tup
             view_quality="landmark_candidate",
             slow_motion=True,
             cropped_or_zoomed=True,
+            injured_side=InjurySide.RIGHT,
+            injury_laterality_source="human_operator_2026-08-17",
             player_name="Leah Williamson",
             video_path=root / "10_leah_williamson_TygjH39bmfU_00m48s869_00m52s235.mp4",
             notes=(
@@ -115,6 +122,8 @@ def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tup
             view_quality="landmark_candidate",
             slow_motion=True,
             cropped_or_zoomed=True,
+            injured_side=InjurySide.RIGHT,
+            injury_laterality_source="human_operator_2026-08-17",
             player_name="Leah Williamson",
             video_path=root / "10_leah_williamson_TygjH39bmfU_01m33s519_01m37s685.mp4",
             notes=(
@@ -227,6 +236,8 @@ def imported_annotation_cases(
                     slow_motion=bool(record.get("slow_motion", False)),
                     cropped_or_zoomed=bool(record.get("cropped_or_zoomed", False)),
                     real_time_scale=record.get("real_time_scale"),
+                    injured_side=InjurySide(record.get("injured_side", "unknown")),
+                    injury_laterality_source=str(record.get("injury_laterality_source", "")),
                     player_name=str(record.get("player_name", video_path.stem)),
                     video_path=video_path,
                     notes=str(record.get("notes", "")),
