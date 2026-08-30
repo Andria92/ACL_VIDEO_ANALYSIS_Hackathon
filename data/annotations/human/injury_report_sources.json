@@ -100,12 +100,12 @@
       "evidence_basis": "project_reviewer_footage_review_plus_contemporary_reports",
       "change_status": "changed",
       "rationale": "Contemporary reporting and Nobbs's federation profile establish that a challenge immediately preceded the injury. After reviewing the stored tight and wide replays, the project reviewer classified the event as indirect contact: the challenge perturbed Nobbs without a direct force to the injured left knee. The taxonomy label is the project reviewer's footage interpretation, not an explicit label used by the public sources.",
-      "last_reviewed_at": "2026-08-30",
-      "review_pass": "project_reviewer_resolution_after_third_pass",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
       "investigation_status": "reviewer_resolved",
-      "investigation_note": "Resolved as indirect contact by the project footage reviewer on 2026-08-30. No independent second-review confirmation is recorded.",
+      "investigation_note": "Resolved as indirect contact by the project footage reviewer and reconfirmed on 2026-08-31. No independent second-review confirmation is recorded.",
       "project_reviewer_decision": "indirect_contact",
-      "project_reviewer_decision_date": "2026-08-30",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Arsenal Women's stroll against Everton marred by injury to Jordan Nobbs",
@@ -406,10 +406,12 @@
       "evidence_basis": "player_account_plus_archived_broadcast_frame_review",
       "change_status": "newly_classified",
       "rationale": "Weir's first-person account identifies the tackle and immediate noise from her left knee. Third-pass review of two locally preserved BBC broadcast views shows the Belgian challenge perturbing her from the side and rear, with visible contact away from the left knee and no direct knee blow. Indirect contact is therefore the best-supported interpretation, but remains low confidence because the original public upload is no longer reliably retrievable and parts of the lower-limb sequence overlap.",
-      "last_reviewed_at": "2026-08-30",
-      "review_pass": "third_pass_multilingual_and_frame_review",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
       "investigation_status": "needs_further_investigation",
       "investigation_note": "Low-confidence indirect-contact working label. Preserve the flag until a stable public copy, reverse angle, or first-person description independently confirms that the force was away from the left knee.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Caroline Weir medical report",
@@ -481,8 +483,12 @@
       "evidence_basis": "official_medical_report_plus_official_club_footage",
       "change_status": "newly_classified",
       "rationale": "Atlético's medical report confirms the right-knee ACL graft rupture. The official highlight shows an opponent perturbing Menayo at the upper body and hip as she turns, without a visible direct blow to the right knee. Because the lower legs partly overlap and only one angle is available, indirect contact is provisional and low confidence.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
       "investigation_status": "needs_further_investigation",
       "investigation_note": "Have an independent second reviewer inspect the injury frames and seek another angle that separates both players' lower limbs.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Menayo sufre una rotura de la plastia del ligamento cruzado anterior",
@@ -545,10 +551,12 @@
       "evidence_basis": "contemporary_reports_plus_official_single_angle_frame_review",
       "change_status": "newly_classified",
       "rationale": "Reporting separates an earlier ankle blow from the later ACL event and describes the later action inconsistently as a collision, a foul by Ludmila, or a hard plant while pressing Ivana Andrés. Frame-by-frame review of Atlético's official replay shows the opponent arriving from the side and rear with contact around the foot, ankle, or distal leg as Ludmila loads and turns; no direct force to the right knee is visible. This supports indirect contact provisionally, but the low-resolution single angle and lower-limb overlap keep confidence low.",
-      "last_reviewed_at": "2026-08-30",
-      "review_pass": "third_pass_multilingual_and_frame_review",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
       "investigation_status": "needs_further_investigation",
       "investigation_note": "Low-confidence indirect-contact working label. A higher-resolution reverse angle is still needed to confirm the apparent distal-leg contact and exclude a direct force to the right knee.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Ludmila, adiós a la temporada con el Atleti y al Mundial",
@@ -806,6 +814,12 @@
       "evidence_basis": "official_medical_report_plus_two_footage_views",
       "change_status": "newly_classified",
       "rationale": "Liverpool's medical report confirms the ACL rupture. Two views from the official WSL match footage show sustained shoulder and torso contact from the Tottenham player while Lundgaard's left leg is loaded, without a visible direct blow to the left knee. This supports indirect contact.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
+      "investigation_status": "reviewer_resolved",
+      "investigation_note": "Indirect contact retained after review of the official report and two stored footage views.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Sofie Lundgaard to undergo surgery on knee injury",
@@ -837,6 +851,12 @@
       "evidence_basis": "detailed_incident_description",
       "change_status": "newly_classified",
       "rationale": "TT's account describes Asllani's foot sticking in the turf and her knee twisting, without player contact in the injury sequence. The source does not explicitly apply the non-contact taxonomy label.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
+      "investigation_status": "reviewer_resolved",
+      "investigation_note": "Non-contact retained after source review and stored replay reassessment; no external player contact is present in the injury action.",
+      "project_reviewer_decision": "non_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Asllani efter skadan: Det alla fotbollsspelare fruktar",
@@ -899,10 +919,12 @@
       "evidence_basis": "official_report_plus_two_angle_official_footage",
       "change_status": "newly_classified",
       "rationale": "The official match report confirms a heavy clash with Miri Taylor. Third-pass review of the official WSL full match and its two replay angles shows Taylor perturbing Marcetto at the upper body and hip immediately before the right-leg collapse, without a visible direct force to the right knee. This supports indirect contact provisionally; lower-limb overlap in one view keeps confidence low.",
-      "last_reviewed_at": "2026-08-30",
-      "review_pass": "third_pass_multilingual_and_frame_review",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
       "investigation_status": "needs_further_investigation",
       "investigation_note": "Low-confidence indirect-contact working label. Keep flagged until a field-level or reverse angle, or a player/medical description, independently locates the force relative to the right knee.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "London City Lionesses 2, Aston Villa 1",
@@ -952,10 +974,12 @@
       "evidence_basis": "official_medical_report_plus_broadcast_footage",
       "change_status": "newly_classified",
       "rationale": "Gotham confirms the right ACL injury. The CBS/NWSL broadcast sequence and replay show an opponent perturbing Duran at the body and hip immediately before the right-leg collapse, without a visible direct blow to the right knee. Because the lower limbs are close and partly occluded, indirect contact is provisional and low confidence.",
-      "last_reviewed_at": "2026-08-30",
-      "review_pass": "source_and_two_view_stored_replay_review",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "source_and_stored_replay_reassessment",
       "investigation_status": "needs_further_investigation",
       "investigation_note": "Have an independent second reviewer inspect both broadcast views and seek a field-level or reverse angle that fully separates the players' lower limbs.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-31",
       "sources": [
         {
           "title": "Gotham FC's Kayla Duran placed on season-ending injury list",

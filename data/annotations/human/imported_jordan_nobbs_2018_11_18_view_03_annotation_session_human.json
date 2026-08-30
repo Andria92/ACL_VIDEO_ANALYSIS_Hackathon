@@ -136,9 +136,9 @@
     "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
   },
   "event_confidence_label": "moderate",
-  "injured_side": "right",
-  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "injured_side": "left",
+  "injury_laterality_source": "official_left_acl_correction:researcher_01:2026-08-31",
   "operator_flags": [],
-  "notes": "",
+  "notes": "Laterality corrected from right to the documented left ACL on 2026-08-31 before analysis regeneration.",
   "finalized": true
 }

@@ -8,16 +8,16 @@
   "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
   "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
   "speed_method": "body-scale-normalized projected speed; not m/s",
-  "mean_normalized_projected_speed_per_s": 4.448867531045807,
-  "minimum_normalized_projected_speed_per_s": 0.4917700957168317,
+  "mean_normalized_projected_speed_per_s": 4.4397709085835935,
+  "minimum_normalized_projected_speed_per_s": 0.472374739120405,
   "time_minimum_projected_speed_ms": -1116.6666666666665,
-  "maximum_normalized_projected_speed_per_s": 15.038015524059634,
+  "maximum_normalized_projected_speed_per_s": 15.164841680473556,
   "direction_change": {
     "evidence_status": "SUPPORTED",
-    "incoming_heading_deg": -177.31080777934392,
-    "late_heading_deg": -175.78732000419674,
-    "projected_change_of_direction_angle_deg": 1.5234877751471743,
-    "absolute_projected_change_of_direction_angle_deg": 1.5234877751471743,
+    "incoming_heading_deg": -177.28800745413534,
+    "late_heading_deg": -175.6806781679536,
+    "projected_change_of_direction_angle_deg": 1.6073292861817379,
+    "absolute_projected_change_of_direction_angle_deg": 1.6073292861817379,
     "source_frame_start": 0,
     "source_frame_end": 41,
     "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
@@ -25,9 +25,9 @@
   "projected_speed_change_final_500ms": {
     "evidence_status": "SUPPORTED",
     "window_start_ms": -500.0,
-    "mean_prior_projected_speed": 3.8769699678904934,
-    "mean_final_projected_speed": 5.449688266567608,
-    "projected_speed_change": 1.5727182986771147,
+    "mean_prior_projected_speed": 3.8597780304224867,
+    "mean_final_projected_speed": 5.454758445365532,
+    "projected_speed_change": 1.5949804149430453,
     "descriptor": "PROJECTED_ACCELERATION"
   },
   "validation": {

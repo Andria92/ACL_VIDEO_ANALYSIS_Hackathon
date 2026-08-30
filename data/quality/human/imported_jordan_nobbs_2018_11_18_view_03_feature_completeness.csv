@@ -1,11 +1,11 @@
 feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
-contralateral_elbow_angle_2d_deg,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN.
+contralateral_elbow_angle_2d_deg,12,69,0.17391304347826086,57,Frame status is TARGET_IDENTITY_UNCERTAIN.
 contralateral_hka_angle_2d_deg,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN.
 elbow_projected_bilateral_absolute_difference_deg,12,69,0.17391304347826086,57,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
 elbow_projected_bilateral_difference_deg,12,69,0.17391304347826086,57,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
 hka_projected_bilateral_absolute_difference_deg,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
 hka_projected_bilateral_difference_deg,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
-injured_elbow_angle_2d_deg,12,69,0.17391304347826086,57,Frame status is TARGET_IDENTITY_UNCERTAIN.
+injured_elbow_angle_2d_deg,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN.
 injured_hka_angle_2d_deg,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN.
 knee_line_deviation_bilateral_absolute_difference,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
 knee_line_deviation_bilateral_difference,13,69,0.18840579710144928,56,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
