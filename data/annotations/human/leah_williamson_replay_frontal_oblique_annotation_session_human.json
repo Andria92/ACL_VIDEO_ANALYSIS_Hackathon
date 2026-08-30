@@ -1,0 +1,204 @@
+{
+  "provenance": {
+    "annotation_session_id": "97787e5f-313f-420e-9512-85b4155eef5e",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-20T10:39:10.184908+00:00",
+    "updated_at": "2026-08-20T13:03:33.772823+00:00",
+    "case_id": "leah_williamson_acl",
+    "source_id": "leah_williamson_replay_frontal_oblique_03",
+    "view_id": "leah_williamson_replay_frontal_oblique_03",
+    "video_path": "data/videos/analysis_clips/10_leah_williamson_TygjH39bmfU_00m48s869_00m52s235.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 14,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 983.15953307393,
+        "y": 127.13360278508749,
+        "width": 173.32295719844353,
+        "height": 369.2928461852542
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 2,
+      "bbox": {
+        "x": 943.3151750972762,
+        "y": 128.34439900208832,
+        "width": 172.3268482490272,
+        "height": 388.6655856572675
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 3,
+      "bbox": {
+        "x": 925.3852140077821,
+        "y": 128.34439900208832,
+        "width": 162.3657587548638,
+        "height": 397.14115917627333
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 5,
+      "bbox": {
+        "x": 871.5953307392996,
+        "y": 140.45236117209666,
+        "width": 157.3852140077821,
+        "height": 382.61160457226333
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 6,
+      "bbox": {
+        "x": 824.7782101167315,
+        "y": 136.81997252109414,
+        "width": 170.33463035019452,
+        "height": 372.92523483625666
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 8,
+      "bbox": {
+        "x": 767.0038910505837,
+        "y": 129.55519521908914,
+        "width": 185.2762645914397,
+        "height": 391.08717809126915
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 10,
+      "bbox": {
+        "x": 736.124513618677,
+        "y": 122.29041791708416,
+        "width": 193.24513618677042,
+        "height": 386.2439932232658
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 11,
+      "bbox": {
+        "x": 678.3501945525292,
+        "y": 106.55006709607332,
+        "width": 221.13618677042803,
+        "height": 401.98434404427667
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 13,
+      "bbox": {
+        "x": 634.5214007782101,
+        "y": 113.81484439807832,
+        "width": 245.04280155642016,
+        "height": 412.8815099972842
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 17,
+      "bbox": {
+        "x": 556.8249027237354,
+        "y": 116.23643683207999,
+        "width": 230.1011673151752,
+        "height": 479.4753019323299
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 19,
+      "bbox": {
+        "x": 447.25291828793775,
+        "y": 111.39325196407665,
+        "width": 342.6614785992218,
+        "height": 519.4315770933575
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 26,
+      "bbox": {
+        "x": 403.42412451361866,
+        "y": 111.39325196407665,
+        "width": 351.62645914396893,
+        "height": 513.3775960083533
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 50,
+      "bbox": {
+        "x": 405.41634241245134,
+        "y": 124.71201035108582,
+        "width": 167.34630350194556,
+        "height": 456.47017380931413
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 54,
+      "bbox": {
+        "x": 409.40077821011675,
+        "y": 116.6015744811369,
+        "width": 138.45914396887156,
+        "height": 399.2720580717718
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 56,
+    "movement_end_timestamp_ms": 1866.6666666666667,
+    "movement_duration_ms": 1866.6666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "leah_williamson_acl",
+    "source_id": "leah_williamson_replay_frontal_oblique_03",
+    "view_id": "leah_williamson_replay_frontal_oblique_03",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 56,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 56,
+    "event_anchor_frame": 56,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

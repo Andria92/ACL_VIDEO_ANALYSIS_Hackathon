@@ -1,0 +1,26 @@
+{
+  "run_id": "jordan_nobbs_acl_m3_20260827T162129Z",
+  "generated_at": "2026-08-27T16:21:29.303424+00:00",
+  "case_id": "jordan_nobbs_acl",
+  "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+  "processed_pose_input": "data/processed/human/imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_processed_pose.parquet",
+  "pose_backend": "yolo",
+  "pose_model": "Ultralytics YOLO pose",
+  "geometry_version": "m3_geometry_primitives_v1",
+  "feature_set_version": "m3_projected_geometry_core_v1",
+  "injured_side": "left",
+  "normalisation_method": "median_torso_length_valid_processed_frames",
+  "normalisation_reference": {
+    "normalisation_method": "median_torso_length_valid_processed_frames",
+    "reference_value_px": 92.59342717225923,
+    "frames_used_for_reference": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames_used_count": 6
+  }
+}

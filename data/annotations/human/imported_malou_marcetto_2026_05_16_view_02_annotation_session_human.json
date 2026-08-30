@@ -1,0 +1,230 @@
+{
+  "provenance": {
+    "annotation_session_id": "ee5f3d0b-71b5-4176-8604-1da9714376f4",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T20:43:01.224184+00:00",
+    "updated_at": "2026-08-29T20:45:02.515953+00:00",
+    "case_id": "imported_malou_marcetto_2026_05_16_acl_candidate",
+    "source_id": "imported_malou_marcetto_2026_05_16_view_02",
+    "view_id": "imported_malou_marcetto_2026_05_16_view_02",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/WSL_Aston_LCL_2026_01h04m15s404_01h04m17s237.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 15,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 10.714285714285714,
+        "y": 237.14285714285714,
+        "width": 237.14285714285714,
+        "height": 288.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 2,
+      "bbox": {
+        "x": 39.285714285714285,
+        "y": 240.0,
+        "width": 198.57142857142858,
+        "height": 275.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 8,
+      "bbox": {
+        "x": 115.0,
+        "y": 235.71428571428572,
+        "width": 182.85714285714283,
+        "height": 292.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 12,
+      "bbox": {
+        "x": 167.85714285714286,
+        "y": 231.42857142857142,
+        "width": 179.99999999999997,
+        "height": 300.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 16,
+      "bbox": {
+        "x": 189.28571428571428,
+        "y": 231.42857142857142,
+        "width": 182.8571428571429,
+        "height": 298.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 20,
+      "bbox": {
+        "x": 233.57142857142858,
+        "y": 218.57142857142858,
+        "width": 169.99999999999997,
+        "height": 320.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 26,
+      "bbox": {
+        "x": 262.14285714285717,
+        "y": 217.14285714285714,
+        "width": 170.0,
+        "height": 341.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 32,
+      "bbox": {
+        "x": 316.42857142857144,
+        "y": 201.42857142857142,
+        "width": 172.85714285714283,
+        "height": 361.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 39,
+      "bbox": {
+        "x": 356.42857142857144,
+        "y": 201.42857142857142,
+        "width": 178.57142857142856,
+        "height": 378.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 41,
+      "bbox": {
+        "x": 416.42857142857144,
+        "y": 204.28571428571428,
+        "width": 121.42857142857144,
+        "height": 348.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 43,
+      "bbox": {
+        "x": 445.0,
+        "y": 205.71428571428572,
+        "width": 120.0,
+        "height": 309.99999999999994
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 503.57142857142856,
+        "y": 210.0,
+        "width": 87.14285714285711,
+        "height": 334.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 63,
+      "bbox": {
+        "x": 540.7142857142857,
+        "y": 232.85714285714286,
+        "width": 54.285714285714334,
+        "height": 311.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 82,
+      "bbox": {
+        "x": 576.4285714285714,
+        "y": 278.57142857142856,
+        "width": 125.71428571428567,
+        "height": 267.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 87,
+      "bbox": {
+        "x": 542.1428571428571,
+        "y": 304.2857142857143,
+        "width": 130.0,
+        "height": 265.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 41,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 5,
+      "end_frame": 45,
+      "frame_count": 41,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 87,
+    "movement_end_timestamp_ms": 1450.0,
+    "movement_duration_ms": 1450.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_malou_marcetto_2026_05_16_acl_candidate",
+    "source_id": "imported_malou_marcetto_2026_05_16_view_02",
+    "view_id": "imported_malou_marcetto_2026_05_16_view_02",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 87,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 87,
+    "event_anchor_frame": 87,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

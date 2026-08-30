@@ -1,0 +1,62 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 28
+  },
+  "supported_samples": 28,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 1.271345296837565,
+  "minimum_normalized_projected_speed_per_s": 0.3614917113480849,
+  "time_minimum_projected_speed_ms": -1600.0000000000002,
+  "maximum_normalized_projected_speed_per_s": 2.5839676014392774,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": 170.99314196578246,
+    "late_heading_deg": -4.307755436506938,
+    "projected_change_of_direction_angle_deg": -175.3008974022894,
+    "absolute_projected_change_of_direction_angle_deg": 175.3008974022894,
+    "source_frame_start": 18,
+    "source_frame_end": 50,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "UNAVAILABLE",
+    "reason": "Insufficient supported speed samples in comparison windows."
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 5,
+      "path_segment_002": 17,
+      "path_segment_003": 6
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 5,
+        "path_segment_002": 17,
+        "path_segment_003": 6
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 5,
+        "path_segment_002": 17,
+        "path_segment_003": 6
+      }
+    },
+    "chosen_method": "translation"
+  }
+}

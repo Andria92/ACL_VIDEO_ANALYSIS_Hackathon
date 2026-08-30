@@ -1,0 +1,103 @@
+{
+  "total_frames": 107,
+  "target_tracking_coverage": 0.6916,
+  "pose_frame_coverage": 0.6916,
+  "frame_status_counts": {
+    "TARGET_NOT_FOUND": 33,
+    "VALID_TARGET": 74
+  },
+  "low_confidence_intervals": [],
+  "target_loss_intervals": [
+    {
+      "start_frame": 25,
+      "end_frame": 39
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 55
+    },
+    {
+      "start_frame": 84,
+      "end_frame": 95
+    }
+  ],
+  "identity_uncertainty_intervals": [],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 40,
+      "end_frame": 49,
+      "frame_count": 10
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 56,
+      "end_frame": 83,
+      "frame_count": 28
+    },
+    {
+      "segment_id": 3,
+      "start_frame": 96,
+      "end_frame": 131,
+      "frame_count": 36
+    }
+  ],
+  "interpolated_frame_fraction": 0.1776,
+  "rejected_frame_fraction": 0.8411,
+  "interpolated_landmark_row_fraction": 0.0154,
+  "rejected_landmark_row_fraction": 0.3744,
+  "processing_status_counts": {
+    "INTERPOLATED": 28,
+    "MISSING": 561,
+    "REJECTED_LOW_CONFIDENCE": 120,
+    "SMOOTHED": 1110
+  },
+  "landmark_status_counts": {
+    "LOW_CONFIDENCE": 146,
+    "MISSING": 561,
+    "OBSERVED_VALID": 1110,
+    "TEMPORAL_OUTLIER": 2
+  },
+  "left_ankle_coverage": 0.6916,
+  "left_ear_coverage": 0.6262,
+  "left_elbow_coverage": 0.6916,
+  "left_eye_coverage": 0.5047,
+  "left_hip_coverage": 0.6916,
+  "left_knee_coverage": 0.6916,
+  "left_shoulder_coverage": 0.6916,
+  "left_wrist_coverage": 0.6916,
+  "nose_coverage": 0.5514,
+  "right_ankle_coverage": 0.6916,
+  "right_ear_coverage": 0.3925,
+  "right_elbow_coverage": 0.6916,
+  "right_eye_coverage": 0.2617,
+  "right_hip_coverage": 0.6916,
+  "right_knee_coverage": 0.6916,
+  "right_shoulder_coverage": 0.6916,
+  "right_wrist_coverage": 0.6916,
+  "core_landmark_coverage": 0.6916,
+  "lower_limb_landmark_coverage": 0.6916,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_raw_pose.parquet"
+}

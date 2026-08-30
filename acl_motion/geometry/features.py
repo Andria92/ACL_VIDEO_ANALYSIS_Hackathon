@@ -391,6 +391,27 @@ def _feature(
             landmarks,
             normalisation,
         )
+    interpolated_outliers = [
+        landmark
+        for landmark in required
+        if landmarks[landmark].interpolated
+        and landmarks[landmark].landmark_status == "TEMPORAL_OUTLIER"
+    ]
+    if interpolated_outliers:
+        return _unavailable_result(
+            context,
+            required,
+            name,
+            unit,
+            FeatureStatus.INVALID_GEOMETRY,
+            completeness,
+            (
+                "Required landmarks were interpolated after temporal-outlier rejection: "
+                f"{interpolated_outliers}."
+            ),
+            landmarks,
+            normalisation,
+        )
     if requires_scale and not normalisation.is_available:
         return _unavailable_result(
             context,
@@ -678,6 +699,10 @@ def _feature_metadata(
         },
         "processing_status_by_landmark": {
             name: landmarks[name].processing_status if name in landmarks else "MISSING"
+            for name in required
+        },
+        "landmark_status_by_landmark": {
+            name: landmarks[name].landmark_status if name in landmarks else "MISSING"
             for name in required
         },
         "normalisation": normalisation.to_metadata(),

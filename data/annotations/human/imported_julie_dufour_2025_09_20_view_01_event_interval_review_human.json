@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "imported_julie_dufour_2025_09_20_acl_candidate",
+  "source_id": "imported_julie_dufour_2025_09_20_view_01",
+  "view_id": "imported_julie_dufour_2025_09_20_view_01",
+  "case_slug": "imported_julie_dufour_2025_09_20_view_01",
+  "decision": "yes",
+  "visible_event_in_supported_phase_interval": true,
+  "eligible_for_injury_event_comparison": true,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-08-30T09:40:42.098875+00:00",
+  "phase_status": "SUPPORTED_EVIDENCE_INTERVAL",
+  "phase_count": 1,
+  "supported_interval": {
+    "start_frame": 46,
+    "end_frame": 61
+  },
+  "movement_phases_sha256": "8fe45c7ca513fec9850b035ef181451902b07645bb8785609e918286e061d423"
+}

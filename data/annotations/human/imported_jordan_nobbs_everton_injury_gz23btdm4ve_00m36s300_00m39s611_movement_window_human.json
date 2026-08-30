@@ -1,0 +1,59 @@
+{
+  "provenance": {
+    "annotation_session_id": "655ce2ae-0c83-4d52-ae42-fe2e0066481d",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-21T06:48:37.234523+00:00",
+    "updated_at": "2026-08-21T12:50:49.024037+00:00",
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+    "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+    "video_path": "data/videos/analysis_clips/jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "jordan_nobbs_acl",
+  "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+  "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+  "manual_roi_keyframe_count": 11,
+  "manual_target_unavailable_frame_count": 32,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 26,
+      "end_frame": 39,
+      "frame_count": 14,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 55,
+      "frame_count": 6,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 84,
+      "end_frame": 95,
+      "frame_count": 12,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 25,
+    "movement_start_timestamp_ms": 416.6666666666667,
+    "movement_end_frame": 131,
+    "movement_end_timestamp_ms": 2183.333333333333,
+    "movement_duration_ms": 1766.6666666666663,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

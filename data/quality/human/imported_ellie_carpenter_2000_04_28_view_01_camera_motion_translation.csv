@@ -1,0 +1,13 @@
+source_frame_index,background_dx_px,background_dy_px,background_feature_count,camera_motion_status,camera_motion_residual_px,camera_motion_method,affine_a,affine_b,affine_tx,affine_c,affine_d,affine_ty,affine_scale,affine_inlier_fraction
+20,0.0,0.0,0,INSUFFICIENT_EVIDENCE,,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+21,-32.7105712890625,-0.7568359375,333,SUPPORTED,0.8113958239555359,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+22,-33.9713134765625,-0.613037109375,335,SUPPORTED,0.4882506728172302,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+23,-17.544677734375,-0.0895538330078125,347,SUPPORTED,0.5091690421104431,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+24,-35.29779052734375,0.01122283935546875,338,SUPPORTED,0.4834303855895996,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+97,-20.121164321899414,28.422683715820312,268,UNSTABLE_TRANSFORM,82.4129638671875,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+98,-6.28143310546875,0.0816650390625,343,SUPPORTED,0.34901919960975647,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+99,-12.79522705078125,0.2533998489379883,328,SUPPORTED,0.39818453788757324,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+100,-11.91937255859375,0.193511962890625,331,SUPPORTED,0.4299977421760559,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+101,-5.9964599609375,0.09588623046875,347,SUPPORTED,0.21749962866306305,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+102,-11.61541748046875,0.2761344909667969,337,SUPPORTED,0.3012745678424835,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+103,-11.3570556640625,0.34639739990234375,337,SUPPORTED,0.29934197664260864,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,

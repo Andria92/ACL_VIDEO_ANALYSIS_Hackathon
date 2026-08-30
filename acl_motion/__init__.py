@@ -1,3 +1,3 @@
-"""ACL Movement Explorer package."""
+"""ACL Movement Analytics Lab package."""
 
 __version__ = "0.1.0"

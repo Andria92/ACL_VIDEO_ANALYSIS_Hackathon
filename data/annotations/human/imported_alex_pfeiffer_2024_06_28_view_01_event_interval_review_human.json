@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "imported_alex_pfeiffer_2024_06_28_acl_candidate",
+  "source_id": "imported_alex_pfeiffer_2024_06_28_view_01",
+  "view_id": "imported_alex_pfeiffer_2024_06_28_view_01",
+  "case_slug": "imported_alex_pfeiffer_2024_06_28_view_01",
+  "decision": "yes",
+  "visible_event_in_supported_phase_interval": true,
+  "eligible_for_injury_event_comparison": true,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-08-30T19:49:44.663659+00:00",
+  "phase_status": "SUPPORTED",
+  "phase_count": 6,
+  "supported_interval": {
+    "start_frame": 0,
+    "end_frame": 201
+  },
+  "movement_phases_sha256": "077e1cc1a37f3fe5f836f2f567822601156f238ba4a8394028c27586b47ac409"
+}

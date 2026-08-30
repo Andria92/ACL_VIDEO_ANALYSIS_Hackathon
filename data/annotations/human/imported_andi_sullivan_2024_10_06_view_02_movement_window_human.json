@@ -1,0 +1,45 @@
+{
+  "provenance": {
+    "annotation_session_id": "96feb3dd-4ee2-4ed6-82b1-3894c4386918",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-30T17:18:19.873698+00:00",
+    "updated_at": "2026-08-30T17:22:50.042515+00:00",
+    "case_id": "imported_andi_sullivan_2024_10_06_acl_candidate",
+    "source_id": "imported_andi_sullivan_2024_10_06_view_02",
+    "view_id": "imported_andi_sullivan_2024_10_06_view_02",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/nwsl_697086_02h00m32s300_02h00m38s037_00m02s167_00m05s767.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_andi_sullivan_2024_10_06_acl_candidate",
+  "source_id": "imported_andi_sullivan_2024_10_06_view_02",
+  "view_id": "imported_andi_sullivan_2024_10_06_view_02",
+  "manual_roi_keyframe_count": 21,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 3,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 61,
+      "end_frame": 63,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 106,
+    "movement_end_timestamp_ms": 3533.333333333333,
+    "movement_duration_ms": 3533.333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

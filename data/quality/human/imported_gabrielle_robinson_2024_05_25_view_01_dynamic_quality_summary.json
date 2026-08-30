@@ -1,0 +1,324 @@
+{
+  "run_metadata": {
+    "run_id": "imported_gabrielle_robinson_2024_05_25_acl_candidate_m4_1_20260830T183243Z",
+    "generated_at": "2026-08-30T18:32:43.839058+00:00",
+    "case_id": "imported_gabrielle_robinson_2024_05_25_acl_candidate",
+    "source_id": "imported_gabrielle_robinson_2024_05_25_view_01",
+    "view_id": "imported_gabrielle_robinson_2024_05_25_view_01",
+    "event_annotation_file": "data/annotations/human/imported_gabrielle_robinson_2024_05_25_view_01_event_annotation_human.json",
+    "event_features_file": "data/events/human/imported_gabrielle_robinson_2024_05_25_view_01_movement_relative_features.parquet",
+    "dynamic_reliability_version": "m4_1_dynamic_reliability_v1",
+    "robust_dynamic_method": "local_linear_regression_slope",
+    "robust_dynamic_parameters": {
+      "half_window_samples": 2,
+      "minimum_samples": 3,
+      "temporal_outlier_residual_ratio": 1.25,
+      "low_confidence_residual_ratio": 0.75,
+      "reversal_rate_multiplier": 2.5,
+      "epsilon": 1e-09
+    },
+    "dynamic_qc_basis": "local trajectory residuals and simple reversal checks; no biological rate ceiling"
+  },
+  "total_eligible_dynamic_samples": 2084,
+  "raw_supported_dynamic_samples": 1923,
+  "supported_robust_dynamic_samples": 1437,
+  "raw_dynamic_completeness": 0.9227447216890595,
+  "robust_dynamic_completeness": 0.6895393474088292,
+  "dynamic_status_counts": {
+    "INSUFFICIENT_NEIGHBORHOOD": 13,
+    "LOW_DYNAMIC_CONFIDENCE": 536,
+    "MISSING_FEATURE": 764,
+    "NOT_DYNAMIC_FEATURE": 356,
+    "SUPPORTED": 1437,
+    "TEMPORAL_OUTLIER": 98
+  },
+  "raw_dynamic_status_counts": {
+    "INSUFFICIENT_PREVIOUS_POINT": 161,
+    "NOT_DYNAMIC_FEATURE": 356,
+    "SUPPORTED": 1923,
+    "UNSUPPORTED_FEATURE": 764
+  },
+  "dynamic_quality_counts": {
+    "HIGH": 1437,
+    "LIMITED": 634,
+    "NOT_APPLICABLE": 356,
+    "UNAVAILABLE": 777
+  },
+  "top_raw_rate": 4855.415311773394,
+  "top_robust_supported_rate": 1591.6166042366342,
+  "feature_dynamic_coverage": {
+    "contralateral_elbow_angle_2d_deg": {
+      "eligible_dynamic_samples": 63,
+      "supported_robust_dynamic_samples": 45,
+      "robust_dynamic_completeness": 0.7142857142857143,
+      "raw_dynamic_completeness": 0.9047619047619048
+    },
+    "contralateral_hka_angle_2d_deg": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 47,
+      "robust_dynamic_completeness": 0.734375,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "elbow_projected_bilateral_absolute_difference_deg": {
+      "eligible_dynamic_samples": 62,
+      "supported_robust_dynamic_samples": 43,
+      "robust_dynamic_completeness": 0.6935483870967742,
+      "raw_dynamic_completeness": 0.8870967741935484
+    },
+    "elbow_projected_bilateral_difference_deg": {
+      "eligible_dynamic_samples": 62,
+      "supported_robust_dynamic_samples": 40,
+      "robust_dynamic_completeness": 0.6451612903225806,
+      "raw_dynamic_completeness": 0.8870967741935484
+    },
+    "hka_projected_bilateral_absolute_difference_deg": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 54,
+      "robust_dynamic_completeness": 0.84375,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "hka_projected_bilateral_difference_deg": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 50,
+      "robust_dynamic_completeness": 0.78125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "injured_elbow_angle_2d_deg": {
+      "eligible_dynamic_samples": 67,
+      "supported_robust_dynamic_samples": 46,
+      "robust_dynamic_completeness": 0.6865671641791045,
+      "raw_dynamic_completeness": 0.9402985074626866
+    },
+    "injured_hka_angle_2d_deg": {
+      "eligible_dynamic_samples": 65,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8,
+      "raw_dynamic_completeness": 0.9230769230769231
+    },
+    "knee_line_deviation_bilateral_difference": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "knee_line_deviation_normalized_bilateral_absolute_difference": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 53,
+      "robust_dynamic_completeness": 0.828125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "knee_line_deviation_normalized_bilateral_difference": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "left_elbow_angle_2d_deg": {
+      "eligible_dynamic_samples": 63,
+      "supported_robust_dynamic_samples": 45,
+      "robust_dynamic_completeness": 0.7142857142857143,
+      "raw_dynamic_completeness": 0.9047619047619048
+    },
+    "left_hka_angle_2d_deg": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 47,
+      "robust_dynamic_completeness": 0.734375,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "left_knee_ankle_distance_normalized": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 41,
+      "robust_dynamic_completeness": 0.640625,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "left_knee_ankle_x_offset_normalized": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 38,
+      "robust_dynamic_completeness": 0.59375,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "left_knee_line_deviation_normalized": {
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 50,
+      "robust_dynamic_completeness": 0.78125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    "left_upper_arm_orientation_2d_deg": {
+      "eligible_dynamic_samples": 67,
+      "supported_robust_dynamic_samples": 39,
+      "robust_dynamic_completeness": 0.582089552238806,
+      "raw_dynamic_completeness": 0.9402985074626866
+    },
+    "left_wrist_pelvis_distance_normalized": {
+      "eligible_dynamic_samples": 63,
+      "supported_robust_dynamic_samples": 36,
+      "robust_dynamic_completeness": 0.5714285714285714,
+      "raw_dynamic_completeness": 0.9047619047619048
+    },
+    "left_wrist_pelvis_x_offset_normalized": {
+      "eligible_dynamic_samples": 63,
+      "supported_robust_dynamic_samples": 36,
+      "robust_dynamic_completeness": 0.5714285714285714,
+      "raw_dynamic_completeness": 0.9047619047619048
+    },
+    "projected_hip_line_angle_deg": {
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 45,
+      "robust_dynamic_completeness": 0.6617647058823529,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    "projected_shoulder_line_angle_deg": {
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 35,
+      "robust_dynamic_completeness": 0.5147058823529411,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    "projected_shoulder_pelvis_orientation_difference_deg": {
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 37,
+      "robust_dynamic_completeness": 0.5441176470588235,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    "projected_shoulder_pelvis_x_offset_normalized": {
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 48,
+      "robust_dynamic_completeness": 0.7058823529411765,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    "projected_trunk_axis_angle_deg": {
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 48,
+      "robust_dynamic_completeness": 0.7058823529411765,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    "right_elbow_angle_2d_deg": {
+      "eligible_dynamic_samples": 67,
+      "supported_robust_dynamic_samples": 46,
+      "robust_dynamic_completeness": 0.6865671641791045,
+      "raw_dynamic_completeness": 0.9402985074626866
+    },
+    "right_hka_angle_2d_deg": {
+      "eligible_dynamic_samples": 65,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8,
+      "raw_dynamic_completeness": 0.9230769230769231
+    },
+    "right_knee_ankle_distance_normalized": {
+      "eligible_dynamic_samples": 65,
+      "supported_robust_dynamic_samples": 39,
+      "robust_dynamic_completeness": 0.6,
+      "raw_dynamic_completeness": 0.9230769230769231
+    },
+    "right_knee_ankle_x_offset_normalized": {
+      "eligible_dynamic_samples": 65,
+      "supported_robust_dynamic_samples": 40,
+      "robust_dynamic_completeness": 0.6153846153846154,
+      "raw_dynamic_completeness": 0.9230769230769231
+    },
+    "right_knee_line_deviation_normalized": {
+      "eligible_dynamic_samples": 65,
+      "supported_robust_dynamic_samples": 50,
+      "robust_dynamic_completeness": 0.7692307692307693,
+      "raw_dynamic_completeness": 0.9230769230769231
+    },
+    "right_upper_arm_orientation_2d_deg": {
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 40,
+      "robust_dynamic_completeness": 0.5882352941176471,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    "right_wrist_pelvis_distance_normalized": {
+      "eligible_dynamic_samples": 67,
+      "supported_robust_dynamic_samples": 47,
+      "robust_dynamic_completeness": 0.7014925373134329,
+      "raw_dynamic_completeness": 0.9402985074626866
+    },
+    "right_wrist_pelvis_x_offset_normalized": {
+      "eligible_dynamic_samples": 67,
+      "supported_robust_dynamic_samples": 44,
+      "robust_dynamic_completeness": 0.6567164179104478,
+      "raw_dynamic_completeness": 0.9402985074626866
+    }
+  },
+  "features_with_strongest_dynamic_coverage": [
+    {
+      "feature_name": "hka_projected_bilateral_absolute_difference_deg",
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 54,
+      "robust_dynamic_completeness": 0.84375,
+      "raw_dynamic_completeness": 0.90625
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_absolute_difference",
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 53,
+      "robust_dynamic_completeness": 0.828125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    {
+      "feature_name": "knee_line_deviation_bilateral_difference",
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    {
+      "feature_name": "knee_line_deviation_normalized_bilateral_difference",
+      "eligible_dynamic_samples": 64,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8125,
+      "raw_dynamic_completeness": 0.90625
+    },
+    {
+      "feature_name": "injured_hka_angle_2d_deg",
+      "eligible_dynamic_samples": 65,
+      "supported_robust_dynamic_samples": 52,
+      "robust_dynamic_completeness": 0.8,
+      "raw_dynamic_completeness": 0.9230769230769231
+    }
+  ],
+  "features_with_weakest_dynamic_coverage": [
+    {
+      "feature_name": "projected_shoulder_line_angle_deg",
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 35,
+      "robust_dynamic_completeness": 0.5147058823529411,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    {
+      "feature_name": "projected_shoulder_pelvis_orientation_difference_deg",
+      "eligible_dynamic_samples": 68,
+      "supported_robust_dynamic_samples": 37,
+      "robust_dynamic_completeness": 0.5441176470588235,
+      "raw_dynamic_completeness": 0.9558823529411765
+    },
+    {
+      "feature_name": "left_wrist_pelvis_distance_normalized",
+      "eligible_dynamic_samples": 63,
+      "supported_robust_dynamic_samples": 36,
+      "robust_dynamic_completeness": 0.5714285714285714,
+      "raw_dynamic_completeness": 0.9047619047619048
+    },
+    {
+      "feature_name": "left_wrist_pelvis_x_offset_normalized",
+      "eligible_dynamic_samples": 63,
+      "supported_robust_dynamic_samples": 36,
+      "robust_dynamic_completeness": 0.5714285714285714,
+      "raw_dynamic_completeness": 0.9047619047619048
+    },
+    {
+      "feature_name": "left_upper_arm_orientation_2d_deg",
+      "eligible_dynamic_samples": 67,
+      "supported_robust_dynamic_samples": 39,
+      "robust_dynamic_completeness": 0.582089552238806,
+      "raw_dynamic_completeness": 0.9402985074626866
+    }
+  ],
+  "main_dynamic_rejection_reasons": {
+    "Feature is not configured for dynamic analysis.": 356,
+    "Feature value is unavailable.": 764,
+    "Fewer than the configured minimum supported neighboring samples.": 13,
+    "Large local residual plus opposite-direction one-step reversal.": 98,
+    "Local trajectory residuals are high relative to local movement.": 536
+  }
+}

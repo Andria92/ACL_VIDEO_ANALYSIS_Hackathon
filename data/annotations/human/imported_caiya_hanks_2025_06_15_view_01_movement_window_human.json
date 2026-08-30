@@ -1,0 +1,77 @@
+{
+  "provenance": {
+    "annotation_session_id": "263277a9-cb44-4162-be5b-f6a8d42350e9",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-30T13:14:29.517933+00:00",
+    "updated_at": "2026-08-30T13:18:40.956568+00:00",
+    "case_id": "imported_caiya_hanks_2025_06_15_acl_candidate",
+    "source_id": "imported_caiya_hanks_2025_06_15_view_01",
+    "view_id": "imported_caiya_hanks_2025_06_15_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Portland Thorns vs. Washington Spirit - Replay _813962__01h00m05s851_01h00m11s017.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_caiya_hanks_2025_06_15_acl_candidate",
+  "source_id": "imported_caiya_hanks_2025_06_15_view_01",
+  "view_id": "imported_caiya_hanks_2025_06_15_view_01",
+  "manual_roi_keyframe_count": 24,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 25,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 25,
+      "end_frame": 36,
+      "frame_count": 12,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 42,
+      "end_frame": 42,
+      "frame_count": 1,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 60,
+      "end_frame": 63,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 83,
+      "end_frame": 86,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 101,
+      "end_frame": 104,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 132,
+    "movement_end_timestamp_ms": 4400.0,
+    "movement_duration_ms": 4400.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

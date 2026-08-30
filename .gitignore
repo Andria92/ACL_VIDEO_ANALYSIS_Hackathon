@@ -14,9 +14,12 @@ build/
 data/videos/*
 data/models/*
 data/pose/*
+data/pose_comparisons/*
 data/overlays/*
 data/diagnostics/*
 !data/videos/.gitkeep
+!data/videos/analysis_clips/
+!data/videos/analysis_clips/**
 !data/models/.gitkeep
 !data/pose/.gitkeep
 !data/overlays/.gitkeep

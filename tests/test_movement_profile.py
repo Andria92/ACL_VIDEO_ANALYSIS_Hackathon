@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from acl_motion.cases.annotations import AnchorType, EventAnnotation
 from acl_motion.profiles.builder import build_case_feature_summary, build_movement_profile
@@ -118,6 +119,11 @@ def test_case_feature_summary_has_eligibility_columns() -> None:
 
     assert {"geometry_analytics_eligible", "dynamic_analytics_eligible", "analytics_eligibility"}.issubset(summary.columns)
     assert summary["bilateral_summary_if_applicable"].iloc[0] == "{}"
+    assert summary["range_semantics"].iloc[0] == "linear"
+    assert summary["angular_statistics_version"].iloc[0] == (
+        "angular_statistics_v1_shortest_arc"
+    )
+    assert summary["profile_version"].iloc[0] == "m5_movement_profile_v2_angular_ranges"
 
 
 def test_human_roi_keyframes_mark_target_as_verified() -> None:
@@ -138,6 +144,19 @@ def test_human_roi_keyframes_mark_target_as_verified() -> None:
     )
 
     assert profile.evidence_profile.evidence_overview.human_target_verified is True
+
+
+def test_profile_uses_axial_range_and_change_across_wrap_boundary() -> None:
+    df = _dynamic_df("projected_hip_line_angle_deg")
+    df["feature_value"] = [89.0, -89.0, 88.0, -88.0, 87.0]
+
+    profile = build_movement_profile(df, event_annotation=_annotation())
+    feature = profile.trajectory_summaries[0]
+    pre_late = next(item for item in feature.window_summaries if item.window_name == "PRE_LATE")
+
+    assert feature.range == pytest.approx(5.0)
+    assert pre_late.range == pytest.approx(2.0)
+    assert pre_late.change == pytest.approx(2.0)
 
 
 def test_wrist_relative_to_pelvis_groups_with_upper_body() -> None:

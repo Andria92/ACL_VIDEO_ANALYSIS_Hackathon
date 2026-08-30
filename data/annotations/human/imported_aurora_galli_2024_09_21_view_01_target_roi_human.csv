@@ -1,0 +1,4 @@
+frame_index,x,y,width,height,view_id,annotation_source,annotation_session_id,annotator_id,flags,note
+0,285.5,130.0,72.0,76.0,imported_aurora_galli_2024_09_21_view_01,human_ui,28e20d86-5129-4c5b-b005-67a471ce98ea,researcher_01,,
+19,322.5,132.0,55.0,71.0,imported_aurora_galli_2024_09_21_view_01,human_ui,28e20d86-5129-4c5b-b005-67a471ce98ea,researcher_01,,
+38,342.5,127.0,48.0,76.0,imported_aurora_galli_2024_09_21_view_01,human_ui,28e20d86-5129-4c5b-b005-67a471ce98ea,researcher_01,,

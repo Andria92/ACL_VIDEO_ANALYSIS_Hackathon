@@ -1243,7 +1243,25 @@ def _withheld_descriptions(
                     ("validated_projected_movement_path",),
                 )
             )
-    if phase_status and phase_status != "SUPPORTED":
+    if phase_status == "SUPPORTED_EVIDENCE_INTERVAL":
+        withheld.append(
+            _withheld(
+                case_id,
+                "PHASE_SEGMENTATION_WITHHELD",
+                "EVIDENCE / AVAILABLE INTERVAL",
+                "Distinct movement phases not detected",
+                (
+                    "A supported measurement interval is available, but it is not "
+                    "presented as a phase sequence because no supported transition was detected."
+                ),
+                (
+                    "The interval remains useful for observable measurements but does not "
+                    "establish a before/after transition or injury timing."
+                ),
+                ("generic_projected_2d_view",),
+            )
+        )
+    elif phase_status and phase_status not in {"SUPPORTED", "SUPPORTED_PARTIAL_WINDOW"}:
         withheld.append(
             _withheld(
                 case_id,

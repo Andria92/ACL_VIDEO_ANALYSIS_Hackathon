@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "imported_gabrielle_robinson_2024_05_25_acl_candidate",
+  "source_id": "imported_gabrielle_robinson_2024_05_25_view_01",
+  "view_id": "imported_gabrielle_robinson_2024_05_25_view_01",
+  "case_slug": "imported_gabrielle_robinson_2024_05_25_view_01",
+  "decision": "yes",
+  "visible_event_in_supported_phase_interval": true,
+  "eligible_for_injury_event_comparison": true,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-08-30T18:36:33.270408+00:00",
+  "phase_status": "SUPPORTED",
+  "phase_count": 3,
+  "supported_interval": {
+    "start_frame": 28,
+    "end_frame": 116
+  },
+  "movement_phases_sha256": "3551219ed5dd6a4765008d0604424d8cebd72078f73bf76bfec84709a5429df8"
+}

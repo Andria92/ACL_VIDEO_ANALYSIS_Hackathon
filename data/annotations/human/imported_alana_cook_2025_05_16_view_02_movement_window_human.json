@@ -1,0 +1,109 @@
+{
+  "provenance": {
+    "annotation_session_id": "79a4c301-3449-4ed5-9a64-02003c836985",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-30T09:01:33.599447+00:00",
+    "updated_at": "2026-08-30T09:10:07.921950+00:00",
+    "case_id": "imported_alana_cook_2025_05_16_acl_candidate",
+    "source_id": "imported_alana_cook_2025_05_16_view_02",
+    "view_id": "imported_alana_cook_2025_05_16_view_02",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Orlando Pride vs. Kansas City Current - Replay _801422__01h38m05s014_01h38m10s847.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_alana_cook_2025_05_16_acl_candidate",
+  "source_id": "imported_alana_cook_2025_05_16_view_02",
+  "view_id": "imported_alana_cook_2025_05_16_view_02",
+  "manual_roi_keyframe_count": 8,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 62,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 20,
+      "end_frame": 25,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 40,
+      "end_frame": 41,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 51,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 64,
+      "end_frame": 68,
+      "frame_count": 5,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 74,
+      "end_frame": 79,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 85,
+      "end_frame": 92,
+      "frame_count": 8,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 98,
+      "end_frame": 100,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 102,
+      "end_frame": 121,
+      "frame_count": 20,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 126,
+      "end_frame": 135,
+      "frame_count": 10,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 145,
+    "movement_end_timestamp_ms": 4833.333333333333,
+    "movement_duration_ms": 4833.333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

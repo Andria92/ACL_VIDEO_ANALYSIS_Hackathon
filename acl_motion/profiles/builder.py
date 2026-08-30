@@ -12,6 +12,13 @@ import pandas as pd
 
 from acl_motion.cases.annotations import EventAnnotation
 from acl_motion.events.dynamic_reliability import DYNAMIC_RELIABILITY_VERSION
+from acl_motion.geometry.angular_semantics import (
+    ANGULAR_STATISTICS_VERSION,
+    angle_type_for_metric,
+    angular_difference,
+    measurement_range_for_metric,
+    range_semantics_for_metric,
+)
 from acl_motion.geometry.features import FEATURE_SET_VERSION, GEOMETRY_VERSION
 from acl_motion.profiles.models import (
     AnalyticsEligibility,
@@ -27,7 +34,7 @@ from acl_motion.profiles.models import (
 )
 from acl_motion.profiles.registry import classify_feature
 
-PROFILE_VERSION = "m5_movement_profile_v1"
+PROFILE_VERSION = "m5_movement_profile_v2_angular_ranges"
 DEFAULT_PROFILE_THRESHOLDS = ProfileThresholds()
 ROBUST_SUPPORTED_STATUS = "SUPPORTED"
 GEOMETRY_SUPPORTED_STATUS = "SUPPORTED"
@@ -129,6 +136,8 @@ def build_case_feature_summary(profile: MovementProfile) -> pd.DataFrame:
                 "maximum_event_relative_ms": feature.maximum.event_relative_ms,
                 "maximum_source_frame_index": feature.maximum.source_frame_index,
                 "range": feature.range,
+                "range_semantics": range_semantics_for_metric(feature.feature_name),
+                "angular_statistics_version": ANGULAR_STATISTICS_VERSION,
                 "mean": feature.mean,
                 "value_at_t0": feature.value_at_t0.value,
                 "t0_status": feature.value_at_t0.feature_status,
@@ -149,6 +158,7 @@ def build_case_feature_summary(profile: MovementProfile) -> pd.DataFrame:
                 ),
                 "eligibility_reason": feature.eligibility_reason,
                 "quality_category": feature.quality_category,
+                "profile_version": PROFILE_VERSION,
                 "primary_rejection_reason": feature.primary_rejection_reason,
             }
         )
@@ -216,7 +226,7 @@ def _build_feature_profile(
     value_at_t0 = _t0_trace(rows)
     baseline = _baseline_value(rows)
     change_baseline = (
-        value_at_t0.value - baseline
+        _difference(feature_name, baseline, value_at_t0.value)
         if value_at_t0.value is not None and baseline is not None
         else None
     )
@@ -234,7 +244,7 @@ def _build_feature_profile(
         quality_category=quality_category.value,
         minimum=minimum,
         maximum=maximum,
-        range=_range(supported["feature_value"]),
+        range=_range(feature_name, supported["feature_value"]),
         mean=_mean(supported["feature_value"]),
         value_at_t0=value_at_t0,
         baseline_value=baseline,
@@ -259,6 +269,7 @@ def _window_summaries(rows: pd.DataFrame) -> list[ProfileWindowSummary]:
         ("POST", 100.0, 200.0),
     )
     summaries: list[ProfileWindowSummary] = []
+    feature_name = str(rows.iloc[0]["feature_name"])
     for name, start, end in windows:
         window = rows[rows["event_relative_ms"].ge(start) & rows["event_relative_ms"].lt(end)]
         supported = window[window["feature_status"].eq(GEOMETRY_SUPPORTED_STATUS)]
@@ -272,8 +283,8 @@ def _window_summaries(rows: pd.DataFrame) -> list[ProfileWindowSummary]:
                 geometry_status="SUPPORTED" if len(window) and completeness >= 0.5 else "INSUFFICIENT_COMPLETENESS",
                 geometry_completeness=float(completeness),
                 mean=_mean(supported["feature_value"]),
-                range=_range(supported["feature_value"]),
-                change=_change(supported["feature_value"]),
+                range=_range(feature_name, supported["feature_value"]),
+                change=_change(feature_name, supported["feature_value"]),
                 robust_max_rate=_max_abs(robust["robust_dynamic_rate"]),
                 time_robust_max_rate_ms=_time_of_abs_max(robust, "robust_dynamic_rate"),
             )
@@ -663,14 +674,28 @@ def _mean(values: pd.Series) -> float | None:
     return float(clean.mean()) if not clean.empty else None
 
 
-def _range(values: pd.Series) -> float | None:
+def _range(feature_name: str, values: pd.Series) -> float | None:
     clean = values.dropna()
-    return float(clean.max() - clean.min()) if not clean.empty else None
+    if clean.empty:
+        return None
+    value = measurement_range_for_metric(feature_name, clean)
+    return float(value) if np.isfinite(value) else None
 
 
-def _change(values: pd.Series) -> float | None:
+def _change(feature_name: str, values: pd.Series) -> float | None:
     clean = values.dropna()
-    return float(clean.iloc[-1] - clean.iloc[0]) if len(clean) >= 2 else None
+    return (
+        _difference(feature_name, float(clean.iloc[0]), float(clean.iloc[-1]))
+        if len(clean) >= 2
+        else None
+    )
+
+
+def _difference(feature_name: str, start: float, end: float) -> float:
+    angle_type = angle_type_for_metric(feature_name)
+    if angle_type is not None:
+        return angular_difference(start, end, angle_type)
+    return end - start
 
 
 def _max_abs(values: pd.Series) -> float | None:

@@ -1,0 +1,394 @@
+{
+  "validation_version": "similarity_internal_validation_v1",
+  "status": "INTERNAL_AUDIT_ONLY",
+  "externally_validated": false,
+  "held_out_players": false,
+  "summary": {
+    "audited_query_count": 7,
+    "reference_pool_case_count": 4,
+    "primary_jackknife_evaluable_query_count": 3,
+    "median_primary_top_retention": 1.0,
+    "median_cross_lens_top_agreement": 0.75,
+    "query_excluded_scaling": true
+  },
+  "case_audits": [
+    {
+      "query_case_id": "beth_mead_acl",
+      "query_reference_pool_eligible": true,
+      "scaling_status": "QUERY_EXCLUDED_EXPLORATORY_ESTIMATE",
+      "scaler_reference_case_count": 3,
+      "cross_lens_top_agreement": 1.0,
+      "cross_lens_winner_counts": {
+        "chloe_kelly_acl": 4
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.512,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.652,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.669,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.244,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        }
+      }
+    },
+    {
+      "query_case_id": "chloe_kelly_acl",
+      "query_reference_pool_eligible": true,
+      "scaling_status": "QUERY_EXCLUDED_EXPLORATORY_ESTIMATE",
+      "scaler_reference_case_count": 3,
+      "cross_lens_top_agreement": 1.0,
+      "cross_lens_winner_counts": {
+        "leah_williamson_acl": 4
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.574,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.655,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.669,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.252,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        }
+      }
+    },
+    {
+      "query_case_id": "christen_press_acl",
+      "query_reference_pool_eligible": false,
+      "scaling_status": "EXPLORATORY_POOL_ESTIMATE",
+      "scaler_reference_case_count": 4,
+      "cross_lens_top_agreement": 0.75,
+      "cross_lens_winner_counts": {
+        "case_01_acl_candidate": 3,
+        "chloe_kelly_acl": 1
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.579,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 3
+          }
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "case_01_acl_candidate",
+          "baseline_top_index": 0.706,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "case_01_acl_candidate": 3
+          }
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "case_01_acl_candidate",
+          "baseline_top_index": 0.711,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "case_01_acl_candidate": 3
+          }
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "case_01_acl_candidate",
+          "baseline_top_index": 0.298,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 1,
+          "jackknife_top_retention_frequency": 0.333,
+          "jackknife_winner_counts": {
+            "beth_mead_acl": 1,
+            "case_01_acl_candidate": 1,
+            "chloe_kelly_acl": 1
+          }
+        }
+      }
+    },
+    {
+      "query_case_id": "delphine_cascarino_acl",
+      "query_reference_pool_eligible": false,
+      "scaling_status": "EXPLORATORY_POOL_ESTIMATE",
+      "scaler_reference_case_count": 4,
+      "cross_lens_top_agreement": 0.75,
+      "cross_lens_winner_counts": {
+        "chloe_kelly_acl": 3,
+        "leah_williamson_acl": 1
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.675,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 3
+          }
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.678,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 1,
+          "jackknife_top_retention_frequency": 0.333,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 2,
+            "leah_williamson_acl": 1
+          }
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.714,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 3
+          }
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.309,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 3
+          }
+        }
+      }
+    },
+    {
+      "query_case_id": "jordan_nobbs_acl",
+      "query_reference_pool_eligible": false,
+      "scaling_status": "EXPLORATORY_POOL_ESTIMATE",
+      "scaler_reference_case_count": 4,
+      "cross_lens_top_agreement": 0.5,
+      "cross_lens_winner_counts": {
+        "chloe_kelly_acl": 2,
+        "leah_williamson_acl": 2
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.728,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 3,
+          "jackknife_top_retention_frequency": 1.0,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 3
+          }
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.641,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 2,
+          "jackknife_top_retention_frequency": 0.667,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 1,
+            "leah_williamson_acl": 2
+          }
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.641,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 1,
+          "jackknife_top_retention_frequency": 0.333,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 2,
+            "leah_williamson_acl": 1
+          }
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.347,
+          "jackknife_valid_checks": 3,
+          "jackknife_top_retention_count": 2,
+          "jackknife_top_retention_frequency": 0.667,
+          "jackknife_winner_counts": {
+            "chloe_kelly_acl": 2,
+            "leah_williamson_acl": 1
+          }
+        }
+      }
+    },
+    {
+      "query_case_id": "leah_williamson_acl",
+      "query_reference_pool_eligible": true,
+      "scaling_status": "QUERY_EXCLUDED_EXPLORATORY_ESTIMATE",
+      "scaler_reference_case_count": 3,
+      "cross_lens_top_agreement": 1.0,
+      "cross_lens_winner_counts": {
+        "chloe_kelly_acl": 4
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.557,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.69,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.689,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "chloe_kelly_acl",
+          "baseline_top_index": 0.258,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        }
+      }
+    },
+    {
+      "query_case_id": "case_01_acl_candidate",
+      "query_reference_pool_eligible": true,
+      "scaling_status": "QUERY_EXCLUDED_EXPLORATORY_ESTIMATE",
+      "scaler_reference_case_count": 3,
+      "cross_lens_top_agreement": 0.75,
+      "cross_lens_winner_counts": {
+        "beth_mead_acl": 1,
+        "leah_williamson_acl": 3
+      },
+      "lenses": {
+        "overall_movement_difference": {
+          "label": "Weighted robust movement difference",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.526,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "movement_pattern_direction": {
+          "label": "Weighted cosine sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.628,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "relationship_aware_pattern": {
+          "label": "Soft-cosine sensitivity",
+          "baseline_top_case_id": "beth_mead_acl",
+          "baseline_top_index": 0.636,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        },
+        "large_difference_focus": {
+          "label": "Weighted Euclidean sensitivity",
+          "baseline_top_case_id": "leah_williamson_acl",
+          "baseline_top_index": 0.244,
+          "jackknife_valid_checks": 0,
+          "jackknife_top_retention_count": 0,
+          "jackknife_top_retention_frequency": null,
+          "jackknife_winner_counts": {}
+        }
+      }
+    }
+  ],
+  "interpretation": "This report checks whether rankings change when individual reference cases are removed and whether different lenses choose the same top case. It does not show agreement with experts, laboratory measurements, injury mechanisms, or future cases. A query is omitted from the jackknife summary when removing another reference leaves fewer than three cases able to define robust feature scales.",
+  "remaining_requirements": [
+    "independent repeated annotations",
+    "laboratory or multi-camera pose reference",
+    "blinded expert pairwise judgements",
+    "evaluation on genuinely new held-out players",
+    "frozen scalers from a separate larger cohort"
+  ]
+}

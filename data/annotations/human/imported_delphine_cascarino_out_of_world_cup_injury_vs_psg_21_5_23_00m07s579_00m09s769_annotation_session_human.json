@@ -1,0 +1,162 @@
+{
+  "provenance": {
+    "annotation_session_id": "4184163f-66bb-4ddf-9c50-64cbb901e596",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T19:04:52.671623+00:00",
+    "updated_at": "2026-08-25T19:04:53.437158+00:00",
+    "case_id": "delphine_cascarino_acl",
+    "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+    "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+    "video_path": "data/videos/analysis_clips/delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 9,
+  "roi_keyframes": [
+    {
+      "frame_index": 9,
+      "bbox": {
+        "x": 361.0,
+        "y": 114.0,
+        "width": 104.0,
+        "height": 185.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 14,
+      "bbox": {
+        "x": 360.0,
+        "y": 110.0,
+        "width": 112.0,
+        "height": 211.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 299.0,
+        "y": 112.0,
+        "width": 153.0,
+        "height": 215.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 20,
+      "bbox": {
+        "x": 264.0,
+        "y": 107.0,
+        "width": 160.0,
+        "height": 234.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 21,
+      "bbox": {
+        "x": 274.0,
+        "y": 108.0,
+        "width": 135.0,
+        "height": 238.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 23,
+      "bbox": {
+        "x": 275.0,
+        "y": 107.0,
+        "width": 113.0,
+        "height": 224.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 28,
+      "bbox": {
+        "x": 230.0,
+        "y": 120.0,
+        "width": 142.0,
+        "height": 214.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 33,
+      "bbox": {
+        "x": 226.0,
+        "y": 101.0,
+        "width": 121.0,
+        "height": 226.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 50,
+      "bbox": {
+        "x": 224.0,
+        "y": 107.0,
+        "width": 113.0,
+        "height": 239.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 16,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 34,
+      "end_frame": 49,
+      "frame_count": 16,
+      "reason": "TARGET_PARTIALLY_OCCLUDED",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 9,
+    "movement_start_timestamp_ms": 300.0,
+    "movement_end_frame": 50,
+    "movement_end_timestamp_ms": 1666.6666666666667,
+    "movement_duration_ms": 1366.6666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "delphine_cascarino_acl",
+    "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+    "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+    "analysis_start_frame": 9,
+    "analysis_end_frame": 50,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 50,
+    "event_anchor_frame": 50,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

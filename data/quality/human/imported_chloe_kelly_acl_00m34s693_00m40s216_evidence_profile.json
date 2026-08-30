@@ -1,0 +1,55 @@
+{
+  "case_id": "chloe_kelly_acl",
+  "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 14,
+  "target_tracking_coverage": 0.438,
+  "pose_frame_coverage": 0.9174,
+  "upper_body_landmark_coverage": 0.4435166666666667,
+  "core_landmark_coverage": 0.45039999999999997,
+  "lower_limb_landmark_coverage": 0.4173833333333334,
+  "geometry_feature_coverage": 0.405188246097337,
+  "dynamic_feature_coverage": 0.6662884074236731,
+  "interpolation_fraction": 0.0146,
+  "rejected_fraction": 0.5756,
+  "identity_uncertainty_fraction": 0.23140495867768596,
+  "target_loss_fraction": 0.08264462809917356,
+  "supported_feature_count": 1,
+  "limited_feature_count": 35,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 1,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is INVALID_TRACK_SEGMENT."
+  ],
+  "evidence_overview": {
+    "supported_features": 1,
+    "limited_features": 35,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.405188246097337,
+    "dynamic_coverage": 0.6662884074236731,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is INVALID_TRACK_SEGMENT."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 14,
+    "overall_quality_label": "LIMITED EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.027777777777777776,
+      "limited_fraction": 0.9722222222222222,
+      "geometry_coverage": 0.405188246097337,
+      "dynamic_coverage": 0.6662884074236731
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 26
+  },
+  "supported_samples": 26,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "partial affine/RANSAC sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 2.9432964124199232,
+  "minimum_normalized_projected_speed_per_s": 0.09893757772452466,
+  "time_minimum_projected_speed_ms": -266.66666666666674,
+  "maximum_normalized_projected_speed_per_s": 8.152042638480003,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": 179.6367477200783,
+    "late_heading_deg": 8.459104583937254,
+    "projected_change_of_direction_angle_deg": -171.17764313614103,
+    "absolute_projected_change_of_direction_angle_deg": 171.17764313614103,
+    "source_frame_start": 5,
+    "source_frame_end": 30,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "SUPPORTED",
+    "window_start_ms": -500.0,
+    "mean_prior_projected_speed": 3.320830630211792,
+    "mean_final_projected_speed": 2.376995085732118,
+    "projected_speed_change": -0.9438355444796742,
+    "descriptor": "PROJECTED_SLOWDOWN"
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 26
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "QA_REQUIRED",
+      "reason": "Supported path fraction is too low for movement-path semantics.",
+      "supported_fraction": 0.19230769230769232,
+      "path_segment_counts": {
+        "path_segment_005": 5
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 26
+      }
+    },
+    "chosen_method": "affine"
+  }
+}

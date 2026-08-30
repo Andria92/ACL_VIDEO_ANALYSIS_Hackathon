@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "imported_alana_cook_2025_05_16_acl_candidate",
+  "source_id": "imported_alana_cook_2025_05_16_view_02",
+  "view_id": "imported_alana_cook_2025_05_16_view_02",
+  "case_slug": "imported_alana_cook_2025_05_16_view_02",
+  "decision": "yes",
+  "visible_event_in_supported_phase_interval": true,
+  "eligible_for_injury_event_comparison": true,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-08-30T09:12:17.590714+00:00",
+  "phase_status": "SUPPORTED",
+  "phase_count": 5,
+  "supported_interval": {
+    "start_frame": 0,
+    "end_frame": 145
+  },
+  "movement_phases_sha256": "5b9b516506b86b3c375e158d676b1e21df2361d411c6ffe823d985af7002bf78"
+}

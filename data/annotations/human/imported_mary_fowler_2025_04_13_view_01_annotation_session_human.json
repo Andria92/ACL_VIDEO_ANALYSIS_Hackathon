@@ -1,0 +1,128 @@
+{
+  "provenance": {
+    "annotation_session_id": "171ceb7d-dbba-4209-8046-bd50bf8f4209",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T20:29:31.095758+00:00",
+    "updated_at": "2026-08-27T20:31:54.624336+00:00",
+    "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+    "source_id": "imported_mary_fowler_2025_04_13_view_01",
+    "view_id": "imported_mary_fowler_2025_04_13_view_01",
+    "video_path": "data/videos/analysis_clips/FULL MATCH _ Manchester City v Manchester United _ Semi-Final _ Adobe Women_s FA Cup 2024-25_20m12s031_20m14s752.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 5,
+  "roi_keyframes": [
+    {
+      "frame_index": 17,
+      "bbox": {
+        "x": 499.5,
+        "y": 138.0,
+        "width": 138.0,
+        "height": 221.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 21,
+      "bbox": {
+        "x": 431.5,
+        "y": 111.0,
+        "width": 204.0,
+        "height": 245.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 423.5,
+        "y": 105.0,
+        "width": 216.0,
+        "height": 252.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 27,
+      "bbox": {
+        "x": 404.5,
+        "y": 96.0,
+        "width": 235.0,
+        "height": 261.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 42,
+      "bbox": {
+        "x": 386.5,
+        "y": 93.0,
+        "width": 241.0,
+        "height": 267.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 23,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 27,
+      "end_frame": 43,
+      "frame_count": 17,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 45,
+      "end_frame": 50,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 17,
+    "movement_start_timestamp_ms": 566.6666666666666,
+    "movement_end_frame": 67,
+    "movement_end_timestamp_ms": 2233.3333333333335,
+    "movement_duration_ms": 1666.666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+    "source_id": "imported_mary_fowler_2025_04_13_view_01",
+    "view_id": "imported_mary_fowler_2025_04_13_view_01",
+    "analysis_start_frame": 17,
+    "analysis_end_frame": 67,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 67,
+    "event_anchor_frame": 67,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

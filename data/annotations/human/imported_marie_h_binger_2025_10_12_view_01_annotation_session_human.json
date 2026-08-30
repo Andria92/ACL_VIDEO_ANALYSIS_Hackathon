@@ -1,0 +1,329 @@
+{
+  "provenance": {
+    "annotation_session_id": "aeabc0a5-a3ee-4197-86fa-166b3ac5fdd9",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T00:07:55.059065+00:00",
+    "updated_at": "2026-08-29T00:12:58.382679+00:00",
+    "case_id": "imported_marie_h_binger_2025_10_12_acl_candidate",
+    "source_id": "imported_marie_h_binger_2025_10_12_view_01",
+    "view_id": "imported_marie_h_binger_2025_10_12_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/youtube_ITcLN1qnmTo_21m59s255_22m04s422.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 24,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 457.5,
+        "y": 53.0,
+        "width": 174.0,
+        "height": 258.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 2,
+      "bbox": {
+        "x": 423.5,
+        "y": 39.0,
+        "width": 208.0,
+        "height": 288.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 4,
+      "bbox": {
+        "x": 402.5,
+        "y": 51.0,
+        "width": 213.0,
+        "height": 276.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 9,
+      "bbox": {
+        "x": 401.5,
+        "y": 51.0,
+        "width": 166.0,
+        "height": 280.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 19,
+      "bbox": {
+        "x": 382.5,
+        "y": 52.0,
+        "width": 145.0,
+        "height": 276.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 23,
+      "bbox": {
+        "x": 369.5,
+        "y": 39.0,
+        "width": 142.0,
+        "height": 276.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 26,
+      "bbox": {
+        "x": 348.5,
+        "y": 41.0,
+        "width": 157.0,
+        "height": 283.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 28,
+      "bbox": {
+        "x": 342.5,
+        "y": 44.0,
+        "width": 172.0,
+        "height": 283.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 32,
+      "bbox": {
+        "x": 325.5,
+        "y": 50.0,
+        "width": 181.0,
+        "height": 264.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 37,
+      "bbox": {
+        "x": 289.5,
+        "y": 42.0,
+        "width": 179.0,
+        "height": 273.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 46,
+      "bbox": {
+        "x": 270.5,
+        "y": 43.0,
+        "width": 152.0,
+        "height": 290.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 53,
+      "bbox": {
+        "x": 269.5,
+        "y": 47.0,
+        "width": 134.0,
+        "height": 302.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 57,
+      "bbox": {
+        "x": 269.5,
+        "y": 46.0,
+        "width": 110.0,
+        "height": 308.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 62,
+      "bbox": {
+        "x": 235.5,
+        "y": 45.0,
+        "width": 135.0,
+        "height": 260.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 65,
+      "bbox": {
+        "x": 232.5,
+        "y": 43.0,
+        "width": 122.0,
+        "height": 269.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 72,
+      "bbox": {
+        "x": 199.5,
+        "y": 37.0,
+        "width": 150.0,
+        "height": 285.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 206.5,
+        "y": 35.0,
+        "width": 131.0,
+        "height": 285.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 82,
+      "bbox": {
+        "x": 200.5,
+        "y": 37.0,
+        "width": 128.0,
+        "height": 272.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 91,
+      "bbox": {
+        "x": 200.5,
+        "y": 39.0,
+        "width": 122.0,
+        "height": 282.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 105,
+      "bbox": {
+        "x": 187.5,
+        "y": 43.0,
+        "width": 162.0,
+        "height": 282.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 109,
+      "bbox": {
+        "x": 189.5,
+        "y": 46.0,
+        "width": 179.0,
+        "height": 278.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 113,
+      "bbox": {
+        "x": 211.5,
+        "y": 44.0,
+        "width": 170.0,
+        "height": 275.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 116,
+      "bbox": {
+        "x": 220.5,
+        "y": 41.0,
+        "width": 204.0,
+        "height": 274.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 121,
+      "bbox": {
+        "x": 253.5,
+        "y": 38.0,
+        "width": 200.0,
+        "height": 250.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 4,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 18,
+      "end_frame": 21,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 109,
+    "movement_end_timestamp_ms": 3633.3333333333335,
+    "movement_duration_ms": 3633.3333333333335,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_marie_h_binger_2025_10_12_acl_candidate",
+    "source_id": "imported_marie_h_binger_2025_10_12_view_01",
+    "view_id": "imported_marie_h_binger_2025_10_12_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 109,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 109,
+    "event_anchor_frame": 109,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

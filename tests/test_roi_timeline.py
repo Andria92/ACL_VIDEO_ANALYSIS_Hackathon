@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from acl_motion.video.roi import BBox, RoiKeyframe, RoiTimeline
+from scripts.extract_pose import pose_extraction_roi
 
 
 def test_roi_timeline_interpolates_between_keyframes():
@@ -32,3 +33,22 @@ def test_roi_timeline_loads_csv(tmp_path: Path):
 
     assert timeline.keyframes[0].frame_index == 0
     assert timeline.bbox_for_frame(10).x == 20
+
+
+def test_pose_extraction_padding_applies_after_keyframe_interpolation():
+    timeline = RoiTimeline(
+        (
+            RoiKeyframe(0, BBox(0, 10, 100, 200)),
+            RoiKeyframe(10, BBox(20, 30, 120, 220)),
+        )
+    )
+
+    bbox = pose_extraction_roi(
+        frame_index=5,
+        roi_timeline=timeline,
+        static_roi=None,
+        padding_fraction=0.2,
+    )
+
+    assert bbox == BBox(x=-12, y=-22, width=154, height=294)
+    assert timeline.bbox_for_frame(5) == BBox(x=10, y=20, width=110, height=210)

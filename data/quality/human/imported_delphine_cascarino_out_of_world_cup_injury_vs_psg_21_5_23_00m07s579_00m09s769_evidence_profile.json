@@ -1,0 +1,53 @@
+{
+  "case_id": "delphine_cascarino_acl",
+  "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+  "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 9,
+  "target_tracking_coverage": 0.5476,
+  "pose_frame_coverage": 0.619,
+  "upper_body_landmark_coverage": 0.5476,
+  "core_landmark_coverage": 0.5476,
+  "lower_limb_landmark_coverage": 0.5476,
+  "geometry_feature_coverage": 0.5476190476190477,
+  "dynamic_feature_coverage": 0.5893719806763286,
+  "interpolation_fraction": 0.007,
+  "rejected_fraction": 0.465,
+  "identity_uncertainty_fraction": 0.047619047619047616,
+  "target_loss_fraction": 0.38095238095238093,
+  "supported_feature_count": 30,
+  "limited_feature_count": 6,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 26,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "Feature value is unavailable.",
+    "Local trajectory residuals are high relative to local movement.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 30,
+    "limited_features": 6,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.5476190476190477,
+    "dynamic_coverage": 0.5893719806763286,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "Feature value is unavailable.",
+      "Local trajectory residuals are high relative to local movement.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 9,
+    "overall_quality_label": "MODERATE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.8333333333333334,
+      "limited_fraction": 0.16666666666666666,
+      "geometry_coverage": 0.5476190476190477,
+      "dynamic_coverage": 0.5893719806763286
+    }
+  }
+}

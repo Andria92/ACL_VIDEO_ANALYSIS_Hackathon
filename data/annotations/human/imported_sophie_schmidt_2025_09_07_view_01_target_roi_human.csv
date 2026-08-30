@@ -1,0 +1,4 @@
+frame_index,x,y,width,height,view_id,annotation_source,annotation_session_id,annotator_id,flags,note
+0,680.7142857142857,151.42857142857142,400.0000000000001,517.1428571428571,imported_sophie_schmidt_2025_09_07_view_01,human_ui,0fe894a7-ef8b-449c-a77d-bd8e5d4c8789,researcher_01,,
+39,567.8571428571429,138.57142857142858,521.4285714285713,551.4285714285714,imported_sophie_schmidt_2025_09_07_view_01,human_ui,0fe894a7-ef8b-449c-a77d-bd8e5d4c8789,researcher_01,,
+79,505.0,124.28571428571429,325.71428571428567,582.8571428571428,imported_sophie_schmidt_2025_09_07_view_01,human_ui,0fe894a7-ef8b-449c-a77d-bd8e5d4c8789,researcher_01,,

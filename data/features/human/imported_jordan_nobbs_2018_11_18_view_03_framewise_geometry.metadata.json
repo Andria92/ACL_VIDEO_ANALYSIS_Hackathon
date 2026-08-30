@@ -1,0 +1,33 @@
+{
+  "run_id": "jordan_nobbs_acl_m3_20260827T162627Z",
+  "generated_at": "2026-08-27T16:26:27.841703+00:00",
+  "case_id": "jordan_nobbs_acl",
+  "source_id": "imported_jordan_nobbs_2018_11_18_view_03",
+  "processed_pose_input": "data/processed/human/imported_jordan_nobbs_2018_11_18_view_03_processed_pose.parquet",
+  "pose_backend": "yolo",
+  "pose_model": "Ultralytics YOLO pose",
+  "geometry_version": "m3_geometry_primitives_v1",
+  "feature_set_version": "m3_projected_geometry_core_v1",
+  "injured_side": "right",
+  "normalisation_method": "median_torso_length_valid_processed_frames",
+  "normalisation_reference": {
+    "normalisation_method": "median_torso_length_valid_processed_frames",
+    "reference_value_px": 90.83542678291329,
+    "frames_used_for_reference": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41
+    ],
+    "frames_used_count": 13
+  }
+}

@@ -8,6 +8,9 @@ from acl_motion.geometry.angular_semantics import (
     AngleType,
     angle_type_for_metric,
     angular_difference,
+    angular_range,
+    measurement_range_for_metric,
+    range_semantics_for_metric,
 )
 from acl_motion.geometry.distances import (
     distance_2d,
@@ -99,3 +102,31 @@ def test_angular_difference_handles_invalid_values_and_registry_types():
     assert angle_type_for_metric("projected_trunk_axis_angle_deg") is AngleType.DIRECTED
     assert angle_type_for_metric("projected_hip_line_angle_deg") is AngleType.AXIS
     assert angle_type_for_metric("not_an_angle") is None
+
+
+@pytest.mark.parametrize(
+    ("values", "angle_type", "expected"),
+    [
+        ([130.0, 170.0], AngleType.INTERNAL, 40.0),
+        ([179.0, -179.0], AngleType.DIRECTED, 2.0),
+        ([170.0, -170.0], AngleType.DIRECTED, 20.0),
+        ([89.0, -89.0], AngleType.AXIS, 2.0),
+        ([10.0], AngleType.AXIS, 0.0),
+    ],
+)
+def test_angular_range_respects_metric_period(values, angle_type, expected):
+    assert angular_range(values, angle_type) == pytest.approx(expected)
+
+
+def test_measurement_range_uses_registry_and_linear_fallback():
+    assert measurement_range_for_metric(
+        "projected_hip_line_angle_deg",
+        [89.0, -89.0],
+    ) == pytest.approx(2.0)
+    assert measurement_range_for_metric("synthetic_metric", [1.0, 7.0]) == pytest.approx(6.0)
+    assert math.isnan(measurement_range_for_metric("synthetic_metric", [np.nan]))
+    assert range_semantics_for_metric("projected_trunk_axis_angle_deg") == (
+        "shortest_directed_arc"
+    )
+    assert range_semantics_for_metric("projected_hip_line_angle_deg") == "shortest_axial_arc"
+    assert range_semantics_for_metric("injured_hka_angle_2d_deg") == "linear"

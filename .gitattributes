@@ -1,0 +1,4 @@
+data/videos/analysis_clips/*.mp4 filter=lfs diff=lfs merge=lfs -text
+data/videos/analysis_clips/*.mov filter=lfs diff=lfs merge=lfs -text
+data/videos/analysis_clips/*.mkv filter=lfs diff=lfs merge=lfs -text
+data/videos/analysis_clips/*.webm filter=lfs diff=lfs merge=lfs -text

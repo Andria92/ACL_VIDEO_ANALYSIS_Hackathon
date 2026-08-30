@@ -1,0 +1,43 @@
+{
+  "provenance": {
+    "annotation_session_id": "6bc21c66-4309-4235-948d-31f432acc6b6",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T13:10:21.015362+00:00",
+    "updated_at": "2026-08-25T14:06:44.341755+00:00",
+    "case_id": "beth_mead_acl",
+    "source_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_view_01",
+    "view_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_view_01",
+    "video_path": "data/videos/analysis_clips/04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_2.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "beth_mead_acl",
+  "source_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_view_01",
+  "view_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_view_01",
+  "manual_roi_keyframe_count": 19,
+  "manual_target_unavailable_frame_count": 19,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 134,
+      "end_frame": 152,
+      "frame_count": 19,
+      "reason": "TARGET_PARTIALLY_OCCLUDED",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 167,
+    "movement_end_timestamp_ms": 5566.666666666666,
+    "movement_duration_ms": 5566.666666666666,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

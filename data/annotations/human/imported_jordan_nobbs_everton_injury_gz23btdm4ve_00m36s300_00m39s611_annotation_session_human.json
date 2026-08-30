@@ -1,0 +1,200 @@
+{
+  "provenance": {
+    "annotation_session_id": "655ce2ae-0c83-4d52-ae42-fe2e0066481d",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-21T06:48:37.234523+00:00",
+    "updated_at": "2026-08-21T12:50:49.024037+00:00",
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+    "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+    "video_path": "data/videos/analysis_clips/jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 11,
+  "roi_keyframes": [
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 327.22178988326846,
+        "y": 426.0845106894585,
+        "width": 138.95719844357978,
+        "height": 198.83943832174725
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 45,
+      "bbox": {
+        "x": 434.80155642023345,
+        "y": 430.56961080197914,
+        "width": 155.39299610894938,
+        "height": 219.76990551351014
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 56,
+      "bbox": {
+        "x": 516.9805447470817,
+        "y": 420.1043772060977,
+        "width": 171.82879377431914,
+        "height": 243.69043944695346
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 61,
+      "bbox": {
+        "x": 549.852140077821,
+        "y": 415.61927709357707,
+        "width": 153.89883268482492,
+        "height": 255.6507064136751
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 66,
+      "bbox": {
+        "x": 620.0778210116731,
+        "y": 421.5994105769379,
+        "width": 116.5447470817121,
+        "height": 251.16560630115453
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 76,
+      "bbox": {
+        "x": 708.2334630350194,
+        "y": 426.0845106894585,
+        "width": 104.59143968871592,
+        "height": 231.73017248023177
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 82,
+      "bbox": {
+        "x": 706.7392996108949,
+        "y": 429.07457743113895,
+        "width": 112.06225680933858,
+        "height": 230.23513910939158
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 100,
+      "bbox": {
+        "x": 756.0466926070039,
+        "y": 423.09444394777813,
+        "width": 153.8988326848248,
+        "height": 201.82950506342763
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 109,
+      "bbox": {
+        "x": 738.1167315175097,
+        "y": 429.07457743113895,
+        "width": 152.40466926070042,
+        "height": 201.8295050634277
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 116,
+      "bbox": {
+        "x": 705.2451361867704,
+        "y": 438.04477765618014,
+        "width": 159.87548638132296,
+        "height": 213.78977203014938
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 126,
+      "bbox": {
+        "x": 663.4085603112841,
+        "y": 420.1043772060977,
+        "width": 203.2062256809338,
+        "height": 206.31460517594832
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 32,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 26,
+      "end_frame": 39,
+      "frame_count": 14,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 55,
+      "frame_count": 6,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 84,
+      "end_frame": 95,
+      "frame_count": 12,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 25,
+    "movement_start_timestamp_ms": 416.6666666666667,
+    "movement_end_frame": 131,
+    "movement_end_timestamp_ms": 2183.333333333333,
+    "movement_duration_ms": 1766.6666666666663,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+    "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+    "analysis_start_frame": 25,
+    "analysis_end_frame": 131,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 131,
+    "event_anchor_frame": 131,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

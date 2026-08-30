@@ -1,0 +1,13 @@
+frame_index,x,y,width,height,view_id,annotation_source,annotation_session_id,annotator_id,flags,note
+3,39.5,74.0,140.0,256.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+4,66.5,78.0,169.0,258.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+6,126.5,72.0,133.0,265.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+7,146.5,74.0,122.0,269.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+8,165.5,66.0,134.0,275.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+9,190.5,63.0,137.0,279.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+10,212.5,58.0,133.0,274.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+11,232.5,62.0,133.0,274.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+12,238.5,61.0,172.0,274.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+13,248.5,64.0,183.0,268.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+14,262.5,61.0,192.0,270.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,
+16,299.5,63.0,179.0,273.0,imported_grace_wisnewski_2023_11_04_view_01,human_ui,102e4936-3b72-49c4-8f16-1bd88a59586e,researcher_01,,

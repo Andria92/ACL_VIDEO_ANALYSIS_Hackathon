@@ -1,0 +1,432 @@
+{
+  "provenance": {
+    "annotation_session_id": "dd24b491-429c-4500-92c1-5bc8b1fa4910",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T22:02:37.502260+00:00",
+    "updated_at": "2026-08-29T22:07:14.383875+00:00",
+    "case_id": "imported_kayla_duran_2026_04_04_acl_candidate",
+    "source_id": "imported_kayla_duran_2026_04_04_view_01",
+    "view_id": "imported_kayla_duran_2026_04_04_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Kansas City Current vs. Gotham FC - Replay _941978__24m28s472_24m33s639.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 29,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 1036.4285714285713,
+        "y": 10.0,
+        "width": 241.42857142857156,
+        "height": 332.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 3,
+      "bbox": {
+        "x": 982.1428571428571,
+        "y": 2.857142857142857,
+        "width": 284.2857142857142,
+        "height": 361.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 5,
+      "bbox": {
+        "x": 937.8571428571429,
+        "y": 10.0,
+        "width": 294.2857142857142,
+        "height": 348.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 7,
+      "bbox": {
+        "x": 895.0,
+        "y": 10.0,
+        "width": 332.8571428571429,
+        "height": 310.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 11,
+      "bbox": {
+        "x": 855.0,
+        "y": 10.0,
+        "width": 338.57142857142867,
+        "height": 338.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 17,
+      "bbox": {
+        "x": 777.8571428571429,
+        "y": 11.428571428571429,
+        "width": 228.57142857142856,
+        "height": 340.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 24,
+      "bbox": {
+        "x": 733.5714285714286,
+        "y": 21.428571428571427,
+        "width": 251.42857142857144,
+        "height": 350.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 29,
+      "bbox": {
+        "x": 716.4285714285714,
+        "y": 4.285714285714286,
+        "width": 244.28571428571422,
+        "height": 368.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 31,
+      "bbox": {
+        "x": 710.7142857142857,
+        "y": 12.857142857142858,
+        "width": 260.0,
+        "height": 398.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 38,
+      "bbox": {
+        "x": 726.4285714285714,
+        "y": 70.0,
+        "width": 222.8571428571429,
+        "height": 400.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 46,
+      "bbox": {
+        "x": 749.2857142857143,
+        "y": 134.28571428571428,
+        "width": 185.71428571428567,
+        "height": 365.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 56,
+      "bbox": {
+        "x": 729.2857142857143,
+        "y": 135.71428571428572,
+        "width": 211.42857142857133,
+        "height": 377.14285714285717
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 60,
+      "bbox": {
+        "x": 700.7142857142857,
+        "y": 125.71428571428571,
+        "width": 165.71428571428578,
+        "height": 408.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 63,
+      "bbox": {
+        "x": 662.1428571428571,
+        "y": 125.71428571428571,
+        "width": 155.71428571428578,
+        "height": 384.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 65,
+      "bbox": {
+        "x": 613.5714285714286,
+        "y": 115.71428571428571,
+        "width": 202.8571428571429,
+        "height": 368.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 68,
+      "bbox": {
+        "x": 572.1428571428571,
+        "y": 112.85714285714286,
+        "width": 202.8571428571429,
+        "height": 374.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 70,
+      "bbox": {
+        "x": 536.4285714285714,
+        "y": 111.42857142857143,
+        "width": 205.71428571428567,
+        "height": 384.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 73,
+      "bbox": {
+        "x": 485.0,
+        "y": 110.0,
+        "width": 224.28571428571433,
+        "height": 384.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 75,
+      "bbox": {
+        "x": 449.2857142857143,
+        "y": 102.85714285714286,
+        "width": 251.4285714285714,
+        "height": 404.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 78,
+      "bbox": {
+        "x": 390.7142857142857,
+        "y": 82.85714285714286,
+        "width": 298.5714285714286,
+        "height": 421.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 81,
+      "bbox": {
+        "x": 325.0,
+        "y": 91.42857142857143,
+        "width": 334.28571428571433,
+        "height": 427.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 85,
+      "bbox": {
+        "x": 286.42857142857144,
+        "y": 111.42857142857143,
+        "width": 347.1428571428571,
+        "height": 412.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 92,
+      "bbox": {
+        "x": 252.14285714285714,
+        "y": 115.71428571428571,
+        "width": 197.14285714285714,
+        "height": 428.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 98,
+      "bbox": {
+        "x": 185.0,
+        "y": 110.0,
+        "width": 227.14285714285717,
+        "height": 434.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 112,
+      "bbox": {
+        "x": 185.0,
+        "y": 114.28571428571429,
+        "width": 230.0,
+        "height": 461.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 118,
+      "bbox": {
+        "x": 179.28571428571428,
+        "y": 104.28571428571429,
+        "width": 368.5714285714286,
+        "height": 501.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 125,
+      "bbox": {
+        "x": 235.0,
+        "y": 128.57142857142858,
+        "width": 260.0,
+        "height": 461.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 129,
+      "bbox": {
+        "x": 169.28571428571428,
+        "y": 141.42857142857142,
+        "width": 320.0,
+        "height": 464.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 139,
+      "bbox": {
+        "x": 167.85714285714286,
+        "y": 208.57142857142858,
+        "width": 275.71428571428567,
+        "height": 410.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 58,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 7,
+      "end_frame": 12,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 22,
+      "end_frame": 36,
+      "frame_count": 15,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 55,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 65,
+      "end_frame": 81,
+      "frame_count": 17,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 85,
+      "end_frame": 91,
+      "frame_count": 7,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 104,
+      "end_frame": 107,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 126,
+      "end_frame": 128,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 139,
+    "movement_end_timestamp_ms": 4633.333333333334,
+    "movement_duration_ms": 4633.333333333334,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_kayla_duran_2026_04_04_acl_candidate",
+    "source_id": "imported_kayla_duran_2026_04_04_view_01",
+    "view_id": "imported_kayla_duran_2026_04_04_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 139,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 139,
+    "event_anchor_frame": 139,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

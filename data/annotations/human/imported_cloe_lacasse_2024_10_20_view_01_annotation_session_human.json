@@ -1,0 +1,161 @@
+{
+  "provenance": {
+    "annotation_session_id": "af0dadf1-fe22-4c95-8921-45b4b0e649d2",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-30T18:42:40.585002+00:00",
+    "updated_at": "2026-08-30T18:44:42.084056+00:00",
+    "case_id": "imported_cloe_lacasse_2024_10_20_acl_candidate",
+    "source_id": "imported_cloe_lacasse_2024_10_20_view_01",
+    "view_id": "imported_cloe_lacasse_2024_10_20_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/nwsl_705795_48m37s480_48m41s146.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 8,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 781.0714285714286,
+        "y": 244.28571428571428,
+        "width": 488.57142857142856,
+        "height": 803.5714285714287
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 50,
+      "bbox": {
+        "x": 819.6428571428571,
+        "y": 300.0,
+        "width": 362.1428571428571,
+        "height": 722.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 53,
+      "bbox": {
+        "x": 819.6428571428571,
+        "y": 302.14285714285717,
+        "width": 351.42857142857156,
+        "height": 720.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 57,
+      "bbox": {
+        "x": 821.7857142857143,
+        "y": 306.42857142857144,
+        "width": 327.8571428571428,
+        "height": 724.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 60,
+      "bbox": {
+        "x": 826.0714285714286,
+        "y": 302.14285714285717,
+        "width": 315.0000000000001,
+        "height": 735.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 63,
+      "bbox": {
+        "x": 748.9285714285714,
+        "y": 300.0,
+        "width": 349.28571428571433,
+        "height": 745.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 68,
+      "bbox": {
+        "x": 663.2142857142857,
+        "y": 295.7142857142857,
+        "width": 409.28571428571433,
+        "height": 743.5714285714284
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 628.9285714285714,
+        "y": 342.85714285714283,
+        "width": 552.8571428571428,
+        "height": 672.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 9,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 67,
+      "end_frame": 71,
+      "frame_count": 5,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 73,
+      "end_frame": 76,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 94,
+    "movement_end_timestamp_ms": 3133.3333333333335,
+    "movement_duration_ms": 3133.3333333333335,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_cloe_lacasse_2024_10_20_acl_candidate",
+    "source_id": "imported_cloe_lacasse_2024_10_20_view_01",
+    "view_id": "imported_cloe_lacasse_2024_10_20_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 94,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 94,
+    "event_anchor_frame": 94,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

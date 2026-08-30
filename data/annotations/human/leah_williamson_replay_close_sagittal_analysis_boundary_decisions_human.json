@@ -1,0 +1,17 @@
+{
+  "decisions": [
+    {
+      "created_at": "2026-08-17T12:11:29.002102+00:00",
+      "case_id": "leah_williamson_acl",
+      "source_id": "leah_williamson_replay_close_sagittal_04",
+      "view_id": "leah_williamson_replay_close_sagittal_04",
+      "previous_movement_end_frame": 124,
+      "movement_end_frame": 78,
+      "rationale": "Post-injury occlusion and wrong-player reacquisition after frame 78; later frames excluded by human operator.",
+      "annotator_id": "researcher_01",
+      "source": "results_ui_end_analysis_here",
+      "preserves_source_video": true,
+      "migrated_from_slug": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685"
+    }
+  ]
+}

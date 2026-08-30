@@ -11,7 +11,10 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from acl_motion.video.roi import BBox
-from acl_motion.visualisation.overlay import draw_pose_overlay
+from acl_motion.visualisation.overlay import (
+    DEFAULT_POSE_DISPLAY_CONFIDENCE_THRESHOLD,
+    draw_pose_overlay,
+)
 
 
 def main() -> int:
@@ -93,7 +96,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--start-frame", type=int, default=0)
     parser.add_argument("--end-frame", type=int, default=None)
     parser.add_argument("--every-n", type=int, default=1)
-    parser.add_argument("--confidence-threshold", type=float, default=0.0)
+    parser.add_argument(
+        "--confidence-threshold",
+        type=float,
+        default=DEFAULT_POSE_DISPLAY_CONFIDENCE_THRESHOLD,
+    )
     args = parser.parse_args()
     if args.every_n <= 0:
         parser.error("--every-n must be positive.")

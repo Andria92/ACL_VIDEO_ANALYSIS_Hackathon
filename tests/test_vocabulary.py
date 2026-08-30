@@ -208,11 +208,28 @@ def test_vocabulary_registry_forbids_clinical_labels() -> None:
     assert "archetype" not in text
 
 
+def test_supported_evidence_interval_withholds_distinct_phase_claim_only() -> None:
+    payload = _payload(
+        _dynamic_df({"injured_hka_angle_2d_deg": [100, 106, 112, 118, 124]}),
+        phase_status="SUPPORTED_EVIDENCE_INTERVAL",
+    )
+    phase_item = next(
+        item
+        for item in payload["withheld_descriptions"]
+        if item["descriptor_id"] == "PHASE_SEGMENTATION_WITHHELD"
+    )
+
+    assert phase_item["user_label"] == "Distinct movement phases not detected"
+    assert "supported measurement interval is available" in phase_item["summary"]
+    assert "injury timing" in phase_item["evidence_reason"]
+
+
 def _payload(
     dynamic_df: pd.DataFrame,
     *,
     frame_quality: pd.DataFrame | None = None,
     config: MovementVocabularyConfig | None = None,
+    phase_status: str = "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION",
 ) -> dict:
     return build_observable_movement_description_payload(
         case_id="case",
@@ -225,7 +242,7 @@ def _payload(
             "movement_end_frame": 4,
             "movement_duration_ms": 400.0,
         },
-        phase_status="INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION",
+        phase_status=phase_status,
         config=config
         or MovementVocabularyConfig(
             minimum_interval_frames=2,

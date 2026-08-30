@@ -1,0 +1,61 @@
+{
+  "provenance": {
+    "annotation_session_id": "f38fa2b9-5bd2-4a1f-8d36-b4afde778309",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T18:45:50.628193+00:00",
+    "updated_at": "2026-08-27T18:52:06.911901+00:00",
+    "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+    "source_id": "imported_caroline_wier_2023_09_26_view_01",
+    "view_id": "imported_caroline_wier_2023_09_26_view_01",
+    "video_path": "data/videos/analysis_clips/YTDown.com_YouTube_Scotland-v-Belgium-Uefa-Women-s-Nations-_Media_zUVLcmUHYAs_001_720p_29m49s105_29m52s885.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+  "source_id": "imported_caroline_wier_2023_09_26_view_01",
+  "view_id": "imported_caroline_wier_2023_09_26_view_01",
+  "manual_roi_keyframe_count": 30,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 15,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 23,
+      "end_frame": 25,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 47,
+      "end_frame": 56,
+      "frame_count": 10,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 74,
+      "end_frame": 75,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 9,
+    "movement_start_timestamp_ms": 180.0,
+    "movement_end_frame": 169,
+    "movement_end_timestamp_ms": 3380.0,
+    "movement_duration_ms": 3200.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

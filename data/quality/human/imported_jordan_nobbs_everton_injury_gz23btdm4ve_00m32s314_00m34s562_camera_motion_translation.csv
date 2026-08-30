@@ -1,0 +1,7 @@
+source_frame_index,background_dx_px,background_dy_px,background_feature_count,camera_motion_status,camera_motion_residual_px,camera_motion_method,affine_a,affine_b,affine_tx,affine_c,affine_d,affine_ty,affine_scale,affine_inlier_fraction
+2,0.0,0.0,0,INSUFFICIENT_EVIDENCE,,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+3,0.002960205078125,0.0008544921875,350,SUPPORTED,0.10241377353668213,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+4,0.009796142578125,0.89276123046875,348,SUPPORTED,0.12117329984903336,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+5,13.963653564453125,0.31298828125,347,SUPPORTED,1.4734082221984863,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+6,12.184646606445312,0.2073516845703125,350,SUPPORTED,1.6449778079986572,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,
+7,-0.000518798828125,-0.746307373046875,345,SUPPORTED,0.17291635274887085,translation_median_sparse_flow,1.0,0.0,0.0,0.0,1.0,0.0,,

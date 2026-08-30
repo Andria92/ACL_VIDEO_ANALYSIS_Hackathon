@@ -112,6 +112,26 @@ def test_signature_accepts_human_movement_duration_key_for_normalized_timing() -
     assert long.loc["strongest_transition_timing_normalized", "value"] == pytest.approx(0.8)
 
 
+def test_signature_uses_wrap_aware_orientation_range_and_change() -> None:
+    dynamic_df = _dynamic_df()
+    mask = dynamic_df["feature_name"].eq("projected_trunk_axis_angle_deg")
+    dynamic_df.loc[mask, "feature_value"] = [179.0, -179.0, 178.0, -178.0, 177.0]
+
+    signature = build_case_movement_signature(
+        case_id="case",
+        source_id="source",
+        dynamic_df=dynamic_df,
+        path_df=pd.DataFrame(),
+        movement_story={"phases": [], "transitions": []},
+        movement_window={"movement_start_frame": 0, "movement_end_frame": 4, "duration_ms": 1000.0},
+        path_quality_summary={"overall_status": "UNAVAILABLE"},
+    )
+
+    long = signature.long_table.set_index("feature_name")
+    assert long.loc["trunk_axis_range_whole", "value"] == pytest.approx(5.0)
+    assert long.loc["trunk_axis_change_whole", "value"] == pytest.approx(-2.0)
+
+
 def _dynamic_df() -> pd.DataFrame:
     rows = []
     frames = [0, 1, 2, 3, 4]

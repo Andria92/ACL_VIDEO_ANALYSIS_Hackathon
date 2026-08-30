@@ -1,0 +1,145 @@
+{
+  "run_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01_20260825T190007Z",
+  "timestamp_utc": "2026-08-25T19:00:07.904485+00:00",
+  "case_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_acl_candidate",
+  "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+  "pose_backend": "yolo",
+  "model_name": "Ultralytics YOLO pose",
+  "model_path": "data/models/yolov8n-pose.pt",
+  "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647.mp4",
+  "fps": 30.0,
+  "width": 640,
+  "height": 360,
+  "frame_count_video": 99,
+  "frame_count_processed": 80,
+  "landmark_row_count": 1360,
+  "start_frame": 0,
+  "end_frame": 79,
+  "every_n": 1,
+  "roi": null,
+  "roi_keyframes": "data/annotations/human/imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_target_roi_human.csv",
+  "roi_keyframe_count": 15,
+  "roi_keyframe_records": [
+    {
+      "frame_index": 0,
+      "x": 474.0,
+      "y": 159.0,
+      "width": 116.0,
+      "height": 174.0
+    },
+    {
+      "frame_index": 13,
+      "x": 502.0,
+      "y": 156.0,
+      "width": 120.0,
+      "height": 182.0
+    },
+    {
+      "frame_index": 16,
+      "x": 519.0,
+      "y": 156.0,
+      "width": 115.0,
+      "height": 182.0
+    },
+    {
+      "frame_index": 25,
+      "x": 517.0,
+      "y": 148.0,
+      "width": 118.0,
+      "height": 175.0
+    },
+    {
+      "frame_index": 27,
+      "x": 498.0,
+      "y": 146.0,
+      "width": 132.0,
+      "height": 178.0
+    },
+    {
+      "frame_index": 30,
+      "x": 483.0,
+      "y": 139.0,
+      "width": 114.0,
+      "height": 189.0
+    },
+    {
+      "frame_index": 32,
+      "x": 471.0,
+      "y": 136.0,
+      "width": 120.0,
+      "height": 192.0
+    },
+    {
+      "frame_index": 35,
+      "x": 455.0,
+      "y": 123.0,
+      "width": 115.0,
+      "height": 195.0
+    },
+    {
+      "frame_index": 40,
+      "x": 448.0,
+      "y": 129.0,
+      "width": 95.0,
+      "height": 191.0
+    },
+    {
+      "frame_index": 42,
+      "x": 440.0,
+      "y": 129.0,
+      "width": 83.0,
+      "height": 165.0
+    },
+    {
+      "frame_index": 44,
+      "x": 425.0,
+      "y": 126.0,
+      "width": 102.0,
+      "height": 170.0
+    },
+    {
+      "frame_index": 48,
+      "x": 411.0,
+      "y": 120.0,
+      "width": 136.0,
+      "height": 180.0
+    },
+    {
+      "frame_index": 55,
+      "x": 395.0,
+      "y": 122.0,
+      "width": 97.0,
+      "height": 142.0
+    },
+    {
+      "frame_index": 77,
+      "x": 375.0,
+      "y": 121.0,
+      "width": 69.0,
+      "height": 135.0
+    },
+    {
+      "frame_index": 79,
+      "x": 385.0,
+      "y": 117.0,
+      "width": 80.0,
+      "height": 131.0
+    }
+  ],
+  "human_annotation_session": "data/annotations/human/imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_annotation_session_human.json",
+  "human_target_unavailable_interval_count": 1,
+  "human_target_unavailable_frame_count": 19,
+  "human_target_unavailable_intervals": [
+    {
+      "start_frame": 57,
+      "end_frame": 75,
+      "frame_count": 19,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "roi_pad": 0.2,
+  "yolo_selection_strategy": "center",
+  "notes": "Raw pose extraction only. Manual ROI keyframe records are preserved unchanged; roi_pad records the symmetric context margin applied only to the pose crop. No biomechanical interpretation."
+}

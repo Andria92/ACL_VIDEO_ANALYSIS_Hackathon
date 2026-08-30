@@ -1,22 +1,30 @@
-"""First human-results experience for ACL Movement Explorer."""
+"""First human-results experience for ACL Movement Analytics Lab."""
 
 from __future__ import annotations
 
 import json
 import math
 import os
+import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
-from acl_motion.analytics.guard import CROSS_CASE_ANALYTIC_NAMES
+from acl_motion.analytics.evidence_coverage import build_geometry_coverage_evidence
+from acl_motion.analytics.similarity import build_similarity_payload
+from acl_motion.annotations.event_interval_review import load_event_interval_review
 from acl_motion.annotations.models import AnnotationCase, MovementWindowAnnotation
 from acl_motion.annotations.movement_window import movement_window_to_event_annotation
 from acl_motion.annotations.propagation import propagated_bbox
+from acl_motion.annotations.research_metadata import (
+    RESEARCH_METADATA_FILENAME,
+    load_research_metadata,
+)
 from acl_motion.annotations.storage import (
     human_annotation_paths,
     load_human_annotation_session,
@@ -24,6 +32,8 @@ from acl_motion.annotations.storage import (
     save_human_annotation_session,
 )
 from acl_motion.annotations.view_alignment import load_view_alignment
+from acl_motion.cases.models import InjurySide
+from acl_motion.pose.profiles import pose_analysis_profile
 from acl_motion.segmentation.target_mask import (
     MaskPrompt,
     append_mask_prompt,
@@ -37,12 +47,47 @@ from acl_motion.segmentation.target_mask import (
 )
 from acl_motion.semantics.metric_explorer import build_metric_explorer_payload
 from acl_motion.semantics.visual_story import build_movement_visual_story
+from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.video.context import (
+    context_clip_registry_path,
+    context_video_clip_by_id,
+    context_video_clips_for_case,
+)
 from acl_motion.video.io import read_video_metadata
 from acl_motion.video.roi import BBox
-from acl_motion.visualisation.overlay import draw_pose_overlay
+from acl_motion.visualisation.overlay import (
+    DEFAULT_POSE_DISPLAY_CONFIDENCE_THRESHOLD,
+    draw_pose_overlay,
+)
 
 HUMAN_DATA_ROOT = Path("data")
+DEFAULT_ANALYSIS_COMMAND_TIMEOUT_SECONDS = 300
+POSE_EXTRACTION_TIMEOUT_SECONDS = 900
+POSE_RUNTIME_WARMUP_TIMEOUT_SECONDS = 120
 
+
+@lru_cache(maxsize=64)
+def _cached_pose_review_parquet(path_text: str, modified_ns: int) -> pd.DataFrame:
+    """Cache immutable pose-review tables until their generated file changes."""
+
+    del modified_ns
+    return pd.read_parquet(path_text)
+
+
+@lru_cache(maxsize=64)
+def _cached_pose_review_csv(path_text: str, modified_ns: int) -> pd.DataFrame:
+    """Cache immutable frame-QC tables until their generated file changes."""
+
+    del modified_ns
+    return pd.read_csv(path_text)
+
+
+def _pose_review_parquet(path: Path) -> pd.DataFrame:
+    return _cached_pose_review_parquet(str(path.resolve()), path.stat().st_mtime_ns)
+
+
+def _pose_review_csv(path: Path) -> pd.DataFrame:
+    return _cached_pose_review_csv(str(path.resolve()), path.stat().st_mtime_ns)
 SEMANTIC_CATEGORY_LABELS = {
     "movement_path": "Movement Path",
     "hip_knee_ankle_chain": "Hip-Knee-Ankle Chain",
@@ -161,6 +206,35 @@ STATUS_EXPLANATIONS = {
     "NOT_DYNAMIC_FEATURE": "This descriptor is not treated as a dynamic feature.",
 }
 
+MEASUREMENT_BOUNDARIES = {
+    "intended_use": (
+        "Exploratory research and education using interpretable markerless 2D analysis "
+        "of observable movement in supplied football footage."
+    ),
+    "measurement_scope": (
+        "Supported outputs are projected or body-normalized image-plane movement descriptors."
+    ),
+    "not_estimated": [
+        "ACL ligament load or strain",
+        "ground-reaction force, joint torque, or joint moment",
+        "true 3D joint angles, depth, or biomechanics",
+        "causal injury mechanism, diagnosis, prognosis, or prospective injury risk",
+        "clinical treatment or medical recommendations",
+    ],
+    "unavailable_rule": (
+        "A measurement is unavailable when target, landmark, geometry, timing, or existing "
+        "QC evidence is insufficient; missing values are not replaced with zero."
+    ),
+    "similarity_meaning": (
+        "Similarity means similarity within the mutually supported measured movement "
+        "representation used by the engine. It does not establish the same injury mechanism, "
+        "biological cause, tissue loading, or clinical condition."
+    ),
+    "human_oversight": (
+        "A researcher remains responsible for source verification, target identity, the "
+        "selected movement window, documented laterality, footage quality, and interpretation."
+    ),
+}
 
 def human_results_available(case: AnnotationCase, data_root: str | Path = HUMAN_DATA_ROOT) -> bool:
     """Return whether a human Movement Profile exists for the case."""
@@ -168,11 +242,402 @@ def human_results_available(case: AnnotationCase, data_root: str | Path = HUMAN_
     return _results_paths(case.slug, Path(data_root))["movement_profile"].exists()
 
 
+def human_results_generated_at(
+    case: AnnotationCase,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> str | None:
+    """Return the completed Movement Profile timestamp for library ordering."""
+
+    movement_profile = _results_paths(case.slug, Path(data_root))["movement_profile"]
+    if not movement_profile.exists():
+        return None
+    return datetime.fromtimestamp(movement_profile.stat().st_mtime, UTC).isoformat()
+
+
+def pose_review_analysis_status(
+    case: AnnotationCase,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> dict:
+    """Describe whether a previous processed pose is available for annotation review."""
+
+    paths = _results_paths(case.slug, Path(data_root))
+    root = Path(data_root)
+    run_metadata_path = (
+        root / "pose" / "human" / f"{case.slug}_raw_pose.metadata.json"
+    )
+    run_metadata = _read_optional_json(run_metadata_path)
+    required = (paths["processed_pose"], paths["frame_quality"])
+    available = all(path.exists() for path in required)
+    generated_at = None
+    stale = False
+    if available:
+        generated_mtime = min(path.stat().st_mtime for path in required)
+        generated_at = datetime.fromtimestamp(generated_mtime, UTC).isoformat()
+        annotation_path = paths["annotation_session"]
+        if annotation_path.exists() and annotation_path.stat().st_mtime > generated_mtime:
+            try:
+                session = load_human_annotation_session(annotation_path)
+                stale = not _annotation_matches_pose_run(session, run_metadata)
+            except (KeyError, OSError, TypeError, ValueError):
+                stale = True
+    return {
+        "available": available,
+        "stale": stale,
+        "generated_at": generated_at,
+        "source": "Previous generated analysis",
+        "pose_model_name": run_metadata.get("model_name"),
+        "pose_model_path": run_metadata.get("model_path"),
+    }
+
+
+def _annotation_matches_pose_run(session, metadata: dict) -> bool:
+    """Compare saved annotation content with the snapshot used for pose extraction."""
+
+    window = session.movement_window
+    if window is None:
+        return False
+    if int(metadata.get("start_frame", -1)) != int(window.movement_start_frame):
+        return False
+    if int(metadata.get("end_frame", -1)) != int(window.movement_end_frame):
+        return False
+
+    saved_rois = sorted(
+        metadata.get("roi_keyframe_records") or [],
+        key=lambda item: int(item.get("frame_index", -1)),
+    )
+    current_rois = sorted(session.roi_keyframes, key=lambda item: item.frame_index)
+    if len(saved_rois) != len(current_rois):
+        return False
+    for saved, current in zip(saved_rois, current_rois, strict=True):
+        if int(saved.get("frame_index", -1)) != int(current.frame_index):
+            return False
+        for key, value in (
+            ("x", current.bbox.x),
+            ("y", current.bbox.y),
+            ("width", current.bbox.width),
+            ("height", current.bbox.height),
+        ):
+            try:
+                if not math.isclose(float(saved.get(key)), float(value), abs_tol=1e-6):
+                    return False
+            except (TypeError, ValueError):
+                return False
+
+    saved_unavailable = [
+        (
+            int(item.get("start_frame", -1)),
+            int(item.get("end_frame", -1)),
+            str(item.get("reason") or ""),
+        )
+        for item in metadata.get("human_target_unavailable_intervals") or []
+    ]
+    current_unavailable = [
+        (int(item.start_frame), int(item.end_frame), item.reason.value)
+        for item in session.target_unavailable_intervals
+    ]
+    if saved_unavailable != current_unavailable:
+        return False
+
+    saved_accepted = [
+        (int(item.get("start_frame", -1)), int(item.get("end_frame", -1)))
+        for item in metadata.get("human_target_accepted_intervals") or []
+    ]
+    current_accepted = [
+        (int(item.start_frame), int(item.end_frame))
+        for item in session.target_accepted_intervals
+    ]
+    return saved_accepted == current_accepted
+
+
+def load_pose_review_frame_payload(
+    case: AnnotationCase,
+    *,
+    source_frame_index: int,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> dict:
+    """Return compact frame and landmark QC for the previous processed pose."""
+
+    paths = _results_paths(case.slug, Path(data_root))
+    status = pose_review_analysis_status(case, data_root)
+    base = {
+        **status,
+        "source_frame_index": int(source_frame_index),
+        "pose_available": False,
+        "frame_status": "NO_PREVIOUS_ANALYSIS",
+        "status_label": "No previous pose analysis",
+        "status_tone": "neutral",
+        "frame_rejection_reason": "",
+        "observed_landmark_count": 0,
+        "usable_landmark_count": 0,
+        "rejected_landmark_count": 0,
+        "interpolated_landmark_count": 0,
+        "median_confidence": None,
+        "valid_target_frame": False,
+        "valid_segment_id": None,
+        "automatic_frame_status": "NO_PREVIOUS_ANALYSIS",
+        "automatic_frame_rejection_reason": "",
+        "manual_review_decision": "NOT_REVIEWED",
+        "manual_override_applied": False,
+        "raw_pose_available": False,
+        "used_in_analysis": False,
+        "analysis_use_label": "Not used in previous analysis",
+        "analysis_use_tone": "neutral",
+        "analysis_use_reason": "No previous generated analysis is available for this frame.",
+        "skeleton_display_note": "No review skeleton is available.",
+    }
+    if not status["available"]:
+        return base
+
+    frame_quality = _pose_review_csv(paths["frame_quality"])
+    pose = _pose_review_parquet(paths["processed_pose"])
+    raw_pose_path = (
+        Path(data_root) / "pose" / "human" / f"{case.slug}_raw_pose.parquet"
+    )
+    raw_pose = _pose_review_parquet(raw_pose_path) if raw_pose_path.exists() else pd.DataFrame()
+    frame_rows = frame_quality[
+        frame_quality["source_frame_index"].astype(int).eq(int(source_frame_index))
+    ]
+    pose_rows = pose[pose["source_frame_index"].astype(int).eq(int(source_frame_index))]
+    raw_pose_rows = (
+        raw_pose[raw_pose["source_frame_index"].astype(int).eq(int(source_frame_index))]
+        if not raw_pose.empty and "source_frame_index" in raw_pose
+        else pd.DataFrame()
+    )
+    if frame_rows.empty:
+        return {
+            **base,
+            "available": True,
+            "frame_status": "OUTSIDE_PREVIOUS_ANALYSIS",
+            "status_label": "Outside previous analysis",
+            "frame_rejection_reason": (
+                "This frame was not included in the previous generated analysis window."
+            ),
+            "analysis_use_reason": (
+                "Not used because this frame was outside the previous generated "
+                "Movement Window."
+            ),
+            "skeleton_display_note": (
+                "The source frame is shown, but it was not part of the previous analysis."
+            ),
+        }
+
+    frame_row = frame_rows.iloc[0]
+    frame_status = str(frame_row.get("frame_status", "") or "UNKNOWN")
+    presentation = {
+        "VALID_TARGET": ("Supported target pose", "supported"),
+        "PARTIAL_POSE": ("Partial pose", "limited"),
+        "LOW_POSE_CONFIDENCE": ("Low-confidence pose", "limited"),
+        "TARGET_IDENTITY_UNCERTAIN": ("Target continuity uncertain", "uncertain"),
+        "INVALID_TRACK_SEGMENT": ("Target segment not accepted", "rejected"),
+        "TARGET_NOT_FOUND": ("No usable target pose", "missing"),
+    }
+    status_label, status_tone = presentation.get(
+        frame_status,
+        (frame_status.replace("_", " ").title(), "neutral"),
+    )
+
+    rejected = (
+        pose_rows["rejected"].fillna(False).astype(bool)
+        if "rejected" in pose_rows
+        else pd.Series(False, index=pose_rows.index)
+    )
+    interpolated = (
+        pose_rows["interpolated"].fillna(False).astype(bool)
+        if "interpolated" in pose_rows
+        else pd.Series(False, index=pose_rows.index)
+    )
+    usable_coordinates = pd.Series(False, index=pose_rows.index)
+    for x_column, y_column in (("smoothed_x", "smoothed_y"), ("clean_x", "clean_y")):
+        if x_column in pose_rows and y_column in pose_rows:
+            usable_coordinates |= pose_rows[x_column].notna() & pose_rows[y_column].notna()
+    usable = usable_coordinates & ~rejected
+    observed_value = frame_row.get("observed_landmark_count", 0)
+    observed_count = 0 if pd.isna(observed_value) else int(observed_value)
+    segment_id = frame_row.get("valid_segment_id")
+    if pd.isna(segment_id):
+        segment_id = None
+    valid_target_value = frame_row.get("valid_target_frame", False)
+    valid_target = not pd.isna(valid_target_value) and bool(valid_target_value)
+    raw_observed = (
+        raw_pose_rows["observed"].fillna(False).astype(bool)
+        if not raw_pose_rows.empty and "observed" in raw_pose_rows
+        else pd.Series(False, index=raw_pose_rows.index)
+    )
+    automatic_status = frame_row.get("automatic_frame_status", frame_status)
+    if pd.isna(automatic_status):
+        automatic_status = frame_status
+    manual_decision = frame_row.get("manual_review_decision", "NOT_REVIEWED")
+    if pd.isna(manual_decision):
+        manual_decision = "NOT_REVIEWED"
+    manual_override = frame_row.get("manual_override_applied", False)
+    manual_override = False if pd.isna(manual_override) else bool(manual_override)
+    used_in_analysis = bool(valid_target and usable.any())
+    analysis_use_reason = _pose_review_analysis_use_reason(
+        frame_status=frame_status,
+        used_in_analysis=used_in_analysis,
+        manual_decision=str(manual_decision),
+        frame_rejection_reason=_clean_reason(frame_row.get("frame_rejection_reason")),
+    )
+
+    return _json_ready(
+        {
+            **base,
+            "available": True,
+            "pose_available": bool(raw_observed.any() or usable.any()),
+            "raw_pose_available": bool(raw_observed.any()),
+            "frame_status": frame_status,
+            "status_label": status_label,
+            "status_tone": status_tone,
+            "frame_rejection_reason": _clean_reason(
+                frame_row.get("frame_rejection_reason")
+            ),
+            "observed_landmark_count": observed_count,
+            "usable_landmark_count": int(usable.sum()),
+            "rejected_landmark_count": int(rejected.sum()),
+            "interpolated_landmark_count": int(interpolated.sum()),
+            "median_confidence": _optional_float(frame_row.get("median_confidence")),
+            "valid_target_frame": valid_target,
+            "valid_segment_id": segment_id,
+            "automatic_frame_status": str(automatic_status),
+            "automatic_frame_rejection_reason": _clean_reason(
+                frame_row.get("automatic_frame_rejection_reason")
+            ),
+            "manual_review_decision": str(manual_decision),
+            "manual_override_applied": manual_override,
+            "used_in_analysis": used_in_analysis,
+            "analysis_use_label": (
+                "Used in previous analysis"
+                if used_in_analysis
+                else "Not used in previous analysis"
+            ),
+            "analysis_use_tone": "supported" if used_in_analysis else status_tone,
+            "analysis_use_reason": analysis_use_reason,
+            "skeleton_display_note": (
+                "Raw skeleton shown for review. It contributed only where individual "
+                "joints passed the measurement checks."
+                if used_in_analysis
+                else "Raw skeleton shown for review; it was not included in measurements."
+            ),
+        }
+    )
+
+
+def load_pose_review_timeline_payload(
+    case: AnnotationCase,
+    *,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> dict:
+    """Return compact previous-analysis inclusion intervals for the annotation timeline."""
+
+    root = Path(data_root)
+    paths = _results_paths(case.slug, root)
+    status = pose_review_analysis_status(case, root)
+    if not status["available"] or not paths["frame_quality"].exists():
+        return {**status, "intervals": [], "summary": {}}
+
+    quality = _pose_review_csv(paths["frame_quality"]).sort_values("source_frame_index")
+    rows: list[dict] = []
+    for _, row in quality.iterrows():
+        frame_status = str(row.get("frame_status") or "UNKNOWN")
+        valid_value = row.get("valid_target_frame", False)
+        used = not pd.isna(valid_value) and bool(valid_value)
+        decision = row.get("manual_review_decision", "NOT_REVIEWED")
+        decision = "NOT_REVIEWED" if pd.isna(decision) else str(decision)
+        state, label, tone = _pose_review_timeline_state(
+            frame_status,
+            used_in_analysis=used,
+            manual_decision=decision,
+        )
+        rows.append(
+            {
+                "frame": int(row["source_frame_index"]),
+                "state": state,
+                "label": label,
+                "tone": tone,
+            }
+        )
+
+    intervals: list[dict] = []
+    for row in rows:
+        if (
+            intervals
+            and intervals[-1]["state"] == row["state"]
+            and intervals[-1]["end_frame"] + 1 == row["frame"]
+        ):
+            intervals[-1]["end_frame"] = row["frame"]
+            intervals[-1]["frame_count"] += 1
+            continue
+        intervals.append(
+            {
+                "start_frame": row["frame"],
+                "end_frame": row["frame"],
+                "frame_count": 1,
+                "state": row["state"],
+                "label": row["label"],
+                "tone": row["tone"],
+            }
+        )
+    summary = pd.Series([row["state"] for row in rows], dtype="object").value_counts().to_dict()
+    return _json_ready({**status, "intervals": intervals, "summary": summary})
+
+
+def _pose_review_timeline_state(
+    frame_status: str,
+    *,
+    used_in_analysis: bool,
+    manual_decision: str,
+) -> tuple[str, str, str]:
+    if used_in_analysis:
+        return "USED", "Used in previous analysis", "supported"
+    if manual_decision == "EXCLUDED":
+        return "HUMAN_EXCLUDED", "Not used: human excluded", "rejected"
+    if frame_status == "TARGET_NOT_FOUND":
+        return "NO_POSE", "Not used: no usable skeleton", "missing"
+    return "INSUFFICIENT_EVIDENCE", "Not used: insufficient evidence", "uncertain"
+
+
+def _pose_review_analysis_use_reason(
+    *,
+    frame_status: str,
+    used_in_analysis: bool,
+    manual_decision: str,
+    frame_rejection_reason: str,
+) -> str:
+    if used_in_analysis:
+        if manual_decision == "ACCEPTED":
+            return (
+                "Used after human review confirmed that the selected skeleton belonged "
+                "to the documented athlete."
+            )
+        return "Used because target identity and pose evidence passed the quality checks."
+    if manual_decision == "EXCLUDED":
+        return "Not used because a human reviewer excluded this frame."
+    simple_reasons = {
+        "TARGET_IDENTITY_UNCERTAIN": (
+            "Not used because the system could not confidently separate the target "
+            "athlete from a nearby player."
+        ),
+        "INVALID_TRACK_SEGMENT": (
+            "Not used because the reliable-looking skeleton sequence was too short "
+            "to establish continuous target identity."
+        ),
+        "TARGET_NOT_FOUND": "Not used because no usable target skeleton was available.",
+        "PARTIAL_POSE": "Not used because too few body joints were available.",
+        "LOW_POSE_CONFIDENCE": "Not used because the pose evidence was too weak.",
+    }
+    return simple_reasons.get(
+        frame_status,
+        frame_rejection_reason
+        or "Not used because the frame did not pass the pose-quality checks.",
+    )
+
+
 def load_human_results_payload(
     case: AnnotationCase,
     *,
     data_root: str | Path = HUMAN_DATA_ROOT,
     case_views: tuple[AnnotationCase, ...] | None = None,
+    analysis_cases: tuple[AnnotationCase, ...] | None = None,
 ) -> dict:
     """Load the user-facing HUMAN results payload for one completed case."""
 
@@ -194,7 +659,12 @@ def load_human_results_payload(
     dynamic_df = pd.read_parquet(paths["dynamic_features"])
     path_df = pd.read_parquet(paths["path_features"])
     processed_pose = pd.read_parquet(paths["processed_pose"])
+    frame_quality = pd.read_csv(paths["frame_quality"])
     phase_frame_map = pd.read_parquet(paths["phase_frame_map"])
+    geometry_coverage_evidence = build_geometry_coverage_evidence(
+        dynamic_df,
+        frame_quality,
+    )
     metric_explorer = build_metric_explorer_payload(
         dynamic_df=dynamic_df,
         path_df=path_df,
@@ -204,6 +674,9 @@ def load_human_results_payload(
     feature_profiles = {
         item["feature_name"]: item for item in movement_profile.get("trajectory_summaries", [])
     }
+    research_metadata = load_research_metadata(
+        root / "annotations" / "human" / RESEARCH_METADATA_FILENAME
+    ).get(case.case_id, {})
     frames = _frame_index(dynamic_df)
     payload = {
         "case": {
@@ -218,10 +691,26 @@ def load_human_results_payload(
         "view": _view_payload(case, root),
         "case_views": _case_views_payload(case, view_cases, root),
         "case_synthesis": build_case_synthesis_payload(case, view_cases, data_root=root),
+        "available_analyses": _available_analyses_payload(
+            case,
+            analysis_cases,
+            root,
+        ),
+        "context_videos": build_context_video_payload(case, data_root=root),
         "target_annotation": {
             "label": "Human verified",
             "human_target_verified": True,
             "manual_roi_keyframes": session.manual_roi_keyframe_count,
+            "manual_accepted_intervals": len(session.target_accepted_intervals),
+            "manual_accepted_frames": session.manual_target_accepted_frame_count,
+            "manual_accepted_usable_frames": int(
+                reliability.get("manual_accepted_usable_frame_count") or 0
+            ),
+            "manual_acceptance_override_frames": int(
+                reliability.get("manual_acceptance_override_frame_count") or 0
+            ),
+            "manual_excluded_intervals": len(session.target_unavailable_intervals),
+            "manual_excluded_frames": session.manual_target_unavailable_frame_count,
             "annotation_session_id": session.provenance.annotation_session_id,
             "annotator_id": session.provenance.annotator_id,
         },
@@ -232,18 +721,29 @@ def load_human_results_payload(
             "The movement window represents the observable sequence selected by the "
             "researcher. The exact timing of ACL rupture is not inferred."
         ),
+        "measurement_boundaries": MEASUREMENT_BOUNDARIES,
+        "case_provenance": _case_provenance(case, session, research_metadata),
         "evidence_dimensions": _evidence_dimensions(
             evidence_profile,
             reliability,
             dynamic_quality,
             case_summary,
+            geometry_coverage_evidence,
         ),
+        "geometry_coverage_evidence": geometry_coverage_evidence,
         "body_region_evidence": _body_region_evidence(case_summary),
         "semantic_category_labels": SEMANTIC_CATEGORY_LABELS,
         "semantic_observations": semantic_observations["observations"],
         "semantic_categories": semantic_observations["categories"],
         "observable_movement_descriptions": observable_descriptions,
         "movement_story": movement_story,
+        "event_interval_review": load_event_interval_review(case, data_root=root),
+        "phase_withholding_explanation": _phase_withholding_explanation(
+            movement_story,
+            reliability,
+            movement_window,
+            geometry_coverage_evidence,
+        ),
         "movement_visual_story": build_movement_visual_story(
             movement_story=movement_story,
             metric_explorer=metric_explorer,
@@ -254,21 +754,76 @@ def load_human_results_payload(
         "metric_explorer": metric_explorer,
         "path_quality_summary": path_quality,
         "feature_groups": _feature_groups(selected_features),
-        "feature_cards": _feature_cards(case_summary, feature_profiles, selected_features),
+        "feature_cards": _feature_cards(
+            case_summary,
+            feature_profiles,
+            selected_features,
+            geometry_coverage_evidence,
+        ),
         "trajectories": _trajectories(dynamic_df, selected_features),
         "frames": frames,
         "quality_limitations": _quality_limitations(reliability, dynamic_quality, dynamic_df),
-        "cross_case_analytics": {
-            name: {
-                "available": False,
-                "label": _cross_case_label(name),
-                "reason": "Additional human-validated cases are required.",
-            }
-            for name in CROSS_CASE_ANALYTIC_NAMES
+        "source_files": {
+            key: _public_artifact_reference(value, root) for key, value in paths.items()
         },
-        "source_files": {key: str(value) for key, value in paths.items()},
     }
     return _json_ready(payload)
+
+
+def build_context_video_payload(
+    case: AnnotationCase,
+    *,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> dict:
+    """Return context-only videos linked to the same documented injury case."""
+
+    registry_path = context_clip_registry_path(data_root)
+    clips = context_video_clips_for_case(case.case_id, registry_path)
+    records = []
+    for clip in clips:
+        available = clip.video_path.exists() and clip.video_path.is_file()
+        records.append(
+            {
+                **clip.to_dict(),
+                "available": available,
+                "video_url": (
+                    "/api/results/context-video?case="
+                    f"{case.slug}&clip={clip.clip_id}"
+                    if available
+                    else None
+                ),
+            }
+        )
+    available_records = [record for record in records if record["available"]]
+    return {
+        "available": bool(available_records),
+        "clips": available_records,
+        "unavailable_clip_count": len(records) - len(available_records),
+        "policy": {
+            "context_only": True,
+            "used_for_measurements": False,
+            "used_for_movement_narrative": False,
+            "automated_contact_interpretation": False,
+        },
+    }
+
+
+def context_video_path(
+    case: AnnotationCase,
+    *,
+    clip_id: str,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> Path:
+    """Resolve a context clip only through its case-scoped human registry id."""
+
+    clip = context_video_clip_by_id(
+        clip_id,
+        case_id=case.case_id,
+        path=context_clip_registry_path(data_root),
+    )
+    if not clip.video_path.exists() or not clip.video_path.is_file():
+        raise ValueError("The registered real-time context clip is unavailable.")
+    return clip.video_path
 
 
 def load_result_evidence_payload(
@@ -295,6 +850,8 @@ def load_result_evidence_payload(
             f"No exact trace point for feature {feature_name} at source frame {source_frame_index}."
         )
     row = rows.iloc[0]
+    feature_status = str(row.get("feature_status", ""))
+    dynamic_status = str(row.get("dynamic_status", ""))
     landmarks = _listify(row.get("landmarks_used"))
     frame_rows = frame_quality[
         frame_quality["source_frame_index"].astype(int).eq(int(source_frame_index))
@@ -316,7 +873,10 @@ def load_result_evidence_payload(
             "timestamp_ms": _optional_float(row["timestamp_ms"]),
             "movement_elapsed_ms": _optional_float(row.get("movement_elapsed_ms")),
             "movement_end_relative_ms": _optional_float(row.get("movement_end_relative_ms")),
-            "feature_value": _optional_float(row["feature_value"]),
+            "feature_value": _supported_numeric(row.get("feature_value"), feature_status),
+            "measurement_support": (
+                "SUPPORTED" if feature_status == "SUPPORTED" else "UNAVAILABLE"
+            ),
             "unit": str(row.get("unit", "")),
             "landmarks_used": landmarks,
             "frame_qc": _row_dict(frame_rows),
@@ -328,18 +888,22 @@ def load_result_evidence_payload(
                 ),
                 "smoothed": bool(row.get("input_smoothed")),
             },
-            "feature_status": str(row.get("feature_status", "")),
-            "feature_status_text": explain_status(str(row.get("feature_status", ""))),
+            "feature_status": feature_status,
+            "feature_status_text": explain_status(feature_status),
             "frame_status": str(row.get("frame_status", "")),
             "frame_status_text": explain_status(str(row.get("frame_status", ""))),
-            "dynamic_status": str(row.get("dynamic_status", "")),
-            "dynamic_status_text": explain_status(str(row.get("dynamic_status", ""))),
+            "dynamic_status": dynamic_status,
+            "dynamic_status_text": explain_status(dynamic_status),
             "dynamic_rejection_reason": _clean_reason(row.get("dynamic_rejection_reason")),
             "rejection_reason": _clean_reason(row.get("rejection_reason")),
             "advanced": {
-                "raw_first_difference_rate": _optional_float(row.get("raw_first_difference_rate")),
+                "raw_first_difference_rate": _supported_numeric(
+                    row.get("raw_first_difference_rate"), dynamic_status
+                ),
                 "raw_dynamic_status": str(row.get("raw_dynamic_status", "")),
-                "robust_dynamic_rate": _optional_float(row.get("robust_dynamic_rate")),
+                "robust_dynamic_rate": _supported_numeric(
+                    row.get("robust_dynamic_rate"), dynamic_status
+                ),
                 "dynamic_quality": str(row.get("dynamic_quality", "")),
                 "local_residual": _optional_float(row.get("local_residual")),
                 "local_jitter_metric": _optional_float(row.get("local_jitter_metric")),
@@ -373,7 +937,7 @@ def read_result_frame_jpeg(
         if not ok:
             raise ValueError(f"Could not read frame {source_frame_index} from {case.video_path}")
         target_bbox = _bbox_for_result_frame(paths, source_frame_index)
-        if show_mask:
+        if show_mask and target_bbox is not None:
             prompts = load_mask_prompts(mask_prompt_path(data_root, case.slug))
             mask = target_mask_for_frame(
                 frame,
@@ -388,17 +952,68 @@ def read_result_frame_jpeg(
                 frame_index=int(source_frame_index),
             )
         bbox = target_bbox if show_roi else None
-        landmarks = _landmarks_for_result_frame(paths, source_frame_index) if show_pose else {}
+        landmarks = (
+            _landmarks_for_result_frame(paths, source_frame_index)
+            if show_pose and target_bbox is not None
+            else {}
+        )
         output = draw_pose_overlay(
             frame,
             landmarks,
             bbox=bbox,
             frame_label=f"source frame {source_frame_index}",
-            confidence_threshold=0.0,
+            confidence_threshold=DEFAULT_POSE_DISPLAY_CONFIDENCE_THRESHOLD,
         )
         encoded_ok, buffer = cv2.imencode(".jpg", output)
         if not encoded_ok:
             raise ValueError("Could not encode results frame as JPEG.")
+        return buffer.tobytes()
+    finally:
+        capture.release()
+
+
+def read_pose_review_frame_jpeg(
+    case: AnnotationCase,
+    *,
+    source_frame_index: int,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+) -> bytes:
+    """Render the previous processed skeleton without changing the current annotation."""
+
+    import cv2
+
+    paths = _results_paths(case.slug, Path(data_root))
+    if not paths["processed_pose"].exists():
+        raise ValueError("No previous processed pose is available for this case.")
+    capture = cv2.VideoCapture(str(case.video_path))
+    try:
+        if not capture.isOpened():
+            raise ValueError(f"Could not open video: {case.video_path}")
+        capture.set(cv2.CAP_PROP_POS_FRAMES, int(source_frame_index))
+        ok, frame = capture.read()
+        if not ok:
+            raise ValueError(f"Could not read frame {source_frame_index} from {case.video_path}")
+        raw_landmarks = _raw_landmarks_for_pose_review(
+            case.slug,
+            Path(data_root),
+            source_frame_index,
+        )
+        showing_raw = bool(raw_landmarks)
+        use_label = _pose_review_image_use_label(paths, source_frame_index)
+        output = draw_pose_overlay(
+            frame,
+            raw_landmarks or _landmarks_for_result_frame(paths, source_frame_index),
+            bbox=_bbox_for_result_frame(paths, source_frame_index),
+            frame_label=(
+                "raw YOLOv8 pose for review"
+                if showing_raw
+                else "previous processed pose"
+            ) + f" | {use_label} | source frame {source_frame_index}",
+            confidence_threshold=DEFAULT_POSE_DISPLAY_CONFIDENCE_THRESHOLD,
+        )
+        encoded_ok, buffer = cv2.imencode(".jpg", output)
+        if not encoded_ok:
+            raise ValueError("Could not encode pose-review frame as JPEG.")
         return buffer.tobytes()
     finally:
         capture.release()
@@ -425,7 +1040,9 @@ def save_result_mask_prompt(
             label=label,
         ),
     )
-    return _json_ready({"prompt_file": str(path), **payload})
+    return _json_ready(
+        {"prompt_file": _public_artifact_reference(path, Path(data_root)), **payload}
+    )
 
 
 def undo_result_mask_prompt(
@@ -438,7 +1055,9 @@ def undo_result_mask_prompt(
 
     path = mask_prompt_path(data_root, case.slug)
     payload = pop_mask_prompt(path, frame_index=int(source_frame_index))
-    return _json_ready({"prompt_file": str(path), **payload})
+    return _json_ready(
+        {"prompt_file": _public_artifact_reference(path, Path(data_root)), **payload}
+    )
 
 
 def clear_result_mask_prompts(
@@ -451,7 +1070,9 @@ def clear_result_mask_prompts(
 
     path = mask_prompt_path(data_root, case.slug)
     payload = clear_mask_prompts(path, frame_index=int(source_frame_index))
-    return _json_ready({"prompt_file": str(path), **payload})
+    return _json_ready(
+        {"prompt_file": _public_artifact_reference(path, Path(data_root)), **payload}
+    )
 
 
 def trim_human_analysis_window_and_regenerate(
@@ -503,6 +1124,7 @@ def trim_human_analysis_window_and_regenerate(
         notes=_append_note(session.notes, boundary_note),
         finalized=True,
     )
+    injured_side = _required_human_injured_side(updated_session)
     save_human_annotation_session(updated_session, root / "annotations" / "human", case.slug)
     decision_path = _append_analysis_boundary_decision(
         root,
@@ -519,6 +1141,7 @@ def trim_human_analysis_window_and_regenerate(
         movement_end_frame=end_frame,
         data_root=root,
         python_executable=python_executable,
+        injured_side=injured_side,
     )
     command_results = [_run_regeneration_command(command) for command in commands]
     return {
@@ -533,6 +1156,128 @@ def trim_human_analysis_window_and_regenerate(
     }
 
 
+def generate_human_analysis_from_annotation(
+    case: AnnotationCase,
+    *,
+    data_root: str | Path = HUMAN_DATA_ROOT,
+    python_executable: str | Path = sys.executable,
+) -> dict:
+    """Build a complete human Results bundle from a finalized annotation."""
+
+    root = Path(data_root)
+    annotation_paths = human_annotation_paths(root / "annotations" / "human", case.slug)
+    if not annotation_paths.session_json.exists():
+        raise ValueError("Save the human annotation before generating analysis.")
+    session = load_human_annotation_session(annotation_paths.session_json)
+    if not session.finalized:
+        raise ValueError("Save the annotation as ready for validation before generating analysis.")
+    if not session.roi_keyframes:
+        raise ValueError("Analysis requires at least one human ROI keyframe.")
+    if session.movement_window is None:
+        raise ValueError("Analysis requires a human Movement End annotation.")
+    injured_side = _required_human_injured_side(session)
+    profile = pose_analysis_profile()
+    model_path = root / "models" / profile.model_filename
+    if not model_path.exists():
+        raise ValueError(
+            f"Pose model is not installed: {model_path}. Choose an installed model "
+            "or download the configured model asset."
+        )
+
+    _warm_pose_runtime(str(python_executable))
+
+    commands = build_human_analysis_regeneration_commands(
+        case,
+        movement_start_frame=int(session.movement_window.movement_start_frame),
+        movement_end_frame=int(session.movement_window.movement_end_frame),
+        data_root=root,
+        python_executable=python_executable,
+        injured_side=injured_side,
+    )
+    command_results = [_run_regeneration_command(command) for command in commands]
+    paths = _results_paths(case.slug, root)
+    return {
+        "generated": True,
+        "case": case.to_dict(),
+        "movement_window": session.movement_window.to_dict(),
+        "result_url": f"/results?case={case.slug}",
+        "outputs": {key: str(value) for key, value in paths.items() if value.exists()},
+        "commands": command_results,
+    }
+
+
+@lru_cache(maxsize=4)
+def _warm_pose_runtime(python_executable: str) -> None:
+    """Bound the cold PyTorch load and warm OS caches before pose extraction."""
+
+    try:
+        result = subprocess.run(
+            [python_executable, "-u", "-c", "import torch"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=POSE_RUNTIME_WARMUP_TIMEOUT_SECONDS,
+            env=_analysis_subprocess_env(python_executable),
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ValueError(
+            "The PyTorch pose runtime did not become ready within "
+            f"{POSE_RUNTIME_WARMUP_TIMEOUT_SECONDS} seconds. Analysis was not started; "
+            "the saved annotation is unchanged."
+        ) from exc
+    if result.returncode != 0:
+        raise ValueError(
+            "The PyTorch pose runtime could not be initialized.\n"
+            f"STDOUT:\n{result.stdout}\nSTDERR:\n{result.stderr}"
+        )
+
+
+def _analysis_subprocess_env(python_executable: str | Path) -> dict[str, str]:
+    """Return an isolated analysis environment with one macOS OpenMP runtime."""
+
+    env = os.environ.copy()
+    if sys.platform != "darwin":
+        return env
+
+    torch_library_dir = _torch_runtime_library_dir(python_executable)
+    if torch_library_dir is None:
+        return env
+
+    library_path = str(torch_library_dir)
+    existing_paths = [
+        path for path in env.get("DYLD_LIBRARY_PATH", "").split(os.pathsep) if path
+    ]
+    env["DYLD_LIBRARY_PATH"] = os.pathsep.join(
+        [library_path, *(path for path in existing_paths if path != library_path)]
+    )
+    return env
+
+
+def _torch_runtime_library_dir(python_executable: str | Path) -> Path | None:
+    """Locate a bundled PyTorch runtime without importing PyTorch itself."""
+
+    executable = Path(python_executable).expanduser().resolve()
+    environment_root = executable.parent.parent
+    version_suffix = executable.name.removeprefix("python")
+    candidates: list[Path] = []
+    if version_suffix:
+        candidates.append(
+            environment_root
+            / "lib"
+            / f"python{version_suffix}"
+            / "site-packages"
+            / "torch"
+            / "lib"
+        )
+    candidates.extend(
+        sorted(environment_root.glob("lib/python*/site-packages/torch/lib"))
+    )
+    for candidate in candidates:
+        if (candidate / "libomp.dylib").is_file():
+            return candidate
+    return None
+
+
 def build_human_analysis_regeneration_commands(
     case: AnnotationCase,
     *,
@@ -540,10 +1285,21 @@ def build_human_analysis_regeneration_commands(
     movement_end_frame: int,
     data_root: str | Path = HUMAN_DATA_ROOT,
     python_executable: str | Path = sys.executable,
+    roi_context_padding_fraction: float | None = None,
+    injured_side: InjurySide | str | None = None,
 ) -> list[list[str]]:
     """Return the existing script commands needed to rebuild one human analysis."""
 
+    if roi_context_padding_fraction is not None and roi_context_padding_fraction < 0:
+        raise ValueError("ROI context padding fraction cannot be negative.")
+
     root = Path(data_root)
+    profile = pose_analysis_profile()
+    roi_padding = (
+        profile.roi_padding_fraction
+        if roi_context_padding_fraction is None
+        else float(roi_context_padding_fraction)
+    )
     slug = case.slug
     prefix = slug
     annotation_root = root / "annotations" / "human"
@@ -559,8 +1315,12 @@ def build_human_analysis_regeneration_commands(
     path_features = root / "path" / "human" / f"{slug}_projected_movement_path.parquet"
     feature_summary = root / "quality" / "human" / f"{slug}_feature_summary.json"
     frame_quality = root / "quality" / "human" / f"{slug}_frame_quality.csv"
-    annotated_injured_side = str(case.injured_side.value)
-    injured_side = (
+    annotated_injured_side = (
+        InjurySide(injured_side).value
+        if injured_side is not None
+        else InjurySide(case.injured_side).value
+    )
+    resolved_injured_side = (
         annotated_injured_side
         if annotated_injured_side in {"left", "right"}
         else _previous_injured_side(feature_summary)
@@ -573,13 +1333,27 @@ def build_human_analysis_regeneration_commands(
             "--video",
             str(case.video_path),
             "--backend",
-            "yolo",
+            profile.backend,
             "--model-path",
-            str(root / "models" / "yolov8n-pose.pt"),
+            str(root / "models" / profile.model_filename),
             "--yolo-selection-strategy",
-            "center",
+            profile.selection_strategy,
+            "--yolo-image-size",
+            str(profile.image_size),
+            "--yolo-detection-confidence",
+            str(profile.detection_confidence),
+            "--yolo-landmark-confidence",
+            str(profile.landmark_confidence),
+            "--yolo-iou-threshold",
+            str(profile.iou_threshold),
+            "--yolo-temporal-max-gap-frames",
+            str(profile.temporal_max_gap_frames),
             "--roi-keyframes",
             str(roi),
+            "--annotation-session",
+            str(session),
+            "--roi-pad",
+            str(roi_padding),
             "--case-id",
             case.case_id,
             "--source-id",
@@ -619,7 +1393,7 @@ def build_human_analysis_regeneration_commands(
             "--processed-pose",
             str(processed),
             "--injured-side",
-            injured_side,
+            resolved_injured_side,
             "--output",
             str(features),
             "--completeness-output",
@@ -798,6 +1572,18 @@ def build_human_analysis_regeneration_commands(
     ]
 
 
+def _required_human_injured_side(session) -> InjurySide:
+    """Return operator-supplied laterality or refuse injured-side result generation."""
+
+    injured_side = InjurySide(session.injured_side)
+    if injured_side is InjurySide.UNKNOWN:
+        raise ValueError(
+            "Select the injured knee in the human annotation and save it as ready "
+            "for validation before generating analysis."
+        )
+    return injured_side
+
+
 def _semantic_command(
     exe: str,
     case: AnnotationCase,
@@ -859,19 +1645,32 @@ def _semantic_command(
 
 
 def _run_regeneration_command(command: list[str]) -> dict:
-    env = os.environ.copy()
+    python_executable = command[0] if command else sys.executable
+    env = _analysis_subprocess_env(python_executable)
     mpl_cache = Path("/private/tmp/acl_movement_explorer_mpl_cache")
     mpl_cache.mkdir(parents=True, exist_ok=True)
     env["MPLCONFIGDIR"] = str(mpl_cache)
-    result = subprocess.run(
-        command,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=300,
-        env=env,
-    )
     command_label = " ".join(command[:2])
+    timeout_seconds = _analysis_command_timeout_seconds(command)
+    try:
+        result = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=timeout_seconds,
+            env=env,
+        )
+    except subprocess.TimeoutExpired as exc:
+        stage = (
+            "YOLO/PyTorch startup and pose extraction"
+            if _is_pose_extraction_command(command)
+            else command_label
+        )
+        raise ValueError(
+            f"Analysis generation timed out during {stage} after "
+            f"{timeout_seconds} seconds. No completed results were published."
+        ) from exc
     if result.returncode != 0:
         raise ValueError(
             f"Analysis regeneration failed during {command_label}.\n"
@@ -882,6 +1681,18 @@ def _run_regeneration_command(command: list[str]) -> dict:
         "returncode": result.returncode,
         "stdout_tail": result.stdout.strip().splitlines()[-3:],
     }
+
+
+def _analysis_command_timeout_seconds(command: list[str]) -> int:
+    """Allow a cold native pose runtime to load without weakening later safeguards."""
+
+    if _is_pose_extraction_command(command):
+        return POSE_EXTRACTION_TIMEOUT_SECONDS
+    return DEFAULT_ANALYSIS_COMMAND_TIMEOUT_SECONDS
+
+
+def _is_pose_extraction_command(command: list[str]) -> bool:
+    return len(command) > 1 and Path(command[1]).name == "extract_pose.py"
 
 
 def _append_analysis_boundary_decision(
@@ -967,7 +1778,9 @@ def result_frame_for_time(payload: dict, movement_end_relative_ms: float) -> int
 def render_results_page() -> str:
     """Return the self-contained first Results experience."""
 
-    return SIMPLE_RESULTS_HTML
+    return SIMPLE_RESULTS_HTML.replace("__APP_SHELL_CSS__", app_shell_css()).replace(
+        "__APP_SITE_HEADER__", app_site_header("Movement Analysis")
+    )
 
 
 def build_case_synthesis_payload(
@@ -1140,6 +1953,38 @@ def _case_views_payload(
     }
 
 
+def _available_analyses_payload(
+    current_case: AnnotationCase,
+    analysis_cases: tuple[AnnotationCase, ...] | None,
+    root: Path,
+) -> list[dict]:
+    """Return completed analyses suitable for the results-page case picker."""
+
+    cases = analysis_cases or (current_case,)
+    available = []
+    seen_slugs: set[str] = set()
+    for case in cases:
+        if case.slug in seen_slugs or not human_results_available(case, root):
+            continue
+        seen_slugs.add(case.slug)
+        available.append(
+            {
+                "slug": case.slug,
+                "player_name": case.player_name,
+                "view_label": case.view_label,
+                "current": case.slug == current_case.slug,
+            }
+        )
+    return sorted(
+        available,
+        key=lambda item: (
+            str(item["player_name"]).casefold(),
+            not bool(item["current"]),
+            str(item["view_label"]).casefold(),
+        ),
+    )
+
+
 def _view_payload(case: AnnotationCase, root: Path) -> dict:
     metadata = _video_metadata_payload(case)
     timing_limited = bool(case.slow_motion and case.real_time_scale is None)
@@ -1151,7 +1996,8 @@ def _view_payload(case: AnnotationCase, root: Path) -> dict:
         "view_label": case.view_label,
         "primary_view": bool(case.primary_view),
         "player_name": case.player_name,
-        "source_video": str(case.video_path),
+        "source_video": Path(case.video_path).name,
+        "source_video_location": "registered local source; full path kept server-side",
         "perspective": case.perspective,
         "occlusion_level": case.occlusion_level,
         "view_quality": case.view_quality,
@@ -1300,7 +2146,7 @@ def _results_paths(slug: str, root: Path) -> dict[str, Path]:
 
 
 def _require_human_paths(paths: dict[str, Path]) -> None:
-    missing = [str(path) for path in paths.values() if not path.exists()]
+    missing = [path.name for path in paths.values() if not path.exists()]
     if missing:
         raise ValueError(f"Human results are incomplete. Missing: {missing}")
     for path in paths.values():
@@ -1310,6 +2156,103 @@ def _require_human_paths(paths: dict[str, Path]) -> None:
 
 def _read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def _read_optional_json(path: Path) -> dict:
+    if not path.exists():
+        return {}
+    try:
+        return _read_json(path)
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def _public_artifact_reference(path: Path, root: Path) -> str:
+    """Return traceable artifact provenance without exposing workstation paths."""
+
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.name
+
+
+def _case_provenance(case: AnnotationCase, session, research_metadata: dict) -> dict:
+    """Expose supplied/verified case provenance without filling absent facts."""
+
+    field_provenance = research_metadata.get("field_provenance", {})
+    metadata_side = str(research_metadata.get("injured_side") or "").lower()
+    laterality_source = session.injury_laterality_source or "not supplied"
+    if metadata_side == session.injured_side.value:
+        laterality_source = str(
+            field_provenance.get("injured_side") or laterality_source
+        )
+    return {
+        "athlete_identity": {
+            "value": case.player_name or "unknown",
+            "source": str(
+                research_metadata.get("identity_source")
+                or research_metadata.get("metadata_source")
+                or "registered case metadata"
+            ),
+            "inferred_from_video": False,
+        },
+        "injured_side": {
+            "value": session.injured_side.value,
+            "source": laterality_source,
+            "inferred_from_movement": False,
+        },
+        "injury_confirmation": {
+            "status": str(research_metadata.get("injury_status") or "not recorded"),
+            "source_reference": str(
+                research_metadata.get("injury_confirmation_source") or "not recorded"
+            ),
+            "inferred_from_video": False,
+        },
+        "video_source": {
+            "reference": str(
+                research_metadata.get("video_source_reference") or case.source_id
+            ),
+            "rights_note": str(
+                research_metadata.get("video_rights_note")
+                or "Rights or reuse permission not recorded; public availability does not imply unrestricted reuse."
+            ),
+        },
+        "documented_context": {
+            "match": {
+                "date": str(research_metadata.get("injury_date") or ""),
+                "competition": str(research_metadata.get("competition") or ""),
+                "team": str(research_metadata.get("team") or ""),
+                "opponent": str(research_metadata.get("opponent") or ""),
+                "result": str(research_metadata.get("match_result") or ""),
+                "minute": str(research_metadata.get("match_minute") or ""),
+            },
+            "athlete": {
+                "shirt_number": str(research_metadata.get("shirt_number") or ""),
+            },
+            "incident": {
+                "opponent_player": str(
+                    research_metadata.get("incident_opponent_player") or ""
+                ),
+                "description": str(research_metadata.get("incident_context") or ""),
+            },
+            "injury": {
+                "diagnosis": str(research_metadata.get("injury_diagnosis") or ""),
+                "side": metadata_side,
+                "prior_acl_injury": research_metadata.get("prior_acl_injury"),
+            },
+            "source_note": str(research_metadata.get("source_note") or ""),
+        },
+        "annotation": {
+            "source": "human annotation session",
+            "session_id": session.provenance.annotation_session_id,
+            "annotator_id": session.provenance.annotator_id,
+        },
+        "derived_analysis": {
+            "source": "deterministic local movement-analysis pipeline",
+            "case_id": case.case_id,
+            "source_id": case.source_id,
+        },
+    }
 
 
 def _header_metrics(session, movement_window) -> dict:
@@ -1327,6 +2270,7 @@ def _evidence_dimensions(
     reliability: dict,
     dynamic_quality: dict,
     case_summary: pd.DataFrame,
+    geometry_coverage_evidence: dict,
 ) -> list[dict]:
     geometry_coverage = float(case_summary["geometry_completeness"].mean())
     dynamic_feature_coverage = float(case_summary["dynamic_completeness"].mean())
@@ -1345,10 +2289,40 @@ def _evidence_dimensions(
             "explanation": "Frames where the pose backend returned pose evidence for the selected target ROI.",
         },
         {
-            "name": "Geometry evidence",
+            "name": "Movement-window geometry",
             "label": coverage_label(geometry_coverage),
             "value": geometry_coverage,
-            "explanation": "Mean supported-frame fraction across projected 2D geometry features.",
+            "explanation": (
+                "Mean supported-frame fraction across projected 2D geometry features, "
+                "with every Movement Window frame retained in the denominator."
+            ),
+        },
+        {
+            "name": "Reviewed-frame geometry yield",
+            "label": coverage_label(
+                geometry_coverage_evidence.get("reviewed_frame_geometry_yield")
+            ),
+            "value": _optional_float(
+                geometry_coverage_evidence.get("reviewed_frame_geometry_yield")
+            ),
+            "explanation": (
+                "Supported feature-frame pairs divided by all feature opportunities on "
+                "frames whose target identity a human accepted. This does not replace "
+                "complete-window coverage."
+            ),
+        },
+        {
+            "name": "Target-present geometry yield",
+            "label": coverage_label(
+                geometry_coverage_evidence.get("target_present_geometry_yield")
+            ),
+            "value": _optional_float(
+                geometry_coverage_evidence.get("target_present_geometry_yield")
+            ),
+            "explanation": (
+                "Supported feature-frame pairs divided by feature opportunities on frames "
+                "with defensible target-region pose evidence."
+            ),
         },
         {
             "name": "Dynamic feature coverage",
@@ -1418,7 +2392,7 @@ def _target_segmentation_payload(slug: str, data_root: Path) -> dict:
     return {
         "method": "human_roi_seeded_grabcut_with_human_point_prompts",
         "mask_version": "m5_9_target_mask_grabcut_prompt_v1",
-        "prompt_file": str(prompt_path),
+        "prompt_file": _public_artifact_reference(prompt_path, data_root),
         "prompt_count": len(prompts),
         "labels": ["target", "opponent"],
         "human_evidence_types": ["visible_target_region", "visible_non_target_region"],
@@ -1481,14 +2455,20 @@ def _feature_cards(
     case_summary: pd.DataFrame,
     feature_profiles: dict[str, dict],
     selected_features: tuple[str, ...],
+    geometry_coverage_evidence: dict,
 ) -> dict[str, dict]:
     indexed = case_summary.set_index("feature_name")
+    coverage_by_feature = {
+        item["feature_name"]: item
+        for item in geometry_coverage_evidence.get("per_feature", [])
+    }
     cards: dict[str, dict] = {}
     for feature_name in selected_features:
         if feature_name not in indexed.index:
             continue
         row = indexed.loc[feature_name]
         profile = feature_profiles.get(feature_name, {})
+        coverage = coverage_by_feature.get(feature_name, {})
         dynamic_status = (
             "SUPPORTED"
             if bool(row["dynamic_analytics_eligible"])
@@ -1503,9 +2483,34 @@ def _feature_cards(
             "unit": str(profile.get("unit") or ""),
             "sequence_evidence": str(row["quality_category"]),
             "geometry_completeness": _optional_float(row["geometry_completeness"]),
+            "reviewed_frame_yield": _optional_float(
+                coverage.get("reviewed_frame_yield")
+            ),
+            "reviewed_supported_frames": int(
+                coverage.get("reviewed_supported_frames") or 0
+            ),
+            "reviewed_total_frames": int(coverage.get("reviewed_total_frames") or 0),
+            "target_present_yield": _optional_float(
+                coverage.get("target_present_yield")
+            ),
+            "target_present_supported_frames": int(
+                coverage.get("target_present_supported_frames") or 0
+            ),
+            "target_present_total_frames": int(
+                coverage.get("target_present_total_frames") or 0
+            ),
+            "longest_continuous_supported": coverage.get(
+                "longest_continuous_supported",
+                {
+                    "start_frame": None,
+                    "end_frame": None,
+                    "frame_count": 0,
+                    "duration_ms": 0.0,
+                },
+            ),
             "dynamic_evidence": dynamic_status,
             "dynamic_completeness": _optional_float(row["dynamic_completeness"]),
-            "at_movement_end": _optional_float(row["value_at_t0"]),
+            "at_movement_end": _supported_numeric(row["value_at_t0"], row["t0_status"]),
             "at_movement_end_status": str(row["t0_status"]),
             "why_limited": _readable_reason(
                 row.get("primary_rejection_reason") or row.get("eligibility_reason")
@@ -1634,8 +2639,191 @@ def _quality_limitations(reliability: dict, dynamic_quality: dict, dynamic_df: p
     return limitations
 
 
-def _bbox_for_result_frame(paths: dict[str, Path], source_frame_index: int) -> BBox:
+def _phase_withholding_explanation(
+    movement_story: dict,
+    reliability: dict,
+    movement_window: MovementWindowAnnotation,
+    geometry_coverage_evidence: dict | None = None,
+) -> dict:
+    """Explain a withheld phase result without inferring an image-quality cause."""
+
+    phases = movement_story.get("phases") or []
+    withheld = not phases and movement_story.get("status") == (
+        "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION"
+    )
+    if not withheld:
+        return {"withheld": False}
+
+    total_frames = max(
+        0,
+        int(movement_window.movement_end_frame)
+        - int(movement_window.movement_start_frame)
+        + 1,
+    )
+    config = movement_story.get("metadata", {}).get("configuration", {})
+    threshold = _optional_float(config.get("minimum_geometry_completeness"))
+    minimum_descriptors = int(config.get("minimum_eligible_descriptors") or 0)
+    eligible_descriptors = movement_story.get("eligible_descriptors") or []
+    geometry_candidates = [
+        item
+        for item in movement_story.get("excluded_descriptors", [])
+        if item.get("kind") == "geometry"
+        and _optional_float(item.get("geometry_completeness")) is not None
+    ]
+    best_geometry = max(
+        geometry_candidates,
+        key=lambda item: float(item["geometry_completeness"]),
+        default=None,
+    )
+    best_geometry_coverage = (
+        _optional_float(best_geometry.get("geometry_completeness"))
+        if best_geometry
+        else None
+    )
+    coverage_evidence = geometry_coverage_evidence or {}
+    evidence_best = coverage_evidence.get("best_movement_window_feature") or {}
+    if _optional_float(evidence_best.get("movement_window_coverage")) is not None:
+        best_geometry = evidence_best
+        best_geometry_coverage = _optional_float(
+            evidence_best.get("movement_window_coverage")
+        )
+    best_reviewed = coverage_evidence.get("best_reviewed_feature") or {}
+    best_target_present = coverage_evidence.get("best_target_present_feature") or {}
+    best_continuous = coverage_evidence.get("best_continuous_feature") or {}
+    continuous_run = best_continuous.get("longest_continuous_supported") or {}
+    pose_coverage = _optional_float(reliability.get("pose_frame_coverage"))
+    frame_counts = reliability.get("frame_status_counts", {})
+    valid_target_frames = int(frame_counts.get("VALID_TARGET", 0) or 0)
+
+    status_explanations = {
+        "TARGET_NOT_FOUND": (
+            "No usable target landmarks were accepted inside the annotated ROI."
+        ),
+        "INVALID_TRACK_SEGMENT": (
+            "Pose evidence appeared, but not in a sufficiently long continuous target segment."
+        ),
+        "TARGET_IDENTITY_UNCERTAIN": (
+            "Pose or position continuity was not strong enough to defend the target measurement."
+        ),
+        "LOW_POSE_CONFIDENCE": "Pose confidence did not meet the configured quality rule.",
+        "PARTIAL_POSE": "Too few body landmarks were available for a complete target pose.",
+        "ATHLETE_TOO_SMALL": "The athlete was too small in the image for dependable pose evidence.",
+        "SEVERE_OCCLUSION": "Too much of the target athlete was hidden for dependable pose evidence.",
+    }
+    frame_reasons = [
+        {
+            "status": str(status),
+            "label": {
+                "TARGET_NOT_FOUND": "No usable target pose",
+                "INVALID_TRACK_SEGMENT": "Target segment too short",
+                "TARGET_IDENTITY_UNCERTAIN": "Target continuity uncertain",
+                "LOW_POSE_CONFIDENCE": "Pose confidence too low",
+                "PARTIAL_POSE": "Partial pose",
+                "ATHLETE_TOO_SMALL": "Athlete too small",
+                "SEVERE_OCCLUSION": "Severe occlusion",
+            }.get(str(status), str(status).replace("_", " ").title()),
+            "count": int(count),
+            "explanation": status_explanations.get(
+                str(status),
+                "The frame did not satisfy the configured target and pose quality rules.",
+            ),
+        }
+        for status, count in frame_counts.items()
+        if status != "VALID_TARGET" and int(count or 0) > 0
+    ]
+
+    return {
+        "withheld": True,
+        "total_frames": total_frames,
+        "pose": {
+            "frames": round(pose_coverage * total_frames) if pose_coverage is not None else None,
+            "coverage": pose_coverage,
+        },
+        "defensible_target": {
+            "frames": valid_target_frames,
+            "coverage": (
+                valid_target_frames / total_frames if total_frames else None
+            ),
+        },
+        "best_geometry": {
+            "feature_name": best_geometry.get("feature_name") if best_geometry else None,
+            "display_label": (
+                feature_display_label(str(best_geometry["feature_name"]))
+                if best_geometry and best_geometry.get("feature_name")
+                else "Best-covered geometry measurement"
+            ),
+            "frames": (
+                round(best_geometry_coverage * total_frames)
+                if best_geometry_coverage is not None
+                else None
+            ),
+            "coverage": best_geometry_coverage,
+        },
+        "reviewed_geometry": {
+            "feature_name": best_reviewed.get("feature_name"),
+            "display_label": (
+                feature_display_label(str(best_reviewed["feature_name"]))
+                if best_reviewed.get("feature_name")
+                else "Reviewed-frame geometry yield"
+            ),
+            "frames": best_reviewed.get("reviewed_supported_frames"),
+            "total_frames": best_reviewed.get("reviewed_total_frames"),
+            "coverage": _optional_float(best_reviewed.get("reviewed_frame_yield")),
+        },
+        "target_present_geometry": {
+            "feature_name": best_target_present.get("feature_name"),
+            "display_label": (
+                feature_display_label(str(best_target_present["feature_name"]))
+                if best_target_present.get("feature_name")
+                else "Target-present geometry yield"
+            ),
+            "frames": best_target_present.get("target_present_supported_frames"),
+            "total_frames": best_target_present.get("target_present_total_frames"),
+            "coverage": _optional_float(best_target_present.get("target_present_yield")),
+        },
+        "continuous_geometry": {
+            "feature_name": best_continuous.get("feature_name"),
+            "display_label": (
+                feature_display_label(str(best_continuous["feature_name"]))
+                if best_continuous.get("feature_name")
+                else "Longest continuous geometry block"
+            ),
+            "start_frame": continuous_run.get("start_frame"),
+            "end_frame": continuous_run.get("end_frame"),
+            "frames": continuous_run.get("frame_count"),
+            "duration_ms": _optional_float(continuous_run.get("duration_ms")),
+            "coverage": (
+                int(continuous_run.get("frame_count") or 0) / total_frames
+                if total_frames
+                else None
+            ),
+        },
+        "phase_rule": {
+            "minimum_geometry_coverage": threshold,
+            "eligible_descriptors": len(eligible_descriptors),
+            "minimum_eligible_descriptors": minimum_descriptors,
+        },
+        "frame_reasons": frame_reasons,
+        "cause_note": (
+            "Frame QC records what evidence failed, but it cannot by itself prove whether "
+            "blur, small athlete scale, compression, camera motion, or nearby players caused "
+            "a missed pose."
+        ),
+        "availability_note": (
+            "Supported framewise measurements remain available below. Missing intervals stay "
+            "visible and were not silently filled. No continuous block met every configured "
+            "partial-window phase safeguard."
+        ),
+    }
+
+
+def _bbox_for_result_frame(
+    paths: dict[str, Path],
+    source_frame_index: int,
+) -> BBox | None:
     session = load_human_annotation_session(paths["annotation_session"])
+    if session.target_unavailable_interval_at(int(source_frame_index)) is not None:
+        return None
     return propagated_bbox(session.roi_keyframes, int(source_frame_index))
 
 
@@ -1654,8 +2842,63 @@ def _landmarks_for_result_frame(paths: dict[str, Path], source_frame_index: int)
             "y_px": _optional_float(y),
             "confidence": _optional_float(row.get("confidence")),
             "observed": not bool(row.get("rejected")) and _optional_float(x) is not None,
+            "rejected": bool(row.get("rejected")),
+            "processing_status": str(row.get("processing_status", "")),
+            "landmark_status": str(row.get("landmark_status", "")),
         }
     return landmarks
+
+
+def _raw_landmarks_for_pose_review(
+    slug: str,
+    root: Path,
+    source_frame_index: int,
+) -> dict:
+    """Return unfiltered YOLO landmarks so rejected frames remain visually reviewable."""
+
+    raw_pose_path = root / "pose" / "human" / f"{slug}_raw_pose.parquet"
+    if not raw_pose_path.exists():
+        return {}
+    raw_pose = _pose_review_parquet(raw_pose_path)
+    if "source_frame_index" not in raw_pose:
+        return {}
+    rows = raw_pose[
+        raw_pose["source_frame_index"].astype(int).eq(int(source_frame_index))
+    ]
+    landmarks = {}
+    for _, row in rows.iterrows():
+        observed_value = row.get("observed", False)
+        observed = not pd.isna(observed_value) and bool(observed_value)
+        x = _optional_float(row.get("x_px"))
+        y = _optional_float(row.get("y_px"))
+        landmarks[str(row["landmark_name"])] = {
+            "x_px": x,
+            "y_px": y,
+            "confidence": _optional_float(row.get("confidence")),
+            "observed": observed and x is not None and y is not None,
+            "rejected": False,
+            "processing_status": "RAW_REVIEW",
+        }
+    return landmarks
+
+
+def _pose_review_image_use_label(
+    paths: dict[str, Path],
+    source_frame_index: int,
+) -> str:
+    """Return an explicit previous-analysis inclusion label for the review image."""
+
+    if not paths["frame_quality"].exists():
+        return "NO PREVIOUS ANALYSIS STATUS"
+    quality = _pose_review_csv(paths["frame_quality"])
+    rows = quality[
+        quality["source_frame_index"].astype(int).eq(int(source_frame_index))
+    ]
+    if rows.empty:
+        return "NOT USED IN PREVIOUS ANALYSIS"
+    valid_value = rows.iloc[0].get("valid_target_frame", False)
+    used = not pd.isna(valid_value) and bool(valid_value)
+    return "USED IN PREVIOUS ANALYSIS" if used else "NOT USED IN PREVIOUS ANALYSIS"
 
 
 def _row_dict(df: pd.DataFrame) -> dict | None:
@@ -1689,6 +2932,14 @@ def _optional_float(value: Any) -> float | None:
         return float(value)
     except (TypeError, ValueError):
         return None
+
+
+def _supported_numeric(value: Any, status: Any) -> float | None:
+    """Return a number only when the existing measurement state supports it."""
+
+    if str(status).upper() != "SUPPORTED":
+        return None
+    return _optional_float(value)
 
 
 def _listify(value: Any) -> list[str]:
@@ -1729,22 +2980,13 @@ def _region_label(region: str) -> str:
     }.get(region, region.replace("_", " ").title())
 
 
-def _cross_case_label(name: str) -> str:
-    return {
-        "similarity": "Similar documented cases",
-        "umap": "Movement Landscape",
-        "clustering": "Exploratory clustering",
-        "association_rules": "Association rules",
-    }[name]
-
-
 SIMPLE_RESULTS_HTML = r"""
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ACL Movement Explorer - Results</title>
+  <title>ACL Movement Analytics Lab - Results</title>
   <style>
     :root {
       color-scheme: light;
@@ -1755,6 +2997,8 @@ SIMPLE_RESULTS_HTML = r"""
       --panel: #ffffff;
       --accent: #215f9a;
       --accent-soft: #e9f2fb;
+      --good: #176d4d;
+      --good-soft: #e9f5ef;
       --warn: #9a6400;
       --bad: #9d2735;
     }
@@ -1766,17 +3010,128 @@ SIMPLE_RESULTS_HTML = r"""
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+    .skip-link {
+      position: fixed;
+      z-index: 100;
+      top: 8px;
+      left: 8px;
+      transform: translateY(-150%);
+      border-radius: 6px;
+      padding: 9px 12px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 800;
+    }
+    .skip-link:focus { transform: translateY(0); }
+    :focus-visible {
+      outline: 3px solid #f0a929;
+      outline-offset: 3px;
+    }
     main {
-      max-width: 1320px;
+      max-width: 1680px;
       margin: 0 auto;
-      padding: 14px;
+      padding: 10px 14px 18px;
     }
     .header {
       background: var(--panel);
       border: 1px solid var(--line);
       border-radius: 8px;
-      padding: 10px 12px;
-      margin-bottom: 10px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+    }
+    .eyebrow {
+      margin: 0 0 5px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .result-overview {
+      border-top: 3px solid var(--accent);
+      padding: 12px 14px;
+    }
+    .overview-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 0;
+    }
+    .overview-heading h1 { font-size: clamp(22px, 2.3vw, 30px); }
+    .overview-intro {
+      max-width: none;
+      margin: 5px 0 12px;
+      color: var(--muted);
+      font-size: clamp(12.5px, 0.74vw, 14px);
+      line-height: 1.45;
+      white-space: normal;
+    }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(310px, 0.9fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .overview-story {
+      border-left: 4px solid var(--accent);
+      padding: 2px 0 2px 13px;
+    }
+    .overview-story h2,
+    .overview-measurements h2 { font-size: 15px; }
+    .overview-story p {
+      margin: 7px 0 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .key-measurement-list {
+      display: grid;
+      gap: 7px;
+    }
+    .key-measurement {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px 10px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fbfcfd;
+    }
+    .key-measurement strong { font-size: 13px; }
+    .key-measurement small {
+      grid-column: 1 / -1;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+    .overview-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .scope-note,
+    .responsible-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .loading-panel {
+      min-height: 220px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+    .loading-panel strong { display: block; margin-bottom: 6px; }
+    .results-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .results-header-copy {
+      flex: 1 1 auto;
+      min-width: 0;
     }
     .header-line {
       display: flex;
@@ -1801,6 +3156,145 @@ SIMPLE_RESULTS_HTML = r"""
       line-height: 1.4;
       margin: 4px 0 0;
     }
+    .analysis-switcher {
+      flex: 0 0 auto;
+      position: relative;
+    }
+    .results-header-actions {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      flex-wrap: nowrap;
+      justify-content: flex-end;
+      white-space: nowrap;
+    }
+    .results-header-actions > .button,
+    .results-header-actions > button,
+    .results-header-actions .analysis-switcher > button {
+      min-height: 36px;
+      padding-block: 5px;
+    }
+    .case-breadcrumb {
+      align-items: center;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      font-size: 11px;
+      font-weight: 750;
+      gap: 5px;
+      margin: 0 0 4px;
+    }
+    .case-breadcrumb a { color: var(--accent); text-decoration: none; }
+    .case-breadcrumb span:not(:last-child)::after {
+      color: #9aa6b2;
+      content: "/";
+      margin-left: 5px;
+    }
+    .results-navigation {
+      display: flex;
+      align-items: flex-end;
+      gap: 7px;
+      padding: 7px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f7f9fb;
+    }
+    .results-nav-control {
+      display: grid;
+      gap: 3px;
+      min-width: 150px;
+    }
+    .results-nav-control label {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+    }
+    .results-nav-control select {
+      max-width: 230px;
+      min-height: 34px;
+      padding: 5px 8px;
+    }
+    .analysis-switcher-menu {
+      position: absolute;
+      z-index: 20;
+      top: calc(100% + 6px);
+      right: 0;
+      width: min(340px, calc(100vw - 36px));
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 10px 28px rgba(31, 42, 55, 0.16);
+    }
+    .analysis-switcher-menu label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+    .analysis-switcher-menu select {
+      width: 100%;
+    }
+    .analysis-switcher-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 8px;
+    }
+    .analysis-switcher-menu button[disabled] {
+      cursor: not-allowed;
+    }
+    .context-dialog {
+      width: min(920px, calc(100vw - 28px));
+      max-height: calc(100vh - 28px);
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      box-shadow: 0 18px 48px rgba(31, 42, 55, 0.25);
+    }
+    .context-dialog::backdrop {
+      background: rgba(16, 24, 32, 0.58);
+    }
+    .context-dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+    .context-dialog-header h2 { margin: 0; }
+    .context-dialog-body { padding: 14px; }
+    .context-dialog video {
+      width: 100%;
+      max-height: calc(100vh - 230px);
+      aspect-ratio: 16 / 9;
+      object-fit: contain;
+      display: block;
+      border-radius: 6px;
+      background: #101820;
+    }
+    .context-clip-selector {
+      display: grid;
+      gap: 5px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .context-policy {
+      margin: 10px 0 0;
+      padding: 9px 10px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.4;
+    }
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -1810,11 +3304,142 @@ SIMPLE_RESULTS_HTML = r"""
     }
     .video-frame {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      height: min(67vw, 820px);
       object-fit: contain;
       background: #101820;
       border-radius: 8px;
       display: block;
+    }
+    .video-panel-heading {
+      align-items: flex-start;
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+    }
+    .video-panel-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: flex-end; }
+    .analysis-focus-workspace {
+      display: grid;
+      grid-template-columns: minmax(380px, 0.9fr) minmax(0, 1.55fr);
+      gap: 12px;
+      align-items: start;
+    }
+    .persistent-video-column {
+      position: sticky;
+      top: 10px;
+      min-width: 0;
+      max-height: calc(100vh - 20px);
+      overflow: auto;
+      scrollbar-gutter: stable;
+    }
+    .persistent-video-column #videoReviewPanel { margin: 0; }
+    .persistent-video-column .video-frame {
+      height: auto;
+      min-height: 260px;
+      max-height: calc(100vh - 245px);
+      aspect-ratio: 16 / 9;
+    }
+    .research-results-column {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .research-results-column > * { min-width: 0; max-width: 100%; }
+    .research-results-column > .panel,
+    .evidence-section > details { margin-bottom: 0; }
+    .results-section-nav {
+      position: sticky;
+      z-index: 12;
+      top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.97);
+      box-shadow: 0 5px 16px rgba(31, 42, 51, 0.08);
+    }
+    .results-section-nav > span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .results-section-nav > div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      min-width: 0;
+      overflow-x: auto;
+    }
+    .results-section-link {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 9px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .results-section-link:hover { border-color: var(--line); color: var(--accent); }
+    .results-section-link.active {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    #resultOverview,
+    #featurePanel,
+    #phaseStoryPanel,
+    #evidenceSection { scroll-margin-top: 72px; }
+    .evidence-section { display: grid; gap: 10px; min-width: 0; }
+    body.analysis-focus-active { overflow: hidden; }
+    body.analysis-focus-active .analysis-focus-workspace {
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: minmax(420px, 0.9fr) minmax(0, 1.55fr);
+      inset: 0;
+      overflow: auto;
+      padding: 12px;
+      position: fixed;
+      z-index: 1000;
+    }
+    body.analysis-focus-active .persistent-video-column,
+    body.analysis-focus-active .results-section-nav { top: 0; }
+    body.analysis-focus-active #videoReviewPanel,
+    body.analysis-focus-active #featurePanel { margin-inline: 0; max-width: none; }
+    body.analysis-focus-active #videoReviewPanel .video-frame {
+      height: auto;
+      max-height: calc(100vh - 245px);
+      min-height: 420px;
+    }
+    body.analysis-focus-active #analysisBoundaryControl { display: none; }
+    .shortcut-hint { color: var(--muted); font-size: 11px; margin-left: auto; }
+    #videoReviewPanel:fullscreen {
+      background: #0c141c;
+      border: 0;
+      border-radius: 0;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      margin: 0;
+      padding: 12px;
+    }
+    #videoReviewPanel:fullscreen .subtle,
+    #videoReviewPanel:fullscreen .readout { color: #c8d1db; }
+    #videoReviewPanel:fullscreen .video-frame {
+      flex: 1 1 auto;
+      height: calc(100vh - 150px);
+      min-height: 0;
     }
     .controls {
       display: flex;
@@ -1823,21 +3448,27 @@ SIMPLE_RESULTS_HTML = r"""
       align-items: center;
       margin-top: 10px;
     }
-    button, select {
+    button, select, a.button {
       border: 1px solid var(--line);
       background: #fff;
       color: var(--ink);
       border-radius: 6px;
       font: inherit;
       font-weight: 750;
-      min-height: 38px;
+      min-height: 44px;
       padding: 7px 10px;
+    }
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
     }
     button {
       cursor: pointer;
       min-width: 50px;
     }
-    button:hover, select:hover { border-color: var(--accent); }
+    button:hover, select:hover, a.button:hover { border-color: var(--accent); }
     button.primary {
       background: var(--accent);
       border-color: var(--accent);
@@ -1862,13 +3493,32 @@ SIMPLE_RESULTS_HTML = r"""
       border: 1px solid #f0d89b;
       border-radius: 8px;
       background: #fffaf0;
-      padding: 9px 10px;
       margin-top: 10px;
+    }
+    .boundary-control > summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      cursor: pointer;
+      list-style-position: inside;
+    }
+    .boundary-control > summary span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .boundary-control[open] > summary {
+      border-bottom: 1px solid #f0d89b;
+    }
+    .boundary-edit-body {
       display: flex;
       gap: 10px;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
+      padding: 10px 12px;
     }
     .boundary-control strong {
       color: #744500;
@@ -1944,6 +3594,14 @@ SIMPLE_RESULTS_HTML = r"""
       font-size: 18px;
       margin-bottom: 5px;
     }
+    .measurement-scope {
+      border-left: 3px solid var(--accent);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 750;
+      margin: 10px 0 0;
+      padding: 5px 0 5px 9px;
+    }
     .section-label {
       color: var(--muted);
       font-size: 12px;
@@ -1981,6 +3639,13 @@ SIMPLE_RESULTS_HTML = r"""
       display: block;
       font-size: 20px;
       line-height: 1.1;
+    }
+    .value-card.secondary-value {
+      background: #ffffff;
+    }
+    .value-card.secondary-value strong {
+      font-size: 16px;
+      font-weight: 750;
     }
     .chart {
       width: 100%;
@@ -2028,6 +3693,53 @@ SIMPLE_RESULTS_HTML = r"""
       cursor: pointer;
       font-weight: 850;
     }
+    details.workspace-disclosure {
+      padding: 0;
+      overflow: clip;
+    }
+    details.workspace-disclosure > summary {
+      align-items: center;
+      display: flex;
+      gap: 12px;
+      list-style: none;
+      min-height: 54px;
+      padding: 10px 12px;
+    }
+    details.workspace-disclosure > summary::-webkit-details-marker { display: none; }
+    details.workspace-disclosure > summary::after {
+      color: var(--accent);
+      content: "+";
+      font-size: 20px;
+      line-height: 1;
+      margin-left: auto;
+    }
+    details.workspace-disclosure[open] > summary {
+      background: #f7fafc;
+      border-bottom: 1px solid var(--line);
+    }
+    details.workspace-disclosure[open] > summary::after { content: "−"; }
+    .workspace-summary-copy { min-width: 0; }
+    .workspace-summary-copy strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.2;
+    }
+    .workspace-summary-copy span {
+      color: var(--muted);
+      display: block;
+      font-size: 12px;
+      font-weight: 650;
+      margin-top: 2px;
+    }
+    .workspace-disclosure-body { padding: 12px; }
+    .measurement-change-block {
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+      padding-top: 2px;
+    }
+    .secondary-disclosure {
+      margin: 10px 0 0;
+    }
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -2040,6 +3752,14 @@ SIMPLE_RESULTS_HTML = r"""
       gap: 10px;
       margin-top: 12px;
     }
+    .phase-detail {
+      margin: 12px 0 0;
+      padding: 10px 0 0;
+      border: 0;
+      border-top: 1px solid var(--line);
+      border-radius: 0;
+    }
+    .phase-detail > summary { color: var(--accent); }
     .phase-card {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -2073,6 +3793,66 @@ SIMPLE_RESULTS_HTML = r"""
     .whole-movement-summary h3 {
       font-size: 14px;
       margin-bottom: 5px;
+    }
+    .phase-withheld-summary {
+      max-width: 1120px;
+    }
+    .phase-withheld-stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      margin: 12px 0;
+    }
+    .phase-withheld-stat {
+      min-width: 0;
+      padding: 10px 12px;
+      border-right: 1px solid var(--line);
+    }
+    .phase-withheld-stat:first-child { padding-left: 0; }
+    .phase-withheld-stat:last-child { border-right: 0; }
+    .phase-withheld-stat span,
+    .phase-withheld-stat small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .phase-withheld-stat strong {
+      display: block;
+      margin: 3px 0;
+      font-size: 18px;
+    }
+    .phase-withheld-reasons {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin: 12px 0;
+    }
+    .phase-withheld-reasons h4 {
+      margin: 0 0 6px;
+      font-size: 13px;
+    }
+    .phase-withheld-reasons ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .phase-withheld-reasons li { margin-bottom: 5px; }
+    .phase-withheld-note {
+      margin: 8px 0;
+      padding-left: 10px;
+      border-left: 3px solid #b37b00;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    @media (max-width: 860px) {
+      .phase-withheld-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .phase-withheld-stat:nth-child(2) { border-right: 0; }
+      .phase-withheld-stat:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+      .phase-withheld-reasons { grid-template-columns: 1fr; }
     }
     .whole-movement-summary p {
       line-height: 1.45;
@@ -2179,6 +3959,9 @@ SIMPLE_RESULTS_HTML = r"""
       border-radius: 6px;
       margin-top: 7px;
     }
+    .phase-mini-visual[data-story-category="upper_body"] {
+      height: 168px;
+    }
     .phase-mini-values {
       display: grid;
       grid-template-columns: 1fr auto;
@@ -2210,6 +3993,19 @@ SIMPLE_RESULTS_HTML = r"""
     .phase-mini-values.multi strong {
       font-size: 11px;
       text-align: right;
+    }
+    .phase-metric-result {
+      text-align: right;
+    }
+    .phase-metric-result strong,
+    .phase-metric-result small {
+      display: block;
+    }
+    .phase-metric-result small {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 600;
     }
     .phase-snapshots {
       display: grid;
@@ -2389,6 +4185,68 @@ SIMPLE_RESULTS_HTML = r"""
       font-weight: 850;
       font-size: 12px;
     }
+    .status.good { background: var(--good-soft); color: var(--good); }
+    .status.limited { background: #fff4e0; color: #805300; }
+    .status.unavailable-state { background: #eef1f4; color: #526170; }
+    .analysis-availability-notice {
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--good);
+      border-radius: 7px;
+      background: var(--good-soft);
+      padding: 10px 12px;
+      margin: 12px 0 4px;
+      color: var(--text);
+    }
+    .analysis-availability-notice.limited {
+      border-left-color: #a46a00;
+      background: #fff8e9;
+    }
+    .analysis-availability-notice p { margin: 4px 0 0; color: var(--muted); }
+    .event-interval-review {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px 18px;
+      align-items: center;
+      margin: 10px 0 4px;
+      padding: 12px;
+    }
+    .event-interval-review[hidden] { display: none; }
+    .event-interval-review h2 {
+      font-size: 15px;
+      line-height: 1.35;
+      margin-bottom: 4px;
+    }
+    .event-interval-review p { margin-bottom: 0; }
+    .event-review-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .event-review-actions button {
+      min-width: 72px;
+      font-weight: 850;
+    }
+    .event-review-actions button[aria-pressed="true"] {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .event-review-status {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      grid-column: 1 / -1;
+    }
+    .responsible-list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    table { max-width: 100%; }
     .status.unavailable {
       background: #fff4e0;
       color: var(--warn);
@@ -2397,31 +4255,216 @@ SIMPLE_RESULTS_HTML = r"""
       display: inline-block;
       padding: 2px 8px;
     }
+    @media (max-width: 1100px) {
+      .results-header-row { align-items: stretch; flex-direction: column; }
+      .results-header-actions { align-items: flex-end; flex-wrap: nowrap; width: 100%; }
+      .analysis-focus-workspace { grid-template-columns: minmax(340px, 0.85fr) minmax(0, 1.4fr); }
+      .results-section-nav { align-items: stretch; flex-direction: column; }
+      .results-section-nav > div { overflow-x: auto; }
+    }
+    @media (max-width: 920px) {
+      .analysis-focus-workspace { display: block; }
+      .persistent-video-column {
+        position: relative;
+        top: auto;
+        max-height: none;
+        overflow: visible;
+      }
+      .persistent-video-column .video-frame {
+        min-height: 0;
+        max-height: min(68vh, 620px);
+      }
+      .research-results-column { margin-top: 10px; }
+      .results-section-nav { top: 0; }
+    }
     @media (max-width: 760px) {
       main { padding: 8px; }
+      .results-header-row { align-items: stretch; flex-direction: column; }
+      .results-header-actions { align-items: flex-end; flex-direction: row; flex-wrap: nowrap; overflow-x: auto; width: 100%; }
+      .results-navigation { flex: 0 0 auto; }
+      .results-nav-control, .results-nav-control select { width: auto; }
+      .analysis-switcher, .analysis-switcher > button { width: auto; }
+      .analysis-switcher-menu {
+        position: static;
+        width: 100%;
+        margin-top: 6px;
+        box-shadow: none;
+      }
       .selector-grid, .headline-values, .stats-grid, .phase-grid, .operator-grid, .filmstrip,
-      .story-change-grid, .phase-snapshots, .audit-grid {
+      .story-change-grid, .phase-snapshots, .audit-grid, .overview-grid {
         grid-template-columns: 1fr;
       }
+      .overview-heading { flex-direction: column; }
+      .overview-heading .status { align-self: flex-start; }
+      .overview-intro { white-space: normal; }
+      .overview-actions a { width: 100%; }
       .audit-section-wide { grid-column: auto; }
       .view-row { align-items: stretch; }
       .readout { margin-left: 0; width: 100%; }
       .chart { height: 260px; }
+      .video-frame { height: min(62vw, 360px); }
+      table { display: block; overflow-x: auto; }
     }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; }
+    }
+    __APP_SHELL_CSS__
   </style>
 </head>
 <body>
-  <main>
-    <section class="header">
-      <div class="header-line" id="compactHeader">
-        <span>Loading</span>
+  <a class="skip-link" href="#resultOverview">Skip to analysis overview</a>
+  __APP_SITE_HEADER__
+  <main class="app-page-main">
+    <section class="panel loading-panel" id="resultsLoading" role="status" aria-live="polite">
+      <div class="app-football-loader">
+        <span class="app-loader-pitch" aria-hidden="true"><span class="app-loader-ball">⚽</span></span>
+        <span class="app-loader-copy"><strong>Reviewing the replay…</strong><small>Bringing the video, movement story, and supported measurements into view.</small></span>
       </div>
-      <p class="subtle" id="headerNote"></p>
+    </section>
+    <div id="resultsContent" hidden>
+    <section class="header">
+      <div class="results-header-row">
+        <div class="results-header-copy">
+          <nav class="case-breadcrumb" aria-label="Current analysis location">
+            <span><a id="caseLibraryBreadcrumb" href="/">Case library</a></span>
+            <span id="breadcrumbPlayer">Selected case</span>
+            <span id="breadcrumbClip">Selected clip</span>
+            <span>Analysis</span>
+          </nav>
+          <p class="eyebrow">ACL Movement Analytics Lab · Selected case</p>
+          <div class="header-line" id="compactHeader">
+            <span>Loading</span>
+          </div>
+          <p class="subtle" id="headerNote"></p>
+        </div>
+        <div class="results-header-actions">
+          <div class="results-navigation" id="resultsNavigation">
+            <div class="results-nav-control">
+              <label for="headerClipSelect">Select clip</label>
+              <select id="headerClipSelect"></select>
+            </div>
+          </div>
+          <button type="button" id="contextVideoButton" hidden>Real-time context</button>
+          <a class="button primary" id="annotateNextClipButton" href="/annotate" hidden>Annotate next clip</a>
+          <a class="button" id="addCaseViewButton" href="/video-cutter">Cut another subclip</a>
+          <a class="button" id="caseClipsButton" href="/">All case clips</a>
+          <a class="button" href="/">Main menu</a>
+          <div class="analysis-switcher" id="analysisSwitcher" hidden>
+            <button type="button" id="analysisSwitcherButton" aria-expanded="false" aria-controls="analysisSwitcherMenu">Open another analysis</button>
+            <div class="analysis-switcher-menu" id="analysisSwitcherMenu" hidden>
+              <label for="analysisCaseSelect">Injury case and video view</label>
+              <select id="analysisCaseSelect"></select>
+              <div class="analysis-switcher-actions">
+                <button type="button" class="primary" id="openAnalysisButton">Open analysis</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="analysis-focus-workspace" id="analysisFocusWorkspace">
+    <aside class="persistent-video-column" aria-label="Persistent synchronized video review">
+    <section class="panel" id="videoReviewPanel" aria-labelledby="videoReviewTitle">
+      <div class="video-panel-heading">
+        <div>
+          <h2 id="videoReviewTitle">Watch the selected movement</h2>
+          <p class="subtle">This synchronized video remains visible while you inspect every analysis section.</p>
+        </div>
+        <div class="video-panel-actions">
+          <button id="focusModeButton" type="button" aria-pressed="false">Analysis focus mode</button>
+          <button id="fullscreenReviewButton" type="button">Video fullscreen</button>
+        </div>
+      </div>
+      <img id="videoFrame" class="video-frame" alt="Selected source frame" />
+      <div class="controls" aria-label="Frame navigation">
+        <button id="backFiveButton" type="button" aria-label="Back 5 frames">-5</button>
+        <button id="backOneButton" type="button" aria-label="Back 1 frame">-1</button>
+        <button id="restartButton" type="button">Restart</button>
+        <button id="playPauseButton" class="primary" type="button">Play</button>
+        <button id="forwardOneButton" type="button" aria-label="Forward 1 frame">+1</button>
+        <button id="forwardFiveButton" type="button" aria-label="Forward 5 frames">+5</button>
+        <span id="frameReadout" class="readout" aria-live="polite">Frame</span>
+        <span class="shortcut-hint">Space: play · ←/→: frame · Shift + ←/→: 5 frames · F: focus</span>
+      </div>
+      <details class="boundary-control" id="analysisBoundaryControl">
+        <summary>
+          <strong>Edit analysis window</strong>
+          <span>Researcher action · annotation or regeneration</span>
+        </summary>
+        <div class="boundary-edit-body">
+          <div>
+            <strong>Human analysis boundary</strong>
+            <p class="subtle">Shorten the current movement window, or reopen annotation to correct the target and extend it.</p>
+          </div>
+          <button id="trimAnalysisButton" class="warn" type="button">End analysis here + regenerate</button>
+          <a id="editAnnotationButton" class="button" href="/annotate">Edit or extend annotation</a>
+          <span id="trimAnalysisStatus" class="boundary-status"></span>
+        </div>
+      </details>
+    </section>
+    </aside>
+
+    <div class="research-results-column" id="researchResultsColumn">
+    <nav class="results-section-nav" id="resultsSectionNav" aria-label="Analysis sections">
+      <span>Review alongside video</span>
+      <div>
+        <a class="results-section-link active" href="#resultOverview" data-section-target="resultOverview" aria-current="location">Overview</a>
+        <a class="results-section-link" href="#featurePanel" data-section-target="featurePanel">Measurements</a>
+        <a class="results-section-link" href="#phaseStoryPanel" data-section-target="phaseStoryPanel">Movement Story</a>
+        <a class="results-section-link" href="#evidenceSection" data-section-target="evidenceSection">Evidence</a>
+      </div>
+    </nav>
+
+    <section class="panel result-overview" id="resultOverview" tabindex="-1" aria-labelledby="caseTitle">
+      <div class="overview-heading">
+        <div>
+          <p class="eyebrow" id="analysisModeEyebrow">Human-guided 2D movement analysis</p>
+          <h1 id="caseTitle">Movement analysis</h1>
+        </div>
+        <span class="status" id="overviewSupportStatus">Checking support</span>
+      </div>
+      <p class="overview-intro" id="overviewIntro">
+        Observable movement from a documented football video, with human-verified target tracking
+        and measurement support kept visible. This is descriptive research evidence, not a diagnosis or risk score.
+      </p>
+      <div id="analysisAvailabilityNotice" class="analysis-availability-notice" role="status"></div>
+      <div id="eventIntervalReview" class="event-interval-review" hidden>
+        <div>
+          <p class="eyebrow">Human event-coverage review</p>
+          <h2 id="eventIntervalReviewQuestion">Does the supported phase interval include the visible event you intended to study?</h2>
+          <p class="subtle">Judge the visible event against the segmented frames. This does not identify an ACL rupture frame.</p>
+        </div>
+        <div class="event-review-actions" role="group" aria-labelledby="eventIntervalReviewQuestion">
+          <button id="eventIntervalReviewYes" type="button" aria-pressed="false">Yes</button>
+          <button id="eventIntervalReviewNo" type="button" aria-pressed="false">No</button>
+        </div>
+        <p id="eventIntervalReviewStatus" class="event-review-status" role="status"></p>
+      </div>
+      <div class="overview-grid">
+        <div class="overview-story">
+          <h2 id="overviewStoryTitle">Movement at a glance</h2>
+          <p id="overviewStory">Loading the compact movement overview…</p>
+          <div class="overview-actions">
+            <a class="button primary" href="#videoReviewPanel">Watch the movement</a>
+            <a class="button" id="movementStoryAction" href="#phaseStoryPanel">Explore the Movement Story</a>
+            <a class="button" id="measurementsAction" href="#featurePanel">Inspect measurements &amp; graph</a>
+          </div>
+        </div>
+        <div class="overview-measurements">
+          <h2>Key observable measurements</h2>
+          <div class="key-measurement-list" id="overviewMeasurements"></div>
+        </div>
+      </div>
+      <p class="scope-note">
+        Projected 2D measurements describe what is visible in this camera view. They do not establish
+        3D biomechanics, injury cause, or the instant of ACL rupture.
+      </p>
     </section>
 
     <section class="panel" id="viewPanel" hidden>
       <div class="view-row">
-        <div>
+        <div hidden>
           <label for="viewSelect">View</label>
           <select id="viewSelect"></select>
         </div>
@@ -2431,85 +4474,118 @@ SIMPLE_RESULTS_HTML = r"""
       <div id="caseSynthesisPanel" class="synthesis" hidden></div>
     </section>
 
-    <section class="panel">
-      <img id="videoFrame" class="video-frame" alt="Selected source frame" />
-      <div class="controls" aria-label="Frame navigation">
-        <button id="backFiveButton" type="button">-5</button>
-        <button id="backOneButton" type="button">-1</button>
-        <button id="restartButton" type="button">Restart</button>
-        <button id="playPauseButton" class="primary" type="button">Play</button>
-        <button id="forwardOneButton" type="button">+1</button>
-        <button id="forwardFiveButton" type="button">+5</button>
-        <span id="frameReadout" class="readout">Frame</span>
-      </div>
-      <div class="boundary-control">
-        <div>
-          <strong>Human analysis boundary</strong>
-          <p class="subtle">If the target switches or disappears after this frame, end analysis here and rebuild the results.</p>
+    <details class="panel workspace-disclosure" id="featurePanel" open>
+      <summary>
+        <span class="workspace-summary-copy">
+          <strong>Observed / measured — Selected Measurement</strong>
+          <span>Category, selected measurement, synchronized trajectory, movement change, and snapshots</span>
+        </span>
+      </summary>
+      <div class="workspace-disclosure-body">
+        <div class="selector-grid">
+          <div>
+            <label for="featureCategorySelect">Feature category</label>
+            <select id="featureCategorySelect"></select>
+          </div>
+          <div>
+            <label for="featureSelect">Selected measurement</label>
+            <select id="featureSelect"></select>
+          </div>
         </div>
-        <button id="trimAnalysisButton" class="warn" type="button">End analysis here + regenerate</button>
-        <span id="trimAnalysisStatus" class="boundary-status"></span>
-      </div>
-    </section>
-
-    <section class="panel" id="phaseStoryPanel">
-      <h2>Movement Story</h2>
-      <p class="subtle" id="phaseStorySummary"></p>
-      <div class="whole-movement-summary" id="wholeMovementSummary"></div>
-      <div class="movement-glyph-legend" aria-label="Movement diagram legend">
-        <strong>Movement diagrams</strong>
-        <span><i class="glyph-line-key start"></i>Blue dashed = phase start</span>
-        <span><i class="glyph-line-key"></i>Green solid = phase end</span>
-        <span>Arrow = direction of change</span>
-        <span>Arc = projected angle</span>
-        <span>H / K / A = hip / knee / ankle</span>
-      </div>
-      <div class="phase-grid" id="phaseStoryGrid"></div>
-    </section>
-
-    <section class="panel" id="featurePanel">
-      <h2>Selected Measurement</h2>
-      <div class="selector-grid">
-        <div>
-          <label for="featureCategorySelect">Feature category</label>
-          <select id="featureCategorySelect"></select>
+        <p class="subtle" id="categoryAvailabilityNote"></p>
+        <p class="measurement-scope" id="measurementScope"></p>
+        <div class="measurement-heading">
+          <h3 id="featureTitle">Feature</h3>
+          <p class="description" id="featureDescription"></p>
+          <p class="technical-label" id="featureTechnicalLabel"></p>
         </div>
-        <div>
-          <label for="featureSelect">Measurement</label>
-          <select id="featureSelect"></select>
+        <canvas id="featureGraph" class="chart" width="1100" height="260" role="img" aria-label="Selected projected movement measurement across source frames" aria-describedby="trajectoryInterpretation"></canvas>
+        <div id="unavailableVisual" class="unavailable" hidden></div>
+        <p class="trajectory-interpretation" id="trajectoryInterpretation"></p>
+        <div class="measurement-change-block">
+          <p class="section-label">Movement change</p>
+          <div class="headline-values" id="headlineValues"></div>
         </div>
+        <div id="filmstrip" class="filmstrip"></div>
+        <details id="moreStatistics">
+          <summary>Descriptive statistics</summary>
+          <div class="stats-grid" id="moreStatisticsGrid"></div>
+        </details>
+        <details class="secondary-disclosure" id="phaseComparisonDetails">
+          <summary id="phaseComparisonTitle">Phase comparison</summary>
+          <div id="phaseComparisonPanel"></div>
+        </details>
       </div>
-      <p class="subtle" id="categoryAvailabilityNote"></p>
-      <div class="measurement-heading">
-        <h3 id="featureTitle">Feature</h3>
-        <p class="description" id="featureDescription"></p>
-        <p class="technical-label" id="featureTechnicalLabel"></p>
-      </div>
-      <p class="section-label">Movement change</p>
-      <div class="headline-values" id="headlineValues"></div>
-      <canvas id="featureGraph" class="chart" width="1100" height="260"></canvas>
-      <div id="unavailableVisual" class="unavailable" hidden></div>
-      <p class="trajectory-interpretation" id="trajectoryInterpretation"></p>
-      <div id="filmstrip" class="filmstrip"></div>
-      <details id="moreStatistics">
-        <summary>Descriptive statistics</summary>
-        <div class="stats-grid" id="moreStatisticsGrid"></div>
-      </details>
-      <div class="measurement-heading">
-        <h3>Phase comparison</h3>
-        <div id="phaseComparisonPanel"></div>
-      </div>
-    </section>
+    </details>
 
-    <section class="panel" id="operatorAnalyticsPanel">
-      <h2>Measurement Support</h2>
-      <p class="subtle">How much of the selected trajectory is supported by defensible target and landmark evidence.</p>
-      <div id="supportPanel"></div>
-      <details class="support-details" id="unsupportedIntervalDetails">
-        <summary id="unsupportedIntervalSummary">Why are some frames unsupported?</summary>
-        <div id="gapReasonPanel"></div>
-      </details>
-    </section>
+    <details class="panel workspace-disclosure" id="phaseStoryPanel">
+      <summary>
+        <span class="workspace-summary-copy">
+          <strong id="movementStoryDetailTitle">Movement Story · interpretive phase detail</strong>
+          <span>Whole-movement interpretation, phase method, and phase-by-phase evidence</span>
+        </span>
+      </summary>
+      <div class="workspace-disclosure-body">
+        <p class="subtle">A deterministic interpretation of supported observed measurements. It does not identify a causal injury mechanism.</p>
+        <p class="subtle" id="phaseStorySummary"></p>
+        <div class="phase-explanation phase-method-note" id="phaseSegmentationRationale">
+          <strong id="phaseMethodTitle">How phases were divided</strong>
+          <p id="phaseMethodText">
+            Within the human-selected movement window, a new phase begins only when several
+            supported 2D movement measurements change together and the changed pattern persists.
+            A one-frame spike or a gap in evidence does not create a boundary. These are
+            measurement-based boundaries; they do not identify foot contact, force, ACL loading,
+            or injury timing.
+          </p>
+        </div>
+        <div class="whole-movement-summary" id="wholeMovementSummary"></div>
+        <details class="phase-detail" id="phaseEvidenceDetails">
+          <summary id="phaseEvidenceSummary">Explore phase-by-phase evidence</summary>
+          <div class="movement-glyph-legend" id="phaseStoryLegend" aria-label="Movement diagram legend">
+            <strong>Movement diagrams</strong>
+            <span><i class="glyph-line-key start"></i>Blue dashed = phase start</span>
+            <span><i class="glyph-line-key"></i>Green solid = phase end</span>
+            <span>Arrow = direction of change</span>
+            <span>Arc = projected angle</span>
+            <span>H / K / A = hip / knee / ankle</span>
+            <span>Orientation <span class="info-icon" title="Directed: endpoint order matters, and change uses the shortest signed path around the 360° orientation circle. Axis: endpoint order does not matter; 0° and 180° describe the same body line, so change uses the shortest equivalent axial difference." aria-label="Directed and axis orientation definitions">ⓘ</span></span>
+          </div>
+          <div class="phase-grid" id="phaseStoryGrid"></div>
+        </details>
+      </div>
+    </details>
+
+    <section class="evidence-section" id="evidenceSection" aria-label="Evidence, limitations, and research safeguards">
+    <details class="panel workspace-disclosure" id="operatorAnalyticsPanel">
+      <summary>
+        <span class="workspace-summary-copy">
+          <strong>Measurement Support</strong>
+          <span>Evidence coverage, unsupported intervals, and landmark limitations</span>
+        </span>
+      </summary>
+      <div class="workspace-disclosure-body">
+        <p class="subtle">How much of the selected trajectory is supported by defensible target and landmark evidence.</p>
+        <div id="supportPanel"></div>
+        <details class="support-details" id="unsupportedIntervalDetails">
+          <summary id="unsupportedIntervalSummary">Why are some frames unsupported?</summary>
+          <div id="gapReasonPanel"></div>
+        </details>
+      </div>
+    </details>
+
+    <details id="responsibleAIDetails">
+      <summary>Measurement support &amp; Responsible AI</summary>
+      <ul class="responsible-list">
+        <li>This is an exploratory research and educational tool for human-guided markerless 2D analysis of observable movement.</li>
+        <li>It does not diagnose, predict injury or risk, establish causation, or recommend treatment.</li>
+        <li>It does not estimate ACL load or strain, ground-reaction force, torque, true 3D angles, or depth.</li>
+        <li>Camera angle, scale, occlusion, blur, cuts, kit/background contrast, target identity, and landmark confidence can limit support.</li>
+        <li>Measurement support describes available evidence, not diagnostic confidence.</li>
+        <li>Unsupported values remain unavailable; they are not displayed as zero.</li>
+        <li>When phase safeguards are not met, the rule-based procedure withholds a phase sequence. The saved result records why and keeps supported evidence available for human review.</li>
+        <li>Human review remains necessary for provenance, identity, laterality, the movement window, footage quality, and interpretation.</li>
+      </ul>
+    </details>
 
     <details id="advancedEvidenceDetails">
       <summary>Advanced Evidence Details</summary>
@@ -2533,7 +4609,29 @@ SIMPLE_RESULTS_HTML = r"""
         </section>
       </div>
     </details>
+    </section>
+    </div>
+    </div>
+    </div>
   </main>
+
+  <dialog id="contextVideoDialog" class="context-dialog" aria-labelledby="contextVideoTitle">
+    <div class="context-dialog-header">
+      <h2 id="contextVideoTitle">Real-time injury sequence</h2>
+      <button type="button" id="closeContextVideoButton">Close</button>
+    </div>
+    <div class="context-dialog-body">
+      <label id="contextClipSelector" class="context-clip-selector" hidden>
+        Context clip
+        <select id="contextClipSelect"></select>
+      </label>
+      <video id="contextVideoPlayer" controls preload="metadata" playsinline></video>
+      <p class="context-policy">
+        <strong>Context only.</strong> This video is not used to calculate measurements,
+        generate the movement summary, or infer contact or causation.
+      </p>
+    </div>
+  </dialog>
 
 <script>
 const params = new URLSearchParams(window.location.search);
@@ -2545,7 +4643,69 @@ let currentFrame = 0;
 let playTimer = null;
 let selectedCategory = 'LOWER LIMB';
 let selectedFeatureId = 'injured_hka';
+let restoredWorkspaceState = {};
+let workspaceStateSaveTimer = null;
+const WORKSPACE_STATE_VERSION = 1;
+const WORKSPACE_DISCLOSURE_IDS = [
+  'featurePanel',
+  'moreStatistics',
+  'phaseComparisonDetails',
+  'phaseStoryPanel',
+  'phaseEvidenceDetails',
+  'operatorAnalyticsPanel',
+  'unsupportedIntervalDetails',
+  'responsibleAIDetails',
+  'advancedEvidenceDetails'
+];
 const phaseHkaViewModes = {};
+const phaseUpperBodyViewModes = {};
+
+function workspaceStateKey() {
+  return 'acl-analysis-workspace:v' + WORKSPACE_STATE_VERSION + ':' + caseSlug;
+}
+
+function readWorkspaceState() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(workspaceStateKey()) || '{}');
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function applyWorkspaceState() {
+  const openState = restoredWorkspaceState.open;
+  if (!openState || typeof openState !== 'object') return;
+  WORKSPACE_DISCLOSURE_IDS.forEach((id) => {
+    const disclosure = $(id);
+    if (disclosure && typeof openState[id] === 'boolean') disclosure.open = openState[id];
+  });
+}
+
+function saveWorkspaceState() {
+  if (!result) return;
+  const open = {};
+  WORKSPACE_DISCLOSURE_IDS.forEach((id) => {
+    const disclosure = $(id);
+    if (disclosure) open[id] = Boolean(disclosure.open);
+  });
+  try {
+    window.localStorage.setItem(workspaceStateKey(), JSON.stringify({
+      version: WORKSPACE_STATE_VERSION,
+      selectedCategory,
+      selectedFeatureId,
+      currentFrame,
+      open
+    }));
+  } catch (error) {
+    // Workspace memory is a convenience; analysis remains fully usable without it.
+  }
+}
+
+function scheduleWorkspaceStateSave() {
+  window.clearTimeout(workspaceStateSaveTimer);
+  workspaceStateSaveTimer = window.setTimeout(saveWorkspaceState, 120);
+}
 
 const FEATURE_CATEGORIES = {
   'LOWER LIMB': [
@@ -2714,16 +4874,41 @@ fetch('/api/results?case=' + encodeURIComponent(caseSlug))
   })
   .then((payload) => {
     result = payload;
-    currentFrame = Number(result.movement_window?.movement_start_frame ?? frameBounds().start);
+    restoredWorkspaceState = readWorkspaceState();
+    if (typeof restoredWorkspaceState.selectedCategory === 'string') {
+      selectedCategory = restoredWorkspaceState.selectedCategory;
+    }
+    if (typeof restoredWorkspaceState.selectedFeatureId === 'string') {
+      selectedFeatureId = restoredWorkspaceState.selectedFeatureId;
+    }
+    const initialFrame = Number(restoredWorkspaceState.currentFrame);
+    const defaultFrame = Number(result.movement_window?.movement_start_frame ?? frameBounds().start);
+    currentFrame = Number.isInteger(initialFrame)
+      ? Math.max(frameBounds().start, Math.min(frameBounds().end, initialFrame))
+      : defaultFrame;
     initialiseFeatureSelection();
     initialiseControls();
+    $('resultsLoading').hidden = true;
+    $('resultsContent').hidden = false;
     renderAll();
   })
   .catch((error) => {
-    document.body.innerHTML = '<main><section class="panel"><h1>Results unavailable</h1><p>' + escapeHtml(error.message) + '</p></section></main>';
+    document.body.innerHTML = '<main><section class="panel" role="alert"><h1>Analysis unavailable</h1>'
+      + '<p>We could not load this movement analysis. Your saved annotation and existing analysis files have not been changed.</p>'
+      + '<p class="subtle">' + escapeHtml(error.message || 'Results are unavailable.') + '</p>'
+      + '<p><a class="button primary" href="' + escapeHtml(window.location.href) + '">Try again</a> '
+      + '<a class="button" href="/annotate?case=' + encodeURIComponent(caseSlug) + '">Open this clip\'s annotation</a> '
+      + '<a class="button" href="/?case=' + encodeURIComponent(caseSlug) + '">View this case\'s clips</a></p></section></main>';
   });
 
 function initialiseControls() {
+  initialiseContextVideo();
+  initialiseAnalysisSwitcher();
+  initialiseWorkspaceDisclosures();
+  initialiseSectionNavigation();
+  initialiseFullscreenReview();
+  initialiseFocusMode();
+  initialiseFrameKeyboardControls();
   const categories = availableCategories();
   $('featureCategorySelect').innerHTML = categories
     .map((category) => '<option value="' + category + '">' + category + '</option>')
@@ -2736,10 +4921,12 @@ function initialiseControls() {
     selectedFeatureId = feature?.id || null;
     renderFeatureOptions();
     renderSelectedFeature();
+    scheduleWorkspaceStateSave();
   };
   $('featureSelect').onchange = () => {
     selectedFeatureId = $('featureSelect').value;
     renderSelectedFeature();
+    scheduleWorkspaceStateSave();
   };
   $('restartButton').onclick = () => {
     if (playTimer) togglePlayback();
@@ -2753,8 +4940,256 @@ function initialiseControls() {
   $('trimAnalysisButton').onclick = trimAnalysisWindowAtCurrentFrame;
   $('featureGraph').addEventListener('click', graphClickToFrame);
   window.addEventListener('resize', () => renderSelectedFeature());
+  window.addEventListener('beforeunload', saveWorkspaceState);
   renderFeatureOptions();
   renderCategoryAvailabilityNote();
+}
+
+function initialiseWorkspaceDisclosures() {
+  applyWorkspaceState();
+  $('measurementsAction').onclick = () => {
+    $('featurePanel').open = true;
+    requestAnimationFrame(renderSelectedFeature);
+  };
+  $('movementStoryAction').onclick = () => {
+    $('phaseStoryPanel').open = true;
+    requestAnimationFrame(drawPhaseStoryVisuals);
+  };
+  WORKSPACE_DISCLOSURE_IDS.forEach((id) => {
+    const disclosure = $(id);
+    if (!disclosure) return;
+    disclosure.addEventListener('toggle', () => {
+      if (id === 'featurePanel' && disclosure.open) requestAnimationFrame(renderSelectedFeature);
+      if ((id === 'phaseStoryPanel' || id === 'phaseEvidenceDetails') && disclosure.open) {
+        requestAnimationFrame(drawPhaseStoryVisuals);
+      }
+      scheduleWorkspaceStateSave();
+    });
+  });
+}
+
+function initialiseSectionNavigation() {
+  const nav = $('resultsSectionNav');
+  const workspace = $('analysisFocusWorkspace');
+  const links = Array.from(nav.querySelectorAll('[data-section-target]'));
+  const sections = links.map((link) => ({
+    link,
+    section: $(link.dataset.sectionTarget),
+  })).filter((item) => item.section);
+  let updateScheduled = false;
+
+  const setActive = (targetId) => {
+    links.forEach((link) => {
+      const active = link.dataset.sectionTarget === targetId;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  const openSection = (targetId) => {
+    const section = $(targetId);
+    if (section instanceof HTMLDetailsElement) section.open = true;
+    if (targetId === 'evidenceSection') $('operatorAnalyticsPanel').open = true;
+    if (targetId === 'featurePanel') requestAnimationFrame(renderSelectedFeature);
+    if (targetId === 'phaseStoryPanel') requestAnimationFrame(drawPhaseStoryVisuals);
+    return section;
+  };
+
+  const updateActiveSection = () => {
+    updateScheduled = false;
+    const threshold = nav.getBoundingClientRect().bottom + 18;
+    let activeId = sections[0]?.section.id || 'resultOverview';
+    sections.forEach(({section}) => {
+      if (section.getBoundingClientRect().top <= threshold) activeId = section.id;
+    });
+    const documentBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+    if (documentBottom && !document.body.classList.contains('analysis-focus-active')) {
+      activeId = sections.at(-1)?.section.id || activeId;
+    }
+    setActive(activeId);
+  };
+
+  const scheduleUpdate = () => {
+    if (updateScheduled) return;
+    updateScheduled = true;
+    requestAnimationFrame(updateActiveSection);
+  };
+
+  links.forEach((link) => {
+    link.onclick = (event) => {
+      event.preventDefault();
+      const targetId = link.dataset.sectionTarget;
+      const section = openSection(targetId);
+      if (!section) return;
+      setActive(targetId);
+      requestAnimationFrame(() => {
+        section.scrollIntoView({behavior: 'smooth', block: 'start'});
+        window.history.replaceState(null, '', '#' + targetId);
+      });
+    };
+  });
+  window.addEventListener('scroll', scheduleUpdate, {passive: true});
+  workspace.addEventListener('scroll', scheduleUpdate, {passive: true});
+  window.addEventListener('resize', scheduleUpdate);
+  requestAnimationFrame(() => requestAnimationFrame(updateActiveSection));
+}
+
+function initialiseFullscreenReview() {
+  const panel = $('videoReviewPanel');
+  const button = $('fullscreenReviewButton');
+  if (!panel.requestFullscreen) {
+    button.hidden = true;
+    return;
+  }
+  button.onclick = async () => {
+    if (document.fullscreenElement === panel) await document.exitFullscreen();
+    else await panel.requestFullscreen();
+  };
+  document.addEventListener('fullscreenchange', () => {
+    button.textContent = document.fullscreenElement === panel
+      ? 'Exit fullscreen'
+      : 'Video fullscreen';
+  });
+}
+
+function initialiseFocusMode() {
+  const workspace = $('analysisFocusWorkspace');
+  const button = $('focusModeButton');
+  const setFocusMode = (active) => {
+    document.body.classList.toggle('analysis-focus-active', active);
+    button.setAttribute('aria-pressed', String(active));
+    button.textContent = active ? 'Exit analysis focus' : 'Analysis focus mode';
+    if (active) {
+      $('featurePanel').open = true;
+      workspace.scrollTop = 0;
+    }
+    scheduleWorkspaceStateSave();
+    requestAnimationFrame(renderSelectedFeature);
+  };
+  button.onclick = () => setFocusMode(!document.body.classList.contains('analysis-focus-active'));
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && document.body.classList.contains('analysis-focus-active')) {
+      setFocusMode(false);
+      button.focus();
+    }
+  });
+}
+
+function initialiseFrameKeyboardControls() {
+  document.addEventListener('keydown', (event) => {
+    const tagName = event.target?.tagName || '';
+    if (['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON', 'A'].includes(tagName) || event.metaKey || event.ctrlKey || event.altKey) {
+      return;
+    }
+    if (event.key === ' ' || event.code === 'Space') {
+      event.preventDefault();
+      togglePlayback();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      stepFrame(event.shiftKey ? -5 : -1);
+    } else if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      stepFrame(event.shiftKey ? 5 : 1);
+    } else if (event.key === 'Home') {
+      event.preventDefault();
+      setFrame(frameBounds().start);
+    } else if (event.key === 'End') {
+      event.preventDefault();
+      setFrame(frameBounds().end);
+    } else if (event.key.toLowerCase() === 'f') {
+      event.preventDefault();
+      $('focusModeButton').click();
+    }
+  });
+}
+
+function initialiseContextVideo() {
+  const context = result?.context_videos || {};
+  const clips = context.clips || [];
+  if (!context.available || !clips.length) return;
+
+  const button = $('contextVideoButton');
+  const dialog = $('contextVideoDialog');
+  const player = $('contextVideoPlayer');
+  const selector = $('contextClipSelector');
+  const select = $('contextClipSelect');
+  const setClip = (clipId) => {
+    const clip = clips.find((item) => item.clip_id === clipId) || clips[0];
+    if (!clip) return;
+    player.pause();
+    player.src = clip.video_url;
+    player.load();
+  };
+
+  select.innerHTML = clips.map((clip, index) => (
+    '<option value="' + escapeHtml(clip.clip_id) + '">'
+      + escapeHtml(clip.label || ('Real-time context ' + (index + 1)))
+      + '</option>'
+  )).join('');
+  selector.hidden = clips.length < 2;
+  select.onchange = () => setClip(select.value);
+  setClip(clips[0].clip_id);
+  button.hidden = false;
+  button.onclick = () => dialog.showModal();
+  $('closeContextVideoButton').onclick = () => dialog.close();
+  dialog.addEventListener('close', () => player.pause());
+  dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+}
+
+function initialiseAnalysisSwitcher() {
+  const analyses = result.available_analyses || [];
+  if (analyses.length < 2) return;
+  const switcher = $('analysisSwitcher');
+  const toggle = $('analysisSwitcherButton');
+  const menu = $('analysisSwitcherMenu');
+  const select = $('analysisCaseSelect');
+  const openButton = $('openAnalysisButton');
+  const grouped = new Map();
+  analyses.forEach((analysis) => {
+    const playerName = analysis.player_name || 'Unknown player';
+    if (!grouped.has(playerName)) grouped.set(playerName, []);
+    grouped.get(playerName).push(analysis);
+  });
+  select.innerHTML = [...grouped.entries()].map(([playerName, playerAnalyses]) => `
+    <optgroup label="${escapeHtml(playerName)}">
+      ${playerAnalyses.map((analysis) => `
+        <option value="${escapeHtml(analysis.slug)}">${escapeHtml(analysis.view_label || 'Analysis')}</option>
+      `).join('')}
+    </optgroup>
+  `).join('');
+  select.value = result.case.slug;
+  const syncOpenButton = () => {
+    openButton.disabled = !select.value || select.value === result.case.slug;
+  };
+  const closeMenu = () => {
+    menu.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+  };
+  switcher.hidden = false;
+  syncOpenButton();
+  toggle.onclick = () => {
+    const opening = menu.hidden;
+    menu.hidden = !opening;
+    toggle.setAttribute('aria-expanded', String(opening));
+    if (opening) select.focus();
+  };
+  select.onchange = syncOpenButton;
+  openButton.onclick = () => {
+    if (!select.value || select.value === result.case.slug) return;
+    window.location.href = '/results?case=' + encodeURIComponent(select.value);
+  };
+  document.addEventListener('click', (event) => {
+    if (!menu.hidden && !switcher.contains(event.target)) closeMenu();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !menu.hidden) {
+      closeMenu();
+      toggle.focus();
+    }
+  });
 }
 
 function initialiseFeatureSelection() {
@@ -2765,8 +5200,11 @@ function initialiseFeatureSelection() {
     return;
   }
   if (!categories.includes(selectedCategory)) selectedCategory = categories[0];
-  const feature = firstAvailableFeature(FEATURE_CATEGORIES[selectedCategory] || []);
-  selectedFeatureId = feature?.id || null;
+  const features = availableFeatures(FEATURE_CATEGORIES[selectedCategory] || []);
+  if (!features.some((feature) => feature.id === selectedFeatureId)) {
+    const feature = firstAvailableFeature(FEATURE_CATEGORIES[selectedCategory] || []);
+    selectedFeatureId = feature?.id || null;
+  }
 }
 
 async function trimAnalysisWindowAtCurrentFrame() {
@@ -2815,13 +5253,16 @@ async function trimAnalysisWindowAtCurrentFrame() {
     window.location.href = data.result_url + '&updated=' + Date.now();
   } catch (error) {
     button.disabled = false;
-    $('trimAnalysisStatus').textContent = error.message;
+    $('trimAnalysisStatus').textContent = 'Could not regenerate. No saved annotation or previous analysis was changed. '
+      + (error.message || 'Reopen annotation to check the movement window and target, then try again.');
+    $('analysisBoundaryControl').open = true;
   }
 }
 
 function renderAll() {
   renderViewControls();
   renderHeader();
+  renderResultOverview();
   renderPhaseStory();
   setFrame(currentFrame, {redrawFeature: false});
   renderSelectedFeature();
@@ -2841,12 +5282,15 @@ function renderViewControls() {
   $('viewSelect').value = result.case_views.current_view_slug || result.case?.slug || caseSlug;
   $('viewSelect').onchange = () => {
     const nextSlug = $('viewSelect').value;
-    if (nextSlug && nextSlug !== caseSlug) {
-      window.location.href = '/results?case=' + encodeURIComponent(nextSlug);
-    }
+    const nextView = views.find((view) => view.slug === nextSlug);
+    if (nextView && nextSlug !== caseSlug) openCaseView(nextView);
   };
-  $('viewCount').textContent = views.length + ' views available | current: '
-    + (result.view?.perspective || 'unknown') + ' perspective';
+  const analysedViewCount = views.filter((view) => view.results_available).length;
+  const pendingViewCount = views.length - analysedViewCount;
+  $('viewCount').textContent = analysedViewCount + ' analysed view'
+    + (analysedViewCount === 1 ? '' : 's')
+    + (pendingViewCount ? ' · ' + pendingViewCount + ' not analysed' : '')
+    + ' | current: ' + (result.view?.perspective || 'unknown') + ' perspective';
   $('synthesisButton').onclick = () => {
     const synthesis = $('caseSynthesisPanel');
     synthesis.hidden = !synthesis.hidden;
@@ -2861,8 +5305,9 @@ function caseSynthesisHtml() {
     '<tr><td><strong>' + escapeHtml(view.view_label || view.view_id) + '</strong>'
     + (view.primary_view ? '<br /><span class="status">Primary</span>' : '')
     + '</td><td>' + escapeHtml(view.perspective || 'unknown')
-    + '</td><td>' + escapeHtml(view.results_available ? 'Analysed' : 'Not analysed yet')
-    + '</td><td><a href="/results?case=' + encodeURIComponent(view.slug) + '">Open view</a></td></tr>'
+    + '</td><td>' + escapeHtml(view.results_available ? 'Analysed' : caseViewStatusLabel(view))
+    + '</td><td><a href="' + caseViewUrl(view) + '">'
+    + escapeHtml(view.results_available ? 'Open analysis' : 'Open annotation') + '</a></td></tr>'
   )).join('');
   if (!synthesis.available) {
     return '<h3>Multi-view movement synthesis</h3>'
@@ -2883,35 +5328,93 @@ function caseSynthesisHtml() {
   }).join('');
   const statusLine = (synthesis.corroborated || []).length + ' corroborated feature(s), '
     + (synthesis.disagreements || []).length + ' disagreement(s).';
+  const completedViewCount = (synthesis.completed_views || []).length;
+  const unavailableViewCount = (synthesis.unavailable_views || []).length;
   return '<h3>Multi-view movement synthesis</h3>'
     + '<p class="subtle">Case-level synthesis selects supporting views feature by feature. It does not average projected angles or pool descriptive statistics across camera views.</p>'
+    + '<p><strong>' + completedViewCount + ' analysed view' + (completedViewCount === 1 ? '' : 's')
+    + ' contribute to this synthesis.</strong>'
+    + (unavailableViewCount ? ' ' + unavailableViewCount + ' registered view' + (unavailableViewCount === 1 ? ' is' : 's are') + ' not analysed.' : '')
+    + '</p>'
+    + '<table class="compact-table"><thead><tr><th>View</th><th>Perspective</th><th>Status</th><th>Inspect</th></tr></thead><tbody>'
+    + viewRows + '</tbody></table>'
     + '<p><span class="status">' + escapeHtml(statusLine) + '</span></p>'
     + '<table class="compact-table"><thead><tr><th>Feature</th><th>Preferred evidence view</th><th>Support</th><th>Status</th></tr></thead><tbody>'
     + featureRows + '</tbody></table>'
-    + '<details class="advanced-details"><summary>View list and alignment note</summary>'
-    + '<p class="subtle">' + escapeHtml(synthesis.alignment?.note || '') + '</p>'
-    + '<table class="compact-table"><thead><tr><th>View</th><th>Perspective</th><th>Status</th><th>Inspect</th></tr></thead><tbody>'
-    + viewRows + '</tbody></table></details>';
+    + '<details class="advanced-details"><summary>Alignment note</summary>'
+    + '<p class="subtle">' + escapeHtml(synthesis.alignment?.note || '') + '</p></details>';
 }
 
 function renderPhaseStory() {
   const story = result?.movement_story || {};
   const phases = story.phases || [];
+  const evidenceInterval = isSupportedEvidenceInterval(story);
+  const partialScope = story?.metadata?.analysis_scope?.type === 'PARTIAL_MOVEMENT_WINDOW';
+  const scope = story?.metadata?.analysis_scope || {};
   const panel = $('phaseStoryPanel');
+  const legend = $('phaseStoryLegend');
+  configureMovementStoryPresentation(evidenceInterval);
   if (!phases.length) {
-    panel.hidden = true;
+    panel.hidden = false;
+    $('phaseEvidenceDetails').open = true;
+    if (legend) legend.hidden = true;
+    $('phaseStorySummary').innerHTML = '<span class="status limited">PHASES WITHHELD</span>';
+    $('wholeMovementSummary').innerHTML = phaseWithholdingHtml(story);
+    $('phaseStoryGrid').innerHTML = '';
+    const inspectButton = $('inspectSupportedMeasurementsButton');
+    if (inspectButton) {
+      inspectButton.onclick = () => {
+        $('featurePanel').open = true;
+        $('featurePanel').scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+        });
+        requestAnimationFrame(renderSelectedFeature);
+      };
+    }
+    return;
+  }
+  if (evidenceInterval) {
+    const interval = phases[0];
+    const supportedStart = Number(scope.start_frame ?? interval.start_frame);
+    const supportedEnd = Number(scope.end_frame ?? interval.end_frame);
+    const position = intervalPositionLabel(scope.position_in_movement_window);
+    const includesEnd = Boolean(scope.includes_annotated_movement_end);
+    panel.hidden = false;
+    if (legend) legend.hidden = true;
+    $('phaseStorySummary').innerHTML = '<span class="status">SUPPORTED EVIDENCE INTERVAL</span> '
+      + 'Source frames ' + supportedStart + '-' + supportedEnd + ' · '
+      + position + ' · Includes annotated Movement End: ' + (includesEnd ? 'Yes' : 'No') + '.';
+    $('wholeMovementSummary').innerHTML = '<h3>Supported Evidence Interval Summary</h3><p>'
+      + escapeHtml(story.sequence_summary) + '</p>';
+    $('phaseStoryGrid').innerHTML = evidenceIntervalHtml(interval, scope);
+    const details = $('phaseEvidenceDetails');
+    details.open = true;
+    details.ontoggle = null;
     return;
   }
   panel.hidden = false;
+  if (legend) legend.hidden = false;
+  const supportedStart = partialScope ? scope.start_frame : result.movement_window.movement_start_frame;
+  const supportedEnd = partialScope ? scope.end_frame : result.movement_window.movement_end_frame;
   $('phaseStorySummary').innerHTML = '<span class="status">' + escapeHtml(story.status || 'SUPPORTED') + '</span> '
     + phases.length + ' evidence-backed phase' + (phases.length === 1 ? '' : 's') + ' across source frames '
-    + result.movement_window.movement_start_frame + '-' + result.movement_window.movement_end_frame + '.';
-  $('wholeMovementSummary').innerHTML = '<h3>Whole Movement Summary</h3><p>'
-    + escapeHtml(wholeMovementSummary(story, phases)) + '</p>';
+    + supportedStart + '-' + supportedEnd
+    + (partialScope ? '; frames outside this supported block remain unsegmented.' : '.');
+  $('wholeMovementSummary').innerHTML = '<h3>'
+    + (partialScope ? 'Supported Evidence Block Summary' : 'Whole Movement Summary')
+    + '</h3><p>'
+    + escapeHtml(partialScope ? story.sequence_summary : wholeMovementSummary(story, phases)) + '</p>';
   $('phaseStoryGrid').innerHTML = phases.map((phase) => {
     const evidence = phase.evidence_summary?.evidence_status || 'EVIDENCE';
+    const phaseDriverDisplayOrder = ['trunk_pelvis', 'upper_body', 'hip_knee_ankle_chain'];
     const drivers = canonicalPhaseDrivers(phaseDrivers(phase))
       .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
+      .sort((a, b) => {
+        const aIndex = phaseDriverDisplayOrder.indexOf(a.key);
+        const bIndex = phaseDriverDisplayOrder.indexOf(b.key);
+        return (aIndex === -1 ? phaseDriverDisplayOrder.length : aIndex)
+          - (bIndex === -1 ? phaseDriverDisplayOrder.length : bIndex);
+      })
       .slice(0, 4);
     const visualStory = visualStoryForPhase(phase.phase_id);
     const snapshots = phaseSalientFrames(phase, visualStory);
@@ -2919,10 +5422,10 @@ function renderPhaseStory() {
       + '<span>Phase ' + phase.phase_index + ' | frames ' + phase.start_frame + '-' + phase.end_frame + '</span>'
       + '<h3>' + escapeHtml(phase.title) + '</h3>'
       + '<p><strong class="status">' + escapeHtml(evidence) + '</strong></p>'
-      + '<div class="phase-explanation"><strong>What happened?</strong><p>'
-      + escapeHtml(phaseWhatHappened(phase, drivers)) + '</p></div>'
-      + '<div class="phase-explanation"><strong>What defines this phase?</strong><p>'
-      + escapeHtml(phaseBoundaryExplanation(phase, drivers)) + '</p></div>'
+      + '<div class="phase-explanation"><strong>Phase summary</strong><p>'
+      + escapeHtml(phaseSummary(phase, drivers, visualStory)) + '</p></div>'
+      + '<div class="phase-explanation"><strong>Why this phase starts here</strong><p>'
+      + escapeHtml(phaseStartRationale(phase, drivers)) + '</p></div>'
       + '<div class="phase-explanation"><strong>Main movement changes</strong>'
       + phaseChangesHtml(phase, drivers, visualStory) + '</div>'
       + phaseSnapshotsHtml(phase, snapshots)
@@ -2937,18 +5440,233 @@ function renderPhaseStory() {
       renderPhaseStory();
     };
   });
+  [...document.querySelectorAll('[data-phase-upper-body-view]')].forEach((button) => {
+    button.onclick = () => {
+      phaseUpperBodyViewModes[button.dataset.phaseId] = button.dataset.phaseUpperBodyView;
+      renderPhaseStory();
+    };
+  });
+  const phaseEvidenceDetails = $('phaseEvidenceDetails');
+  phaseEvidenceDetails.ontoggle = () => {
+    if (phaseEvidenceDetails.open) requestAnimationFrame(drawPhaseStoryVisuals);
+  };
   requestAnimationFrame(drawPhaseStoryVisuals);
+}
+
+function isSupportedEvidenceInterval(story = result?.movement_story || {}) {
+  return story?.status === 'SUPPORTED_EVIDENCE_INTERVAL'
+    || story?.metadata?.presentation_mode === 'SUPPORTED_EVIDENCE_INTERVAL';
+}
+
+function phaseDecisionJustification(story = result?.movement_story || {}) {
+  const saved = story?.metadata?.phase_decision_rationale
+    || story?.metadata?.responsible_ai_phase_decision;
+  if (saved?.explanation) return saved;
+  if (isSupportedEvidenceInterval(story)) {
+    return {
+      decision: 'PHASES_NOT_PRODUCED',
+      reason_code: 'NO_SUPPORTED_MULTIVARIATE_TRANSITION',
+      explanation: 'The rule-based phase procedure did not produce distinct phases because no sustained multivariate transition satisfied the configured phase-boundary rule.',
+      safety_rationale: 'Withholding a phase sequence avoids imposing a before/after structure or implying an injury moment that the supported measurements do not establish.',
+      evidence_preserved: 'The supported framewise measurements and evidence interval remain visible, including their scope and evidence gaps.',
+      method_note: 'This decision was made by a deterministic rule-based procedure. No AI or generative model was used.',
+    };
+  }
+  return {
+    decision: 'PHASES_NOT_PRODUCED',
+    reason_code: 'INSUFFICIENT_CONTINUOUS_MULTIVARIATE_EVIDENCE',
+    explanation: 'The rule-based phase procedure did not produce phases because too few supported movement descriptors formed a continuous block that satisfied the configured evidence safeguards.',
+    safety_rationale: 'Withholding phases avoids turning unsupported values or fragmented evidence into a seemingly complete movement story.',
+    evidence_preserved: 'Available measurements and frame-level support reasons remain visible for human inspection.',
+    method_note: 'This decision was made by a deterministic rule-based procedure. No AI or generative model was used.',
+  };
+}
+
+function configureMovementStoryPresentation(evidenceInterval) {
+  $('overviewStoryTitle').textContent = evidenceInterval
+    ? 'Supported evidence at a glance'
+    : 'Movement at a glance';
+  $('movementStoryAction').textContent = evidenceInterval
+    ? 'Explore the Supported Evidence Interval'
+    : 'Explore the Movement Story';
+  $('movementStoryDetailTitle').textContent = evidenceInterval
+    ? 'Supported Evidence Interval · measurement detail'
+    : 'Movement Story · interpretive phase detail';
+  $('phaseMethodTitle').textContent = evidenceInterval
+    ? 'How this interval was selected'
+    : 'How phases were divided';
+  $('phaseMethodText').textContent = evidenceInterval
+    ? 'This is one continuous block that met the measurement-support, duration, and scope safeguards. No sustained multivariate transition met the phase-boundary rule, so the block is not presented as a phase sequence. It does not identify injury timing.'
+    : 'Within the human-selected movement window, a new phase begins only when several supported 2D movement measurements change together and the changed pattern persists. A one-frame spike or a gap in evidence does not create a boundary. These are measurement-based boundaries; they do not identify foot contact, force, ACL loading, or injury timing.';
+  $('phaseEvidenceSummary').textContent = evidenceInterval
+    ? 'Explore interval evidence'
+    : 'Explore phase-by-phase evidence';
+  $('phaseComparisonTitle').textContent = evidenceInterval
+    ? 'Interval measurement summary'
+    : 'Phase comparison';
+}
+
+function evidenceIntervalHtml(interval, scope) {
+  const decision = phaseDecisionJustification();
+  const drivers = canonicalPhaseDrivers(phaseDrivers(interval))
+    .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
+    .slice(0, 4);
+  const observations = drivers.map((driver) => (
+    '<li><strong>' + escapeHtml(driver.label) + '</strong>: '
+    + escapeHtml(phaseDefinitionSentence(interval, driver))
+    + ' <span class="status">' + escapeHtml(driver.status) + '</span></li>'
+  )).join('');
+  const position = intervalPositionLabel(scope.position_in_movement_window);
+  const includesEnd = Boolean(scope.includes_annotated_movement_end);
+  return '<article class="phase-card evidence-interval-card">'
+    + '<span>Supported measurement interval · frames ' + interval.start_frame + '-' + interval.end_frame + '</span>'
+    + '<h3>No supported transition detected</h3>'
+    + '<p><strong class="status">' + escapeHtml(interval.evidence_summary?.evidence_status || 'EVIDENCE') + '</strong></p>'
+    + '<div class="phase-explanation phase-decision-rationale"><strong>Why phases were not generated</strong><p>'
+    + escapeHtml(decision.explanation) + '</p><p class="subtle">'
+    + escapeHtml(decision.safety_rationale + ' ' + decision.evidence_preserved + ' ' + decision.method_note)
+    + '</p></div>'
+    + '<div class="phase-explanation"><strong>What is observable in this interval</strong><p>'
+    + escapeHtml(phaseObservableSummary(interval, drivers, visualStoryForPhase(interval.phase_id))) + ' '
+    + escapeHtml(phaseEvidenceQualification(interval)) + '</p></div>'
+    + (observations ? '<div class="phase-explanation"><strong>Supported measurement changes</strong><ul>' + observations + '</ul></div>' : '')
+    + '<div class="phase-explanation"><strong>Scope and limitation</strong><p>'
+    + escapeHtml(position + '. Includes annotated Movement End: ' + (includesEnd ? 'Yes' : 'No')
+      + '. This interval is not a before/after phase comparison and does not establish the injury moment.')
+    + '</p></div></article>';
+}
+
+function intervalPositionLabel(value) {
+  return {
+    EARLY: 'Early portion of the Movement Window',
+    MIDDLE: 'Middle portion of the Movement Window',
+    LATE: 'Late portion of the Movement Window',
+    FULL_WINDOW: 'Complete Movement Window',
+  }[String(value || '').toUpperCase()] || 'Position within the Movement Window unavailable';
+}
+
+function phaseWithholdingHtml(story) {
+  const explanation = result?.phase_withholding_explanation || {};
+  const decision = phaseDecisionJustification(story);
+  if (!explanation.withheld) {
+    return '<h3>Phase segmentation unavailable</h3><p>'
+      + escapeHtml(story.sequence_summary || 'There is not enough supported movement evidence to divide this sequence into defensible phases.')
+      + '</p><div class="phase-explanation phase-decision-rationale"><strong>Why phases were not generated</strong><p>'
+      + escapeHtml(decision.explanation) + '</p><p class="subtle">'
+      + escapeHtml(decision.safety_rationale + ' ' + decision.evidence_preserved + ' ' + decision.method_note)
+      + '</p></div><p class="subtle">' + escapeHtml(phaseEvidenceShortfall(story)) + '</p>';
+  }
+  const total = Number(explanation.total_frames) || 0;
+  const pose = explanation.pose || {};
+  const target = explanation.defensible_target || {};
+  const geometry = explanation.best_geometry || {};
+  const reviewed = explanation.reviewed_geometry || {};
+  const targetPresent = explanation.target_present_geometry || {};
+  const continuous = explanation.continuous_geometry || {};
+  const rule = explanation.phase_rule || {};
+  const threshold = Number(rule.minimum_geometry_coverage);
+  const coverage = Number(geometry.coverage);
+  const shortfall = Number.isFinite(threshold) && Number.isFinite(coverage)
+    ? Math.max(0, threshold - coverage)
+    : null;
+  const reasons = (explanation.frame_reasons || []).map((item) => (
+    '<li><strong>' + escapeHtml(item.count) + ' frame' + (Number(item.count) === 1 ? '' : 's')
+    + ': ' + escapeHtml(item.label) + '.</strong> ' + escapeHtml(item.explanation) + '</li>'
+  )).join('');
+  const geometryDecision = Number.isFinite(coverage) && Number.isFinite(threshold)
+    ? 'The best-covered geometry candidate reached ' + phasePercent(coverage)
+      + ', while phase segmentation requires ' + phasePercent(threshold) + '.'
+      + (shortfall > 0 ? ' The shortfall was ' + phasePercent(shortfall) + ' of the movement window.' : '')
+    : phaseEvidenceShortfall(story);
+  const reviewedDecision = Number.isFinite(Number(reviewed.coverage))
+    ? ' On human-reviewed target-identity frames, the strongest feature yielded '
+      + phasePercent(reviewed.coverage) + ' (' + Number(reviewed.frames || 0) + ' / '
+      + Number(reviewed.total_frames || 0) + ' reviewed frames).'
+    : '';
+  return '<div class="phase-withheld-summary">'
+    + '<h3>Phase segmentation unavailable</h3><p>'
+    + escapeHtml(story.sequence_summary || 'There is not enough supported movement evidence to divide this sequence into defensible phases.')
+    + '</p><div class="phase-withheld-stats">'
+    + phaseWithheldStat('Pose available', pose.frames, total, pose.coverage, 'The pose backend returned target-region pose evidence.')
+    + phaseWithheldStat('Defensible target', target.frames, total, target.coverage, 'Frames accepted by target and continuity QC.')
+    + phaseWithheldStat('Best Movement Window coverage', geometry.frames, total, geometry.coverage, geometry.display_label || 'Best-covered geometry measurement')
+    + phaseWithheldStat('Best reviewed-frame yield', reviewed.frames, reviewed.total_frames, reviewed.coverage, reviewed.display_label || 'Human-reviewed target-identity frames')
+    + phaseWithheldStat('Best target-present yield', targetPresent.frames, targetPresent.total_frames, targetPresent.coverage, targetPresent.display_label || 'Defensible target-present frames')
+    + phaseWithheldStat('Longest continuous geometry', continuous.frames, total, continuous.coverage,
+      Number.isFinite(Number(continuous.duration_ms))
+        ? (Number(continuous.duration_ms) / 1000).toFixed(2) + ' s · frames ' + continuous.start_frame + '-' + continuous.end_frame
+        : (continuous.display_label || 'Longest supported measurement block'))
+    + '<div class="phase-withheld-stat"><span>Eligible phase descriptors</span><strong>'
+    + escapeHtml(rule.eligible_descriptors ?? 0) + ' / ' + escapeHtml(rule.minimum_eligible_descriptors ?? 0)
+    + '</strong><small>Available / required</small></div></div>'
+    + '<div class="phase-explanation phase-decision-rationale"><strong>Why phases were not generated</strong><p>'
+    + escapeHtml(decision.explanation) + '</p><p class="subtle">'
+    + escapeHtml(decision.safety_rationale + ' ' + decision.evidence_preserved + ' ' + decision.method_note)
+    + '</p></div><div class="phase-withheld-reasons"><div><h4>Why phases were withheld</h4><p class="subtle">'
+    + escapeHtml(geometryDecision + reviewedDecision) + '</p><ul>' + reasons + '</ul></div>'
+    + '<div><h4>What the software can and cannot conclude</h4><p class="phase-withheld-note">'
+    + escapeHtml(explanation.cause_note || '') + '</p><p class="subtle">'
+    + escapeHtml(explanation.availability_note || '') + '</p></div></div>'
+    + '<button id="inspectSupportedMeasurementsButton" type="button">Inspect supported measurements</button>'
+    + '</div>';
+}
+
+function phaseWithheldStat(label, frames, total, coverage, note) {
+  const frameText = Number.isFinite(Number(frames)) && total
+    ? Number(frames) + ' / ' + total + ' frames'
+    : 'Unavailable';
+  return '<div class="phase-withheld-stat"><span>' + escapeHtml(label) + '</span><strong>'
+    + escapeHtml(frameText) + '</strong><small>' + escapeHtml(phasePercent(coverage))
+    + ' · ' + escapeHtml(note) + '</small></div>';
+}
+
+function phasePercent(value) {
+  if (value === null || value === undefined || !Number.isFinite(Number(value))) return 'Unavailable';
+  return (Math.round(Number(value) * 1000) / 10).toFixed(1) + '%';
+}
+
+function phaseEvidenceShortfall(story) {
+  const threshold = Number(story?.metadata?.configuration?.minimum_geometry_completeness);
+  const candidates = [
+    ...(story?.eligible_descriptors || []),
+    ...(story?.excluded_descriptors || [])
+  ]
+    .filter(item => item.kind === 'geometry')
+    .map(item => Number(item.geometry_completeness))
+    .filter(Number.isFinite);
+  const best = candidates.length ? Math.max(...candidates) : null;
+  if (best !== null && Number.isFinite(threshold)) {
+    return 'The strongest candidate measurement covers ' + Math.round(best * 1000) / 10
+      + '% of the movement window; phase segmentation requires '
+      + Math.round(threshold * 1000) / 10
+      + '%. Framewise supported measurements remain available below.';
+  }
+  return 'Framewise supported measurements remain available below, including visible gaps where evidence was withheld.';
 }
 
 function wholeMovementSummary(story, phases) {
   if (!phases.length) return 'A whole-movement description is unavailable for this case.';
   const first = phases[0];
   const last = phases[phases.length - 1];
+  const phaseObservation = (phase) => phaseObservableSummary(
+    phase,
+    canonicalPhaseDrivers(phaseDrivers(phase))
+      .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
+      .slice(0, 4),
+    visualStoryForPhase(phase.phase_id)
+  );
   const sequence = phases.length === 1
     ? 'The observable sequence remained within one supported phase: ' + first.title.toLowerCase() + '.'
     : 'The observable sequence developed across ' + phases.length + ' supported phases, beginning with '
       + first.title.toLowerCase() + ' and ending with ' + last.title.toLowerCase() + '.';
-  if (phases.length === 1) return sequence;
+  if (phases.length === 1) {
+    const observation = phaseObservation(first);
+    return [
+      sequence,
+      observation ? 'Across this interval, ' + lowerFirst(observation) : '',
+      phaseEvidenceQualification(first),
+    ].filter(Boolean).join(' ');
+  }
   const transition = phases[1];
   const categories = naturalList(canonicalPhaseDrivers(phaseDrivers(transition))
     .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
@@ -2957,26 +5675,258 @@ function wholeMovementSummary(story, phases) {
   const change = categories
     ? 'The clearest phase transition occurs near source frame ' + transition.start_frame + ', where ' + categories + ' change together.'
     : 'The clearest phase transition occurs near source frame ' + transition.start_frame + '.';
-  return sequence + ' ' + change;
+  const openingObservation = phaseObservation(first);
+  const finalObservation = phaseObservation(last);
+  return [
+    sequence,
+    openingObservation ? 'During the opening phase, ' + lowerFirst(openingObservation) : '',
+    change,
+    finalObservation ? 'After this transition, ' + lowerFirst(finalObservation) : '',
+    phaseEvidenceQualification(last),
+  ].filter(Boolean).join(' ');
 }
 
-function phaseWhatHappened(phase, drivers) {
-  const actions = drivers.slice(0, 3).map((driver) => storyCategoryAction(driver.key)).filter(Boolean);
+function movementAtAGlance(story, phases) {
+  if (!phases.length) {
+    return 'No defensible phase sequence was produced. Supported framewise measurements remain available.';
+  }
+  const scope = story?.metadata?.analysis_scope || {};
+  if (isSupportedEvidenceInterval(story)) {
+    const interval = phases[0];
+    const start = scope.start_frame ?? interval.start_frame;
+    const end = scope.end_frame ?? interval.end_frame;
+    return 'One supported evidence interval across source frames ' + start + '-' + end
+      + '. No sustained multivariate transition met the phase rule.';
+  }
+  const first = phases[0];
+  const last = phases[phases.length - 1];
+  if (phases.length === 1) {
+    return 'One supported phase, ' + first.title.toLowerCase() + ', across source frames '
+      + first.start_frame + '-' + first.end_frame + '. No additional supported phase transition was detected.';
+  }
+  const transition = phases[1];
+  const categories = naturalList(canonicalPhaseDrivers(phaseDrivers(transition))
+    .filter((driver) => !['movement_timing', 'movement_path'].includes(driver.key))
+    .slice(0, 3)
+    .map((driver) => storyCategoryPlainLabel(driver.key).toLowerCase()));
+  return phases.length + ' supported phases, from ' + first.title.toLowerCase() + ' to '
+    + last.title.toLowerCase() + '. Clearest combined change near source frame '
+    + transition.start_frame + (categories ? ', involving ' + categories : '') + '.';
+}
+
+function phaseSummary(phase, drivers, visualStory) {
+  return [
+    phaseObservableSummary(phase, drivers, visualStory),
+    phaseBoundarySummary(phase),
+    phaseEvidenceQualification(phase),
+  ].filter(Boolean).join(' ');
+}
+
+function phaseObservableSummary(phase, drivers, visualStory) {
+  const categories = phaseNarrativeCategories(phase, drivers, visualStory);
+  const actions = categories.map((category) => phaseCategoryNarrative(phase, category)).filter(Boolean).slice(0, 2);
   if (!actions.length) {
     return 'The supported projected movement followed a consistent pattern through this interval.';
   }
-  return 'During this interval, ' + naturalList(actions) + '.';
+  const sentences = actions.map((action) => action.replace(/\.$/, ''));
+  if (sentences.length === 1) return sentences[0] + '.';
+  return sentences[0] + '. At the same time, ' + lowerFirst(sentences[1]) + '.';
 }
 
-function phaseBoundaryExplanation(phase, drivers) {
-  const categories = naturalList(drivers.slice(0, 3).map((driver) => storyCategoryPlainLabel(driver.key)));
+function phaseBoundarySummary(phase) {
+  const phases = result?.movement_story?.phases || [];
   if (Number(phase.phase_index) === 1) {
-    return 'This is the opening continuous interval before the next supported multidimensional movement change'
-      + (categories ? ', led by ' + categories : '') + '.';
+    const nextPhase = phases.find((item) => Number(item.phase_index) === 2);
+    return nextPhase
+      ? 'This pattern continued until several measured movement features changed together at frame '
+        + nextPhase.start_frame + '.'
+      : 'This pattern continued throughout the observable interval.';
   }
-  return 'This phase begins at source frame ' + phase.start_frame
-    + ', where the supported movement-change pattern separates from the preceding interval'
-    + (categories ? ', led by ' + categories : '') + '.';
+  const isFinal = Number(phase.phase_index) === phases.length;
+  return 'At frame ' + phase.start_frame
+    + ', several measured movement features changed together, marking the start of '
+    + (isFinal ? 'the final observable phase.' : 'this phase.');
+}
+
+function phaseStartRationale(phase, drivers) {
+  const phaseIndex = Number(phase.phase_index);
+  const startFrame = Number(phase.start_frame);
+  if (phaseIndex === 1) {
+    return 'This opening phase starts at source frame ' + startFrame
+      + ' because that is the beginning of the human-selected movement window.';
+  }
+  const transitions = result?.movement_story?.transitions || [];
+  const transition = transitions.find((item) => (
+    item.to_phase_id === phase.phase_id
+    || Number(item.transition_frame) === startFrame
+  ));
+  const fallbackFamilies = canonicalPhaseDrivers(drivers).map((driver) => driver.key);
+  const rawFamilies = transition?.dominant_feature_families?.length
+    ? transition.dominant_feature_families
+    : fallbackFamilies;
+  const families = [];
+  rawFamilies.forEach((family) => {
+    const canonical = family === 'bilateral_limb_relationship'
+      ? 'hip_knee_ankle_chain'
+      : family;
+    if (!families.includes(canonical)) families.push(canonical);
+  });
+  const labels = naturalList(families.slice(0, 3).map((family) => (
+    storyCategoryPlainLabel(family).toLowerCase()
+  )));
+  if (!labels) {
+    return 'This phase starts at source frame ' + startFrame
+      + ' because the supported measurements showed a sustained combined change at this boundary.';
+  }
+  return 'This phase starts at source frame ' + startFrame + ' because supported changes in '
+    + labels + ' occurred together and the changed pattern persisted long enough to meet the phase-boundary rules.';
+}
+
+function phaseEvidenceQualification(phase) {
+  const evidence = phase.evidence_summary || {};
+  const status = String(evidence.evidence_status || '').toUpperCase();
+  const coverage = Number(evidence.finite_change_fraction);
+  const partial = Number.isFinite(coverage) && coverage < 0.8;
+  if (status === 'MODERATE') {
+    return partial
+      ? 'Evidence is moderate because usable measurements were available for only part of this interval.'
+      : 'Evidence is moderate for this interval.';
+  }
+  if (status === 'LIMITED') {
+    return partial
+      ? 'Evidence is limited because usable measurements were available for only part of this interval.'
+      : 'Evidence is limited for this interval.';
+  }
+  return '';
+}
+
+function phaseNarrativeCategories(phase, drivers, visualStory) {
+  const observations = (visualStory?.observations || [])
+    .filter((item) => Number(item?.support?.supported_fraction || 0) >= 0.45)
+    .filter((item) => !['movement_path', 'movement_timing'].includes(item.category))
+    .map((item) => item.category);
+  const fallback = drivers
+    .filter((driver) => !['movement_path', 'movement_timing'].includes(driver.key))
+    .map((driver) => driver.key);
+  const ordered = [];
+  [...observations, ...fallback].forEach((category) => {
+    const canonical = category === 'bilateral_limb_relationship' ? 'hip_knee_ankle_chain' : category;
+    if (!ordered.includes(canonical)) ordered.push(canonical);
+  });
+  const hka = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
+  const hkaChange = canonicalStatChange(hka);
+  if (phaseStatUsable(hka) && Number.isFinite(hkaChange) && Math.abs(hkaChange) >= 8) {
+    const index = ordered.indexOf('hip_knee_ankle_chain');
+    if (index > 0) ordered.splice(index, 1);
+    if (index !== -1) ordered.unshift('hip_knee_ankle_chain');
+  }
+  return ordered;
+}
+
+function phaseCategoryNarrative(phase, category) {
+  if (category === 'hip_knee_ankle_chain') {
+    return phaseHkaNarrative(phase);
+  }
+  if (category === 'trunk_pelvis') {
+    const changes = supportedPhaseChanges(phase, torsoMetricDefinitions());
+    if (!changes.length) return '';
+    const maximum = Math.max(...changes);
+    if (maximum < 8) return 'The projected trunk and pelvis remained relatively stable';
+    return maximum >= 20
+      ? 'The projected trunk and pelvis reoriented substantially'
+      : 'The projected trunk and pelvis reoriented';
+  }
+  if (category === 'upper_body') {
+    const side = upperBodySide(phase);
+    if (!side) return '';
+    const changes = supportedPhaseChanges(phase, upperBodyMetricDefinitions(side));
+    if (!changes.length) return '';
+    const maximum = Math.max(...changes);
+    if (maximum < 8) return 'The supported projected upper-body configuration remained relatively stable';
+    return maximum >= 20
+      ? 'The supported projected upper-body configuration changed substantially'
+      : 'The supported projected upper-body configuration changed';
+  }
+  return '';
+}
+
+function phaseHkaNarrative(phase) {
+  const injuredStat = phaseMetricStat(phase, 'injured_hka_angle_2d_deg');
+  const uninjuredStat = phaseMetricStat(phase, 'contralateral_hka_angle_2d_deg');
+  const injuredChange = canonicalStatChange(injuredStat);
+  const uninjuredChange = canonicalStatChange(uninjuredStat);
+  if (phaseStatUsable(injuredStat) && phaseStatUsable(uninjuredStat)
+      && Number.isFinite(injuredChange) && Number.isFinite(uninjuredChange)) {
+    const bothClosed = injuredChange <= -8 && uninjuredChange <= -8;
+    const bothOpened = injuredChange >= 8 && uninjuredChange >= 8;
+    if (bothClosed || bothOpened) {
+      const direction = bothClosed ? 'closed' : 'open';
+      const verb = bothClosed ? 'closed' : 'opened';
+      let summary = 'Both legs moved toward a more ' + direction
+        + ' projected hip–knee–ankle position';
+      const magnitudeDifference = Math.abs(injuredChange) - Math.abs(uninjuredChange);
+      if (Math.abs(magnitudeDifference) >= 8) {
+        const leadingSide = magnitudeDifference > 0 ? 'injured side' : 'opposite side';
+        const otherSide = magnitudeDifference > 0 ? 'opposite side' : 'injured side';
+        summary += ', but the ' + leadingSide + ' ' + verb + ' more than the ' + otherSide;
+        const bilateral = phaseMetricStat(phase, 'hka_projected_bilateral_absolute_difference_deg');
+        const bilateralChange = canonicalStatChange(bilateral);
+        if (Number.isFinite(bilateralChange) && Math.abs(bilateralChange) >= 8) {
+          summary += bilateralChange > 0
+            ? ', increasing the difference between them'
+            : ', reducing the difference between them';
+        }
+      }
+      return summary;
+    }
+  }
+  const injured = hkaSideNarrative(
+    phase,
+    'injured_hka_angle_2d_deg',
+    'the injured-side projected hip–knee–ankle configuration'
+  );
+  const uninjured = hkaSideNarrative(
+    phase,
+    'contralateral_hka_angle_2d_deg',
+    'the opposite-side projected hip–knee–ankle configuration'
+  );
+  const clauses = [injured, uninjured].filter(Boolean);
+  if (!clauses.length) return '';
+  return upperFirst(clauses.join('; '));
+}
+
+function hkaSideNarrative(phase, metric, subject) {
+  const stat = phaseMetricStat(phase, metric);
+  const change = canonicalStatChange(stat);
+  if (!phaseStatUsable(stat) || !Number.isFinite(change)) return '';
+  if (Math.abs(change) < 8) return subject + ' remained relatively stable';
+  const substantial = Math.abs(change) >= 20;
+  return change > 0
+    ? subject + ' opened' + (substantial ? ' substantially' : '')
+    : subject + ' became ' + (substantial ? 'substantially ' : '') + 'more closed';
+}
+
+function lowerFirst(value) {
+  return value ? value.charAt(0).toLowerCase() + value.slice(1) : '';
+}
+
+function upperFirst(value) {
+  return value ? value.charAt(0).toUpperCase() + value.slice(1) : '';
+}
+
+function supportedPhaseChanges(phase, definitions) {
+  return definitions.map((item) => phaseMetricStat(phase, item.metric))
+    .filter(phaseStatUsable)
+    .map((stat) => canonicalStatChange(stat))
+    .filter((value) => value !== null)
+    .map(Math.abs);
+}
+
+function phaseStatUsable(stat) {
+  const completeness = Number(stat?.completeness ?? stat?.supported_fraction ?? 0);
+  return completeness >= 0.45
+    && Number.isFinite(Number(stat?.start_value))
+    && Number.isFinite(Number(stat?.end_value));
 }
 
 function phaseChangesHtml(phase, drivers, visualStory) {
@@ -2984,6 +5934,9 @@ function phaseChangesHtml(phase, drivers, visualStory) {
   return '<div class="story-change-grid">' + drivers.map((driver) => {
     if (driver.key === 'hip_knee_ankle_chain') {
       return phaseHkaChangeHtml(phase, visualStory);
+    }
+    if (driver.key === 'upper_body') {
+      return phaseUpperBodyChangeHtml(phase, visualStory);
     }
     const support = storyObservationSupport(visualStory, driver.key);
     const status = support?.evidence_status || driver.status || 'EVIDENCE';
@@ -3022,6 +5975,49 @@ function canonicalPhaseDrivers(drivers) {
 
 function phaseHkaMode(phase) {
   return phaseHkaViewModes[phase.phase_id] || 'injured';
+}
+
+function phaseUpperBodyMode(phase) {
+  return phaseUpperBodyViewModes[phase.phase_id] || upperBodySide(phase) || 'right';
+}
+
+function phaseUpperBodyChangeHtml(phase, visualStory) {
+  const mode = phaseUpperBodyMode(phase);
+  const hasVisual = phaseVisualAvailable(visualStory, 'upper_body', mode);
+  return '<div class="story-change">'
+    + '<div class="story-change-heading"><strong>Upper body</strong>'
+    + phaseUpperBodySupportBadges(phase, mode) + '</div>'
+    + '<div class="phase-view-switch" aria-label="Upper-body elbow view">'
+    + ['right', 'left', 'compare'].map((item) => (
+      '<button type="button" class="' + (item === mode ? 'active' : '')
+      + '" data-phase-upper-body-view="' + item + '" data-phase-id="' + escapeHtml(phase.phase_id) + '">'
+      + (item === 'right' ? 'Right elbow' : item === 'left' ? 'Left elbow' : 'Compare') + '</button>'
+    )).join('') + '</div>'
+    + '<p>' + escapeHtml(upperBodyViewSummary(mode)) + '</p>'
+    + (hasVisual ? '<canvas class="phase-mini-visual" data-phase-mini="' + escapeHtml(phase.phase_id)
+      + '" data-story-category="upper_body" data-upper-body-mode="' + mode
+      + '" width="360" height="168"></canvas>' : '')
+    + (mode === 'compare'
+      ? phaseMetricRowsHtml(phase, [elbowMetricDefinition('right'), elbowMetricDefinition('left')])
+      : phaseMetricRowsHtml(phase, upperBodyMetricDefinitions(mode)))
+    + '<div class="phase-support-row"><span>Elbow configuration = internal projected shoulder–elbow–wrist angle.</span></div>'
+    + '</div>';
+}
+
+function phaseUpperBodySupportBadges(phase, mode) {
+  const sides = mode === 'compare' ? ['Right', 'Left'] : [upperFirst(mode)];
+  return '<span class="phase-support-row">' + sides.map((label) => {
+    const stat = phaseMetricStat(phase, label.toLowerCase() + '_elbow_angle_2d_deg');
+    return escapeHtml(label) + ' ' + escapeHtml(measurementSupportLabel(stat));
+  }).join(' · ') + '</span>';
+}
+
+function upperBodyViewSummary(mode) {
+  if (mode === 'compare') {
+    return 'The right and left projected elbow configurations are shown side by side from phase start to phase end.';
+  }
+  const side = upperFirst(mode);
+  return 'The ' + side.toLowerCase() + ' projected elbow configuration and upper-arm orientation changed through the phase.';
 }
 
 function phaseHkaChangeHtml(phase, visualStory) {
@@ -3109,11 +6105,15 @@ function phaseSnapshotsHtml(phase, snapshots) {
 
 function phaseSalientFrames(phase, visualStory) {
   const snapshots = visualStory?.snapshot_frames || [];
+  const legacyLabels = ['25%', '50%', '75%', 'Mid-phase'];
   const chosen = snapshots.filter((snapshot) => (
-    snapshot.change_intensity
+    (snapshot.change_intensity && snapshot.change_reason && snapshot.change_category)
     || ['Phase start', 'Phase end'].includes(snapshot.label)
-    || !['25%', '50%', '75%', 'Mid-phase'].includes(snapshot.label)
-  ));
+    || !legacyLabels.includes(snapshot.label)
+  )).map((snapshot) => ({
+    ...snapshot,
+    label: legacyLabels.includes(snapshot.label) ? salientSnapshotLabel(snapshot) : snapshot.label,
+  }));
   const fallback = [
     {label: 'Phase start', source_frame_index: phase.start_frame},
     {label: 'Phase end', source_frame_index: phase.end_frame},
@@ -3127,6 +6127,20 @@ function phaseSalientFrames(phase, visualStory) {
   return unique.sort((a, b) => a.source_frame_index - b.source_frame_index);
 }
 
+function salientSnapshotLabel(snapshot) {
+  const subject = {
+    movement_path: 'direction',
+    hip_knee_ankle_chain: 'HKA configuration',
+    bilateral_limb_relationship: 'bilateral HKA relationship',
+    trunk_pelvis: 'trunk / pelvis',
+    upper_body: 'upper-body configuration',
+  }[snapshot.change_category];
+  if (!subject || !snapshot.change_reason) return '';
+  if (snapshot.change_intensity === 'largest') return 'Largest supported ' + subject + ' change';
+  if (snapshot.change_intensity === 'larger') return 'Major supported ' + subject + ' change';
+  return 'Supported ' + subject + ' change';
+}
+
 function visualStoryForPhase(phaseId) {
   return (result?.movement_visual_story?.phases || []).find((item) => item.phase_id === phaseId) || null;
 }
@@ -3135,7 +6149,7 @@ function storyObservationSupport(visualStory, category) {
   return (visualStory?.observations || []).find((item) => item.category === category) || null;
 }
 
-function phaseVisualAvailable(visualStory, category, hkaMode = 'injured') {
+function phaseVisualAvailable(visualStory, category, viewMode = 'injured') {
   if (!visualStory) return false;
   if (category === 'bilateral_limb_relationship') {
     const phase = phaseForStory(visualStory);
@@ -3145,22 +6159,24 @@ function phaseVisualAvailable(visualStory, category, hkaMode = 'injured') {
   }
   if (category === 'hip_knee_ankle_chain') {
     const phase = phaseForStory(visualStory);
-    if (hkaMode === 'compare') {
+    if (viewMode === 'compare') {
       return ['injured_hka_angle_2d_deg', 'contralateral_hka_angle_2d_deg'].some((metric) => (
         phaseMetricPoints(metric, phase).some((point) => point.value !== null)
       ));
     }
-    const metric = hkaMode === 'opposite'
+    const metric = viewMode === 'opposite'
       ? 'contralateral_hka_angle_2d_deg'
       : 'injured_hka_angle_2d_deg';
     const stat = phaseMetricStat(phase, metric);
-    return [stat?.start_value, stat?.end_value]
-      .every((value) => Number.isFinite(Number(value)));
+    return [stat?.start_value, stat?.end_value].every(isFiniteValue);
   }
   const phase = phaseForStory(visualStory);
   if (category === 'trunk_pelvis') return canonicalTorsoState(phase, 'start_value', 360, 132) !== null
     && canonicalTorsoState(phase, 'end_value', 360, 132) !== null;
-  if (category === 'upper_body') return upperBodySide(phase) !== null;
+  if (category === 'upper_body') {
+    const sides = viewMode === 'compare' ? ['right', 'left'] : [viewMode];
+    return sides.some((side) => upperBodySideAvailable(phase, side));
+  }
   return false;
 }
 
@@ -3203,9 +6219,10 @@ function storyCategoryChangeSummary(category, phase) {
         + (magnitude ? ' substantially' : '') + ' more closed through the phase.';
   }
   if (category === 'trunk_pelvis') {
-    const changes = torsoMetricDefinitions().map((item) => (
-      Math.abs(Number(canonicalStatChange(phaseMetricStat(phase, item.metric))))
-    )).filter(Number.isFinite);
+    const changes = torsoMetricDefinitions()
+      .map((item) => canonicalStatChange(phaseMetricStat(phase, item.metric)))
+      .filter((value) => value !== null)
+      .map(Math.abs);
     if (changes.length && Math.max(...changes) < 8) {
       return 'The projected trunk, shoulder, and hip lines remained relatively stable through the phase.';
     }
@@ -3214,9 +6231,10 @@ function storyCategoryChangeSummary(category, phase) {
   if (category === 'upper_body') {
     const side = upperBodySide(phase);
     if (!side) return 'Supported projected arm geometry is shown for this phase.';
-    const changes = upperBodyMetricDefinitions(side).map((item) => (
-      Math.abs(Number(canonicalStatChange(phaseMetricStat(phase, item.metric))))
-    )).filter(Number.isFinite);
+    const changes = upperBodyMetricDefinitions(side)
+      .map((item) => canonicalStatChange(phaseMetricStat(phase, item.metric)))
+      .filter((value) => value !== null)
+      .map(Math.abs);
     if (changes.length && Math.max(...changes) < 8) {
       return 'The ' + side + ' projected arm configuration remained relatively stable through the phase.';
     }
@@ -3247,7 +6265,7 @@ function drawPhaseStoryVisuals() {
 function drawPhaseStoryVisual(canvas, visualStory, category) {
   const scale = window.devicePixelRatio || 1;
   const width = Math.max(220, canvas.clientWidth || 360);
-  const height = 132;
+  const height = category === 'upper_body' ? 168 : 132;
   canvas.width = Math.floor(width * scale);
   canvas.height = Math.floor(height * scale);
   const ctx = canvas.getContext('2d');
@@ -3270,7 +6288,7 @@ function drawPhaseStoryVisual(canvas, visualStory, category) {
     return;
   }
   if (category === 'upper_body') {
-    drawPhaseUpperBodyMini(ctx, width, height, visualStory);
+    drawPhaseUpperBodyMini(ctx, width, height, visualStory, canvas.dataset.upperBodyMode);
     return;
   }
   drawPhasePoseMini(ctx, width, height, visualStory, category);
@@ -3299,7 +6317,7 @@ function phaseMeasurementSummaryHtml(phase, category, hkaMode = 'injured') {
     const stat = phaseMetricStat(phase, metric);
     const change = canonicalStatChange(stat);
     if (![stat?.start_value, stat?.end_value, change]
-      .every((value) => Number.isFinite(Number(value)))) {
+      .every(isFiniteValue)) {
       return '<div class="phase-mini-values"><span>' + label
         + '</span><strong>Start or end unavailable</strong></div>';
     }
@@ -3324,16 +6342,17 @@ function phaseMeasurementSummaryHtml(phase, category, hkaMode = 'injured') {
 function phaseMetricRowsHtml(phase, definitions) {
   const rows = definitions.map((item) => ({...item, stat: phaseMetricStat(phase, item.metric)}))
     .filter((item) => [item.stat?.start_value, item.stat?.end_value, canonicalStatChange(item.stat)]
-      .every((value) => Number.isFinite(Number(value))));
+      .every(isFiniteValue));
   if (!rows.length) return '';
   return '<div class="phase-mini-values multi">' + rows.map((item) => (
     '<span><small class="angle-kind">' + escapeHtml(item.kind) + '</small><br />'
     + escapeHtml(item.label) + (item.tooltip ? ' <span class="info-icon" title="'
       + escapeHtml(item.tooltip) + '" aria-label="Orientation definition">ⓘ</span>' : '')
-    + '</span><strong>'
-    + formatDegrees(item.stat.start_value) + ' &rarr; ' + formatDegrees(item.stat.end_value)
-    + ' &middot; ' + escapeHtml(changeLabel(item.stat)) + ' '
-    + formatSignedDegrees(canonicalStatChange(item.stat)) + '</strong>'
+    + '</span><span class="phase-metric-result"><strong>'
+    + escapeHtml(item.changeLabel || changeLabel(item.stat)) + ' '
+    + formatSignedDegrees(canonicalStatChange(item.stat)) + '</strong><small>Start '
+    + formatDegrees(item.stat.start_value) + ' &middot; End ' + formatDegrees(item.stat.end_value)
+    + '</small></span>'
   )).join('') + '</div>';
 }
 
@@ -3342,53 +6361,65 @@ function torsoMetricDefinitions() {
     {
       metric: 'projected_trunk_axis_angle_deg',
       label: 'Trunk-axis orientation',
-      kind: 'Directed orientation',
-      tooltip: orientationExplanation('projected_trunk_axis_angle_deg'),
+      kind: 'Directed',
+      changeLabel: 'Reorientation',
     },
     {
       metric: 'projected_hip_line_angle_deg',
       label: 'Hip-line axis orientation',
-      kind: 'Axis orientation',
-      tooltip: orientationExplanation('projected_hip_line_angle_deg'),
+      kind: 'Axis',
+      changeLabel: 'Axial reorientation',
     },
     {
       metric: 'projected_shoulder_line_angle_deg',
       label: 'Shoulder-line axis orientation',
-      kind: 'Axis orientation',
-      tooltip: orientationExplanation('projected_shoulder_line_angle_deg'),
+      kind: 'Axis',
+      changeLabel: 'Axial reorientation',
     },
     {
       metric: 'projected_shoulder_pelvis_orientation_difference_deg',
       label: 'Shoulder–hip signed relative orientation',
-      kind: 'Relative orientation',
+      kind: 'Relative',
+      changeLabel: 'Relative change',
       tooltip: orientationExplanation('projected_shoulder_pelvis_orientation_difference_deg'),
     },
   ];
 }
 
 function upperBodyMetricDefinitions(side) {
-  const label = side.charAt(0).toUpperCase() + side.slice(1);
   return [
-    {
-      metric: `${side}_elbow_angle_2d_deg`,
-      label: label + ' elbow configuration',
-      kind: 'Configuration',
-      tooltip: 'The internal angle made by the projected shoulder–elbow–wrist chain.',
-    },
+    elbowMetricDefinition(side),
     {
       metric: `${side}_upper_arm_orientation_2d_deg`,
-      label: label + ' upper-arm orientation',
-      kind: 'Directed orientation',
-      tooltip: orientationExplanation(`${side}_upper_arm_orientation_2d_deg`),
+      label: upperFirst(side) + ' upper-arm orientation',
+      kind: 'Directed',
+      changeLabel: 'Reorientation',
     },
   ];
+}
+
+function elbowMetricDefinition(side) {
+  return {
+    metric: `${side}_elbow_angle_2d_deg`,
+    label: upperFirst(side) + ' elbow configuration',
+    kind: 'Configuration',
+    changeLabel: 'Configuration change',
+    tooltip: 'The internal angle made by the projected shoulder–elbow–wrist chain.',
+  };
+}
+
+function upperBodySideAvailable(phase, side) {
+  return upperBodyMetricDefinitions(side).every((item) => {
+    const stat = phaseMetricStat(phase, item.metric);
+    return [stat?.start_value, stat?.end_value, canonicalStatChange(stat)]
+      .every(isFiniteValue);
+  });
 }
 
 function upperBodySide(phase) {
   const candidates = ['left', 'right'].map((side) => {
     const stats = upperBodyMetricDefinitions(side).map((item) => phaseMetricStat(phase, item.metric));
-    const valid = stats.every((stat) => [stat?.start_value, stat?.end_value, canonicalStatChange(stat)]
-      .every((value) => Number.isFinite(Number(value))));
+    const valid = upperBodySideAvailable(phase, side);
     return {
       side,
       valid,
@@ -3566,22 +6597,75 @@ function canonicalArmState(phase, endpoint, side, width, height) {
   return [shoulder, elbow, wrist];
 }
 
-function drawPhaseUpperBodyMini(ctx, width, height, visualStory) {
+function drawPhaseUpperBodyMini(ctx, width, height, visualStory, requestedMode) {
   const phase = phaseForStory(visualStory);
-  const side = upperBodySide(phase);
-  if (!side) return;
-  const start = canonicalArmState(phase, 'start_value', side, width, height);
-  const end = canonicalArmState(phase, 'end_value', side, width, height);
-  if (!start || !end) return;
+  const mode = requestedMode || phaseUpperBodyMode(phase);
+  if (mode === 'compare') {
+    const halfWidth = width / 2;
+    ctx.save();
+    ctx.strokeStyle = '#d7dfe7';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(halfWidth, 18);
+    ctx.lineTo(halfWidth, height - 12);
+    ctx.stroke();
+    ctx.restore();
+    ['right', 'left'].forEach((side, index) => {
+      ctx.save();
+      ctx.translate(index * halfWidth, 0);
+      drawPhaseUpperBodySideMini(ctx, halfWidth, height, phase, side);
+      ctx.restore();
+    });
+    return;
+  }
+  drawPhaseUpperBodySideMini(ctx, width, height, phase, mode);
+}
+
+function drawPhaseUpperBodySideMini(ctx, width, height, phase, side) {
+  const rawStart = canonicalArmState(phase, 'start_value', side, width, height);
+  const rawEnd = canonicalArmState(phase, 'end_value', side, width, height);
+  if (!rawStart || !rawEnd) {
+    ctx.fillStyle = '#627181';
+    ctx.font = '10px sans-serif';
+    ctx.fillText(upperFirst(side) + ' elbow unavailable', 9, 18);
+    return;
+  }
+  const [start, end] = fitArmStatesToCanvas([rawStart, rawEnd], width, height);
   drawArticulatedState(ctx, start, '#215f9a', true, 2);
   drawArticulatedState(ctx, end, '#176d4d', false, 3);
+  drawAngleArc(ctx, start[1], start[0], start[2], '#215f9a', true);
   drawAngleArc(ctx, end[1], end[0], end[2], '#176d4d');
   const movingJoint = pointDistance(start[2], end[2]) >= pointDistance(start[1], end[1]) ? 2 : 1;
   drawChangeArrow(ctx, start[movingJoint], end[movingJoint]);
   drawJointLabels(ctx, end, ['S', 'E', 'W']);
   ctx.fillStyle = '#627181';
   ctx.font = '10px sans-serif';
-  ctx.fillText(side.charAt(0).toUpperCase() + side.slice(1) + ' arm', 9, 13);
+  ctx.fillText(upperFirst(side) + ' arm', 9, 13);
+}
+
+function fitArmStatesToCanvas(states, width, height) {
+  const points = states.flat();
+  const minX = Math.min(...points.map((point) => point.x));
+  const maxX = Math.max(...points.map((point) => point.x));
+  const minY = Math.min(...points.map((point) => point.y));
+  const maxY = Math.max(...points.map((point) => point.y));
+  const bounds = {left: 20, right: width - 20, top: 28, bottom: height - 30};
+  const spanX = Math.max(1, maxX - minX);
+  const spanY = Math.max(1, maxY - minY);
+  const scale = Math.min(
+    1,
+    (bounds.right - bounds.left) / spanX,
+    (bounds.bottom - bounds.top) / spanY
+  );
+  const sourceCenter = {x: (minX + maxX) / 2, y: (minY + maxY) / 2};
+  const targetCenter = {
+    x: (bounds.left + bounds.right) / 2,
+    y: (bounds.top + bounds.bottom) / 2,
+  };
+  return states.map((state) => state.map((point) => ({
+    x: targetCenter.x + (point.x - sourceCenter.x) * scale,
+    y: targetCenter.y + (point.y - sourceCenter.y) * scale,
+  })));
 }
 
 function pointDistance(first, second) {
@@ -3621,7 +6705,7 @@ function drawJointLabels(ctx, points, labels) {
   ctx.restore();
 }
 
-function drawAngleArc(ctx, vertex, first, second, color) {
+function drawAngleArc(ctx, vertex, first, second, color, dashed = false) {
   const start = Math.atan2(first.y - vertex.y, first.x - vertex.x);
   const finish = Math.atan2(second.y - vertex.y, second.x - vertex.x);
   let delta = finish - start;
@@ -3631,6 +6715,7 @@ function drawAngleArc(ctx, vertex, first, second, color) {
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.5;
+  ctx.setLineDash(dashed ? [4, 3] : []);
   ctx.beginPath();
   ctx.arc(vertex.x, vertex.y, radius, start, start + delta, delta < 0);
   ctx.stroke();
@@ -3839,22 +6924,249 @@ function drawMiniPoseHalf(ctx, landmarks, rect, category, color) {
 }
 
 function renderHeader() {
+  renderHeaderNavigation();
   const coverage = evidenceCoverage();
-  const supported = coverage.supported_source_ranges?.[0];
-  const supportedText = supported
-    ? 'Supported measurements: frames ' + supported.start_frame + '-' + supported.end_frame
-    : 'Supported measurements: unavailable';
+  const supportedRanges = coverage.supported_source_ranges || [];
+  const supportedText = supportedRanges.length
+    ? 'Usable measurement interval' + (supportedRanges.length === 1 ? ': ' : 's: ')
+      + supportedRanges.map((range) => 'frames ' + range.start_frame + '-' + range.end_frame).join(', ')
+    : 'Usable measurement intervals: unavailable';
   const movementSeconds = Number(result.header_metrics?.movement_duration_seconds ?? 0).toFixed(2);
   $('compactHeader').innerHTML = [
-    result.case?.player_name || 'Christen Press',
+    result.case?.player_name || 'Selected player',
+    result.case?.view_label || 'Primary view',
+    'YOLOv8n',
     result.target_annotation?.label || 'Human verified',
     'Movement ' + movementSeconds + ' s',
     supportedText
-  ].map((item) => '<span>' + escapeHtml(item) + '</span>').join('');
+  ].filter(Boolean).map((item) => '<span>' + escapeHtml(item) + '</span>').join('');
+  $('breadcrumbPlayer').textContent = result.case?.player_name || 'Selected case';
+  $('breadcrumbClip').textContent = result.case?.view_label || 'Selected clip';
   const post = coverage.post_supported_frame_range;
   $('headerNote').textContent = post
-    ? 'Frames ' + post.start_frame + '-' + post.end_frame + ' withheld because target identity is unreliable during overlap/occlusion.'
+    ? 'Movement-window frames ' + post.start_frame + '-' + post.end_frame + ' withheld because target identity is unreliable during overlap/occlusion.'
     : '';
+  const movementEnd = Number(result.movement_window?.movement_end_frame ?? frameBounds().end);
+  $('editAnnotationButton').href = '/annotate?case=' + encodeURIComponent(result.case.slug)
+    + '&frame=' + encodeURIComponent(movementEnd)
+    + '&mode=edit';
+  $('analysisBoundaryControl').hidden = false;
+}
+
+function caseViewStatusLabel(view) {
+  if (view.results_available) return 'analysis ready';
+  if (view.annotation_saved) return 'annotation saved';
+  return 'needs annotation';
+}
+
+function caseViewUrl(view) {
+  if (!view?.slug) return '/';
+  return view.results_available
+    ? '/results?case=' + encodeURIComponent(view.slug)
+    : '/annotate?case=' + encodeURIComponent(view.slug);
+}
+
+function openCaseView(view) {
+  const destination = caseViewUrl(view);
+  if (destination !== window.location.pathname + window.location.search) {
+    window.location.href = destination;
+  }
+}
+
+function renderHeaderNavigation() {
+  const views = result?.case_views?.views || [];
+  const clipSelect = $('headerClipSelect');
+  clipSelect.innerHTML = views.map((view) => (
+    `<option value="${escapeHtml(view.slug)}">${escapeHtml(view.view_label || view.view_id || view.slug)} · ${escapeHtml(caseViewStatusLabel(view))}</option>`
+  )).join('');
+  clipSelect.value = result?.case_views?.current_view_slug || caseSlug;
+  clipSelect.disabled = views.length < 2;
+  clipSelect.onchange = () => {
+    const targetSlug = clipSelect.value;
+    const targetView = views.find((view) => view.slug === targetSlug);
+    if (targetView && targetSlug !== caseSlug) openCaseView(targetView);
+  };
+  const caseId = result?.case_views?.case_id || result.case?.case_id || '';
+  const caseLibraryUrl = caseId ? '/?case=' + encodeURIComponent(caseId) : '/';
+  const currentAnalysisUrl = window.location.pathname + window.location.search + window.location.hash;
+  $('addCaseViewButton').href = caseId
+    ? '/video-cutter?case=' + encodeURIComponent(caseId) + '&return=' + encodeURIComponent(currentAnalysisUrl)
+    : '/video-cutter?return=' + encodeURIComponent(currentAnalysisUrl);
+  $('caseClipsButton').href = caseLibraryUrl;
+  $('caseLibraryBreadcrumb').href = caseLibraryUrl;
+  const nextView = views.find((view) => (
+    view.slug !== caseSlug && !view.annotation_saved
+  ));
+  const nextButton = $('annotateNextClipButton');
+  nextButton.hidden = !nextView;
+  if (nextView) {
+    nextButton.href = '/annotate?case=' + encodeURIComponent(nextView.slug);
+    nextButton.textContent = 'Annotate next clip';
+    nextButton.title = nextView.view_label || 'Open the next unannotated clip';
+  }
+}
+
+function renderResultOverview() {
+  const story = result?.movement_story || {};
+  const phases = story.phases || [];
+  const evidenceInterval = isSupportedEvidenceInterval(story);
+  const partialScope = story?.metadata?.analysis_scope?.type === 'PARTIAL_MOVEMENT_WINDOW';
+  const scope = story?.metadata?.analysis_scope || {};
+  const caseName = result.case?.player_name || result.case?.case_id || 'Selected case';
+  const viewName = result.case?.view_label || result.view?.view_label || 'Primary view';
+  $('caseTitle').textContent = caseName + ' · ' + viewName;
+  $('analysisModeEyebrow').textContent = 'Human-guided 2D movement analysis';
+  $('overviewIntro').textContent = 'Observable movement from a documented football video, with human-verified target tracking and measurement support kept visible. This is descriptive research evidence, not a diagnosis or risk score.';
+  const phaseExplanation = result?.phase_withholding_explanation || {};
+  const availabilityNotice = $('analysisAvailabilityNotice');
+  if (phases.length && evidenceInterval) {
+    const interval = phases[0];
+    const start = scope.start_frame ?? interval.start_frame;
+    const end = scope.end_frame ?? interval.end_frame;
+    const position = intervalPositionLabel(scope.position_in_movement_window);
+    availabilityNotice.className = 'analysis-availability-notice limited';
+    availabilityNotice.innerHTML = `<strong>Full analysis ready · Supported Evidence Interval available</strong>
+      <p>Supported measurements form one continuous interval at frames ${escapeHtml(start)}-${escapeHtml(end)}. ${escapeHtml(position)}. Includes annotated Movement End: ${scope.includes_annotated_movement_end ? 'Yes' : 'No'}. No supported transition was detected, so this is not presented as a phase story.</p>`;
+  } else if (phases.length && partialScope) {
+    availabilityNotice.className = 'analysis-availability-notice limited';
+    availabilityNotice.innerHTML = `<strong>Full analysis ready · Partial-window phase story available (${phases.length} phase${phases.length === 1 ? '' : 's'})</strong>
+      <p>Phase analysis is limited to the continuous supported block at frames ${escapeHtml(scope.start_frame)}-${escapeHtml(scope.end_frame)} (${phasePercent(scope.movement_window_fraction)} of the Movement Window). Frames outside this block remain visible and unsegmented.</p>`;
+  } else if (phases.length) {
+    availabilityNotice.className = 'analysis-availability-notice';
+    availabilityNotice.innerHTML = `<strong>Full analysis ready · Phase story available (${phases.length} phase${phases.length === 1 ? '' : 's'})</strong>
+      <p>The frame measurements, evidence checks, explanations, and phase-by-phase story below are available for this analysis.</p>`;
+  } else if (phaseExplanation.withheld) {
+    const rule = phaseExplanation.phase_rule || {};
+    const best = phaseExplanation.best_geometry || {};
+    const descriptorText = Number.isFinite(Number(rule.minimum_eligible_descriptors))
+      ? `${Number(rule.eligible_descriptors || 0)} of ${Number(rule.minimum_eligible_descriptors || 0)} required movement descriptors met the phase rule`
+      : 'the phase evidence rule was not met';
+    const coverageText = Number.isFinite(Number(best.coverage)) && Number.isFinite(Number(rule.minimum_geometry_coverage))
+      ? ` Best geometry coverage was ${(Number(best.coverage) * 100).toFixed(1)}%, below the ${(Number(rule.minimum_geometry_coverage) * 100).toFixed(0)}% rule.`
+      : '';
+    availabilityNotice.className = 'analysis-availability-notice limited';
+    availabilityNotice.innerHTML = `<strong>Full analysis ready · Phase story withheld</strong>
+      <p>The frame measurements, support checks, skeleton output, and supported explanations are available. A phase story is not shown because ${escapeHtml(descriptorText)}.${escapeHtml(coverageText)} This is an evidence limitation, not a missing or failed analysis.</p>`;
+  } else {
+    availabilityNotice.className = 'analysis-availability-notice limited';
+    availabilityNotice.innerHTML = '<strong>Full analysis ready · Phase story unavailable</strong><p>Supported frame measurements remain available, but no defensible phase story was produced for this model.</p>';
+  }
+  renderEventIntervalReview();
+  $('overviewStory').textContent = movementAtAGlance(story, phases);
+
+  const priorities = [
+    'injured_hka',
+    'hka_absolute_difference',
+    'trunk_orientation',
+    'elbow_pair',
+    'knee_ankle_offset',
+  ];
+  const allFeatures = Object.values(FEATURE_CATEGORIES).flat();
+  const candidates = priorities
+    .map((id) => allFeatures.find((feature) => feature.id === id))
+    .filter(Boolean)
+    .map((feature) => ({feature, stats: featureStats(feature)}));
+  const available = candidates.filter((item) => item.stats.status !== 'Unavailable');
+  const selected = available.slice(0, 3);
+  if (selected.length < 3) {
+    selected.push(...candidates.filter((item) => item.stats.status === 'Unavailable').slice(0, 3 - selected.length));
+  }
+  $('overviewMeasurements').innerHTML = selected.length
+    ? selected.map(overviewMeasurementHtml).join('')
+    : '<div class="key-measurement"><strong>Measurements unavailable</strong>'
+      + '<span class="status unavailable-state">Unavailable</span>'
+      + '<small>No defensible projected measurement is available for this case.</small></div>';
+
+  const bestCoverage = available.length
+    ? Math.max(...available.map((item) => Number(item.stats.completeness || 0)))
+    : 0;
+  const supportLabel = !available.length
+    ? 'Measurements unavailable'
+    : bestCoverage >= 0.80
+      ? 'Analysis complete · supported measurements'
+      : 'Analysis complete · limited measurements';
+  const supportClass = !available.length ? 'unavailable-state' : bestCoverage >= 0.80 ? 'good' : 'limited';
+  $('overviewSupportStatus').className = 'status ' + supportClass;
+  $('overviewSupportStatus').textContent = supportLabel;
+}
+
+function renderEventIntervalReview() {
+  const card = $('eventIntervalReview');
+  const story = result?.movement_story || {};
+  const phases = story.phases || [];
+  const supportedStatuses = new Set([
+    'SUPPORTED',
+    'SUPPORTED_PARTIAL_WINDOW',
+    'SUPPORTED_EVIDENCE_INTERVAL'
+  ]);
+  const available = phases.length > 0 && supportedStatuses.has(String(story.status || ''));
+  card.hidden = !available;
+  if (!available) return;
+
+  const review = result?.event_interval_review || {};
+  const decision = review.decision || null;
+  $('eventIntervalReviewQuestion').textContent = review.question
+    || 'Does the supported phase interval include the visible event you intended to study?';
+  $('eventIntervalReviewYes').setAttribute('aria-pressed', String(decision === 'yes'));
+  $('eventIntervalReviewNo').setAttribute('aria-pressed', String(decision === 'no'));
+  $('eventIntervalReviewYes').onclick = () => saveEventIntervalReview('yes');
+  $('eventIntervalReviewNo').onclick = () => saveEventIntervalReview('no');
+
+  const status = $('eventIntervalReviewStatus');
+  if (decision === 'yes') {
+    status.textContent = 'Saved: Yes. This view can be included in injury-event comparisons.';
+  } else if (decision === 'no') {
+    status.textContent = 'Saved: No. The case is retained, but this view is excluded from injury-event comparisons.';
+  } else if (review.review_status === 'DEFAULT_YES') {
+    status.textContent = 'Default: Yes. Change this to No if the supported interval does not contain the visible event.';
+  } else if (review.review_status === 'REVIEW_REQUIRED_AFTER_REGENERATION') {
+    status.textContent = 'The analysis changed after the previous answer. Please review this interval again.';
+  } else {
+    status.textContent = 'Not reviewed yet. Choose Yes or No before using this view in injury-event comparisons.';
+  }
+}
+
+async function saveEventIntervalReview(decision) {
+  const yesButton = $('eventIntervalReviewYes');
+  const noButton = $('eventIntervalReviewNo');
+  const status = $('eventIntervalReviewStatus');
+  yesButton.disabled = true;
+  noButton.disabled = true;
+  status.textContent = 'Saving your review…';
+  try {
+    const response = await fetch('/api/results/event-interval-review', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        case: caseSlug,
+        decision,
+        reviewer_id: 'researcher_01'
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'The review could not be saved.');
+    result.event_interval_review = payload;
+    renderEventIntervalReview();
+  } catch (error) {
+    status.textContent = error.message || 'The review could not be saved.';
+  } finally {
+    yesButton.disabled = false;
+    noButton.disabled = false;
+  }
+}
+
+function overviewMeasurementHtml(item) {
+  const {feature, stats} = item;
+  const presentation = featurePresentation(feature);
+  const level = measurementSupportLevel(stats);
+  const className = level === 'GOOD' ? 'good' : level === 'UNAVAILABLE' ? 'unavailable-state' : 'limited';
+  const detail = level === 'UNAVAILABLE'
+    ? 'No supported samples; no zero value is substituted.'
+    : formatValue(stats.start, stats.unit) + ' → ' + formatValue(stats.end, stats.unit)
+      + ' · ' + percent(stats.completeness) + ' supported';
+  return '<div class="key-measurement"><strong>' + escapeHtml(presentation.name) + '</strong>'
+    + '<span class="status ' + className + '">' + escapeHtml(level) + '</span>'
+    + '<small>' + escapeHtml(detail) + '</small></div>';
 }
 
 function renderFeatureOptions() {
@@ -3877,6 +7189,7 @@ function renderFeatureOptions() {
 }
 
 function renderSelectedFeature() {
+  renderMeasurementScope();
   const feature = selectedFeature();
   if (!feature) {
     const stats = unavailableStats();
@@ -3897,12 +7210,8 @@ function renderSelectedFeature() {
     return;
   }
   const presentation = featurePresentation(feature);
-  const primaryMetric = feature.metrics?.[0] || '';
-  const orientationNote = metricSpec(primaryMetric)?.angle_type
-    ? ' ' + orientationExplanation(primaryMetric)
-    : '';
   $('featureTitle').innerHTML = escapeHtml(presentation.name)
-    + '<span class="info-icon" title="' + escapeHtml(presentation.limitation + orientationNote)
+    + '<span class="info-icon" title="' + escapeHtml(presentation.limitation)
     + '" aria-label="Measurement information">ⓘ</span>';
   $('featureDescription').textContent = presentation.definition;
   $('featureTechnicalLabel').textContent = presentation.technical;
@@ -3912,7 +7221,7 @@ function renderSelectedFeature() {
     $('unavailableVisual').hidden = false;
     $('unavailableVisual').style.display = 'grid';
     $('unavailableVisual').textContent = 'Movement path graph unavailable in this panel. Check the phase narrative for supported path evidence.';
-    $('headlineValues').innerHTML = headlineHtml(unavailableStats());
+    $('headlineValues').innerHTML = headlineHtml(unavailableStats(), feature);
     $('trajectoryInterpretation').textContent = 'A chart-level movement-path trajectory is unavailable in this measurement panel.';
     $('filmstrip').innerHTML = '';
     $('moreStatisticsGrid').innerHTML = statsGridHtml(feature, unavailableStats());
@@ -3927,7 +7236,7 @@ function renderSelectedFeature() {
   $('unavailableVisual').hidden = true;
   $('unavailableVisual').style.display = 'none';
   $('unavailableVisual').textContent = '';
-  $('headlineValues').innerHTML = headlineHtml(stats);
+  $('headlineValues').innerHTML = headlineHtml(stats, feature);
   $('moreStatisticsGrid').innerHTML = statsGridHtml(feature, stats);
   $('evidenceSummary').innerHTML = evidenceHtml(stats);
   $('technicalText').textContent = technicalDetails(feature, stats);
@@ -3935,6 +7244,12 @@ function renderSelectedFeature() {
   drawFeatureGraph(feature, stats);
   $('trajectoryInterpretation').textContent = trajectoryInterpretation(feature, stats);
   renderOperatorAnalytics(feature, stats);
+}
+
+function renderMeasurementScope() {
+  const start = Number(result?.movement_window?.movement_start_frame ?? frameBounds().start);
+  const end = Number(result?.movement_window?.movement_end_frame ?? frameBounds().end);
+  $('measurementScope').textContent = 'Scope: Whole movement · Frames ' + start + '–' + end;
 }
 
 function selectedFeature() {
@@ -4113,20 +7428,59 @@ function metricSeries(metric) {
   return series.map((point) => ({
     frame: Number(point.source_frame_index),
     time: Number(point.timestamp_ms ?? 0),
-    value: Number.isFinite(Number(point.value)) ? Number(point.value) : null,
+    value: finiteNumberOrNull(point.value),
     unit: point.unit || metricSpec(metric)?.unit || '',
     status: point.evidence_status || point.feature_status || 'UNAVAILABLE',
     reason: point.quality_reason || point.rejection_reason || ''
   }));
 }
 
-function supportedSeries(metric) {
+function measuredSeries(metric) {
   return metricSeries(metric).map((point) => {
-    if (!isSupportedPoint(point) || !isInSupportedEvidenceRange(point.frame)) {
+    if (!isSupportedPoint(point)) {
       return {...point, value: null};
     }
     return point;
   });
+}
+
+function supportedSeries(metric) {
+  return measuredSeries(metric).map((point) => {
+    if (point.value !== null && !isInSupportedEvidenceRange(point.frame)) {
+      return {...point, value: null};
+    }
+    return point;
+  });
+}
+
+function limitedMeasuredSeries(metric) {
+  return measuredSeries(metric).map((point) => {
+    if (point.value === null || isInSupportedEvidenceRange(point.frame)) {
+      return {...point, value: null};
+    }
+    return point;
+  });
+}
+
+function limitedMeasuredIntervals(metric) {
+  const intervals = [];
+  let current = null;
+  limitedMeasuredSeries(metric).forEach((point) => {
+    if (point.value === null) {
+      if (current) intervals.push(current);
+      current = null;
+      return;
+    }
+    if (!current || point.frame !== current.end + 1) {
+      if (current) intervals.push(current);
+      current = {start: point.frame, end: point.frame, frameCount: 1};
+      return;
+    }
+    current.end = point.frame;
+    current.frameCount += 1;
+  });
+  if (current) intervals.push(current);
+  return intervals;
 }
 
 function isSupportedPoint(point) {
@@ -4134,8 +7488,9 @@ function isSupportedPoint(point) {
 }
 
 function isInSupportedEvidenceRange(frame) {
-  const ranges = evidenceCoverage().supported_source_ranges || [];
-  if (!ranges.length) return true;
+  const coverage = evidenceCoverage();
+  const ranges = coverage.supported_source_ranges || [];
+  if (!ranges.length) return coverage.status !== 'AVAILABLE';
   return ranges.some((range) => frame >= Number(range.start_frame) && frame <= Number(range.end_frame));
 }
 
@@ -4149,31 +7504,41 @@ function featureStats(feature) {
   if (!values.length) return unavailableStats(unit, primaryMetric);
   const start = supported[0];
   const end = supported[supported.length - 1];
+  const angleType = wholeStats.angle_type || metricSpec(primaryMetric)?.angle_type || null;
+  const isOrientation = ['axis', 'directed'].includes(angleType);
   const sorted = [...values].sort((a, b) => a - b);
-  const mean = values.reduce((total, value) => total + value, 0) / values.length;
-  const variance = values.reduce((total, value) => total + Math.pow(value - mean, 2), 0) / values.length;
-  const sameEndpoints = Number(wholeStats.start_frame) === Number(start.frame)
-    && Number(wholeStats.end_frame) === Number(end.frame);
-  const canonicalChange = sameEndpoints ? canonicalStatChange(wholeStats) : null;
-  const change = Number.isFinite(Number(canonicalChange))
-    ? Number(canonicalChange)
-    : wholeStats.angle_type ? null : end.value - start.value;
+  const mean = isOrientation
+    ? circularMean(values, angleType)
+    : values.reduce((total, value) => total + value, 0) / values.length;
+  const variance = isOrientation
+    ? null
+    : values.reduce((total, value) => total + Math.pow(value - mean, 2), 0) / values.length;
+  const wholeStartFrame = finiteNumberOrNull(wholeStats.start_frame);
+  const wholeEndFrame = finiteNumberOrNull(wholeStats.end_frame);
+  const sameEndpoints = wholeStartFrame !== null && wholeEndFrame !== null
+    && wholeStartFrame === Number(start.frame)
+    && wholeEndFrame === Number(end.frame);
+  let change = sameEndpoints ? canonicalStatChange(wholeStats) : null;
+  if (change === null) {
+    change = canonicalAngleDifference(start.value, end.value, angleType);
+  }
   return {
     status: values.length >= 8 ? 'Supported' : 'Limited',
     unit,
     start: start.value,
     end: end.value,
     change,
-    angleType: wholeStats.angle_type || null,
+    angleType,
     min: sorted[0],
     max: sorted[sorted.length - 1],
     mean,
-    median: quantile(sorted, 0.5),
-    sd: Math.sqrt(variance),
-    q1: quantile(sorted, 0.25),
-    q3: quantile(sorted, 0.75),
-    iqr: quantile(sorted, 0.75) - quantile(sorted, 0.25),
-    range: sorted[sorted.length - 1] - sorted[0],
+    median: isOrientation ? null : quantile(sorted, 0.5),
+    sd: isOrientation ? circularStandardDeviation(values, angleType) : Math.sqrt(variance),
+    q1: isOrientation ? null : quantile(sorted, 0.25),
+    q3: isOrientation ? null : quantile(sorted, 0.75),
+    iqr: isOrientation ? null : quantile(sorted, 0.75) - quantile(sorted, 0.25),
+    summarySemantics: isOrientation ? 'circular' : 'linear',
+    range: canonicalMeasurementRange(values, angleType),
     supportedN: values.length,
     relevantN: relevantFrameCount(),
     completeness: values.length / Math.max(1, relevantFrameCount()),
@@ -4209,37 +7574,61 @@ function unavailableStats(unit = '', metric = '') {
   };
 }
 
-function headlineHtml(stats) {
-  const signedLabel = stats.angleType === 'axis'
-    ? 'Shortest axial reorientation'
-    : stats.angleType === 'directed'
-      ? 'Shortest directed reorientation'
-      : stats.angleType === 'internal'
-        ? 'Signed configuration change'
-        : 'Signed change';
+function headlineHtml(stats, feature = null) {
+  const isOrientation = ['axis', 'directed'].includes(stats.angleType);
+  const isRelative = feature?.id === 'shoulder_pelvis_relationship';
+  const signedLabel = isRelative
+    ? 'Relative change'
+    : stats.angleType === 'axis'
+      ? 'Axial reorientation'
+      : stats.angleType === 'directed'
+        ? 'Reorientation'
+        : stats.angleType === 'internal'
+          ? 'Signed configuration change'
+          : 'Signed change';
   const absoluteLabel = stats.angleType === 'internal'
     ? 'Absolute configuration change'
     : stats.angleType ? 'Absolute reorientation' : 'Absolute change';
-  return [
-    ['Start', formatValue(stats.start, stats.unit)],
-    ['End', formatValue(stats.end, stats.unit)],
-    [signedLabel, formatSigned(stats.change, stats.unit)],
-    [absoluteLabel, formatValue(stats.change === null ? null : Math.abs(stats.change), stats.unit)]
-  ].map(([label, value]) => '<div class="value-card"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
+  const cards = isOrientation
+    ? [
+        [signedLabel, formatSigned(stats.change, stats.unit), ''],
+        [absoluteLabel, formatValue(stats.change === null ? null : Math.abs(stats.change), stats.unit), ''],
+        ['Raw start orientation', formatValue(stats.start, stats.unit), ' secondary-value'],
+        ['Raw end orientation', formatValue(stats.end, stats.unit), ' secondary-value'],
+      ]
+    : [
+        ['Start', formatValue(stats.start, stats.unit), ''],
+        ['End', formatValue(stats.end, stats.unit), ''],
+        [signedLabel, formatSigned(stats.change, stats.unit), ''],
+        [absoluteLabel, formatValue(stats.change === null ? null : Math.abs(stats.change), stats.unit), ''],
+      ];
+  return cards.map(([label, value, className]) => '<div class="value-card' + className
+    + '"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
 }
 
 function statsGridHtml(feature, stats) {
-  return [
-    ['Mean', formatValue(stats.mean, stats.unit)],
-    ['Median', formatValue(stats.median, stats.unit)],
-    ['SD', formatValue(stats.sd, stats.unit)],
-    ['Q1', formatValue(stats.q1, stats.unit)],
-    ['Q3', formatValue(stats.q3, stats.unit)],
-    ['IQR', formatValue(stats.iqr, stats.unit)],
-    ['Minimum', formatValue(stats.min, stats.unit)],
-    ['Maximum', formatValue(stats.max, stats.unit)],
-    ['Range', formatValue(stats.range, stats.unit)],
-  ].map(([label, value]) => '<div class="value-card"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
+  const isOrientation = ['axis', 'directed'].includes(stats.angleType);
+  const rows = isOrientation
+    ? [
+        [stats.angleType === 'axis' ? 'Axial circular mean' : 'Circular mean', formatValue(stats.mean, stats.unit)],
+        [stats.angleType === 'axis' ? 'Axial circular SD' : 'Circular SD', formatValue(stats.sd, stats.unit)],
+        ['Raw minimum orientation', formatValue(stats.min, stats.unit)],
+        ['Raw maximum orientation', formatValue(stats.max, stats.unit)],
+        ['Wrap-aware movement range', formatValue(stats.range, stats.unit)],
+        ['Supported samples', stats.supportedN + '/' + stats.relevantN],
+      ]
+    : [
+        ['Mean', formatValue(stats.mean, stats.unit)],
+        ['Median', formatValue(stats.median, stats.unit)],
+        ['SD', formatValue(stats.sd, stats.unit)],
+        ['Q1', formatValue(stats.q1, stats.unit)],
+        ['Q3', formatValue(stats.q3, stats.unit)],
+        ['IQR', formatValue(stats.iqr, stats.unit)],
+        ['Minimum', formatValue(stats.min, stats.unit)],
+        ['Maximum', formatValue(stats.max, stats.unit)],
+        ['Range', formatValue(stats.range, stats.unit)],
+      ];
+  return rows.map(([label, value]) => '<div class="value-card"><span>' + label + '</span><strong>' + value + '</strong></div>').join('');
 }
 
 function trajectoryInterpretation(feature, stats) {
@@ -4291,7 +7680,7 @@ function evidenceHtml(stats) {
   const labelClass = stats.status === 'Unavailable' ? 'status unavailable' : 'status';
   const fraction = percent(stats.completeness);
   return '<span class="' + labelClass + '">' + stats.status + '</span> '
-    + fraction + ' of supported-interval frames contained measurements. Yellow chart bands mark missing or unsupported frames; lines do not connect across those gaps.';
+    + fraction + ' of supported-interval frames contained measurements. Yellow chart bands mark genuinely missing or unsupported frames; dashed coloured lines show measured frames in short sequences that remain excluded from trend summaries.';
 }
 
 function renderOperatorAnalytics(feature, stats) {
@@ -4318,10 +7707,13 @@ function movementNarrativeHtml(feature, stats) {
         + result.movement_window.movement_start_frame + ' to ' + result.movement_window.movement_end_frame + '.'
       : 'A whole-video movement narrative is not available for this case.');
   const phaseSentence = currentPhase
-    ? 'At source frame ' + currentFrame + ', the active phase is Phase ' + currentPhase.phase_index + ' (' + currentPhase.title
-      + '), spanning frames ' + currentPhase.start_frame + '-' + currentPhase.end_frame + '.'
+    ? (isSupportedEvidenceInterval(story)
+      ? 'The supported evidence interval spans frames ' + currentPhase.start_frame + '-' + currentPhase.end_frame
+        + '; no before/after phase comparison is claimed.'
+      : 'At source frame ' + currentFrame + ', the active phase is Phase ' + currentPhase.phase_index + ' (' + currentPhase.title
+        + '), spanning frames ' + currentPhase.start_frame + '-' + currentPhase.end_frame + '.')
     : 'No phase is selected for the current frame.';
-  const sequenceSentence = firstPhase && finalPhase
+  const sequenceSentence = !isSupportedEvidenceInterval(story) && firstPhase && finalPhase
     ? 'The sequence starts with ' + firstPhase.title.toLowerCase() + ' and ends with ' + finalPhase.title.toLowerCase() + '.'
     : '';
   const regionRows = currentPhase ? narrativeRegionRows(currentPhase, feature, stats) : [];
@@ -4459,7 +7851,7 @@ function selectedFrameNarrative(feature, stats) {
 function strongestAvailableSentence(phase, metricLabels) {
   const candidates = metricLabels
     .map(([metric, label]) => ({metric, label, stat: phaseMetricStat(phase, metric)}))
-    .filter((item) => item.stat)
+    .filter((item) => item.stat && canonicalStatChange(item.stat) !== null)
     .sort((a, b) => (
       Math.abs(Number(canonicalStatChange(b.stat) || 0))
       - Math.abs(Number(canonicalStatChange(a.stat) || 0))
@@ -4479,10 +7871,73 @@ function phaseMetricStat(phase, metric) {
 }
 
 function canonicalStatChange(stat) {
-  const canonical = Number(stat?.canonical_signed_change);
-  if (Number.isFinite(canonical)) return canonical;
-  const existing = Number(stat?.change);
-  return Number.isFinite(existing) ? existing : null;
+  const canonical = finiteNumberOrNull(stat?.canonical_signed_change);
+  if (canonical !== null) return canonical;
+  return finiteNumberOrNull(stat?.change);
+}
+
+function finiteNumberOrNull(value) {
+  if (value === null || value === undefined || value === '' || typeof value === 'boolean') {
+    return null;
+  }
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function isFiniteValue(value) {
+  return finiteNumberOrNull(value) !== null;
+}
+
+function canonicalAngleDifference(startValue, endValue, angleType) {
+  const start = finiteNumberOrNull(startValue);
+  const end = finiteNumberOrNull(endValue);
+  if (start === null || end === null) return null;
+  if (angleType === 'directed') return ((end - start + 180) % 360 + 360) % 360 - 180;
+  if (angleType === 'axis') return ((end - start + 90) % 180 + 180) % 180 - 90;
+  return end - start;
+}
+
+function canonicalMeasurementRange(values, angleType) {
+  const numeric = values.map(finiteNumberOrNull).filter((value) => value !== null);
+  if (!numeric.length) return null;
+  if (numeric.length === 1) return 0;
+  if (!['axis', 'directed'].includes(angleType)) {
+    return Math.max(...numeric) - Math.min(...numeric);
+  }
+  const period = angleType === 'axis' ? 180 : 360;
+  const ordered = numeric
+    .map((value) => ((value % period) + period) % period)
+    .sort((a, b) => a - b);
+  let largestGap = ordered[0] + period - ordered[ordered.length - 1];
+  for (let index = 1; index < ordered.length; index += 1) {
+    largestGap = Math.max(largestGap, ordered[index] - ordered[index - 1]);
+  }
+  const range = period - largestGap;
+  return Math.abs(range) < 1e-12 ? 0 : range;
+}
+
+function circularMean(values, angleType) {
+  const numeric = values.map(finiteNumberOrNull).filter((value) => value !== null);
+  if (!numeric.length || !['axis', 'directed'].includes(angleType)) return null;
+  const period = angleType === 'axis' ? 180 : 360;
+  const scale = 2 * Math.PI / period;
+  const meanSine = numeric.reduce((total, value) => total + Math.sin(value * scale), 0) / numeric.length;
+  const meanCosine = numeric.reduce((total, value) => total + Math.cos(value * scale), 0) / numeric.length;
+  if (Math.hypot(meanSine, meanCosine) <= Number.EPSILON) return null;
+  const mean = Math.atan2(meanSine, meanCosine) / scale;
+  return ((mean + period / 2) % period + period) % period - period / 2;
+}
+
+function circularStandardDeviation(values, angleType) {
+  const numeric = values.map(finiteNumberOrNull).filter((value) => value !== null);
+  if (numeric.length < 2 || !['axis', 'directed'].includes(angleType)) return null;
+  const period = angleType === 'axis' ? 180 : 360;
+  const scale = 2 * Math.PI / period;
+  const meanSine = numeric.reduce((total, value) => total + Math.sin(value * scale), 0) / numeric.length;
+  const meanCosine = numeric.reduce((total, value) => total + Math.cos(value * scale), 0) / numeric.length;
+  const resultant = Math.min(1, Math.hypot(meanSine, meanCosine));
+  if (resultant <= Number.EPSILON) return null;
+  return Math.sqrt(-2 * Math.log(resultant)) / scale;
 }
 
 function changeLabel(stat) {
@@ -4555,7 +8010,11 @@ function regionalSupport(phase, metrics) {
 }
 
 function supportHtml(feature, stats) {
-  const intervals = feature.metrics?.[0] ? gapIntervalsForMetric(feature.metrics[0]) : [];
+  const primaryMetric = feature.metrics?.[0];
+  const intervals = primaryMetric ? gapIntervalsForMetric(primaryMetric) : [];
+  const limitedIntervals = primaryMetric ? limitedMeasuredIntervals(primaryMetric) : [];
+  const limitedFrameCount = limitedIntervals.reduce((total, interval) => total + interval.frameCount, 0);
+  const card = primaryMetric ? (result.feature_cards?.[primaryMetric] || {}) : {};
   const level = measurementSupportLevel(stats);
   const intervalText = intervals.length === 1
     ? '1 unsupported or withheld interval'
@@ -4563,10 +8022,35 @@ function supportHtml(feature, stats) {
   const graphSentence = intervals.length
     ? intervalText + ' ' + (intervals.length === 1 ? 'is' : 'are') + ' shown as yellow gaps on the trajectory.'
     : 'No unsupported intervals are present in the displayed trajectory.';
+  const limitedSentence = limitedIntervals.length
+    ? ' ' + limitedFrameCount + ' individually supported frame' + (limitedFrameCount === 1 ? ' is' : 's are')
+      + ' shown with a dashed coloured line across ' + limitedIntervals.length + ' short sequence'
+      + (limitedIntervals.length === 1 ? '' : 's')
+      + '; these measurements remain excluded from higher-level trend summaries.'
+    : '';
+  const reviewedText = Number(card.reviewed_total_frames || 0)
+    ? '<div class="operator-row"><strong>Reviewed accepted-frame yield</strong><br />'
+      + card.reviewed_supported_frames + ' / ' + card.reviewed_total_frames + ' frames · '
+      + percent(card.reviewed_frame_yield)
+      + '<br /><span class="subtle">Conditional on frames whose target identity the reviewer accepted; this does not replace Movement Window coverage.</span></div>'
+    : '<div class="operator-row"><strong>Reviewed accepted-frame yield</strong><br />Not reviewed for this case.</div>';
+  const targetPresentText = Number(card.target_present_total_frames || 0)
+    ? '<div class="operator-row"><strong>Target-present yield</strong><br />'
+      + card.target_present_supported_frames + ' / ' + card.target_present_total_frames + ' frames · '
+      + percent(card.target_present_yield) + '</div>'
+    : '';
+  const run = card.longest_continuous_supported || {};
+  const continuousText = Number(run.frame_count || 0)
+    ? '<div class="operator-row"><strong>Longest continuous supported block</strong><br />'
+      + run.frame_count + ' frames · ' + (Number(run.duration_ms || 0) / 1000).toFixed(2)
+      + ' s · frames ' + run.start_frame + '-' + run.end_frame + '</div>'
+    : '';
   return '<div class="support-overview"><span class="status">' + escapeHtml(level) + ' · '
     + percent(stats.completeness) + ' supported</span>'
-    + '<strong>' + (stats.supportedN ?? 0) + ' / ' + (stats.relevantN ?? 0) + ' relevant frames</strong></div>'
-    + '<p class="support-copy">' + escapeHtml(graphSentence) + '</p>';
+    + '<strong>Movement-window coverage: ' + (stats.supportedN ?? 0) + ' / '
+    + (stats.relevantN ?? 0) + ' frames</strong></div>'
+    + '<div class="operator-list">' + reviewedText + targetPresentText + continuousText + '</div>'
+    + '<p class="support-copy">' + escapeHtml(graphSentence + limitedSentence) + '</p>';
 }
 
 function measurementSupportLevel(stats) {
@@ -4590,6 +8074,11 @@ function whyPhaseHtml() {
       + ' <span class="status">' + escapeHtml(driver.status) + '</span></li>'
     )).join('') + '</ul></details>'
     : '';
+  if (isSupportedEvidenceInterval()) {
+    return '<p><strong>Supported Evidence Interval · frames ' + phase.start_frame + '-' + phase.end_frame + '</strong></p>'
+      + '<p class="subtle">This continuous block met measurement-support safeguards, but no supported transition was detected. It is not presented as a phase sequence.</p>'
+      + details;
+  }
   return '<p><strong>Phase ' + phase.phase_index + ': ' + escapeHtml(phase.title) + '</strong></p>'
     + '<p class="subtle">Frames ' + phase.start_frame + '-' + phase.end_frame + ' are grouped because '
     + escapeHtml(compact) + '</p>'
@@ -4633,7 +8122,7 @@ function phaseFallbackSentence(phase) {
 function largestMetricChangeSentence(phase, metrics, fallback) {
   const entries = Object.entries(metrics || {})
     .map(([metric, stat]) => [metric, phaseMetricStat(phase, metric) || stat])
-    .filter(([, stat]) => Number.isFinite(Number(canonicalStatChange(stat))))
+    .filter(([, stat]) => canonicalStatChange(stat) !== null)
     .sort((a, b) => (
       Math.abs(Number(canonicalStatChange(b[1])))
       - Math.abs(Number(canonicalStatChange(a[1])))
@@ -4700,7 +8189,7 @@ function gapReasonHtml(feature, suppliedIntervals = null) {
 }
 
 function gapIntervalsForMetric(metric) {
-  const rows = supportedSeries(metric);
+  const rows = measuredSeries(metric);
   const intervals = [];
   let current = null;
   rows.forEach((point) => {
@@ -4797,7 +8286,23 @@ function phaseComparisonHtml(feature, stats) {
   const phaseStats = result.metric_explorer?.phase_statistics?.[metric] || [];
   if (!phaseStats.length) return '<p class="subtle">Phase-level statistics are unavailable for this measurement.</p>';
   const unit = displayUnit(stats.unit || metricSpec(metric)?.unit || '', metric);
-  return '<table class="compact-table"><thead><tr><th>Phase</th><th>Change</th><th>Mean</th><th>Support</th></tr></thead><tbody>'
+  const angleType = metricSpec(metric)?.angle_type || stats.angleType;
+  const meanLabel = angleType === 'axis'
+    ? 'Axial circular mean'
+    : angleType === 'directed' ? 'Circular mean' : 'Mean';
+  if (isSupportedEvidenceInterval()) {
+    const interval = phaseStats[0];
+    const scope = result?.movement_story?.metadata?.analysis_scope || {};
+    return '<p class="subtle">One supported interval is available; no before/after phase comparison is claimed.</p>'
+      + '<table class="compact-table"><thead><tr><th>Supported interval</th><th>Change</th><th>' + meanLabel + '</th><th>Support</th></tr></thead><tbody><tr><td><strong>Frames '
+      + escapeHtml(scope.start_frame ?? interval.source_frame_start ?? '') + '-'
+      + escapeHtml(scope.end_frame ?? interval.source_frame_end ?? '') + '</strong></td><td>'
+      + formatSigned(canonicalStatChange(interval), unit) + '</td><td>'
+      + formatValue(interval.mean, unit) + '</td><td>'
+      + (interval.supported_n ?? 0) + '/' + (interval.relevant_n ?? 0)
+      + '<br />' + percent(interval.completeness) + '</td></tr></tbody></table>';
+  }
+  return '<table class="compact-table"><thead><tr><th>Phase</th><th>Change</th><th>' + meanLabel + '</th><th>Support</th></tr></thead><tbody>'
     + phaseStats.map((phase) => (
       '<tr><td><strong>P' + phase.phase_index + '</strong><br />'
       + escapeHtml(phase.phase_title || '') + '</td><td>'
@@ -4915,11 +8420,42 @@ function technicalDetails(feature, stats) {
 
 function provenanceDetails() {
   const lines = [];
+  const provenance = result.case_provenance || {};
   lines.push('Case ID: ' + (result.case?.case_id || result.case?.slug || 'unavailable'));
   lines.push('Source ID: ' + (result.case?.source_id || 'unavailable'));
   lines.push('View ID: ' + (result.case?.view_id || result.view?.view_id || 'unavailable'));
   lines.push('View perspective: ' + (result.view?.perspective || 'unknown'));
   lines.push('Target annotation: ' + (result.target_annotation?.label || 'unavailable'));
+  lines.push('Manually accepted skeleton frames: ' + Number(result.target_annotation?.manual_accepted_frames || 0));
+  lines.push('Manually excluded skeleton frames: ' + Number(result.target_annotation?.manual_excluded_frames || 0));
+  lines.push('Athlete identity source: ' + (provenance.athlete_identity?.source || 'not recorded'));
+  lines.push('Documented injured side: ' + (provenance.injured_side?.value || 'unknown'));
+  lines.push('Laterality source: ' + (provenance.injured_side?.source || 'not supplied'));
+  lines.push('Injury confirmation: ' + (provenance.injury_confirmation?.status || 'not recorded'));
+  lines.push('Injury confirmation source: ' + (provenance.injury_confirmation?.source_reference || 'not recorded'));
+  const context = provenance.documented_context || {};
+  const match = context.match || {};
+  const incident = context.incident || {};
+  const injury = context.injury || {};
+  const athlete = context.athlete || {};
+  if (athlete.shirt_number) lines.push('Shirt number: ' + athlete.shirt_number);
+  if (match.team || match.opponent) {
+    lines.push('Match: ' + [match.team, match.opponent ? 'vs ' + match.opponent : ''].filter(Boolean).join(' '));
+  }
+  if (match.result) lines.push('Match result: ' + match.result);
+  if (match.date) lines.push('Match / injury date: ' + match.date);
+  if (match.competition) lines.push('Competition: ' + match.competition);
+  if (match.minute) lines.push('Incident match minute: ' + match.minute);
+  if (incident.opponent_player) lines.push('Other player in duel: ' + incident.opponent_player);
+  if (incident.description) lines.push('Incident context: ' + incident.description);
+  if (injury.diagnosis) lines.push('Documented diagnosis: ' + injury.diagnosis);
+  if (injury.prior_acl_injury?.diagnosis) {
+    lines.push('Prior ACL history: ' + injury.prior_acl_injury.diagnosis + ' ('
+      + (injury.prior_acl_injury.side || 'side not recorded') + ' knee).');
+  }
+  if (context.source_note) lines.push('Context source note: ' + context.source_note);
+  lines.push('Video source reference: ' + (provenance.video_source?.reference || 'not recorded'));
+  lines.push('Video rights note: ' + (provenance.video_source?.rights_note || 'not recorded'));
   lines.push('Current source frame: ' + currentFrame);
   lines.push('Movement window: ' + frameBounds().start + '-' + frameBounds().end);
   const sources = Object.entries(result.source_files || {});
@@ -4964,6 +8500,7 @@ function drawFeatureGraph(feature, stats) {
   ctx.clearRect(0, 0, width, height);
   if (feature.visual === 'timing_extrema' || feature.visual === 'timing_change') {
     drawPlotFrame(ctx, width, height, axisLabelForFeature(feature, stats));
+    drawWholeMovementPhaseBoundaries(ctx, width, height);
     drawTimingGraph(ctx, width, height, feature, stats);
     drawCursor(ctx, width, height);
     return;
@@ -4973,7 +8510,9 @@ function drawFeatureGraph(feature, stats) {
     metric,
     label: shortMetricLabel(metric),
     color: metric === metrics[0] ? '#215f9a' : '#9d2735',
-    series: supportedSeries(metric)
+    series: measuredSeries(metric),
+    trendSeries: supportedSeries(metric),
+    limitedSeries: limitedMeasuredSeries(metric)
   }));
   const values = plotted.flatMap((item) => item.series.map((point) => point.value).filter((value) => value !== null));
   if (!values.length) {
@@ -4985,8 +8524,10 @@ function drawFeatureGraph(feature, stats) {
   const yMax = Math.max(...values);
   drawPlotFrame(ctx, width, height, axisLabelForFeature(feature, stats), yMin, yMax);
   drawMissingIntervals(ctx, plotted[0].series, width, height);
-  plotted.forEach((item) => drawLine(ctx, item.series, item.color, yMin, yMax, width, height));
-  drawLegend(ctx, plotted, width);
+  drawWholeMovementPhaseBoundaries(ctx, width, height);
+  plotted.forEach((item) => drawLine(ctx, item.trendSeries, item.color, yMin, yMax, width, height));
+  plotted.forEach((item) => drawLimitedLine(ctx, item.limitedSeries, item.color, yMin, yMax, width, height));
+  drawLegend(ctx, plotted, width, plotted.some((item) => item.limitedSeries.some((point) => point.value !== null)));
   drawCursor(ctx, width, height);
 }
 
@@ -5084,6 +8625,40 @@ function drawMissingIntervals(ctx, series, width, height) {
   });
 }
 
+function drawWholeMovementPhaseBoundaries(ctx, width, height) {
+  const phases = result?.movement_story?.phases || [];
+  if (phases.length < 2) return;
+  const plot = plotBox(width, height);
+  const bounds = frameBounds();
+  const phaseColor = '#147d73';
+  const phaseLabelBackground = '#e6f5f2';
+  phases.slice(1).forEach((phase) => {
+    const frame = Number(phase.start_frame);
+    if (!Number.isFinite(frame) || frame <= bounds.start || frame > bounds.end) return;
+    const x = frameToPlotX(frame, bounds, plot);
+    const label = 'P' + phase.phase_index + ' begins';
+    ctx.save();
+    ctx.strokeStyle = phaseColor;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x, plot.top);
+    ctx.lineTo(x, plot.top + plot.height);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font = '700 11px sans-serif';
+    const labelWidth = ctx.measureText(label).width + 10;
+    const labelX = Math.min(x + 5, plot.left + plot.width - labelWidth - 4);
+    ctx.fillStyle = phaseLabelBackground;
+    ctx.fillRect(labelX, plot.top + 4, labelWidth, 18);
+    ctx.strokeStyle = phaseColor;
+    ctx.strokeRect(labelX, plot.top + 4, labelWidth, 18);
+    ctx.fillStyle = phaseColor;
+    ctx.fillText(label, labelX + 5, plot.top + 17);
+    ctx.restore();
+  });
+}
+
 function missingIntervals(series) {
   const intervals = [];
   let current = null;
@@ -5136,6 +8711,29 @@ function drawLine(ctx, series, color, yMin, yMax, width, height) {
   ctx.stroke();
 }
 
+function drawLimitedLine(ctx, series, color, yMin, yMax, width, height) {
+  if (!series.some((point) => point.value !== null)) return;
+  ctx.save();
+  ctx.setLineDash([6, 4]);
+  drawLine(ctx, series, color, yMin, yMax, width, height);
+  ctx.setLineDash([]);
+  const bounds = frameBounds();
+  const plot = plotBox(width, height);
+  const yPad = yMax === yMin ? 1 : (yMax - yMin) * 0.08;
+  const low = yMin - yPad;
+  const high = yMax + yPad;
+  ctx.fillStyle = color;
+  series.forEach((point) => {
+    if (point.value === null) return;
+    const x = frameToPlotX(point.frame, bounds, plot);
+    const y = plot.top + (1 - ((point.value - low) / Math.max(0.000001, high - low))) * plot.height;
+    ctx.beginPath();
+    ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.restore();
+}
+
 function drawTimingGraph(ctx, width, height, feature, stats) {
   const plot = plotBox(width, height);
   const bounds = frameBounds();
@@ -5176,7 +8774,7 @@ function largestChangeFrame(metric) {
   return bestFrame;
 }
 
-function drawLegend(ctx, plotted, width) {
+function drawLegend(ctx, plotted, width, hasLimitedEvidence = false) {
   let x = plotBox(width, 260).left;
   const y = 28;
   plotted.forEach((item) => {
@@ -5193,10 +8791,39 @@ function drawLegend(ctx, plotted, width) {
   ctx.strokeRect(x, y - 3, 14, 9);
   ctx.fillStyle = '#627181';
   ctx.fillText('missing / unsupported', x + 18, y + 5);
+  if ((result?.movement_story?.phases || []).length > 1 && x + 330 < width) {
+    x += 164;
+    ctx.save();
+    ctx.strokeStyle = '#147d73';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(x, y - 6);
+    ctx.lineTo(x, y + 8);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#627181';
+    ctx.fillText('phase begins', x + 9, y + 5);
+  }
   ctx.fillStyle = '#9d2735';
   ctx.fillRect(width - 150, y, 14, 3);
   ctx.fillStyle = '#627181';
   ctx.fillText('selected frame', width - 132, y + 5);
+  if (hasLimitedEvidence) {
+    const limitedY = y + 18;
+    const limitedX = plotBox(width, 260).left;
+    ctx.save();
+    ctx.strokeStyle = '#215f9a';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.moveTo(limitedX, limitedY);
+    ctx.lineTo(limitedX + 14, limitedY);
+    ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle = '#627181';
+    ctx.fillText('measured · short / trend-limited sequence', limitedX + 18, limitedY + 5);
+  }
 }
 
 function drawCursor(ctx, width, height) {
@@ -5230,7 +8857,8 @@ function renderFilmstrip(feature, stats) {
   $('filmstrip').innerHTML = selected.map((item) => (
     '<button class="thumb" type="button" data-film-frame="' + item.frame + '">'
     + '<img alt="' + item.label + ' source frame ' + item.frame + '" src="' + frameUrl(item.frame, true) + '" />'
-    + '<span><strong>' + item.label + '</strong><br />source frame ' + item.frame + '</span>'
+    + '<span><strong>' + item.label + '</strong><br />source frame ' + item.frame
+    + (item.detail ? '<br />' + escapeHtml(item.detail) : '') + '</span>'
     + '</button>'
   )).join('');
   [...document.querySelectorAll('[data-film-frame]')].forEach((button) => {
@@ -5241,10 +8869,19 @@ function renderFilmstrip(feature, stats) {
 function filmstripFrames(frames, stats, metric) {
   if (!frames.length) return [];
   const lastSupportedLabel = Number(stats.endFrame) === Number(frameBounds().end) ? 'END' : 'LAST SUPPORTED';
+  const hkaConfiguration = isHkaConfigurationMetric(metric);
   const candidates = [
     {label: 'START', frame: stats.startFrame ?? frames[0]},
-    {label: 'MINIMUM', frame: stats.minFrame},
-    {label: 'MAXIMUM', frame: stats.maxFrame},
+    {
+      label: hkaConfiguration ? 'MOST CLOSED' : 'MINIMUM',
+      detail: hkaConfiguration ? 'Minimum HKA · ' + Number(stats.min).toFixed(1) + '°' : '',
+      frame: stats.minFrame,
+    },
+    {
+      label: hkaConfiguration ? 'MOST OPEN' : 'MAXIMUM',
+      detail: hkaConfiguration ? 'Maximum HKA · ' + Number(stats.max).toFixed(1) + '°' : '',
+      frame: stats.maxFrame,
+    },
     {label: 'SALIENT CHANGE', frame: largestChangeFrame(metric)},
     {label: lastSupportedLabel, frame: stats.endFrame ?? frames[frames.length - 1]},
   ];
@@ -5258,6 +8895,15 @@ function filmstripFrames(frames, stats, metric) {
     used.add(frame);
     return true;
   });
+}
+
+function isHkaConfigurationMetric(metric) {
+  return [
+    'left_hka_angle_2d_deg',
+    'right_hka_angle_2d_deg',
+    'injured_hka_angle_2d_deg',
+    'contralateral_hka_angle_2d_deg',
+  ].includes(metric);
 }
 
 function graphClickToFrame(event) {
@@ -5281,6 +8927,7 @@ function setFrame(frame, options = {}) {
   const seconds = Number(frameRecord?.timestamp_ms ?? 0) / 1000;
   $('frameReadout').textContent = 'Frame ' + currentFrame + ' | ' + seconds.toFixed(2) + ' s';
   if (options.redrawFeature !== false) renderSelectedFeature();
+  scheduleWorkspaceStateSave();
 }
 
 function stepFrame(delta) {
@@ -5432,7 +9079,7 @@ RESULTS_HTML = r"""
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ACL Movement Explorer - Results</title>
+  <title>ACL Movement Analytics Lab - Results</title>
   <style>
     :root {
       color-scheme: light;
@@ -6055,7 +9702,7 @@ RESULTS_HTML = r"""
             <button id="clearMaskPromptsButton" class="mini-button">Clear frame regions</button>
             <span id="maskPromptReadout" class="hint">Visible-region marks are saved with human provenance.</span>
           </div>
-          <p class="hint">Legend: rectangular target ROI, pose skeleton, generated target segmentation mask, green target-region marks, and red non-target marks are independent overlays. Region marks guide the mask; they are not pose/keypoints and not proof that hidden joints were observed.</p>
+          <p class="hint">Legend: solid pose bones have stronger landmark support; dashed amber bones and hollow points are provisional. Very low-confidence or rejected joints are hidden. The rectangular target ROI, generated target mask, green target-region marks, and red non-target marks are independent overlays. Region marks guide the mask; they are not pose/keypoints and not proof that hidden joints were observed.</p>
           <input id="frameScrub" type="range" min="0" max="0" value="0" />
           <div id="timeline" class="timeline">
             <div id="timelineBand" class="timeline-band"></div>
@@ -6441,16 +10088,25 @@ function renderHeader() {
     ["Duration", `${result.header_metrics.movement_duration_seconds.toFixed(2)} s`],
     ["ROI", result.header_metrics.target],
     ["Keyframes", result.header_metrics.roi_keyframes],
+    [
+      "Frame review",
+      Number(result.target_annotation?.manual_accepted_frames || 0)
+        || Number(result.target_annotation?.manual_excluded_frames || 0)
+        ? `${Number(result.target_annotation?.manual_accepted_frames || 0)} accepted · ${Number(result.target_annotation?.manual_excluded_frames || 0)} excluded`
+        : "Automatic QC only",
+    ],
   ].map(([label, value]) => `<span>${label}: <strong>${value}</strong></span>`).join("");
 }
 
 function renderEvidenceCompactRow() {
   const profile = result.evidence_dimensions.find(item => item.name === "Movement Profile evidence");
-  const geometry = result.evidence_dimensions.find(item => item.name === "Geometry evidence");
+  const geometry = result.evidence_dimensions.find(item => item.name === "Movement-window geometry");
+  const reviewed = result.evidence_dimensions.find(item => item.name === "Reviewed-frame geometry yield");
   const dynamics = result.evidence_dimensions.find(item => item.name === "Dynamic feature coverage");
   $("evidenceCompactRow").innerHTML = [
     `<span>Evidence: <strong>${profile?.label || "Limited"}</strong></span>`,
-    `<span>Geometry: <strong>${geometry?.label || "Limited"}</strong></span>`,
+    `<span>Window geometry: <strong>${geometry?.label || "Limited"}</strong></span>`,
+    `<span>Reviewed yield: <strong>${reviewed?.label || "Unavailable"}</strong></span>`,
     `<span>Dynamics: <strong>${dynamics?.label || "Limited"}</strong></span>`,
     `<span>View: <strong>Single broadcast view</strong></span>`,
     `<span>Details below: <strong>Evidence details + Technical provenance</strong></span>`,
@@ -8627,12 +12283,25 @@ function renderActiveGroup() {
 function featureCard(card) {
   if (!card) return "";
   const endValue = card.at_movement_end === null ? "Unavailable" : `${fmt(card.at_movement_end, 2)} ${card.unit}`;
+  const reviewedYield = Number(card.reviewed_total_frames || 0)
+    ? `<p class="hint">Reviewed-frame yield: <strong>${pct(card.reviewed_frame_yield)}</strong> (${card.reviewed_supported_frames}/${card.reviewed_total_frames})</p>`
+    : '<p class="hint">Reviewed-frame yield: <strong>Not reviewed</strong></p>';
+  const targetYield = Number(card.target_present_total_frames || 0)
+    ? `<p class="hint">Target-present yield: <strong>${pct(card.target_present_yield)}</strong> (${card.target_present_supported_frames}/${card.target_present_total_frames})</p>`
+    : '';
+  const run = card.longest_continuous_supported || {};
+  const continuous = Number(run.frame_count || 0)
+    ? `<p class="hint">Longest continuous evidence: <strong>${run.frame_count} frames</strong> (${fmt(Number(run.duration_ms || 0) / 1000, 2)} s; frames ${run.start_frame}-${run.end_frame})</p>`
+    : '';
   return `
     <div class="feature-card">
       <span>Projected 2D descriptor</span>
       <h3>${card.display_label}</h3>
       <p><strong class="status ${statusClass(card.sequence_evidence)}">${card.sequence_evidence}</strong></p>
-      <p class="hint">Geometry completeness: <strong>${pct(card.geometry_completeness)}</strong></p>
+      <p class="hint">Movement-window coverage: <strong>${pct(card.geometry_completeness)}</strong></p>
+      ${reviewedYield}
+      ${targetYield}
+      ${continuous}
       <p class="hint">Dynamic evidence: <strong>${card.dynamic_evidence}</strong> (${pct(card.dynamic_completeness)})</p>
       <p class="hint">At Movement End: <strong>${endValue}</strong></p>
       <p class="hint">Why limited: ${card.why_limited || "No primary limitation for this displayed feature."}</p>

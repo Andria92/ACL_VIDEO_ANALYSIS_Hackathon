@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+contralateral_hka_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+elbow_projected_bilateral_absolute_difference_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+elbow_projected_bilateral_difference_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+hka_projected_bilateral_absolute_difference_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+hka_projected_bilateral_difference_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+injured_elbow_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+injured_hka_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_bilateral_absolute_difference,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_bilateral_difference,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_normalized_bilateral_absolute_difference,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_normalized_bilateral_difference,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+left_elbow_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_hka_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_ankle_distance_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_ankle_x_offset_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_line_deviation_2d,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_line_deviation_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_upper_arm_orientation_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_wrist_pelvis_distance_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+left_wrist_pelvis_x_offset_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+projected_hip_line_angle_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_line_angle_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_pelvis_orientation_difference_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_pelvis_x_offset_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_pelvis_x_offset_px,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+projected_trunk_axis_angle_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_elbow_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_hka_angle_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_ankle_distance_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_ankle_x_offset_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_line_deviation_2d,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_line_deviation_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_upper_arm_orientation_2d_deg,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_wrist_pelvis_distance_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.
+right_wrist_pelvis_x_offset_normalized,19,48,0.3958333333333333,29,Frame status is INVALID_TRACK_SEGMENT.

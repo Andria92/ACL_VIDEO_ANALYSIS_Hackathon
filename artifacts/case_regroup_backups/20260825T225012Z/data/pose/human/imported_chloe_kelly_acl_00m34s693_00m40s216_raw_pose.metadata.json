@@ -1,0 +1,129 @@
+{
+  "run_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01_20260825T221903Z",
+  "timestamp_utc": "2026-08-25T22:19:03.186540+00:00",
+  "case_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_acl_candidate",
+  "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "pose_backend": "yolo",
+  "model_name": "Ultralytics YOLO pose",
+  "model_path": "data/models/yolov8n-pose.pt",
+  "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/chloe_kelly_acl_00m34s693_00m40s216_2.mp4",
+  "fps": 30.0,
+  "width": 640,
+  "height": 360,
+  "frame_count_video": 166,
+  "frame_count_processed": 121,
+  "landmark_row_count": 2057,
+  "start_frame": 0,
+  "end_frame": 120,
+  "every_n": 1,
+  "roi": null,
+  "roi_keyframes": "data/annotations/human/imported_chloe_kelly_acl_00m34s693_00m40s216_target_roi_human.csv",
+  "roi_keyframe_count": 14,
+  "roi_keyframe_records": [
+    {
+      "frame_index": 0,
+      "x": 472.0,
+      "y": 40.0,
+      "width": 92.0,
+      "height": 109.0
+    },
+    {
+      "frame_index": 5,
+      "x": 481.0,
+      "y": 39.0,
+      "width": 84.0,
+      "height": 114.0
+    },
+    {
+      "frame_index": 13,
+      "x": 485.0,
+      "y": 36.0,
+      "width": 97.0,
+      "height": 130.0
+    },
+    {
+      "frame_index": 19,
+      "x": 469.0,
+      "y": 50.0,
+      "width": 99.0,
+      "height": 136.0
+    },
+    {
+      "frame_index": 30,
+      "x": 448.0,
+      "y": 51.0,
+      "width": 115.0,
+      "height": 138.0
+    },
+    {
+      "frame_index": 37,
+      "x": 435.0,
+      "y": 50.0,
+      "width": 110.0,
+      "height": 140.0
+    },
+    {
+      "frame_index": 47,
+      "x": 412.0,
+      "y": 48.0,
+      "width": 119.0,
+      "height": 131.0
+    },
+    {
+      "frame_index": 57,
+      "x": 390.0,
+      "y": 51.0,
+      "width": 121.0,
+      "height": 132.0
+    },
+    {
+      "frame_index": 61,
+      "x": 400.0,
+      "y": 49.0,
+      "width": 103.0,
+      "height": 138.0
+    },
+    {
+      "frame_index": 73,
+      "x": 416.0,
+      "y": 47.0,
+      "width": 94.0,
+      "height": 142.0
+    },
+    {
+      "frame_index": 96,
+      "x": 433.0,
+      "y": 65.0,
+      "width": 67.0,
+      "height": 138.0
+    },
+    {
+      "frame_index": 104,
+      "x": 448.0,
+      "y": 68.0,
+      "width": 58.0,
+      "height": 151.0
+    },
+    {
+      "frame_index": 113,
+      "x": 465.0,
+      "y": 73.0,
+      "width": 51.0,
+      "height": 159.0
+    },
+    {
+      "frame_index": 120,
+      "x": 441.0,
+      "y": 90.0,
+      "width": 66.0,
+      "height": 120.0
+    }
+  ],
+  "human_annotation_session": "data/annotations/human/imported_chloe_kelly_acl_00m34s693_00m40s216_annotation_session_human.json",
+  "human_target_unavailable_interval_count": 0,
+  "human_target_unavailable_frame_count": 0,
+  "human_target_unavailable_intervals": [],
+  "roi_pad": 0.2,
+  "yolo_selection_strategy": "center",
+  "notes": "Raw pose extraction only. Manual ROI keyframe records are preserved unchanged; roi_pad records the symmetric context margin applied only to the pose crop. No biomechanical interpretation."
+}

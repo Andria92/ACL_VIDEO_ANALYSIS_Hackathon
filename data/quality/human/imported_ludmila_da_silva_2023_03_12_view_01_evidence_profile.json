@@ -1,0 +1,53 @@
+{
+  "case_id": "imported_ludmila_da_silva_2023_03_12_acl_candidate",
+  "source_id": "imported_ludmila_da_silva_2023_03_12_view_01",
+  "view_id": "imported_ludmila_da_silva_2023_03_12_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 13,
+  "target_tracking_coverage": 0.6,
+  "pose_frame_coverage": 0.9875,
+  "upper_body_landmark_coverage": 0.5979166666666667,
+  "core_landmark_coverage": 0.6,
+  "lower_limb_landmark_coverage": 0.6,
+  "geometry_feature_coverage": 0.5979166666666669,
+  "dynamic_feature_coverage": 0.6107294129235618,
+  "interpolation_fraction": 0.0059,
+  "rejected_fraction": 0.4272,
+  "identity_uncertainty_fraction": 0.2375,
+  "target_loss_fraction": 0.0125,
+  "supported_feature_count": 34,
+  "limited_feature_count": 2,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 30,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "Feature value is unavailable.",
+    "Local trajectory residuals are high relative to local movement.",
+    "Frame status is TARGET_IDENTITY_UNCERTAIN."
+  ],
+  "evidence_overview": {
+    "supported_features": 34,
+    "limited_features": 2,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.5979166666666669,
+    "dynamic_coverage": 0.6107294129235618,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "Feature value is unavailable.",
+      "Local trajectory residuals are high relative to local movement.",
+      "Frame status is TARGET_IDENTITY_UNCERTAIN."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 13,
+    "overall_quality_label": "MODERATE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.9444444444444444,
+      "limited_fraction": 0.05555555555555555,
+      "geometry_coverage": 0.5979166666666669,
+      "dynamic_coverage": 0.6107294129235618
+    }
+  }
+}

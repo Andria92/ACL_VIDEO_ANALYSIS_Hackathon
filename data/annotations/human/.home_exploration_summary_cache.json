@@ -1,0 +1,29 @@
+{
+  "cache_version": "exploration_home_summary_cache_v1",
+  "fingerprint": "93a170190f98f84294aa5262f8ffad9618eb87d04202bd3637c231b24769ba69",
+  "payload": {
+    "summary": {
+      "analysed_case_count": 36,
+      "analysed_view_count": 50,
+      "feature_count": 36,
+      "known_injury_side_count": 34,
+      "known_contact_mechanism_count": 29,
+      "unclear_contact_mechanism_count": 7,
+      "mechanism_source_count": 29,
+      "phase_supported_case_count": 23
+    },
+    "similarity": {
+      "available": true,
+      "status": "AVAILABLE",
+      "comparable_case_count": 18,
+      "reference_pool_case_count": 18,
+      "query_only_case_count": 0,
+      "pairwise_output_count": 153,
+      "eligible_descriptor_count": 98,
+      "reason": "Injury-event rankings use completed, phase-supported views whose visible event is covered. Each injury appears once and its most similar eligible view pair is retained.",
+      "scientific_note": "Movement similarity is a descriptive comparison of mutually supported projected measurements, not evidence of the same ACL mechanism or biological cause.",
+      "signature_case_count": 2,
+      "signature_file_count": 2
+    }
+  }
+}

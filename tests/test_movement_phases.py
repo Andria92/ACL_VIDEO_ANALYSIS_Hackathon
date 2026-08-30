@@ -10,7 +10,7 @@ from acl_motion.semantics.phases import (
 )
 
 
-def test_stable_sequence_creates_one_phase() -> None:
+def test_stable_sequence_is_presented_as_supported_evidence_interval() -> None:
     dynamic = _dynamic_df(
         {
             "feature_a": [i * 0.03 for i in range(24)],
@@ -20,9 +20,25 @@ def test_stable_sequence_creates_one_phase() -> None:
 
     result = _segment(dynamic)
 
-    assert result.status == "SUPPORTED"
+    assert result.status == "SUPPORTED_EVIDENCE_INTERVAL"
     assert len(result.phases) == 1
     assert result.transitions == ()
+    assert result.metadata["presentation_mode"] == "SUPPORTED_EVIDENCE_INTERVAL"
+    assert result.metadata["analysis_scope"]["type"] == "FULL_MOVEMENT_WINDOW"
+    assert result.metadata["analysis_scope"]["includes_annotated_movement_end"] is True
+    decision = result.metadata["phase_decision_rationale"]
+    assert decision["decision"] == "PHASES_NOT_PRODUCED"
+    assert decision["reason_code"] == "NO_SUPPORTED_MULTIVARIATE_TRANSITION"
+    assert "imposing a before/after structure" in decision["safety_rationale"]
+    assert "No AI or generative model was used" in decision["method_note"]
+    assert "not presented as a phase sequence" in result.sequence_summary
+    payload = result.to_json_dict()
+    assert payload["phase_count"] == 0
+    assert payload["internal_segment_count"] == 1
+    assert payload["supported_evidence_interval"]["start_frame"] == 0
+    assert "phase_index" not in payload["supported_evidence_interval"]
+    assert result.frame_map["phase_index"].isna().all()
+    assert set(result.frame_map["phase_title"]) == {"Supported Evidence Interval"}
 
 
 def test_one_clear_sustained_transition_creates_two_phases() -> None:
@@ -35,6 +51,12 @@ def test_one_clear_sustained_transition_creates_two_phases() -> None:
 
     result = _segment(dynamic)
 
+    assert result.status == "SUPPORTED"
+    assert result.metadata["presentation_mode"] == "PHASE_SEQUENCE"
+    assert (
+        result.metadata["phase_decision_rationale"]["reason_code"]
+        == "SUPPORTED_MULTIVARIATE_TRANSITION"
+    )
     assert len(result.phases) == 2
     assert len(result.transitions) == 1
     assert 10 <= result.transitions[0]["transition_frame"] <= 13
@@ -106,6 +128,229 @@ def test_unsupported_feature_does_not_contribute_to_change_score() -> None:
     assert all(
         item["feature_name"] != "unsupported_large_feature"
         for item in result.eligible_descriptors
+    )
+
+
+def test_long_supported_block_without_transition_is_an_evidence_interval() -> None:
+    frame_count = 40
+    supported = set(range(10, 30))
+    dynamic = _dynamic_df(
+        {
+            feature: [
+                (frame - 10) * scale if frame in supported else np.nan
+                for frame in range(frame_count)
+            ]
+            for feature, scale in {
+                "feature_a": 0.1,
+                "feature_b": 0.2,
+                "feature_c": -0.1,
+                "feature_d": 0.3,
+            }.items()
+        }
+    )
+
+    result = segment_movement_phases(
+        case_id="synthetic_case",
+        source_id="synthetic_view",
+        dynamic_df=dynamic,
+        case_summary=_case_summary(dynamic),
+        path_df=_path_df(dynamic),
+        movement_window={
+            "movement_start_frame": 0,
+            "movement_end_frame": frame_count - 1,
+            "duration_ms": 3900.0,
+        },
+        config=PhaseSegmentationConfig(
+            minimum_geometry_completeness=0.70,
+            minimum_supported_fraction=0.55,
+            minimum_dynamic_supported_fraction=0.40,
+            minimum_continuous_supported_ms=300.0,
+            minimum_eligible_descriptors=4,
+            minimum_partial_window_duration_ms=500.0,
+            minimum_partial_window_fraction=0.15,
+            minimum_phase_duration_ms=300.0,
+            minimum_boundary_separation_ms=300.0,
+            smoothing_ms=100.0,
+        ),
+    )
+
+    assert result.status == "SUPPORTED_EVIDENCE_INTERVAL"
+    assert result.phases
+    assert result.transitions == ()
+    assert result.metadata["presentation_mode"] == "SUPPORTED_EVIDENCE_INTERVAL"
+    assert result.metadata["analysis_scope"]["type"] == "PARTIAL_MOVEMENT_WINDOW"
+    assert result.metadata["configuration"]["enable_partial_window_segmentation"] is True
+    assert result.metadata["analysis_scope"]["start_frame"] == 10
+    assert result.metadata["analysis_scope"]["end_frame"] == 29
+    assert result.metadata["analysis_scope"]["position_in_movement_window"] == "MIDDLE"
+    assert result.metadata["analysis_scope"]["includes_annotated_movement_end"] is False
+    assert (
+        result.metadata["phase_decision_rationale"]["reason_code"]
+        == "NO_SUPPORTED_MULTIVARIATE_TRANSITION"
+    )
+    assert result.frame_map.loc[
+        result.frame_map["source_frame_index"].eq(0), "phase_id"
+    ].isna().all()
+    assert result.frame_map.loc[
+        result.frame_map["source_frame_index"].between(10, 29), "phase_id"
+    ].notna().all()
+    assert result.frame_map.loc[
+        result.frame_map["source_frame_index"].between(10, 29), "phase_index"
+    ].isna().all()
+    assert "not presented as a phase sequence" in result.sequence_summary
+    assert "Evidence outside this continuous block remains unsegmented" in result.sequence_summary
+    assert result.to_json_dict()["phase_count"] == 0
+
+
+def test_partial_supported_block_with_transition_remains_a_phase_sequence() -> None:
+    frame_count = 40
+    supported = set(range(10, 30))
+    dynamic = _dynamic_df(
+        {
+            feature: [
+                (0.0 if frame < 20 else scale) if frame in supported else np.nan
+                for frame in range(frame_count)
+            ]
+            for feature, scale in {
+                "feature_a": 5.0,
+                "feature_b": 6.0,
+                "feature_c": -5.0,
+                "feature_d": 7.0,
+            }.items()
+        }
+    )
+
+    result = segment_movement_phases(
+        case_id="synthetic_case",
+        source_id="synthetic_view",
+        dynamic_df=dynamic,
+        case_summary=_case_summary(dynamic),
+        path_df=_path_df(dynamic),
+        movement_window={
+            "movement_start_frame": 0,
+            "movement_end_frame": frame_count - 1,
+            "duration_ms": 3900.0,
+        },
+        config=PhaseSegmentationConfig(
+            minimum_geometry_completeness=0.70,
+            minimum_supported_fraction=0.55,
+            minimum_dynamic_supported_fraction=0.40,
+            minimum_continuous_supported_ms=300.0,
+            minimum_eligible_descriptors=4,
+            minimum_partial_window_duration_ms=500.0,
+            minimum_partial_window_fraction=0.15,
+            minimum_phase_duration_ms=300.0,
+            minimum_boundary_separation_ms=300.0,
+            smoothing_ms=100.0,
+        ),
+    )
+
+    assert result.status == "SUPPORTED_PARTIAL_WINDOW"
+    assert len(result.phases) == 2
+    assert len(result.transitions) == 1
+    assert result.metadata["presentation_mode"] == "PHASE_SEQUENCE"
+
+
+def test_short_supported_block_can_be_interval_without_weakening_phase_duration() -> None:
+    frame_count = 20
+    supported = set(range(10, 14))
+    dynamic = _dynamic_df(
+        {
+            feature: [
+                frame * scale if frame in supported else np.nan
+                for frame in range(frame_count)
+            ]
+            for feature, scale in {
+                "feature_a": 0.1,
+                "feature_b": 0.2,
+                "feature_c": -0.1,
+                "feature_d": 0.3,
+            }.items()
+        }
+    )
+
+    result = segment_movement_phases(
+        case_id="synthetic_case",
+        source_id="synthetic_view",
+        dynamic_df=dynamic,
+        case_summary=_case_summary(dynamic),
+        path_df=_path_df(dynamic),
+        movement_window={
+            "movement_start_frame": 0,
+            "movement_end_frame": frame_count - 1,
+            "duration_ms": 1900.0,
+        },
+        config=PhaseSegmentationConfig(
+            minimum_geometry_completeness=0.70,
+            minimum_supported_fraction=0.55,
+            minimum_dynamic_supported_fraction=0.40,
+            minimum_continuous_supported_ms=300.0,
+            minimum_eligible_descriptors=4,
+            minimum_evidence_interval_duration_ms=300.0,
+            minimum_partial_window_duration_ms=500.0,
+            minimum_partial_window_fraction=0.15,
+            minimum_phase_duration_ms=300.0,
+            minimum_boundary_separation_ms=300.0,
+            smoothing_ms=100.0,
+        ),
+    )
+
+    assert result.status == "SUPPORTED_EVIDENCE_INTERVAL"
+    assert result.to_json_dict()["phase_count"] == 0
+    assert result.metadata["analysis_scope"]["duration_ms"] == 300.0
+    assert result.metadata["analysis_scope"]["movement_window_fraction"] == 0.20
+    assert (
+        result.metadata["analysis_scope"]["minimum_phase_sequence_window_duration_ms"]
+        == 500.0
+    )
+
+
+def test_sparse_supported_frames_cannot_trigger_partial_window_phases() -> None:
+    frame_count = 40
+    supported = set(range(10, 14))
+    dynamic = _dynamic_df(
+        {
+            feature: [
+                frame * scale if frame in supported else np.nan
+                for frame in range(frame_count)
+            ]
+            for feature, scale in {
+                "feature_a": 0.1,
+                "feature_b": 0.2,
+                "feature_c": -0.1,
+                "feature_d": 0.3,
+            }.items()
+        }
+    )
+
+    result = segment_movement_phases(
+        case_id="synthetic_case",
+        source_id="synthetic_view",
+        dynamic_df=dynamic,
+        case_summary=_case_summary(dynamic),
+        path_df=_path_df(dynamic),
+        movement_window={
+            "movement_start_frame": 0,
+            "movement_end_frame": frame_count - 1,
+            "duration_ms": 3900.0,
+        },
+        config=PhaseSegmentationConfig(
+            minimum_geometry_completeness=0.70,
+            minimum_supported_fraction=0.55,
+            minimum_dynamic_supported_fraction=0.40,
+            minimum_continuous_supported_ms=300.0,
+            minimum_eligible_descriptors=4,
+            minimum_partial_window_duration_ms=500.0,
+            minimum_partial_window_fraction=0.15,
+        ),
+    )
+
+    assert result.status == "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION"
+    assert result.phases == ()
+    assert result.metadata["presentation_mode"] == "PHASES_WITHHELD"
+    assert (
+        result.metadata["phase_decision_rationale"]["reason_code"]
+        == "INSUFFICIENT_CONTINUOUS_MULTIVARIATE_EVIDENCE"
     )
 
 

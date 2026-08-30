@@ -1,0 +1,162 @@
+{
+  "provenance": {
+    "annotation_session_id": "c8cdaa08-3c0d-477e-a890-f0ffe8525515",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T20:23:43.367614+00:00",
+    "updated_at": "2026-08-27T20:27:12.291540+00:00",
+    "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+    "source_id": "imported_mary_fowler_2025_04_13_view_02",
+    "view_id": "imported_mary_fowler_2025_04_13_view_02",
+    "video_path": "data/videos/analysis_clips/FULL MATCH _ Manchester City v Manchester United _ Semi-Final _ Adobe Women_s FA Cup 2024-25_20m29s552_20m34s552.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 8,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 507.5,
+        "y": 107.0,
+        "width": 103.0,
+        "height": 184.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 6,
+      "bbox": {
+        "x": 517.5,
+        "y": 113.0,
+        "width": 106.0,
+        "height": 220.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 10,
+      "bbox": {
+        "x": 549.5,
+        "y": 106.0,
+        "width": 87.0,
+        "height": 232.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 31,
+      "bbox": {
+        "x": 593.5,
+        "y": 119.0,
+        "width": 46.0,
+        "height": 234.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 90,
+      "bbox": {
+        "x": 479.5,
+        "y": 126.0,
+        "width": 154.0,
+        "height": 227.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 91,
+      "bbox": {
+        "x": 438.5,
+        "y": 102.0,
+        "width": 199.0,
+        "height": 247.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 95,
+      "bbox": {
+        "x": 412.5,
+        "y": 111.0,
+        "width": 222.0,
+        "height": 244.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 122,
+      "bbox": {
+        "x": 395.5,
+        "y": 114.0,
+        "width": 193.0,
+        "height": 241.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 27,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 62,
+      "end_frame": 88,
+      "frame_count": 27,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 22,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 99,
+      "end_frame": 120,
+      "frame_count": 22,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 122,
+    "movement_end_timestamp_ms": 4066.6666666666665,
+    "movement_duration_ms": 4066.6666666666665,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+    "source_id": "imported_mary_fowler_2025_04_13_view_02",
+    "view_id": "imported_mary_fowler_2025_04_13_view_02",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 122,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 122,
+    "event_anchor_frame": 122,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

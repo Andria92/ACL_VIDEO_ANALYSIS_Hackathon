@@ -1,0 +1,55 @@
+{
+  "case_id": "jordan_nobbs_acl",
+  "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+  "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 9,
+  "target_tracking_coverage": 0.0968,
+  "pose_frame_coverage": 0.871,
+  "upper_body_landmark_coverage": 0.10216666666666667,
+  "core_landmark_coverage": 0.10485,
+  "lower_limb_landmark_coverage": 0.1129,
+  "geometry_feature_coverage": 0.10707885304659497,
+  "dynamic_feature_coverage": 0.6395502645502646,
+  "interpolation_fraction": 0.0,
+  "rejected_fraction": 0.9013,
+  "identity_uncertainty_fraction": 0.5483870967741935,
+  "target_loss_fraction": 0.12903225806451613,
+  "supported_feature_count": 0,
+  "limited_feature_count": 0,
+  "unavailable_feature_count": 36,
+  "analytics_ready_feature_count": 0,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_IDENTITY_UNCERTAIN."
+  ],
+  "evidence_overview": {
+    "supported_features": 0,
+    "limited_features": 0,
+    "unavailable_features": 36,
+    "geometry_coverage": 0.10707885304659497,
+    "dynamic_coverage": 0.6395502645502646,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_IDENTITY_UNCERTAIN."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 9,
+    "overall_quality_label": "UNAVAILABLE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.0,
+      "limited_fraction": 0.0,
+      "geometry_coverage": 0.10707885304659497,
+      "dynamic_coverage": 0.6395502645502646
+    }
+  }
+}

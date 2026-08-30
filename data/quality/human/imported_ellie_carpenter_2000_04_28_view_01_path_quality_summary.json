@@ -1,0 +1,59 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 12
+  },
+  "supported_samples": 12,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 3.4890782559047993,
+  "minimum_normalized_projected_speed_per_s": 1.3236776865001694,
+  "time_minimum_projected_speed_ms": -1100.0000000000005,
+  "maximum_normalized_projected_speed_per_s": 6.035209817576483,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": -0.7145217356870089,
+    "late_heading_deg": 1.6053436982425267,
+    "projected_change_of_direction_angle_deg": 2.3198654339295217,
+    "absolute_projected_change_of_direction_angle_deg": 2.3198654339295217,
+    "source_frame_start": 20,
+    "source_frame_end": 103,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "UNAVAILABLE",
+    "reason": "Insufficient supported speed samples in comparison windows."
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 5,
+      "path_segment_002": 7
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 5,
+        "path_segment_002": 7
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 5,
+        "path_segment_002": 7
+      }
+    },
+    "chosen_method": "translation"
+  }
+}

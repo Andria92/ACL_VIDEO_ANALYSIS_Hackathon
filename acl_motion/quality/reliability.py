@@ -53,6 +53,24 @@ def build_reliability_summary(
         "processing_status_counts": processed_pose["processing_status"].value_counts().sort_index().to_dict(),
         "landmark_status_counts": processed_pose["landmark_status"].value_counts().sort_index().to_dict(),
     }
+    if "automatic_frame_status" in frame_quality:
+        summary["automatic_frame_status_counts"] = (
+            frame_quality["automatic_frame_status"].value_counts().sort_index().to_dict()
+        )
+    if "manual_review_decision" in frame_quality:
+        summary["manual_review_decision_counts"] = (
+            frame_quality["manual_review_decision"].value_counts().sort_index().to_dict()
+        )
+    if "manual_override_applied" in frame_quality:
+        summary["manual_acceptance_override_frame_count"] = int(
+            frame_quality["manual_override_applied"].fillna(False).astype(bool).sum()
+        )
+    if "human_target_accepted" in frame_quality:
+        reviewed_accepted = frame_quality["human_target_accepted"].fillna(False).astype(bool)
+        summary["manual_accepted_frame_count"] = int(reviewed_accepted.sum())
+        summary["manual_accepted_usable_frame_count"] = int(
+            (reviewed_accepted & frame_quality["valid_target_frame"].astype(bool)).sum()
+        )
     for landmark_name, group in processed_pose.groupby("landmark_name"):
         summary[f"{landmark_name}_coverage"] = _fraction(int(group["clean_x"].notna().sum()), total_frames)
     summary["core_landmark_coverage"] = _coverage_for_landmarks(processed_pose, CORE_LANDMARKS, total_frames)

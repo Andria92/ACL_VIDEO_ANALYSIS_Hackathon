@@ -1,0 +1,15 @@
+{
+  "overall_status": "UNAVAILABLE",
+  "reason": "No projected body-center samples.",
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "UNAVAILABLE",
+      "reason": "No path rows were produced."
+    },
+    "affine": {
+      "validation_status": "UNAVAILABLE",
+      "reason": "No path rows were produced."
+    },
+    "chosen_method": "translation_diagnostic_unavailable"
+  }
+}

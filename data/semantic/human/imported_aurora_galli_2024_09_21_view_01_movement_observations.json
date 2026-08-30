@@ -1,0 +1,886 @@
+{
+  "metadata": {
+    "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+    "source_id": "imported_aurora_galli_2024_09_21_view_01",
+    "movement_window": {
+      "movement_start_frame": 0,
+      "movement_start_timestamp_ms": 0.0,
+      "movement_end_frame": 44,
+      "movement_end_timestamp_ms": 1466.6666666666665,
+      "movement_duration_ms": 1466.6666666666665,
+      "confidence": "moderate",
+      "rationale": "",
+      "source": "human_ui_movement_window",
+      "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+    },
+    "path_output": "data/path/human/imported_aurora_galli_2024_09_21_view_01_projected_movement_path.parquet",
+    "path_quality_summary": "data/quality/human/imported_aurora_galli_2024_09_21_view_01_path_quality_summary.json",
+    "path_candidate_choice": "translation_diagnostic_unavailable",
+    "bilateral_hka_summary": {
+      "evidence_status": "UNAVAILABLE",
+      "supported_samples": 0,
+      "mean_absolute_hka_bilateral_difference_deg": null,
+      "peak_absolute_hka_bilateral_difference_deg": null,
+      "time_peak_absolute_hka_bilateral_difference_ms": null,
+      "source_frame_peak_absolute_hka_bilateral_difference": null,
+      "relationship_pattern": "INSUFFICIENT_EVIDENCE",
+      "pattern_explanation": "Fewer than the configured supported bilateral HKA samples were available.",
+      "start_signed_difference_deg": null,
+      "end_signed_difference_deg": null,
+      "signed_change_deg": null,
+      "window_summaries": []
+    },
+    "semantic_version": "m5_10_semantic_movement_with_controlled_vocabulary_v1",
+    "observable_description_output": "data/semantics/human/imported_aurora_galli_2024_09_21_view_01_observable_movement_descriptions.json"
+  },
+  "observations": [
+    {
+      "observation_id": "movement_path.movement_direction",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "movement_path",
+      "title": "Movement Direction",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "projected_movement_heading_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "No projected body-center samples."
+      ],
+      "source_frames": [],
+      "technical_explanation": "No projected body-center samples.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "movement_path.projected_speed_pattern",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "movement_path",
+      "title": "Projected Speed Pattern",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "normalized_projected_movement_speed"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "Projected speed pattern was unavailable."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Projected speed pattern was unavailable.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "hip_knee_ankle_chain.injured-side_knee_chain",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "hip_knee_ankle_chain",
+      "title": "Injured-Side Knee Chain",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "injured_hka_angle_2d_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected hip-knee-ankle angle was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected hip-knee-ankle angle was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "hip_knee_ankle_chain.contralateral_knee_chain",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "hip_knee_ankle_chain",
+      "title": "Contralateral Knee Chain",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected hip-knee-ankle angle was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected hip-knee-ankle angle was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "hip_knee_ankle_chain.injured_knee_relative_to_foot",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "hip_knee_ankle_chain",
+      "title": "Injured Knee Relative to Foot",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "right_knee_ankle_x_offset_normalized"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected knee-ankle relationship was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Knee Relative to Foot uses a projected knee-ankle relationship in V1; it is not a true foot-axis measurement.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "hip_knee_ankle_chain.contralateral_knee_relative_to_foot",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "hip_knee_ankle_chain",
+      "title": "Contralateral Knee Relative to Foot",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "left_knee_ankle_x_offset_normalized"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected knee-ankle relationship was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Knee Relative to Foot uses a projected knee-ankle relationship in V1; it is not a true foot-axis measurement.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "hip_thigh.hip___thigh_geometry",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "hip_thigh",
+      "title": "Hip / Thigh Geometry",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "projected_thigh_orientation"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "Dedicated projected hip/thigh descriptors are not part of the current M3 feature set."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Dedicated projected hip/thigh descriptors are not part of the current M3 feature set.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "trunk_pelvis.trunk_orientation",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "trunk_pelvis",
+      "title": "Trunk Orientation",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "projected_trunk_axis_angle_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected trunk-axis orientation was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected trunk-axis orientation was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "trunk_pelvis.pelvic_orientation",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "trunk_pelvis",
+      "title": "Pelvic Orientation",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "projected_hip_line_angle_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected hip-line orientation was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected hip-line orientation was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "trunk_pelvis.shoulder-pelvis_relationship",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "trunk_pelvis",
+      "title": "Shoulder-Pelvis Relationship",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "projected_shoulder_pelvis_orientation_difference_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected shoulder-pelvis orientation difference was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected shoulder-pelvis orientation difference was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "upper_body.injured-side_elbow_configuration",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "upper_body",
+      "title": "Injured-Side Elbow Configuration",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "right_elbow_angle_2d_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected elbow angle was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected elbow angle was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "upper_body.injured-side_arm_orientation",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "upper_body",
+      "title": "Injured-Side Arm Orientation",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "right_upper_arm_orientation_2d_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "projected upper-arm orientation was unavailable under the current quality rules."
+      ],
+      "source_frames": [],
+      "technical_explanation": "projected upper-arm orientation was unavailable under the current quality rules.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "bilateral_limb_relationship.bilateral_knee-chain_relationship",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "bilateral_limb_relationship",
+      "title": "Bilateral Knee-Chain Relationship",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "hka_projected_bilateral_difference_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "Fewer than the configured supported bilateral HKA samples were available."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Fewer than the configured supported bilateral HKA samples were available.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "bilateral_limb_relationship.final-window_bilateral_relationship",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "bilateral_limb_relationship",
+      "title": "Final-Window Bilateral Relationship",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "hka_projected_bilateral_difference_deg"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "Insufficient supported samples in the requested Movement-End-relative window."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Insufficient supported samples in the requested Movement-End-relative window.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "movement_timing.timing_of_largest_supported_changes",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "movement_timing",
+      "title": "Timing of Largest Supported Changes",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "No supported robust dynamic extrema were available."
+      ],
+      "source_frames": [],
+      "technical_explanation": "No supported robust dynamic extrema were available.",
+      "metadata": {}
+    },
+    {
+      "observation_id": "evidence.foot___ankle_orientation",
+      "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+      "category": "evidence",
+      "title": "Foot / Ankle Orientation",
+      "plain_language_summary": "Unavailable under the current evidence rules.",
+      "technical_feature_names": [
+        "ankle_angle",
+        "foot_progression"
+      ],
+      "value": null,
+      "unit": "",
+      "start_value": null,
+      "end_value": null,
+      "change": null,
+      "peak_value": null,
+      "peak_source_frame": null,
+      "peak_movement_relative_ms": null,
+      "evidence_status": "UNAVAILABLE",
+      "evidence_completeness": null,
+      "quality_reasons": [
+        "Foot/ankle orientation requires heel, toe, or foot-index landmarks and is not available in the current YOLO COCO-17 analysis."
+      ],
+      "source_frames": [],
+      "technical_explanation": "Foot/ankle orientation requires heel, toe, or foot-index landmarks and is not available in the current YOLO COCO-17 analysis.",
+      "metadata": {}
+    }
+  ],
+  "categories": {
+    "movement_path": [
+      {
+        "observation_id": "movement_path.movement_direction",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "movement_path",
+        "title": "Movement Direction",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "projected_movement_heading_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "No projected body-center samples."
+        ],
+        "source_frames": [],
+        "technical_explanation": "No projected body-center samples.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "movement_path.projected_speed_pattern",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "movement_path",
+        "title": "Projected Speed Pattern",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "normalized_projected_movement_speed"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "Projected speed pattern was unavailable."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Projected speed pattern was unavailable.",
+        "metadata": {}
+      }
+    ],
+    "hip_knee_ankle_chain": [
+      {
+        "observation_id": "hip_knee_ankle_chain.injured-side_knee_chain",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "hip_knee_ankle_chain",
+        "title": "Injured-Side Knee Chain",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "injured_hka_angle_2d_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected hip-knee-ankle angle was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected hip-knee-ankle angle was unavailable under the current quality rules.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "hip_knee_ankle_chain.contralateral_knee_chain",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "hip_knee_ankle_chain",
+        "title": "Contralateral Knee Chain",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "contralateral_hka_angle_2d_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected hip-knee-ankle angle was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected hip-knee-ankle angle was unavailable under the current quality rules.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "hip_knee_ankle_chain.injured_knee_relative_to_foot",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "hip_knee_ankle_chain",
+        "title": "Injured Knee Relative to Foot",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "right_knee_ankle_x_offset_normalized"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected knee-ankle relationship was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Knee Relative to Foot uses a projected knee-ankle relationship in V1; it is not a true foot-axis measurement.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "hip_knee_ankle_chain.contralateral_knee_relative_to_foot",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "hip_knee_ankle_chain",
+        "title": "Contralateral Knee Relative to Foot",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "left_knee_ankle_x_offset_normalized"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected knee-ankle relationship was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Knee Relative to Foot uses a projected knee-ankle relationship in V1; it is not a true foot-axis measurement.",
+        "metadata": {}
+      }
+    ],
+    "hip_thigh": [
+      {
+        "observation_id": "hip_thigh.hip___thigh_geometry",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "hip_thigh",
+        "title": "Hip / Thigh Geometry",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "projected_thigh_orientation"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "Dedicated projected hip/thigh descriptors are not part of the current M3 feature set."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Dedicated projected hip/thigh descriptors are not part of the current M3 feature set.",
+        "metadata": {}
+      }
+    ],
+    "trunk_pelvis": [
+      {
+        "observation_id": "trunk_pelvis.trunk_orientation",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "trunk_pelvis",
+        "title": "Trunk Orientation",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "projected_trunk_axis_angle_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected trunk-axis orientation was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected trunk-axis orientation was unavailable under the current quality rules.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "trunk_pelvis.pelvic_orientation",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "trunk_pelvis",
+        "title": "Pelvic Orientation",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "projected_hip_line_angle_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected hip-line orientation was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected hip-line orientation was unavailable under the current quality rules.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "trunk_pelvis.shoulder-pelvis_relationship",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "trunk_pelvis",
+        "title": "Shoulder-Pelvis Relationship",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "projected_shoulder_pelvis_orientation_difference_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected shoulder-pelvis orientation difference was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected shoulder-pelvis orientation difference was unavailable under the current quality rules.",
+        "metadata": {}
+      }
+    ],
+    "upper_body": [
+      {
+        "observation_id": "upper_body.injured-side_elbow_configuration",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "upper_body",
+        "title": "Injured-Side Elbow Configuration",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "right_elbow_angle_2d_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected elbow angle was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected elbow angle was unavailable under the current quality rules.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "upper_body.injured-side_arm_orientation",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "upper_body",
+        "title": "Injured-Side Arm Orientation",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "right_upper_arm_orientation_2d_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "projected upper-arm orientation was unavailable under the current quality rules."
+        ],
+        "source_frames": [],
+        "technical_explanation": "projected upper-arm orientation was unavailable under the current quality rules.",
+        "metadata": {}
+      }
+    ],
+    "bilateral_limb_relationship": [
+      {
+        "observation_id": "bilateral_limb_relationship.bilateral_knee-chain_relationship",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "bilateral_limb_relationship",
+        "title": "Bilateral Knee-Chain Relationship",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "hka_projected_bilateral_difference_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "Fewer than the configured supported bilateral HKA samples were available."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Fewer than the configured supported bilateral HKA samples were available.",
+        "metadata": {}
+      },
+      {
+        "observation_id": "bilateral_limb_relationship.final-window_bilateral_relationship",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "bilateral_limb_relationship",
+        "title": "Final-Window Bilateral Relationship",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "hka_projected_bilateral_difference_deg"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "Insufficient supported samples in the requested Movement-End-relative window."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Insufficient supported samples in the requested Movement-End-relative window.",
+        "metadata": {}
+      }
+    ],
+    "movement_timing": [
+      {
+        "observation_id": "movement_timing.timing_of_largest_supported_changes",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "movement_timing",
+        "title": "Timing of Largest Supported Changes",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "No supported robust dynamic extrema were available."
+        ],
+        "source_frames": [],
+        "technical_explanation": "No supported robust dynamic extrema were available.",
+        "metadata": {}
+      }
+    ],
+    "evidence": [
+      {
+        "observation_id": "evidence.foot___ankle_orientation",
+        "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+        "category": "evidence",
+        "title": "Foot / Ankle Orientation",
+        "plain_language_summary": "Unavailable under the current evidence rules.",
+        "technical_feature_names": [
+          "ankle_angle",
+          "foot_progression"
+        ],
+        "value": null,
+        "unit": "",
+        "start_value": null,
+        "end_value": null,
+        "change": null,
+        "peak_value": null,
+        "peak_source_frame": null,
+        "peak_movement_relative_ms": null,
+        "evidence_status": "UNAVAILABLE",
+        "evidence_completeness": null,
+        "quality_reasons": [
+          "Foot/ankle orientation requires heel, toe, or foot-index landmarks and is not available in the current YOLO COCO-17 analysis."
+        ],
+        "source_frames": [],
+        "technical_explanation": "Foot/ankle orientation requires heel, toe, or foot-index landmarks and is not available in the current YOLO COCO-17 analysis.",
+        "metadata": {}
+      }
+    ]
+  }
+}

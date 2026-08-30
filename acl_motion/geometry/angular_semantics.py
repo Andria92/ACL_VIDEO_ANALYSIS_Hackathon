@@ -2,9 +2,12 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from enum import StrEnum
 
 import numpy as np
+
+ANGULAR_STATISTICS_VERSION = "angular_statistics_v1_shortest_arc"
 
 
 class AngleType(StrEnum):
@@ -91,3 +94,133 @@ def angular_difference_for_metric(
     if angle_type is None:
         return float("nan")
     return angular_difference(start_angle, end_angle, angle_type)
+
+
+def angular_range(
+    values: Iterable[float],
+    angle_type: AngleType | str,
+) -> float:
+    """Return the smallest semantically valid arc containing ``values``.
+
+    Internal/configuration angles retain their ordinary linear range. Directed
+    orientations use a 360-degree period, while undirected axes use a 180-degree
+    period. This prevents a boundary crossing such as ``179, -179`` from being
+    reported as a 358-degree movement range.
+
+    Non-numeric, non-finite-only, or unknown inputs return ``NaN``.
+    """
+
+    try:
+        semantic_type = AngleType(angle_type)
+        numeric = np.asarray(list(values), dtype=float).reshape(-1)
+    except (TypeError, ValueError):
+        return float("nan")
+    numeric = numeric[np.isfinite(numeric)]
+    if numeric.size == 0:
+        return float("nan")
+    if numeric.size == 1:
+        return 0.0
+    if semantic_type is AngleType.INTERNAL:
+        return float(np.ptp(numeric))
+
+    period = 360.0 if semantic_type is AngleType.DIRECTED else 180.0
+    ordered = np.sort(np.mod(numeric, period))
+    gaps = np.diff(np.concatenate((ordered, [ordered[0] + period])))
+    result = float(period - np.max(gaps))
+    return 0.0 if np.isclose(result, 0.0, atol=1e-12) else result
+
+
+def angular_mean(
+    values: Iterable[float],
+    angle_type: AngleType | str,
+) -> float:
+    """Return the circular or axial mean for an angular measurement.
+
+    Directed orientations use a 360-degree period. Undirected axes use a
+    180-degree period, so values separated by 180 degrees contribute to the
+    same visible axis. Internal/configuration angles retain their ordinary
+    arithmetic mean.
+    """
+
+    semantic_type, numeric = _finite_angular_values(values, angle_type)
+    if semantic_type is None or numeric.size == 0:
+        return float("nan")
+    if semantic_type is AngleType.INTERNAL:
+        return float(np.mean(numeric))
+
+    period = 360.0 if semantic_type is AngleType.DIRECTED else 180.0
+    radians = numeric * (2.0 * np.pi / period)
+    mean_sine = float(np.mean(np.sin(radians)))
+    mean_cosine = float(np.mean(np.cos(radians)))
+    if np.hypot(mean_sine, mean_cosine) <= np.finfo(float).eps:
+        return float("nan")
+    mean = float(np.arctan2(mean_sine, mean_cosine) * period / (2.0 * np.pi))
+    return float((mean + period / 2.0) % period - period / 2.0)
+
+
+def angular_standard_deviation(
+    values: Iterable[float],
+    angle_type: AngleType | str,
+) -> float:
+    """Return circular/axial standard deviation in degrees.
+
+    A single observation has no sample uncertainty and therefore returns
+    ``NaN``. Internal/configuration angles retain sample standard deviation.
+    """
+
+    semantic_type, numeric = _finite_angular_values(values, angle_type)
+    if semantic_type is None or numeric.size < 2:
+        return float("nan")
+    if semantic_type is AngleType.INTERNAL:
+        return float(np.std(numeric, ddof=1))
+
+    period = 360.0 if semantic_type is AngleType.DIRECTED else 180.0
+    radians = numeric * (2.0 * np.pi / period)
+    resultant = float(
+        np.hypot(np.mean(np.sin(radians)), np.mean(np.cos(radians)))
+    )
+    if resultant <= np.finfo(float).eps:
+        return float("nan")
+    resultant = min(resultant, 1.0)
+    return float(np.sqrt(-2.0 * np.log(resultant)) * period / (2.0 * np.pi))
+
+
+def _finite_angular_values(
+    values: Iterable[float],
+    angle_type: AngleType | str,
+) -> tuple[AngleType | None, np.ndarray]:
+    try:
+        semantic_type = AngleType(angle_type)
+        numeric = np.asarray(list(values), dtype=float).reshape(-1)
+    except (TypeError, ValueError):
+        return None, np.asarray([], dtype=float)
+    return semantic_type, numeric[np.isfinite(numeric)]
+
+
+def measurement_range_for_metric(
+    metric_name: str,
+    values: Iterable[float],
+) -> float:
+    """Return a registered angular range or an ordinary linear range."""
+
+    numeric_values = list(values)
+    angle_type = angle_type_for_metric(metric_name)
+    if angle_type is not None:
+        return angular_range(numeric_values, angle_type)
+    try:
+        numeric = np.asarray(numeric_values, dtype=float).reshape(-1)
+    except (TypeError, ValueError):
+        return float("nan")
+    numeric = numeric[np.isfinite(numeric)]
+    return float(np.ptp(numeric)) if numeric.size else float("nan")
+
+
+def range_semantics_for_metric(metric_name: str) -> str:
+    """Return the auditable range rule used for ``metric_name``."""
+
+    angle_type = angle_type_for_metric(metric_name)
+    if angle_type is None or angle_type is AngleType.INTERNAL:
+        return "linear"
+    if angle_type is AngleType.DIRECTED:
+        return "shortest_directed_arc"
+    return "shortest_axial_arc"

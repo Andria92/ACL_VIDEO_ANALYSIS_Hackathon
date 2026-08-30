@@ -1,0 +1,6 @@
+frame_index,x,y,width,height,view_id,annotation_source,annotation_session_id,annotator_id,flags,note
+17,499.5,138.0,138.0,221.0,imported_mary_fowler_2025_04_13_view_01,human_ui,171ceb7d-dbba-4209-8046-bd50bf8f4209,researcher_01,,
+21,431.5,111.0,204.0,245.0,imported_mary_fowler_2025_04_13_view_01,human_ui,171ceb7d-dbba-4209-8046-bd50bf8f4209,researcher_01,,
+25,423.5,105.0,216.0,252.0,imported_mary_fowler_2025_04_13_view_01,human_ui,171ceb7d-dbba-4209-8046-bd50bf8f4209,researcher_01,,
+27,404.5,96.0,235.0,261.0,imported_mary_fowler_2025_04_13_view_01,human_ui,171ceb7d-dbba-4209-8046-bd50bf8f4209,researcher_01,,
+42,386.5,93.0,241.0,267.0,imported_mary_fowler_2025_04_13_view_01,human_ui,171ceb7d-dbba-4209-8046-bd50bf8f4209,researcher_01,,

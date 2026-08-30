@@ -1,0 +1,136 @@
+{
+  "run_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_view_01_20260825T171357Z",
+  "timestamp_utc": "2026-08-25T17:13:57.181635+00:00",
+  "case_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_acl_candidate",
+  "source_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_view_01",
+  "pose_backend": "yolo",
+  "model_name": "Ultralytics YOLO pose",
+  "model_path": "data/models/yolov8n-pose.pt",
+  "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_2.mp4",
+  "fps": 30.0,
+  "width": 1280,
+  "height": 720,
+  "frame_count_video": 82,
+  "frame_count_processed": 73,
+  "landmark_row_count": 1241,
+  "start_frame": 0,
+  "end_frame": 72,
+  "every_n": 1,
+  "roi": null,
+  "roi_keyframes": "data/annotations/human/imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_target_roi_human.csv",
+  "roi_keyframe_count": 15,
+  "roi_keyframe_records": [
+    {
+      "frame_index": 0,
+      "x": 12.857142857142858,
+      "y": 78.57142857142857,
+      "width": 474.28571428571433,
+      "height": 598.5714285714286
+    },
+    {
+      "frame_index": 7,
+      "x": 161.42857142857142,
+      "y": 78.57142857142857,
+      "width": 338.57142857142856,
+      "height": 611.4285714285714
+    },
+    {
+      "frame_index": 13,
+      "x": 185.71428571428572,
+      "y": 71.42857142857143,
+      "width": 361.4285714285714,
+      "height": 627.1428571428571
+    },
+    {
+      "frame_index": 17,
+      "x": 194.28571428571428,
+      "y": 64.28571428571429,
+      "width": 388.5714285714286,
+      "height": 618.5714285714286
+    },
+    {
+      "frame_index": 21,
+      "x": 232.85714285714286,
+      "y": 62.857142857142854,
+      "width": 420.0,
+      "height": 632.8571428571428
+    },
+    {
+      "frame_index": 31,
+      "x": 380.0,
+      "y": 64.28571428571429,
+      "width": 295.71428571428567,
+      "height": 630.0
+    },
+    {
+      "frame_index": 35,
+      "x": 387.14285714285717,
+      "y": 62.857142857142854,
+      "width": 371.4285714285714,
+      "height": 630.0
+    },
+    {
+      "frame_index": 37,
+      "x": 384.2857142857143,
+      "y": 62.857142857142854,
+      "width": 501.4285714285714,
+      "height": 641.4285714285714
+    },
+    {
+      "frame_index": 41,
+      "x": 501.42857142857144,
+      "y": 44.285714285714285,
+      "width": 397.1428571428571,
+      "height": 655.7142857142857
+    },
+    {
+      "frame_index": 43,
+      "x": 518.5714285714286,
+      "y": 41.42857142857143,
+      "width": 390.0,
+      "height": 658.5714285714286
+    },
+    {
+      "frame_index": 47,
+      "x": 522.8571428571429,
+      "y": 41.42857142857143,
+      "width": 387.1428571428571,
+      "height": 662.8571428571429
+    },
+    {
+      "frame_index": 51,
+      "x": 550.0,
+      "y": 42.857142857142854,
+      "width": 374.28571428571433,
+      "height": 661.4285714285714
+    },
+    {
+      "frame_index": 55,
+      "x": 592.8571428571429,
+      "y": 131.42857142857142,
+      "width": 365.71428571428567,
+      "height": 567.1428571428571
+    },
+    {
+      "frame_index": 56,
+      "x": 545.7142857142857,
+      "y": 41.42857142857143,
+      "width": 461.42857142857144,
+      "height": 675.7142857142857
+    },
+    {
+      "frame_index": 65,
+      "x": 487.14285714285717,
+      "y": 62.857142857142854,
+      "width": 475.7142857142857,
+      "height": 647.1428571428571
+    }
+  ],
+  "human_annotation_session": "data/annotations/human/imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_annotation_session_human.json",
+  "human_target_unavailable_interval_count": 0,
+  "human_target_unavailable_frame_count": 0,
+  "human_target_unavailable_intervals": [],
+  "roi_pad": 0.2,
+  "yolo_selection_strategy": "center",
+  "notes": "Raw pose extraction only. Manual ROI keyframe records are preserved unchanged; roi_pad records the symmetric context margin applied only to the pose crop. No biomechanical interpretation."
+}

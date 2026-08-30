@@ -1,0 +1,18 @@
+{
+  "case_id": "imported_grace_wisnewski_2023_11_04_acl_candidate",
+  "source_id": "imported_grace_wisnewski_2023_11_04_view_01",
+  "view_id": "imported_grace_wisnewski_2023_11_04_view_01",
+  "analysis_start_frame": 3,
+  "analysis_end_frame": 27,
+  "initial_contact_frame": null,
+  "critical_plant_frame": null,
+  "estimated_event_start_frame": null,
+  "estimated_event_end_frame": 27,
+  "event_anchor_frame": 27,
+  "event_anchor_type": "estimated_event_end",
+  "collapse_frame": null,
+  "annotation_confidence": 0.6,
+  "annotation_method": "human_movement_window_compatibility",
+  "annotator": "researcher_01",
+  "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+}

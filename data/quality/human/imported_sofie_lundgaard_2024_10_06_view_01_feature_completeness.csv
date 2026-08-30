@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,49,84,0.5833333333333334,35,Frame status is INVALID_TRACK_SEGMENT.
+contralateral_hka_angle_2d_deg,44,84,0.5238095238095238,40,Frame status is INVALID_TRACK_SEGMENT.
+elbow_projected_bilateral_absolute_difference_deg,40,84,0.47619047619047616,44,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+elbow_projected_bilateral_difference_deg,40,84,0.47619047619047616,44,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+hka_projected_bilateral_absolute_difference_deg,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+hka_projected_bilateral_difference_deg,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+injured_elbow_angle_2d_deg,40,84,0.47619047619047616,44,Frame status is INVALID_TRACK_SEGMENT.
+injured_hka_angle_2d_deg,42,84,0.5,42,Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_bilateral_absolute_difference,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_bilateral_difference,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_normalized_bilateral_absolute_difference,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+knee_line_deviation_normalized_bilateral_difference,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT. | Frame status is INVALID_TRACK_SEGMENT.
+left_elbow_angle_2d_deg,40,84,0.47619047619047616,44,Frame status is INVALID_TRACK_SEGMENT.
+left_hka_angle_2d_deg,42,84,0.5,42,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_ankle_distance_normalized,42,84,0.5,42,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_ankle_x_offset_normalized,42,84,0.5,42,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_line_deviation_2d,42,84,0.5,42,Frame status is INVALID_TRACK_SEGMENT.
+left_knee_line_deviation_normalized,42,84,0.5,42,Frame status is INVALID_TRACK_SEGMENT.
+left_upper_arm_orientation_2d_deg,40,84,0.47619047619047616,44,Frame status is INVALID_TRACK_SEGMENT.
+left_wrist_pelvis_distance_normalized,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT.
+left_wrist_pelvis_x_offset_normalized,41,84,0.4880952380952381,43,Frame status is INVALID_TRACK_SEGMENT.
+projected_hip_line_angle_deg,48,84,0.5714285714285714,36,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_line_angle_deg,46,84,0.5476190476190477,38,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_pelvis_orientation_difference_deg,45,84,0.5357142857142857,39,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_pelvis_x_offset_normalized,45,84,0.5357142857142857,39,Frame status is INVALID_TRACK_SEGMENT.
+projected_shoulder_pelvis_x_offset_px,45,84,0.5357142857142857,39,Frame status is INVALID_TRACK_SEGMENT.
+projected_trunk_axis_angle_deg,45,84,0.5357142857142857,39,Frame status is INVALID_TRACK_SEGMENT.
+right_elbow_angle_2d_deg,49,84,0.5833333333333334,35,Frame status is INVALID_TRACK_SEGMENT.
+right_hka_angle_2d_deg,44,84,0.5238095238095238,40,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_ankle_distance_normalized,44,84,0.5238095238095238,40,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_ankle_x_offset_normalized,44,84,0.5238095238095238,40,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_line_deviation_2d,44,84,0.5238095238095238,40,Frame status is INVALID_TRACK_SEGMENT.
+right_knee_line_deviation_normalized,44,84,0.5238095238095238,40,Frame status is INVALID_TRACK_SEGMENT.
+right_upper_arm_orientation_2d_deg,49,84,0.5833333333333334,35,Frame status is INVALID_TRACK_SEGMENT.
+right_wrist_pelvis_distance_normalized,48,84,0.5714285714285714,36,Frame status is INVALID_TRACK_SEGMENT.
+right_wrist_pelvis_x_offset_normalized,48,84,0.5714285714285714,36,Frame status is INVALID_TRACK_SEGMENT.

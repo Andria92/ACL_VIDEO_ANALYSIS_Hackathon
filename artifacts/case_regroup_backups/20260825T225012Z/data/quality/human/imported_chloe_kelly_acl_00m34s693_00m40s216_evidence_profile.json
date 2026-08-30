@@ -1,0 +1,53 @@
+{
+  "case_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_acl_candidate",
+  "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 14,
+  "target_tracking_coverage": 0.9008,
+  "pose_frame_coverage": 0.9835,
+  "upper_body_landmark_coverage": 0.8980666666666667,
+  "core_landmark_coverage": 0.9008,
+  "lower_limb_landmark_coverage": 0.8966833333333333,
+  "geometry_feature_coverage": 0.8923324150596879,
+  "dynamic_feature_coverage": 0.5273987565404152,
+  "interpolation_fraction": 0.0408,
+  "rejected_fraction": 0.1473,
+  "identity_uncertainty_fraction": 0.06611570247933884,
+  "target_loss_fraction": 0.01652892561983471,
+  "supported_feature_count": 32,
+  "limited_feature_count": 4,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 28,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "Local trajectory residuals are high relative to local movement.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_IDENTITY_UNCERTAIN."
+  ],
+  "evidence_overview": {
+    "supported_features": 32,
+    "limited_features": 4,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.8923324150596879,
+    "dynamic_coverage": 0.5273987565404152,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "Local trajectory residuals are high relative to local movement.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_IDENTITY_UNCERTAIN."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 14,
+    "overall_quality_label": "HIGH EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.8888888888888888,
+      "limited_fraction": 0.1111111111111111,
+      "geometry_coverage": 0.8923324150596879,
+      "dynamic_coverage": 0.5273987565404152
+    }
+  }
+}

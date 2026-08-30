@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
+from itertools import pairwise
 from pathlib import Path
 from uuid import uuid4
 
@@ -30,6 +31,7 @@ class OperatorFlag(StrEnum):
     TARGET_NOT_VISIBLE = "TARGET_NOT_VISIBLE"
     CAMERA_CUT = "CAMERA_CUT"
     ROI_DIFFICULT = "ROI_DIFFICULT"
+    CANNOT_JUDGE = "CANNOT_JUDGE"
     OTHER = "OTHER"
 
 
@@ -143,6 +145,113 @@ class RoiKeyframeAnnotation:
                 height=float(bbox["height"]),
             ),
             flags=tuple(_operator_flag(flag) for flag in data.get("flags", ())),
+            note=str(data.get("note", "")),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class TargetUnavailableIntervalAnnotation:
+    """Inclusive human-authored interval where target identity is unavailable.
+
+    No ROI is propagated and no pose candidate is accepted inside this interval.
+    The interval records absence as evidence instead of encoding it as a fake box.
+    """
+
+    start_frame: int
+    end_frame: int
+    reason: OperatorFlag = OperatorFlag.TARGET_NOT_VISIBLE
+    note: str = ""
+
+    def __post_init__(self) -> None:
+        if self.start_frame < 0 or self.end_frame < 0:
+            raise ValueError("Target-unavailable interval frames must be non-negative.")
+        if self.end_frame < self.start_frame:
+            raise ValueError("Target-unavailable interval end must be at or after its start.")
+        object.__setattr__(self, "reason", _operator_flag(self.reason))
+
+    @property
+    def frame_count(self) -> int:
+        """Return the inclusive number of unavailable source frames."""
+
+        return self.end_frame - self.start_frame + 1
+
+    def contains(self, frame_index: int) -> bool:
+        """Return whether frame_index falls inside this inclusive interval."""
+
+        return self.start_frame <= frame_index <= self.end_frame
+
+    def to_dict(self) -> dict:
+        """Return a JSON-ready representation."""
+
+        return {
+            "start_frame": self.start_frame,
+            "end_frame": self.end_frame,
+            "frame_count": self.frame_count,
+            "reason": self.reason.value,
+            "note": self.note,
+            "annotation_source": "human_ui",
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> TargetUnavailableIntervalAnnotation:
+        """Create an interval from serialized data."""
+
+        return cls(
+            start_frame=int(data["start_frame"]),
+            end_frame=int(data["end_frame"]),
+            reason=_operator_flag(data.get("reason", OperatorFlag.TARGET_NOT_VISIBLE.value)),
+            note=str(data.get("note", "")),
+        )
+
+
+@dataclass(frozen=True, slots=True)
+class TargetAcceptedIntervalAnnotation:
+    """Inclusive interval where a human confirmed the selected pose is the target.
+
+    Acceptance confirms target identity only. Downstream pose-quality rules may still
+    withhold a frame when the skeleton itself is missing or too incomplete to measure.
+    """
+
+    start_frame: int
+    end_frame: int
+    note: str = ""
+
+    def __post_init__(self) -> None:
+        if self.start_frame < 0 or self.end_frame < 0:
+            raise ValueError("Target-accepted interval frames must be non-negative.")
+        if self.end_frame < self.start_frame:
+            raise ValueError("Target-accepted interval end must be at or after its start.")
+
+    @property
+    def frame_count(self) -> int:
+        """Return the inclusive number of human-reviewed source frames."""
+
+        return self.end_frame - self.start_frame + 1
+
+    def contains(self, frame_index: int) -> bool:
+        """Return whether frame_index falls inside this inclusive interval."""
+
+        return self.start_frame <= frame_index <= self.end_frame
+
+    def to_dict(self) -> dict:
+        """Return a JSON-ready representation."""
+
+        return {
+            "start_frame": self.start_frame,
+            "end_frame": self.end_frame,
+            "frame_count": self.frame_count,
+            "decision": "ACCEPTED",
+            "note": self.note,
+            "annotation_source": "human_ui_pose_review",
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> TargetAcceptedIntervalAnnotation:
+        """Create an accepted interval from serialized data."""
+
+        return cls(
+            start_frame=int(data["start_frame"]),
+            end_frame=int(data["end_frame"]),
             note=str(data.get("note", "")),
         )
 
@@ -308,9 +417,13 @@ class HumanAnnotationSession:
 
     provenance: AnnotationProvenance
     roi_keyframes: tuple[RoiKeyframeAnnotation, ...] = ()
+    target_unavailable_intervals: tuple[TargetUnavailableIntervalAnnotation, ...] = ()
+    target_accepted_intervals: tuple[TargetAcceptedIntervalAnnotation, ...] = ()
     movement_window: MovementWindowAnnotation | None = None
     event_annotation: EventAnnotation | None = None
     event_confidence_label: EventConfidence | None = None
+    injured_side: InjurySide = InjurySide.UNKNOWN
+    injury_laterality_source: str = ""
     operator_flags: tuple[OperatorFlag, ...] = ()
     notes: str = ""
     finalized: bool = False
@@ -321,6 +434,51 @@ class HumanAnnotationSession:
         if len(frames) != len(set(frames)):
             raise ValueError("Human ROI keyframes must not contain duplicate frame indices.")
         object.__setattr__(self, "roi_keyframes", sorted_keyframes)
+        sorted_intervals = tuple(
+            sorted(
+                self.target_unavailable_intervals,
+                key=lambda item: (item.start_frame, item.end_frame),
+            )
+        )
+        for previous, current in pairwise(sorted_intervals):
+            if current.start_frame <= previous.end_frame:
+                raise ValueError("Human target-unavailable intervals must not overlap.")
+        interval_keyframes = [
+            keyframe.frame_index
+            for keyframe in sorted_keyframes
+            if any(interval.contains(keyframe.frame_index) for interval in sorted_intervals)
+        ]
+        if interval_keyframes:
+            raise ValueError(
+                "Human ROI keyframes cannot exist inside target-unavailable intervals: "
+                f"{interval_keyframes}."
+            )
+        object.__setattr__(self, "target_unavailable_intervals", sorted_intervals)
+        sorted_accepted = tuple(
+            sorted(
+                self.target_accepted_intervals,
+                key=lambda item: (item.start_frame, item.end_frame),
+            )
+        )
+        for previous, current in pairwise(sorted_accepted):
+            if current.start_frame <= previous.end_frame:
+                raise ValueError("Human target-accepted intervals must not overlap.")
+        conflicting_reviews = [
+            (accepted.start_frame, accepted.end_frame)
+            for accepted in sorted_accepted
+            if any(
+                accepted.start_frame <= unavailable.end_frame
+                and accepted.end_frame >= unavailable.start_frame
+                for unavailable in sorted_intervals
+            )
+        ]
+        if conflicting_reviews:
+            raise ValueError(
+                "Human target-accepted intervals cannot overlap target-unavailable "
+                f"intervals: {conflicting_reviews}."
+            )
+        object.__setattr__(self, "target_accepted_intervals", sorted_accepted)
+        object.__setattr__(self, "injured_side", InjurySide(self.injured_side))
         object.__setattr__(
             self,
             "operator_flags",
@@ -332,6 +490,48 @@ class HumanAnnotationSession:
         """Return the number of human ROI keyframes."""
 
         return len(self.roi_keyframes)
+
+    @property
+    def manual_target_unavailable_frame_count(self) -> int:
+        """Return the number of source frames explicitly excluded by the operator."""
+
+        return sum(interval.frame_count for interval in self.target_unavailable_intervals)
+
+    @property
+    def manual_target_accepted_frame_count(self) -> int:
+        """Return the number of source frames explicitly accepted after pose review."""
+
+        return sum(interval.frame_count for interval in self.target_accepted_intervals)
+
+    def target_unavailable_interval_at(
+        self,
+        frame_index: int,
+    ) -> TargetUnavailableIntervalAnnotation | None:
+        """Return the human exclusion interval containing frame_index, if any."""
+
+        return next(
+            (
+                interval
+                for interval in self.target_unavailable_intervals
+                if interval.contains(frame_index)
+            ),
+            None,
+        )
+
+    def target_accepted_interval_at(
+        self,
+        frame_index: int,
+    ) -> TargetAcceptedIntervalAnnotation | None:
+        """Return the human acceptance interval containing frame_index, if any."""
+
+        return next(
+            (
+                interval
+                for interval in self.target_accepted_intervals
+                if interval.contains(frame_index)
+            ),
+            None,
+        )
 
     def replace_keyframe(self, keyframe: RoiKeyframeAnnotation) -> HumanAnnotationSession:
         """Return a copy with the keyframe at the same frame replaced."""
@@ -355,9 +555,13 @@ class HumanAnnotationSession:
         data = {
             "provenance": self.provenance.touch(),
             "roi_keyframes": self.roi_keyframes,
+            "target_unavailable_intervals": self.target_unavailable_intervals,
+            "target_accepted_intervals": self.target_accepted_intervals,
             "movement_window": self.movement_window,
             "event_annotation": self.event_annotation,
             "event_confidence_label": self.event_confidence_label,
+            "injured_side": self.injured_side,
+            "injury_laterality_source": self.injury_laterality_source,
             "operator_flags": self.operator_flags,
             "notes": self.notes,
             "finalized": self.finalized,
@@ -372,6 +576,14 @@ class HumanAnnotationSession:
             "provenance": self.provenance.to_dict(),
             "manual_roi_keyframe_count": self.manual_roi_keyframe_count,
             "roi_keyframes": [keyframe.to_dict() for keyframe in self.roi_keyframes],
+            "manual_target_unavailable_frame_count": self.manual_target_unavailable_frame_count,
+            "target_unavailable_intervals": [
+                interval.to_dict() for interval in self.target_unavailable_intervals
+            ],
+            "manual_target_accepted_frame_count": self.manual_target_accepted_frame_count,
+            "target_accepted_intervals": [
+                interval.to_dict() for interval in self.target_accepted_intervals
+            ],
             "movement_window": (
                 self.movement_window.to_dict() if self.movement_window is not None else None
             ),
@@ -381,6 +593,8 @@ class HumanAnnotationSession:
             "event_confidence_label": (
                 self.event_confidence_label.value if self.event_confidence_label else None
             ),
+            "injured_side": self.injured_side.value,
+            "injury_laterality_source": self.injury_laterality_source,
             "operator_flags": [flag.value for flag in self.operator_flags],
             "notes": self.notes,
             "finalized": self.finalized,
@@ -403,6 +617,14 @@ class HumanAnnotationSession:
                 RoiKeyframeAnnotation.from_dict(item)
                 for item in data.get("roi_keyframes", ())
             ),
+            target_unavailable_intervals=tuple(
+                TargetUnavailableIntervalAnnotation.from_dict(item)
+                for item in data.get("target_unavailable_intervals", ())
+            ),
+            target_accepted_intervals=tuple(
+                TargetAcceptedIntervalAnnotation.from_dict(item)
+                for item in data.get("target_accepted_intervals", ())
+            ),
             movement_window=(
                 MovementWindowAnnotation.from_dict(data["movement_window"])
                 if data.get("movement_window")
@@ -410,6 +632,8 @@ class HumanAnnotationSession:
             ),
             event_annotation=event_annotation,
             event_confidence_label=EventConfidence(confidence) if confidence else None,
+            injured_side=InjurySide(data.get("injured_side", InjurySide.UNKNOWN.value)),
+            injury_laterality_source=str(data.get("injury_laterality_source", "")),
             operator_flags=tuple(
                 _operator_flag(flag) for flag in data.get("operator_flags", ())
             ),

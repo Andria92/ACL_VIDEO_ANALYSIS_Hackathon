@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "acl-movement-explorer"
 version = "0.1.0"
-description = "Milestone 1 pose feasibility prototype for ACL Movement Explorer."
+description = "Milestone 1 pose feasibility prototype for ACL Movement Analytics Lab."
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = [

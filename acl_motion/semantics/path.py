@@ -54,6 +54,44 @@ class PathAnalysisConfig:
     minimum_supported_fraction_for_validation: float = 0.55
 
 
+BODY_CENTER_COLUMNS = (
+    "source_frame_index",
+    "timestamp_ms",
+    "movement_elapsed_ms",
+    "movement_end_relative_ms",
+    "center_x",
+    "center_y",
+    "center_source",
+    "center_status",
+)
+
+PATH_COLUMNS = (
+    "source_frame_index",
+    "timestamp_ms",
+    "movement_elapsed_ms",
+    "movement_end_relative_ms",
+    "center_x",
+    "center_y",
+    "center_source",
+    "raw_dx",
+    "raw_dy",
+    "compensated_dx",
+    "compensated_dy",
+    "compensated_x",
+    "compensated_y",
+    "camera_dx",
+    "camera_dy",
+    "camera_compensation_method",
+    "background_feature_count",
+    "camera_motion_residual_px",
+    "projected_heading_deg",
+    "normalized_projected_speed_per_s",
+    "path_segment_id",
+    "path_status",
+    "path_rejection_reason",
+)
+
+
 def estimate_background_camera_motion(
     video_path: str | Path,
     source_frames: list[int],
@@ -377,7 +415,7 @@ def body_center_from_processed_pose(processed_pose: pd.DataFrame) -> pd.DataFram
                     "center_status": "SUPPORTED",
                 }
             )
-    return pd.DataFrame(records)
+    return pd.DataFrame.from_records(records, columns=BODY_CENTER_COLUMNS)
 
 
 def compensate_projected_path(
@@ -396,7 +434,7 @@ def compensate_projected_path(
 
     cfg = config or PathAnalysisConfig()
     if center_df.empty:
-        return pd.DataFrame()
+        return pd.DataFrame(columns=PATH_COLUMNS)
     centers = center_df.sort_values("source_frame_index").reset_index(drop=True).copy()
     camera = camera_motion_df.set_index("source_frame_index")
     rows = []

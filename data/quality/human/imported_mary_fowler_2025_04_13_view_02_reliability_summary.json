@@ -1,0 +1,165 @@
+{
+  "total_frames": 123,
+  "target_tracking_coverage": 0.3659,
+  "pose_frame_coverage": 0.5447,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 4,
+    "LOW_POSE_CONFIDENCE": 9,
+    "TARGET_IDENTITY_UNCERTAIN": 9,
+    "TARGET_NOT_FOUND": 56,
+    "VALID_TARGET": 45
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 22,
+      "end_frame": 22
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 51
+    },
+    {
+      "start_frame": 56,
+      "end_frame": 61
+    }
+  ],
+  "target_loss_intervals": [
+    {
+      "start_frame": 24,
+      "end_frame": 49
+    },
+    {
+      "start_frame": 52,
+      "end_frame": 54
+    },
+    {
+      "start_frame": 62,
+      "end_frame": 88
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 2,
+      "end_frame": 3
+    },
+    {
+      "start_frame": 23,
+      "end_frame": 23
+    },
+    {
+      "start_frame": 55,
+      "end_frame": 55
+    },
+    {
+      "start_frame": 94,
+      "end_frame": 94
+    },
+    {
+      "start_frame": 97,
+      "end_frame": 98
+    },
+    {
+      "start_frame": 121,
+      "end_frame": 122
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 4,
+      "end_frame": 21,
+      "frame_count": 18
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 89,
+      "end_frame": 93,
+      "frame_count": 5
+    },
+    {
+      "segment_id": 3,
+      "start_frame": 99,
+      "end_frame": 120,
+      "frame_count": 22
+    }
+  ],
+  "interpolated_frame_fraction": 0.1301,
+  "rejected_frame_fraction": 1.0,
+  "interpolated_landmark_row_fraction": 0.0115,
+  "rejected_landmark_row_fraction": 0.681,
+  "processing_status_counts": {
+    "INTERPOLATED": 24,
+    "MISSING": 952,
+    "RAW_VALID": 61,
+    "REJECTED_IDENTITY_UNCERTAIN": 153,
+    "REJECTED_INVALID_TRACK_SEGMENT": 68,
+    "REJECTED_LOW_CONFIDENCE": 251,
+    "SMOOTHED": 582
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 153,
+    "LOW_CONFIDENCE": 275,
+    "MISSING": 952,
+    "OBSERVED_VALID": 643,
+    "REJECTED": 68
+  },
+  "automatic_frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 4,
+    "LOW_POSE_CONFIDENCE": 9,
+    "TARGET_IDENTITY_UNCERTAIN": 17,
+    "TARGET_NOT_FOUND": 56,
+    "VALID_TARGET": 37
+  },
+  "manual_review_decision_counts": {
+    "ACCEPTED": 22,
+    "EXCLUDED": 27,
+    "NOT_REVIEWED": 74
+  },
+  "manual_acceptance_override_frame_count": 8,
+  "manual_accepted_frame_count": 22,
+  "manual_accepted_usable_frame_count": 22,
+  "left_ankle_coverage": 0.3902,
+  "left_ear_coverage": 0.3415,
+  "left_elbow_coverage": 0.4065,
+  "left_eye_coverage": 0.1382,
+  "left_hip_coverage": 0.4065,
+  "left_knee_coverage": 0.4065,
+  "left_shoulder_coverage": 0.3902,
+  "left_wrist_coverage": 0.3821,
+  "nose_coverage": 0.1382,
+  "right_ankle_coverage": 0.3821,
+  "right_ear_coverage": 0.2114,
+  "right_elbow_coverage": 0.3496,
+  "right_eye_coverage": 0.0,
+  "right_hip_coverage": 0.3902,
+  "right_knee_coverage": 0.3902,
+  "right_shoulder_coverage": 0.374,
+  "right_wrist_coverage": 0.3252,
+  "core_landmark_coverage": 0.3902,
+  "lower_limb_landmark_coverage": 0.3943,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35,
+    "competing_pose_iou_threshold": 0.05,
+    "competing_pose_center_distance_fraction_threshold": 0.45
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_mary_fowler_2025_04_13_view_02_raw_pose.parquet"
+}

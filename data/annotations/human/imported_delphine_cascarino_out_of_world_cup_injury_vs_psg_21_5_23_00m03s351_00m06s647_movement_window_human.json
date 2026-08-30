@@ -1,0 +1,43 @@
+{
+  "provenance": {
+    "annotation_session_id": "1dae8b17-4c16-4818-9229-67ccf7b8b053",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T19:00:00.879728+00:00",
+    "updated_at": "2026-08-25T19:00:02.137503+00:00",
+    "case_id": "delphine_cascarino_acl",
+    "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+    "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+    "video_path": "data/videos/analysis_clips/delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "delphine_cascarino_acl",
+  "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+  "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+  "manual_roi_keyframe_count": 15,
+  "manual_target_unavailable_frame_count": 19,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 57,
+      "end_frame": 75,
+      "frame_count": 19,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 79,
+    "movement_end_timestamp_ms": 2633.3333333333335,
+    "movement_duration_ms": 2633.3333333333335,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

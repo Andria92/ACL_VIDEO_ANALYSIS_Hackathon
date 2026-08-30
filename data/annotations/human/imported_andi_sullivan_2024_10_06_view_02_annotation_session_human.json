@@ -1,0 +1,296 @@
+{
+  "provenance": {
+    "annotation_session_id": "96feb3dd-4ee2-4ed6-82b1-3894c4386918",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-30T17:18:19.873698+00:00",
+    "updated_at": "2026-08-30T17:22:50.042515+00:00",
+    "case_id": "imported_andi_sullivan_2024_10_06_acl_candidate",
+    "source_id": "imported_andi_sullivan_2024_10_06_view_02",
+    "view_id": "imported_andi_sullivan_2024_10_06_view_02",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/nwsl_697086_02h00m32s300_02h00m38s037_00m02s167_00m05s767.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 21,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 950.3571428571429,
+        "y": 278.57142857142856,
+        "width": 203.57142857142844,
+        "height": 306.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 7,
+      "bbox": {
+        "x": 894.6428571428571,
+        "y": 285.0,
+        "width": 257.1428571428571,
+        "height": 319.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 12,
+      "bbox": {
+        "x": 909.6428571428571,
+        "y": 261.42857142857144,
+        "width": 210.0,
+        "height": 355.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 911.7857142857143,
+        "y": 261.42857142857144,
+        "width": 242.142857142857,
+        "height": 362.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 32,
+      "bbox": {
+        "x": 886.0714285714286,
+        "y": 261.42857142857144,
+        "width": 280.71428571428567,
+        "height": 385.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 871.0714285714286,
+        "y": 270.0,
+        "width": 231.42857142857144,
+        "height": 372.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 52,
+      "bbox": {
+        "x": 836.7857142857143,
+        "y": 265.7142857142857,
+        "width": 194.9999999999999,
+        "height": 344.99999999999994
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 58,
+      "bbox": {
+        "x": 804.6428571428571,
+        "y": 263.57142857142856,
+        "width": 248.57142857142867,
+        "height": 340.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 62,
+      "bbox": {
+        "x": 757.5,
+        "y": 270.0,
+        "width": 308.57142857142867,
+        "height": 377.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 757.5,
+        "y": 279.21429225376676,
+        "width": 203.57142857142856,
+        "height": 338.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 65,
+      "bbox": {
+        "x": 746.7857142857143,
+        "y": 298.50000653948103,
+        "width": 227.1428571428571,
+        "height": 314.99999999999994
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 66,
+      "bbox": {
+        "x": 744.6428571428571,
+        "y": 281.35714939662387,
+        "width": 229.28571428571433,
+        "height": 345.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 67,
+      "bbox": {
+        "x": 733.9285714285714,
+        "y": 283.50000653948103,
+        "width": 255.0,
+        "height": 344.99999999999994
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 68,
+      "bbox": {
+        "x": 725.3571428571429,
+        "y": 281.35714939662387,
+        "width": 240.0,
+        "height": 355.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 69,
+      "bbox": {
+        "x": 714.6428571428571,
+        "y": 274.9285779680525,
+        "width": 225.0,
+        "height": 317.14285714285717
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 70,
+      "bbox": {
+        "x": 701.7857142857143,
+        "y": 266.35714939662387,
+        "width": 233.57142857142856,
+        "height": 336.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 71,
+      "bbox": {
+        "x": 701.7857142857143,
+        "y": 257.7857208251953,
+        "width": 222.85714285714278,
+        "height": 349.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 72,
+      "bbox": {
+        "x": 695.3571428571429,
+        "y": 264.21429225376676,
+        "width": 229.28571428571422,
+        "height": 347.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 73,
+      "bbox": {
+        "x": 682.5,
+        "y": 268.50000653948103,
+        "width": 216.42857142857144,
+        "height": 338.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 76,
+      "bbox": {
+        "x": 639.6428571428571,
+        "y": 274.2857142857143,
+        "width": 246.42857142857144,
+        "height": 342.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 85,
+      "bbox": {
+        "x": 577.5,
+        "y": 310.7142857142857,
+        "width": 207.8571428571429,
+        "height": 306.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 3,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 61,
+      "end_frame": 63,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 106,
+    "movement_end_timestamp_ms": 3533.333333333333,
+    "movement_duration_ms": 3533.333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_andi_sullivan_2024_10_06_acl_candidate",
+    "source_id": "imported_andi_sullivan_2024_10_06_view_02",
+    "view_id": "imported_andi_sullivan_2024_10_06_view_02",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 106,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 106,
+    "event_anchor_frame": 106,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

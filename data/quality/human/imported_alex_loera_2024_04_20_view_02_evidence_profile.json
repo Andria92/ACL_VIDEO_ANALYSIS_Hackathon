@@ -1,0 +1,53 @@
+{
+  "case_id": "imported_alex_loera_2024_04_20_acl_candidate",
+  "source_id": "imported_alex_loera_2024_04_20_view_02",
+  "view_id": "imported_alex_loera_2024_04_20_view_02",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 11,
+  "target_tracking_coverage": 0.5526,
+  "pose_frame_coverage": 1.0,
+  "upper_body_landmark_coverage": 0.5899,
+  "core_landmark_coverage": 0.60195,
+  "lower_limb_landmark_coverage": 0.6096333333333334,
+  "geometry_feature_coverage": 0.5592105263157895,
+  "dynamic_feature_coverage": 0.6685036029446725,
+  "interpolation_fraction": 0.0116,
+  "rejected_fraction": 0.4265,
+  "identity_uncertainty_fraction": 0.2894736842105263,
+  "target_loss_fraction": 0.0,
+  "supported_feature_count": 36,
+  "limited_feature_count": 0,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 32,
+  "primary_evidence_limitations": [
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_IDENTITY_UNCERTAIN."
+  ],
+  "evidence_overview": {
+    "supported_features": 36,
+    "limited_features": 0,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.5592105263157895,
+    "dynamic_coverage": 0.6685036029446725,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_IDENTITY_UNCERTAIN."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 11,
+    "overall_quality_label": "MODERATE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 1.0,
+      "limited_fraction": 0.0,
+      "geometry_coverage": 0.5592105263157895,
+      "dynamic_coverage": 0.6685036029446725
+    }
+  }
+}

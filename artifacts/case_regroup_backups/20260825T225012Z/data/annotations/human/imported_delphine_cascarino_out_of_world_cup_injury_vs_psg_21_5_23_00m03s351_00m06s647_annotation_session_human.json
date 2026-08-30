@@ -1,0 +1,228 @@
+{
+  "provenance": {
+    "annotation_session_id": "1dae8b17-4c16-4818-9229-67ccf7b8b053",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T19:00:00.879728+00:00",
+    "updated_at": "2026-08-25T19:00:02.137503+00:00",
+    "case_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_acl_candidate",
+    "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+    "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 15,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 474.0,
+        "y": 159.0,
+        "width": 116.0,
+        "height": 174.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 13,
+      "bbox": {
+        "x": 502.0,
+        "y": 156.0,
+        "width": 120.0,
+        "height": 182.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 16,
+      "bbox": {
+        "x": 519.0,
+        "y": 156.0,
+        "width": 115.0,
+        "height": 182.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 517.0,
+        "y": 148.0,
+        "width": 118.0,
+        "height": 175.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 27,
+      "bbox": {
+        "x": 498.0,
+        "y": 146.0,
+        "width": 132.0,
+        "height": 178.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 30,
+      "bbox": {
+        "x": 483.0,
+        "y": 139.0,
+        "width": 114.0,
+        "height": 189.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 32,
+      "bbox": {
+        "x": 471.0,
+        "y": 136.0,
+        "width": 120.0,
+        "height": 192.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 35,
+      "bbox": {
+        "x": 455.0,
+        "y": 123.0,
+        "width": 115.0,
+        "height": 195.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 40,
+      "bbox": {
+        "x": 448.0,
+        "y": 129.0,
+        "width": 95.0,
+        "height": 191.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 42,
+      "bbox": {
+        "x": 440.0,
+        "y": 129.0,
+        "width": 83.0,
+        "height": 165.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 44,
+      "bbox": {
+        "x": 425.0,
+        "y": 126.0,
+        "width": 102.0,
+        "height": 170.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 48,
+      "bbox": {
+        "x": 411.0,
+        "y": 120.0,
+        "width": 136.0,
+        "height": 180.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 55,
+      "bbox": {
+        "x": 395.0,
+        "y": 122.0,
+        "width": 97.0,
+        "height": 142.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 375.0,
+        "y": 121.0,
+        "width": 69.0,
+        "height": 135.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 79,
+      "bbox": {
+        "x": 385.0,
+        "y": 117.0,
+        "width": 80.0,
+        "height": 131.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 19,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 57,
+      "end_frame": 75,
+      "frame_count": 19,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 79,
+    "movement_end_timestamp_ms": 2633.3333333333335,
+    "movement_duration_ms": 2633.3333333333335,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_acl_candidate",
+    "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+    "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 79,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 79,
+    "event_anchor_frame": 79,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

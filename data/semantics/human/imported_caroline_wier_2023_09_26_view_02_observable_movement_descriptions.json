@@ -1,0 +1,3593 @@
+{
+  "metadata": {
+    "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+    "source_id": "imported_caroline_wier_2023_09_26_view_02",
+    "generated_at": "2026-08-27T18:41:02.941498+00:00",
+    "vocabulary_version": "m5_10_controlled_movement_vocabulary_v1",
+    "description_version": "m5_10_observable_movement_description_v1",
+    "movement_window": {
+      "movement_start_frame": 0,
+      "movement_start_timestamp_ms": 0.0,
+      "movement_end_frame": 183,
+      "movement_end_timestamp_ms": 3660.0,
+      "movement_duration_ms": 3660.0,
+      "confidence": "moderate",
+      "rationale": "",
+      "source": "human_ui_movement_window",
+      "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+    },
+    "path_quality_status": "SUPPORTED",
+    "phase_status": "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION",
+    "clustering_policy": "Semantic strings are not clustering inputs; future clustering uses CaseMovementSignature numeric descriptors.",
+    "threshold_note": "Magnitude/rate thresholds are transparent engineering rules for description, not clinical or population-normal thresholds."
+  },
+  "movement_families": [
+    "BILATERAL LOWER-LIMB RELATIONSHIP",
+    "EVIDENCE / UNAVAILABLE",
+    "HIP-KNEE-ANKLE CHAIN",
+    "MOVEMENT PATH",
+    "TRUNK & PELVIS",
+    "UPPER BODY",
+    "WHOLE-BODY ORIENTATION"
+  ],
+  "descriptor_registry": [
+    {
+      "descriptor_id": "PROJECTED_MOVEMENT_CONTINUES",
+      "family": "MOVEMENT PATH",
+      "user_label": "Projected movement continued",
+      "description": "Path must pass QA and contain a continuous supported path segment.",
+      "required_features": [
+        "path:compensated_x",
+        "path:compensated_y"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "PROJECTED_DIRECTION_CHANGE",
+      "family": "MOVEMENT PATH",
+      "user_label": "Projected travel direction changed",
+      "description": "Validated heading evidence must change across a supported interval.",
+      "required_features": [
+        "path:projected_heading_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RAPID_PROJECTED_DIRECTION_CHANGE",
+      "family": "MOVEMENT PATH",
+      "user_label": "Rapid projected direction change",
+      "description": "Validated heading change must be sustained and rate-supported.",
+      "required_features": [
+        "path:projected_heading_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "PROJECTED_SPEED_INCREASE",
+      "family": "MOVEMENT PATH",
+      "user_label": "Projected speed increased",
+      "description": "Validated projected speed must increase across a supported interval.",
+      "required_features": [
+        "path:normalized_projected_speed_per_s"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "PROJECTED_SLOWDOWN",
+      "family": "MOVEMENT PATH",
+      "user_label": "Projected slowdown",
+      "description": "Validated projected speed must decrease across a supported interval.",
+      "required_features": [
+        "path:normalized_projected_speed_per_s"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RAPID_PROJECTED_SLOWDOWN",
+      "family": "MOVEMENT PATH",
+      "user_label": "Rapid projected slowdown",
+      "description": "Projected slowdown must be sustained and rate-supported.",
+      "required_features": [
+        "path:normalized_projected_speed_per_s"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "PROJECTED_STOP_OR_NEAR_STOP",
+      "family": "MOVEMENT PATH",
+      "user_label": "Projected movement approached a low-speed state",
+      "description": "Validated projected speed must remain low for a sufficient interval.",
+      "required_features": [
+        "path:normalized_projected_speed_per_s"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RELATIVELY_STABLE_BODY_ORIENTATION",
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Body orientation remained relatively stable",
+      "description": "Multiple orientation features must remain below the descriptive change rule.",
+      "required_features": [
+        "projected_trunk_axis_angle_deg",
+        "projected_hip_line_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "WHOLE_BODY_REORIENTATION",
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Whole-body orientation shifted",
+      "description": "At least two projected body-orientation measures must shift.",
+      "required_features": [
+        "projected_trunk_axis_angle_deg",
+        "projected_hip_line_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RAPID_WHOLE_BODY_REORIENTATION",
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Rapid whole-body orientation shift",
+      "description": "Orientation shift must be sustained and rate-supported.",
+      "required_features": [
+        "projected_trunk_axis_angle_deg",
+        "projected_hip_line_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "INJURED_HKA_INCREASED",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Injured-side projected HKA increased",
+      "description": "Supported injured-side HKA change must exceed the descriptive rule.",
+      "required_features": [
+        "injured_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "INJURED_HKA_DECREASED",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Injured-side projected HKA decreased",
+      "description": "Supported injured-side HKA change must exceed the descriptive rule.",
+      "required_features": [
+        "injured_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "CONTRALATERAL_HKA_INCREASED",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Contralateral projected HKA increased",
+      "description": "Supported contralateral HKA change must exceed the descriptive rule.",
+      "required_features": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "CONTRALATERAL_HKA_DECREASED",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Contralateral projected HKA decreased",
+      "description": "Supported contralateral HKA change must exceed the descriptive rule.",
+      "required_features": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "LOWER_LIMB_CONFIGURATION_CHANGED",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Lower-limb configuration changed",
+      "description": "At least one supported projected HKA chain must change.",
+      "required_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RAPID_LOWER_LIMB_CONFIGURATION_CHANGE",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Rapid lower-limb configuration change",
+      "description": "Projected HKA change must be sustained and rate-supported.",
+      "required_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RELATIVELY_STABLE_LOWER_LIMB_CONFIGURATION",
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Lower-limb configuration remained relatively stable",
+      "description": "Projected HKA changes must remain below the descriptive change rule.",
+      "required_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_DIFFERENCE_INCREASED",
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb difference increased",
+      "description": "Absolute injured-vs-contralateral HKA relationship must increase.",
+      "required_features": [
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_DIFFERENCE_DECREASED",
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb difference decreased",
+      "description": "Absolute injured-vs-contralateral HKA relationship must decrease.",
+      "required_features": [
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_RELATIONSHIP_DIVERGING",
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb relationship diverged",
+      "description": "Absolute bilateral relationship must increase beyond the descriptive rule.",
+      "required_features": [
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_RELATIONSHIP_CONVERGING",
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb relationship converged",
+      "description": "Absolute bilateral relationship must decrease beyond the descriptive rule.",
+      "required_features": [
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_RELATIONSHIP_CROSSING",
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb relationship crossed",
+      "description": "Signed injured-minus-contralateral HKA relationship must change sign.",
+      "required_features": [
+        "hka_projected_bilateral_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_RELATIONSHIP_RELATIVELY_STABLE",
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb relationship remained relatively stable",
+      "description": "Absolute bilateral relationship must remain below the descriptive change rule.",
+      "required_features": [
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "TRUNK_ORIENTATION_SHIFT",
+      "family": "TRUNK & PELVIS",
+      "user_label": "Trunk orientation shifted",
+      "description": "Projected trunk-axis change must exceed the descriptive rule.",
+      "required_features": [
+        "projected_trunk_axis_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RAPID_TRUNK_ORIENTATION_SHIFT",
+      "family": "TRUNK & PELVIS",
+      "user_label": "Rapid trunk orientation shift",
+      "description": "Projected trunk-axis shift must be sustained and rate-supported.",
+      "required_features": [
+        "projected_trunk_axis_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "PELVIS_ORIENTATION_SHIFT",
+      "family": "TRUNK & PELVIS",
+      "user_label": "Pelvis orientation shifted",
+      "description": "Projected hip-line orientation change must exceed the descriptive rule.",
+      "required_features": [
+        "projected_hip_line_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "SHOULDER_PELVIS_RELATIONSHIP_CHANGED",
+      "family": "TRUNK & PELVIS",
+      "user_label": "Shoulder-pelvis relationship changed",
+      "description": "Shoulder-line relative to hip-line orientation change must exceed the rule.",
+      "required_features": [
+        "projected_shoulder_pelvis_orientation_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RELATIVELY_STABLE_TRUNK_PELVIS",
+      "family": "TRUNK & PELVIS",
+      "user_label": "Trunk and pelvis remained relatively stable",
+      "description": "Trunk/pelvis changes must remain below the descriptive change rule.",
+      "required_features": [
+        "projected_trunk_axis_angle_deg",
+        "projected_hip_line_angle_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "ARM_CONFIGURATION_CHANGED",
+      "family": "UPPER BODY",
+      "user_label": "Arm configuration changed",
+      "description": "Supported projected elbow change must exceed the descriptive rule.",
+      "required_features": [
+        "right_elbow_angle_2d_deg",
+        "left_elbow_angle_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "BILATERAL_ARM_RELATIONSHIP_CHANGED",
+      "family": "UPPER BODY",
+      "user_label": "Bilateral arm relationship changed",
+      "description": "Projected bilateral elbow relationship must change.",
+      "required_features": [
+        "elbow_projected_bilateral_absolute_difference_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "UPPER_BODY_REORIENTATION",
+      "family": "UPPER BODY",
+      "user_label": "Upper-body orientation shifted",
+      "description": "Supported projected upper-arm orientation change must exceed the rule.",
+      "required_features": [
+        "right_upper_arm_orientation_2d_deg",
+        "left_upper_arm_orientation_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "RELATIVELY_STABLE_UPPER_BODY",
+      "family": "UPPER BODY",
+      "user_label": "Upper body remained relatively stable",
+      "description": "Upper-body changes must remain below the descriptive change rule.",
+      "required_features": [
+        "right_upper_arm_orientation_2d_deg",
+        "left_upper_arm_orientation_2d_deg"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "MOVEMENT_PATH_WITHHELD",
+      "family": "EVIDENCE / UNAVAILABLE",
+      "user_label": "Movement path interpretation withheld",
+      "description": "Projected movement path must be withheld when path QA is not supported.",
+      "required_features": [
+        "path:compensated_x",
+        "path:compensated_y"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "validated_projected_movement_path"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    },
+    {
+      "descriptor_id": "PHASE_SEGMENTATION_WITHHELD",
+      "family": "EVIDENCE / UNAVAILABLE",
+      "user_label": "Movement phase segmentation withheld",
+      "description": "Phase descriptions require supported phase segmentation.",
+      "required_features": [
+        "movement_phases"
+      ],
+      "required_evidence": "supported feature samples inside one valid target interval",
+      "temporal_rule": "do not bridge identity uncertainty, invalid track segments, or unsupported gaps",
+      "magnitude_rule": "configured engineering threshold; not a clinical or population-normal threshold",
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "forbidden_when": [
+        "acl mechanism",
+        "acl loading",
+        "dangerous movement",
+        "risky movement",
+        "injury-causing movement",
+        "valgus collapse",
+        "unstable landing",
+        "bad landing",
+        "poor technique",
+        "abnormal asymmetry",
+        "high-risk plant",
+        "sudden turn",
+        "sudden stop",
+        "knee collapse",
+        "knee valgus",
+        "knee varus",
+        "plant",
+        "foot strike",
+        "ground contact",
+        "stance",
+        "support foot",
+        "lumbar rotation",
+        "spinal rotation",
+        "trunk collapse"
+      ],
+      "explanation_template": "Show start/end values, change magnitude, supported samples, duration, and QC reason.",
+      "version": "m5_10_controlled_movement_vocabulary_v1",
+      "enabled": true
+    }
+  ],
+  "forbidden_descriptors": [
+    "acl mechanism",
+    "acl loading",
+    "dangerous movement",
+    "risky movement",
+    "injury-causing movement",
+    "valgus collapse",
+    "unstable landing",
+    "bad landing",
+    "poor technique",
+    "abnormal asymmetry",
+    "high-risk plant",
+    "sudden turn",
+    "sudden stop",
+    "knee collapse",
+    "knee valgus",
+    "knee varus",
+    "plant",
+    "foot strike",
+    "ground contact",
+    "stance",
+    "support foot",
+    "lumbar rotation",
+    "spinal rotation",
+    "trunk collapse"
+  ],
+  "magnitude_rules": {
+    "minimum_interval_frames": 8,
+    "minimum_supported_samples": 8,
+    "minimum_feature_coverage": 0.55,
+    "minimum_dynamic_supported_fraction": 0.35,
+    "angle_change_deg": 10.0,
+    "bilateral_change_deg": 6.0,
+    "orientation_shift_deg": 15.0,
+    "upper_body_shift_deg": 15.0,
+    "rapid_rate_deg_per_s": 150.0,
+    "rapid_min_consecutive_samples": 3,
+    "max_default_descriptions": 4
+  },
+  "clip_evidence_coverage": {
+    "status": "AVAILABLE",
+    "clip_start_frame": 0,
+    "clip_end_frame": 183,
+    "total_clip_frames": 184,
+    "annotated_movement_start_frame": 0,
+    "annotated_movement_end_frame": 183,
+    "valid_target_frames": 71,
+    "withheld_or_unsupported_frames": 113,
+    "frame_status_counts": {
+      "VALID_TARGET": 71,
+      "TARGET_NOT_FOUND": 50,
+      "INVALID_TRACK_SEGMENT": 33,
+      "TARGET_IDENTITY_UNCERTAIN": 26,
+      "LOW_POSE_CONFIDENCE": 4
+    },
+    "supported_source_ranges": [
+      {
+        "start_frame": 28,
+        "end_frame": 37,
+        "frame_count": 10
+      },
+      {
+        "start_frame": 50,
+        "end_frame": 57,
+        "frame_count": 8
+      },
+      {
+        "start_frame": 59,
+        "end_frame": 73,
+        "frame_count": 15
+      },
+      {
+        "start_frame": 75,
+        "end_frame": 90,
+        "frame_count": 16
+      }
+    ],
+    "last_supported_source_frame": 90,
+    "has_frames_after_supported_interval": true,
+    "supported_interval_reaches_annotated_movement_end": false,
+    "note": "Supported intervals are evidence/QC boundaries, not claims about the final video frame.",
+    "post_supported_frame_range": {
+      "start_frame": 91,
+      "end_frame": 183,
+      "frame_count": 93
+    },
+    "post_supported_status_counts": {
+      "TARGET_NOT_FOUND": 44,
+      "INVALID_TRACK_SEGMENT": 23,
+      "VALID_TARGET": 12,
+      "TARGET_IDENTITY_UNCERTAIN": 10,
+      "LOW_POSE_CONFIDENCE": 4
+    },
+    "post_supported_note": "Frames after the supported interval are present in the clip but withheld from controlled movement descriptions by quality checks."
+  },
+  "supported_intervals": [
+    {
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_id": "supported_interval_001",
+      "valid_segment_id": "3.0",
+      "start_frame": 28,
+      "end_frame": 37,
+      "start_timestamp_ms": 560.0,
+      "end_timestamp_ms": 740.0,
+      "duration_ms": 180.0,
+      "frame_count": 10,
+      "label": "Supported evidence interval, source frames 28-37",
+      "snapshot_frames": [
+        {
+          "label": "Start",
+          "source_frame_index": 28,
+          "timestamp_ms": 560.0
+        },
+        {
+          "label": "Mid",
+          "source_frame_index": 32,
+          "timestamp_ms": 640.0
+        },
+        {
+          "label": "End",
+          "source_frame_index": 37,
+          "timestamp_ms": 740.0
+        }
+      ]
+    },
+    {
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_id": "supported_interval_002",
+      "valid_segment_id": "4.0",
+      "start_frame": 50,
+      "end_frame": 57,
+      "start_timestamp_ms": 1000.0,
+      "end_timestamp_ms": 1140.0,
+      "duration_ms": 140.0,
+      "frame_count": 8,
+      "label": "Supported evidence interval, source frames 50-57",
+      "snapshot_frames": [
+        {
+          "label": "Start",
+          "source_frame_index": 50,
+          "timestamp_ms": 1000.0
+        },
+        {
+          "label": "Mid",
+          "source_frame_index": 53,
+          "timestamp_ms": 1060.0
+        },
+        {
+          "label": "End",
+          "source_frame_index": 57,
+          "timestamp_ms": 1140.0
+        }
+      ]
+    },
+    {
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_id": "supported_interval_003",
+      "valid_segment_id": "5.0",
+      "start_frame": 59,
+      "end_frame": 73,
+      "start_timestamp_ms": 1180.0,
+      "end_timestamp_ms": 1460.0,
+      "duration_ms": 280.0,
+      "frame_count": 15,
+      "label": "Supported evidence interval, source frames 59-73",
+      "snapshot_frames": [
+        {
+          "label": "Start",
+          "source_frame_index": 59,
+          "timestamp_ms": 1180.0
+        },
+        {
+          "label": "25%",
+          "source_frame_index": 62,
+          "timestamp_ms": 1240.0
+        },
+        {
+          "label": "50%",
+          "source_frame_index": 66,
+          "timestamp_ms": 1320.0
+        },
+        {
+          "label": "75%",
+          "source_frame_index": 69,
+          "timestamp_ms": 1380.0
+        },
+        {
+          "label": "End",
+          "source_frame_index": 73,
+          "timestamp_ms": 1460.0
+        }
+      ]
+    },
+    {
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_id": "supported_interval_004",
+      "valid_segment_id": "6.0",
+      "start_frame": 75,
+      "end_frame": 90,
+      "start_timestamp_ms": 1500.0,
+      "end_timestamp_ms": 1800.0,
+      "duration_ms": 300.0,
+      "frame_count": 16,
+      "label": "Supported evidence interval, source frames 75-90",
+      "snapshot_frames": [
+        {
+          "label": "Start",
+          "source_frame_index": 75,
+          "timestamp_ms": 1500.0
+        },
+        {
+          "label": "25%",
+          "source_frame_index": 79,
+          "timestamp_ms": 1580.0
+        },
+        {
+          "label": "50%",
+          "source_frame_index": 82,
+          "timestamp_ms": 1640.0
+        },
+        {
+          "label": "75%",
+          "source_frame_index": 86,
+          "timestamp_ms": 1720.0
+        },
+        {
+          "label": "End",
+          "source_frame_index": 90,
+          "timestamp_ms": 1800.0
+        }
+      ]
+    }
+  ],
+  "default_story_descriptions": [
+    {
+      "descriptor_id": "WHOLE_BODY_REORIENTATION",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Whole-body orientation shifted",
+      "summary": "Multiple projected body-orientation measures shifted across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_hip_line_angle_deg",
+        "projected_shoulder_line_angle_deg",
+        "projected_shoulder_pelvis_orientation_difference_deg",
+        "injured_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "projected_hip_line_angle_deg": {
+          "start_value": -176.9647169114008,
+          "end_value": -23.08417523180873,
+          "change": 153.88054167959206,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 4,
+          "dynamic_supported_fraction": 0.4,
+          "max_abs_robust_rate": 4312.065255986355,
+          "rapid_max_consecutive_samples": 3
+        },
+        "projected_shoulder_line_angle_deg": {
+          "start_value": 173.91417198480315,
+          "end_value": -6.993757917287667,
+          "change": 179.0920700979092,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 3,
+          "dynamic_supported_fraction": 0.3,
+          "max_abs_robust_rate": 4204.212281466283,
+          "rapid_max_consecutive_samples": 2
+        },
+        "projected_shoulder_pelvis_orientation_difference_deg": {
+          "start_value": -9.12111110379601,
+          "end_value": 16.090417314521062,
+          "change": 25.211528418317073,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 6,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 2364.5022322464383,
+          "rapid_max_consecutive_samples": 2
+        },
+        "injured_hka_angle_2d_deg": {
+          "start_value": 136.55519600793167,
+          "end_value": 147.34919716738355,
+          "change": 10.79400115945188,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 146.41952350358326,
+          "rapid_max_consecutive_samples": 0
+        }
+      },
+      "change_magnitude": 179.0920700979092,
+      "duration_ms": 180.0,
+      "robust_rate": 4312.065255986355,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "ghosted_pose_sequence",
+      "salience_score": 1.43,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "LOWER_LIMB_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Lower-limb configuration changed",
+      "summary": "The projected configuration of the lower-limb chain changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "injured_hka_angle_2d_deg": {
+          "start_value": 93.88985862769242,
+          "end_value": 151.5499957651466,
+          "change": 57.660137137454186,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 708.2196587894604,
+          "rapid_max_consecutive_samples": 3
+        },
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 85.09812069403708,
+          "end_value": 147.59525313789965,
+          "change": 62.49713244386257,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 573.4367392860287,
+          "rapid_max_consecutive_samples": 4
+        }
+      },
+      "change_magnitude": 62.49713244386257,
+      "duration_ms": 280.0,
+      "robust_rate": 708.2196587894604,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "pose_start_mid_end_hka_arc",
+      "salience_score": 1.3730444039483545,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "PELVIS_ORIENTATION_SHIFT",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Pelvis orientation shifted",
+      "summary": "Projected hip-line orientation shifted during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_hip_line_angle_deg"
+      ],
+      "supporting_values": {
+        "projected_hip_line_angle_deg": {
+          "start_value": -176.9647169114008,
+          "end_value": -23.08417523180873,
+          "change": 153.88054167959206,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 4,
+          "dynamic_supported_fraction": 0.4,
+          "max_abs_robust_rate": 4312.065255986355,
+          "rapid_max_consecutive_samples": 3
+        }
+      },
+      "change_magnitude": 153.88054167959206,
+      "duration_ms": 180.0,
+      "robust_rate": 4312.065255986355,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "hip_line_start_end_overlay",
+      "salience_score": 1.25,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "ARM_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "UPPER BODY",
+      "user_label": "Arm configuration changed",
+      "summary": "Supported projected upper-body measurements changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "left_elbow_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "left_elbow_angle_2d_deg": {
+          "start_value": 146.70911748758292,
+          "end_value": 64.86326546903582,
+          "change": -81.84585201854709,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 2201.5896908158506,
+          "rapid_max_consecutive_samples": 3
+        }
+      },
+      "change_magnitude": 81.84585201854709,
+      "duration_ms": 280.0,
+      "robust_rate": 2201.5896908158506,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "upper_body_start_end_overlay",
+      "salience_score": 1.1099999999999999,
+      "version": "m5_10_observable_movement_description_v1"
+    }
+  ],
+  "descriptions": [
+    {
+      "descriptor_id": "LOWER_LIMB_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Lower-limb configuration changed",
+      "summary": "The projected configuration of the lower-limb chain changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "injured_hka_angle_2d_deg": {
+          "start_value": 136.55519600793167,
+          "end_value": 147.34919716738355,
+          "change": 10.79400115945188,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 146.41952350358326,
+          "rapid_max_consecutive_samples": 0
+        },
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 144.51822838742018,
+          "end_value": 143.56226409903707,
+          "change": -0.9559642883831145,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 75.55645235264008,
+          "rapid_max_consecutive_samples": 0
+        }
+      },
+      "change_magnitude": 10.79400115945188,
+      "duration_ms": 180.0,
+      "robust_rate": 146.41952350358326,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "pose_start_mid_end_hka_arc",
+      "salience_score": 1.1585815520515421,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "INJURED_HKA_INCREASED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Injured-side projected HKA increased",
+      "summary": "The injured-side projected hip-knee-ankle chain increased across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "injured_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "injured_hka_angle_2d_deg": {
+          "start_value": 136.55519600793167,
+          "end_value": 147.34919716738355,
+          "change": 10.79400115945188,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 146.41952350358326,
+          "rapid_max_consecutive_samples": 0
+        }
+      },
+      "change_magnitude": 10.79400115945188,
+      "duration_ms": 180.0,
+      "robust_rate": 146.41952350358326,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "hka_start_end_overlay",
+      "salience_score": 0.8985815520515421,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "BILATERAL_RELATIONSHIP_CROSSING",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb relationship crossed",
+      "summary": "The signed injured-minus-contralateral projected lower-limb relationship changed sign during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "hka_projected_bilateral_difference_deg",
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "supporting_values": {
+        "hka_projected_bilateral_difference_deg": {
+          "start_value": -7.96303237948851,
+          "end_value": 3.7869330683464852,
+          "change": 11.749965447834995,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 159.19568246034268,
+          "rapid_max_consecutive_samples": 1
+        },
+        "hka_projected_bilateral_absolute_difference_deg": {
+          "start_value": 7.96303237948851,
+          "end_value": 3.7869330683464852,
+          "change": -4.176099311142025,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 146.34090272250043,
+          "rapid_max_consecutive_samples": 0
+        }
+      },
+      "change_magnitude": 11.749965447834995,
+      "duration_ms": 180.0,
+      "robust_rate": 159.19568246034268,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "bilateral_compact_trajectory",
+      "salience_score": 1.1054932306899996,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "PELVIS_ORIENTATION_SHIFT",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Pelvis orientation shifted",
+      "summary": "Projected hip-line orientation shifted during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_hip_line_angle_deg"
+      ],
+      "supporting_values": {
+        "projected_hip_line_angle_deg": {
+          "start_value": -176.9647169114008,
+          "end_value": -23.08417523180873,
+          "change": 153.88054167959206,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 4,
+          "dynamic_supported_fraction": 0.4,
+          "max_abs_robust_rate": 4312.065255986355,
+          "rapid_max_consecutive_samples": 3
+        }
+      },
+      "change_magnitude": 153.88054167959206,
+      "duration_ms": 180.0,
+      "robust_rate": 4312.065255986355,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "hip_line_start_end_overlay",
+      "salience_score": 1.25,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "SHOULDER_PELVIS_RELATIONSHIP_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Shoulder-pelvis relationship changed",
+      "summary": "The projected shoulder-line relative to hip-line relationship changed during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_shoulder_pelvis_orientation_difference_deg"
+      ],
+      "supporting_values": {
+        "projected_shoulder_pelvis_orientation_difference_deg": {
+          "start_value": -9.12111110379601,
+          "end_value": 16.090417314521062,
+          "change": 25.211528418317073,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 6,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 2364.5022322464383,
+          "rapid_max_consecutive_samples": 2
+        }
+      },
+      "change_magnitude": 25.211528418317073,
+      "duration_ms": 180.0,
+      "robust_rate": 2364.5022322464383,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "shoulder_pelvis_axis_overlay",
+      "salience_score": 1.0280448327379,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "ARM_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "UPPER BODY",
+      "user_label": "Arm configuration changed",
+      "summary": "Supported projected upper-body measurements changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "left_elbow_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "left_elbow_angle_2d_deg": {
+          "start_value": 124.35630096317371,
+          "end_value": 146.2309071601598,
+          "change": 21.874606196986093,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 10,
+          "dynamic_supported_fraction": 1.0,
+          "max_abs_robust_rate": 601.4697005250893,
+          "rapid_max_consecutive_samples": 2
+        }
+      },
+      "change_magnitude": 21.874606196986093,
+      "duration_ms": 180.0,
+      "robust_rate": 601.4697005250893,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "upper_body_start_end_overlay",
+      "salience_score": 0.9150679129882793,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "WHOLE_BODY_REORIENTATION",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 28,
+      "scope_end": 37,
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Whole-body orientation shifted",
+      "summary": "Multiple projected body-orientation measures shifted across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "10 of 10 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_hip_line_angle_deg",
+        "projected_shoulder_line_angle_deg",
+        "projected_shoulder_pelvis_orientation_difference_deg",
+        "injured_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "projected_hip_line_angle_deg": {
+          "start_value": -176.9647169114008,
+          "end_value": -23.08417523180873,
+          "change": 153.88054167959206,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 4,
+          "dynamic_supported_fraction": 0.4,
+          "max_abs_robust_rate": 4312.065255986355,
+          "rapid_max_consecutive_samples": 3
+        },
+        "projected_shoulder_line_angle_deg": {
+          "start_value": 173.91417198480315,
+          "end_value": -6.993757917287667,
+          "change": 179.0920700979092,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 3,
+          "dynamic_supported_fraction": 0.3,
+          "max_abs_robust_rate": 4204.212281466283,
+          "rapid_max_consecutive_samples": 2
+        },
+        "projected_shoulder_pelvis_orientation_difference_deg": {
+          "start_value": -9.12111110379601,
+          "end_value": 16.090417314521062,
+          "change": 25.211528418317073,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 6,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 2364.5022322464383,
+          "rapid_max_consecutive_samples": 2
+        },
+        "injured_hka_angle_2d_deg": {
+          "start_value": 136.55519600793167,
+          "end_value": 147.34919716738355,
+          "change": 10.79400115945188,
+          "unit": "deg",
+          "supported_samples": 10,
+          "relevant_frames": 10,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.9,
+          "max_abs_robust_rate": 146.41952350358326,
+          "rapid_max_consecutive_samples": 0
+        }
+      },
+      "change_magnitude": 179.0920700979092,
+      "duration_ms": 180.0,
+      "robust_rate": 4312.065255986355,
+      "source_frames": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "ghosted_pose_sequence",
+      "salience_score": 1.43,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "LOWER_LIMB_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Lower-limb configuration changed",
+      "summary": "The projected configuration of the lower-limb chain changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "injured_hka_angle_2d_deg": {
+          "start_value": 98.83102482003495,
+          "end_value": 77.13534473799095,
+          "change": -21.695680082044007,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 6,
+          "dynamic_supported_fraction": 0.75,
+          "max_abs_robust_rate": 377.36780378422355,
+          "rapid_max_consecutive_samples": 4
+        },
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 95.99496758686657,
+          "end_value": 67.16674365348983,
+          "change": -28.828223933376734,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 7,
+          "dynamic_supported_fraction": 0.875,
+          "max_abs_robust_rate": 302.0828658810152,
+          "rapid_max_consecutive_samples": 6
+        }
+      },
+      "change_magnitude": 28.828223933376734,
+      "duration_ms": 140.0,
+      "robust_rate": 377.36780378422355,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "pose_start_mid_end_hka_arc",
+      "salience_score": 1.2421097597409096,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "CONTRALATERAL_HKA_DECREASED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Contralateral projected HKA decreased",
+      "summary": "The contralateral projected hip-knee-ankle chain decreased across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 95.99496758686657,
+          "end_value": 67.16674365348983,
+          "change": -28.828223933376734,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 7,
+          "dynamic_supported_fraction": 0.875,
+          "max_abs_robust_rate": 302.0828658810152,
+          "rapid_max_consecutive_samples": 6
+        }
+      },
+      "change_magnitude": 28.828223933376734,
+      "duration_ms": 140.0,
+      "robust_rate": 302.0828658810152,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "hka_start_end_overlay",
+      "salience_score": 0.9821097597409096,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "RAPID_LOWER_LIMB_CONFIGURATION_CHANGE",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Rapid lower-limb configuration change",
+      "summary": "The projected lower-limb configuration changed rapidly under the configured robust-rate rule.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 95.99496758686657,
+          "end_value": 67.16674365348983,
+          "change": -28.828223933376734,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 7,
+          "dynamic_supported_fraction": 0.875,
+          "max_abs_robust_rate": 302.0828658810152,
+          "rapid_max_consecutive_samples": 6
+        }
+      },
+      "change_magnitude": 28.828223933376734,
+      "duration_ms": 140.0,
+      "robust_rate": 302.0828658810152,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "pose_start_mid_end_hka_arc",
+      "salience_score": 1.1221097597409095,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "BILATERAL_DIFFERENCE_INCREASED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "BILATERAL LOWER-LIMB RELATIONSHIP",
+      "user_label": "Bilateral lower-limb difference increased",
+      "summary": "The absolute projected difference between the injured and contralateral lower-limb chains changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "hka_projected_bilateral_absolute_difference_deg"
+      ],
+      "supporting_values": {
+        "hka_projected_bilateral_absolute_difference_deg": {
+          "start_value": 2.8360572331683898,
+          "end_value": 9.968601084501117,
+          "change": 7.132543851332727,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 7,
+          "dynamic_supported_fraction": 0.875,
+          "max_abs_robust_rate": 156.34224798942356,
+          "rapid_max_consecutive_samples": 1
+        }
+      },
+      "change_magnitude": 7.132543851332727,
+      "duration_ms": 140.0,
+      "robust_rate": 156.34224798942356,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "bilateral_compact_trajectory",
+      "salience_score": 1.0468232325303164,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "PELVIS_ORIENTATION_SHIFT",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Pelvis orientation shifted",
+      "summary": "Projected hip-line orientation shifted during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_hip_line_angle_deg"
+      ],
+      "supporting_values": {
+        "projected_hip_line_angle_deg": {
+          "start_value": -136.0529318596965,
+          "end_value": -165.3634927369971,
+          "change": -29.31056087730059,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 8,
+          "dynamic_supported_fraction": 1.0,
+          "max_abs_robust_rate": 313.6416562091981,
+          "rapid_max_consecutive_samples": 5
+        }
+      },
+      "change_magnitude": 29.31056087730059,
+      "duration_ms": 140.0,
+      "robust_rate": 313.6416562091981,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "hip_line_start_end_overlay",
+      "salience_score": 1.0839855145228356,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "UPPER_BODY_REORIENTATION",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "UPPER BODY",
+      "user_label": "Upper-body orientation shifted",
+      "summary": "Supported projected upper-body measurements changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "right_upper_arm_orientation_2d_deg"
+      ],
+      "supporting_values": {
+        "right_upper_arm_orientation_2d_deg": {
+          "start_value": -59.539879319487156,
+          "end_value": -99.47634944774931,
+          "change": -39.93647012826216,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 8,
+          "dynamic_supported_fraction": 1.0,
+          "max_abs_robust_rate": 422.18773348976026,
+          "rapid_max_consecutive_samples": 6
+        }
+      },
+      "change_magnitude": 39.93647012826216,
+      "duration_ms": 140.0,
+      "robust_rate": 422.18773348976026,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "upper_body_start_end_overlay",
+      "salience_score": 0.9853084949432418,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "WHOLE_BODY_REORIENTATION",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 50,
+      "scope_end": 57,
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Whole-body orientation shifted",
+      "summary": "Multiple projected body-orientation measures shifted across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "8 of 8 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_hip_line_angle_deg",
+        "projected_shoulder_line_angle_deg",
+        "contralateral_hka_angle_2d_deg",
+        "right_upper_arm_orientation_2d_deg"
+      ],
+      "supporting_values": {
+        "projected_hip_line_angle_deg": {
+          "start_value": -136.0529318596965,
+          "end_value": -165.3634927369971,
+          "change": -29.31056087730059,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 8,
+          "dynamic_supported_fraction": 1.0,
+          "max_abs_robust_rate": 313.6416562091981,
+          "rapid_max_consecutive_samples": 5
+        },
+        "projected_shoulder_line_angle_deg": {
+          "start_value": -144.34384618239062,
+          "end_value": -160.2783283788703,
+          "change": -15.934482196479678,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 8,
+          "dynamic_supported_fraction": 1.0,
+          "max_abs_robust_rate": 225.7256663658478,
+          "rapid_max_consecutive_samples": 3
+        },
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 95.99496758686657,
+          "end_value": 67.16674365348983,
+          "change": -28.828223933376734,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 7,
+          "dynamic_supported_fraction": 0.875,
+          "max_abs_robust_rate": 302.0828658810152,
+          "rapid_max_consecutive_samples": 6
+        },
+        "right_upper_arm_orientation_2d_deg": {
+          "start_value": -59.539879319487156,
+          "end_value": -99.47634944774931,
+          "change": -39.93647012826216,
+          "unit": "deg",
+          "supported_samples": 8,
+          "relevant_frames": 8,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 8,
+          "dynamic_supported_fraction": 1.0,
+          "max_abs_robust_rate": 422.18773348976026,
+          "rapid_max_consecutive_samples": 6
+        }
+      },
+      "change_magnitude": 39.93647012826216,
+      "duration_ms": 140.0,
+      "robust_rate": 422.18773348976026,
+      "source_frames": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "ghosted_pose_sequence",
+      "salience_score": 1.3053084949432416,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "LOWER_LIMB_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Lower-limb configuration changed",
+      "summary": "The projected configuration of the lower-limb chain changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "injured_hka_angle_2d_deg",
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "injured_hka_angle_2d_deg": {
+          "start_value": 93.88985862769242,
+          "end_value": 151.5499957651466,
+          "change": 57.660137137454186,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 708.2196587894604,
+          "rapid_max_consecutive_samples": 3
+        },
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 85.09812069403708,
+          "end_value": 147.59525313789965,
+          "change": 62.49713244386257,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 573.4367392860287,
+          "rapid_max_consecutive_samples": 4
+        }
+      },
+      "change_magnitude": 62.49713244386257,
+      "duration_ms": 280.0,
+      "robust_rate": 708.2196587894604,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "pose_start_mid_end_hka_arc",
+      "salience_score": 1.3730444039483545,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "CONTRALATERAL_HKA_INCREASED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Contralateral projected HKA increased",
+      "summary": "The contralateral projected hip-knee-ankle chain increased across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 85.09812069403708,
+          "end_value": 147.59525313789965,
+          "change": 62.49713244386257,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 573.4367392860287,
+          "rapid_max_consecutive_samples": 4
+        }
+      },
+      "change_magnitude": 62.49713244386257,
+      "duration_ms": 280.0,
+      "robust_rate": 573.4367392860287,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "hka_start_end_overlay",
+      "salience_score": 1.1130444039483545,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "RAPID_LOWER_LIMB_CONFIGURATION_CHANGE",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "HIP-KNEE-ANKLE CHAIN",
+      "user_label": "Rapid lower-limb configuration change",
+      "summary": "The projected lower-limb configuration changed rapidly under the configured robust-rate rule.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "contralateral_hka_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 85.09812069403708,
+          "end_value": 147.59525313789965,
+          "change": 62.49713244386257,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 573.4367392860287,
+          "rapid_max_consecutive_samples": 4
+        }
+      },
+      "change_magnitude": 62.49713244386257,
+      "duration_ms": 280.0,
+      "robust_rate": 573.4367392860287,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "pose_start_mid_end_hka_arc",
+      "salience_score": 1.2530444039483544,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "TRUNK_ORIENTATION_SHIFT",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Trunk orientation shifted",
+      "summary": "Projected trunk orientation shifted during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_trunk_axis_angle_deg"
+      ],
+      "supporting_values": {
+        "projected_trunk_axis_angle_deg": {
+          "start_value": 113.40663564824735,
+          "end_value": 97.40361214539405,
+          "change": -16.003023502853296,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 93.87963156972314,
+          "rapid_max_consecutive_samples": 0
+        }
+      },
+      "change_magnitude": 16.003023502853296,
+      "duration_ms": 280.0,
+      "robust_rate": 93.87963156972314,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "trunk_axis_start_end_overlay",
+      "salience_score": 1.0857038881813048,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "ARM_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "UPPER BODY",
+      "user_label": "Arm configuration changed",
+      "summary": "Supported projected upper-body measurements changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "left_elbow_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "left_elbow_angle_2d_deg": {
+          "start_value": 146.70911748758292,
+          "end_value": 64.86326546903582,
+          "change": -81.84585201854709,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 2201.5896908158506,
+          "rapid_max_consecutive_samples": 3
+        }
+      },
+      "change_magnitude": 81.84585201854709,
+      "duration_ms": 280.0,
+      "robust_rate": 2201.5896908158506,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "upper_body_start_end_overlay",
+      "salience_score": 1.1099999999999999,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "WHOLE_BODY_REORIENTATION",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 59,
+      "scope_end": 73,
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Whole-body orientation shifted",
+      "summary": "Multiple projected body-orientation measures shifted across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "15 of 15 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_trunk_axis_angle_deg",
+        "projected_shoulder_line_angle_deg",
+        "contralateral_hka_angle_2d_deg",
+        "right_upper_arm_orientation_2d_deg"
+      ],
+      "supporting_values": {
+        "projected_trunk_axis_angle_deg": {
+          "start_value": 113.40663564824735,
+          "end_value": 97.40361214539405,
+          "change": -16.003023502853296,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 93.87963156972314,
+          "rapid_max_consecutive_samples": 0
+        },
+        "projected_shoulder_line_angle_deg": {
+          "start_value": -156.1286289134639,
+          "end_value": -171.98960805880506,
+          "change": -15.860979145341162,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 5,
+          "dynamic_supported_fraction": 0.3333333333333333,
+          "max_abs_robust_rate": 158.93385861575118,
+          "rapid_max_consecutive_samples": 1
+        },
+        "contralateral_hka_angle_2d_deg": {
+          "start_value": 85.09812069403708,
+          "end_value": 147.59525313789965,
+          "change": 62.49713244386257,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.6,
+          "max_abs_robust_rate": 573.4367392860287,
+          "rapid_max_consecutive_samples": 4
+        },
+        "right_upper_arm_orientation_2d_deg": {
+          "start_value": -114.8761256471236,
+          "end_value": -91.55748950624915,
+          "change": 23.318636140874446,
+          "unit": "deg",
+          "supported_samples": 15,
+          "relevant_frames": 15,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 12,
+          "dynamic_supported_fraction": 0.8,
+          "max_abs_robust_rate": 383.6924683059112,
+          "rapid_max_consecutive_samples": 2
+        }
+      },
+      "change_magnitude": 62.49713244386257,
+      "duration_ms": 280.0,
+      "robust_rate": 573.4367392860287,
+      "source_frames": [
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "ghosted_pose_sequence",
+      "salience_score": 1.3930444039483545,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "TRUNK_ORIENTATION_SHIFT",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 75,
+      "scope_end": 90,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Trunk orientation shifted",
+      "summary": "Projected trunk orientation shifted during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "16 of 16 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_trunk_axis_angle_deg"
+      ],
+      "supporting_values": {
+        "projected_trunk_axis_angle_deg": {
+          "start_value": 94.47290103180069,
+          "end_value": 52.53559790428113,
+          "change": -41.937303127519556,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 10,
+          "dynamic_supported_fraction": 0.625,
+          "max_abs_robust_rate": 463.34052897496684,
+          "rapid_max_consecutive_samples": 3
+        }
+      },
+      "change_magnitude": 41.937303127519556,
+      "duration_ms": 300.0,
+      "robust_rate": 463.34052897496684,
+      "source_frames": [
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "trunk_axis_start_end_overlay",
+      "salience_score": 1.2130895121625762,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "SHOULDER_PELVIS_RELATIONSHIP_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 75,
+      "scope_end": 90,
+      "family": "TRUNK & PELVIS",
+      "user_label": "Shoulder-pelvis relationship changed",
+      "summary": "The projected shoulder-line relative to hip-line relationship changed during the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "16 of 16 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_shoulder_pelvis_orientation_difference_deg"
+      ],
+      "supporting_values": {
+        "projected_shoulder_pelvis_orientation_difference_deg": {
+          "start_value": 10.452375799350534,
+          "end_value": -4.832391469894333,
+          "change": -15.284767269244867,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 13,
+          "dynamic_supported_fraction": 0.8125,
+          "max_abs_robust_rate": 346.31748779241514,
+          "rapid_max_consecutive_samples": 4
+        }
+      },
+      "change_magnitude": 15.284767269244867,
+      "duration_ms": 300.0,
+      "robust_rate": 346.31748779241514,
+      "source_frames": [
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "shoulder_pelvis_axis_overlay",
+      "salience_score": 0.9894407616026191,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "ARM_CONFIGURATION_CHANGED",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 75,
+      "scope_end": 90,
+      "family": "UPPER BODY",
+      "user_label": "Arm configuration changed",
+      "summary": "Supported projected upper-body measurements changed across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "16 of 16 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "right_elbow_angle_2d_deg"
+      ],
+      "supporting_values": {
+        "right_elbow_angle_2d_deg": {
+          "start_value": 179.67742686949967,
+          "end_value": 63.88914714511639,
+          "change": -115.78827972438327,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 5,
+          "dynamic_supported_fraction": 0.3125,
+          "max_abs_robust_rate": 2793.9428442892918,
+          "rapid_max_consecutive_samples": 1
+        }
+      },
+      "change_magnitude": 115.78827972438327,
+      "duration_ms": 300.0,
+      "robust_rate": 2793.9428442892918,
+      "source_frames": [
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "upper_body_start_end_overlay",
+      "salience_score": 1.1099999999999999,
+      "version": "m5_10_observable_movement_description_v1"
+    },
+    {
+      "descriptor_id": "WHOLE_BODY_REORIENTATION",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "SUPPORTED_INTERVAL",
+      "scope_start": 75,
+      "scope_end": 90,
+      "family": "WHOLE-BODY ORIENTATION",
+      "user_label": "Whole-body orientation shifted",
+      "summary": "Multiple projected body-orientation measures shifted across the supported interval.",
+      "evidence_status": "SUPPORTED",
+      "evidence_reason": "16 of 16 interval frames supported the primary measurement.",
+      "supporting_features": [
+        "projected_trunk_axis_angle_deg",
+        "projected_shoulder_line_angle_deg",
+        "projected_shoulder_pelvis_orientation_difference_deg",
+        "right_upper_arm_orientation_2d_deg"
+      ],
+      "supporting_values": {
+        "projected_trunk_axis_angle_deg": {
+          "start_value": 94.47290103180069,
+          "end_value": 52.53559790428113,
+          "change": -41.937303127519556,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 10,
+          "dynamic_supported_fraction": 0.625,
+          "max_abs_robust_rate": 463.34052897496684,
+          "rapid_max_consecutive_samples": 3
+        },
+        "projected_shoulder_line_angle_deg": {
+          "start_value": -169.9245168542135,
+          "end_value": 161.7888034954728,
+          "change": -28.286679650313715,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 9,
+          "dynamic_supported_fraction": 0.5625,
+          "max_abs_robust_rate": 305.70377294294246,
+          "rapid_max_consecutive_samples": 4
+        },
+        "projected_shoulder_pelvis_orientation_difference_deg": {
+          "start_value": 10.452375799350534,
+          "end_value": -4.832391469894333,
+          "change": -15.284767269244867,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 13,
+          "dynamic_supported_fraction": 0.8125,
+          "max_abs_robust_rate": 346.31748779241514,
+          "rapid_max_consecutive_samples": 4
+        },
+        "right_upper_arm_orientation_2d_deg": {
+          "start_value": -91.14037564916313,
+          "end_value": -132.8246938988869,
+          "change": -41.68431824972376,
+          "unit": "deg",
+          "supported_samples": 16,
+          "relevant_frames": 16,
+          "coverage": 1.0,
+          "dynamic_supported_samples": 11,
+          "dynamic_supported_fraction": 0.6875,
+          "max_abs_robust_rate": 620.7383471381411,
+          "rapid_max_consecutive_samples": 4
+        }
+      },
+      "change_magnitude": 41.937303127519556,
+      "duration_ms": 300.0,
+      "robust_rate": 620.7383471381411,
+      "source_frames": [
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "human target annotation + processed pose QC + controlled vocabulary rule",
+      "visualisation_hint": "ghosted_pose_sequence",
+      "salience_score": 1.313089512162576,
+      "version": "m5_10_observable_movement_description_v1"
+    }
+  ],
+  "withheld_descriptions": [
+    {
+      "descriptor_id": "PHASE_SEGMENTATION_WITHHELD",
+      "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+      "scope_type": "WHOLE_MOVEMENT",
+      "scope_start": null,
+      "scope_end": null,
+      "family": "EVIDENCE / UNAVAILABLE",
+      "user_label": "Movement phase segmentation withheld",
+      "summary": "Distinct movement phases were not inferred reliably for this case.",
+      "evidence_status": "WITHHELD",
+      "evidence_reason": "Continuous multidimensional evidence was insufficient after target/path QC.",
+      "supporting_features": [],
+      "supporting_values": {},
+      "change_magnitude": null,
+      "duration_ms": null,
+      "robust_rate": null,
+      "source_frames": [],
+      "view_requirements": [
+        "generic_projected_2d_view"
+      ],
+      "provenance": "controlled vocabulary availability rule",
+      "visualisation_hint": "unavailable_state",
+      "salience_score": 0.0,
+      "version": "m5_10_observable_movement_description_v1"
+    }
+  ]
+}

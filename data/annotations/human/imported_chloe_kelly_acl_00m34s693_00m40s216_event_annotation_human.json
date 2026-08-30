@@ -1,0 +1,18 @@
+{
+  "case_id": "chloe_kelly_acl",
+  "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "analysis_start_frame": 0,
+  "analysis_end_frame": 120,
+  "initial_contact_frame": null,
+  "critical_plant_frame": null,
+  "estimated_event_start_frame": null,
+  "estimated_event_end_frame": 120,
+  "event_anchor_frame": 120,
+  "event_anchor_type": "estimated_event_end",
+  "collapse_frame": null,
+  "annotation_confidence": 0.6,
+  "annotation_method": "human_movement_window_compatibility",
+  "annotator": "researcher_01",
+  "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+}

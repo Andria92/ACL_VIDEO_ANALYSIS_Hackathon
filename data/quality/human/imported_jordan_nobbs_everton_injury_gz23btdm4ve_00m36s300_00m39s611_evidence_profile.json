@@ -1,0 +1,51 @@
+{
+  "case_id": "jordan_nobbs_acl",
+  "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+  "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 11,
+  "target_tracking_coverage": 0.6916,
+  "pose_frame_coverage": 0.6916,
+  "upper_body_landmark_coverage": 0.6916000000000001,
+  "core_landmark_coverage": 0.6916,
+  "lower_limb_landmark_coverage": 0.6916000000000001,
+  "geometry_feature_coverage": 0.6884735202492211,
+  "dynamic_feature_coverage": 0.5303011344678011,
+  "interpolation_fraction": 0.0154,
+  "rejected_fraction": 0.3744,
+  "identity_uncertainty_fraction": 0.0,
+  "target_loss_fraction": 0.308411214953271,
+  "supported_feature_count": 31,
+  "limited_feature_count": 5,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 27,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "Feature value is unavailable.",
+    "Local trajectory residuals are high relative to local movement.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 31,
+    "limited_features": 5,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.6884735202492211,
+    "dynamic_coverage": 0.5303011344678011,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "Feature value is unavailable.",
+      "Local trajectory residuals are high relative to local movement.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 11,
+    "overall_quality_label": "HIGH EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.8611111111111112,
+      "limited_fraction": 0.1388888888888889,
+      "geometry_coverage": 0.6884735202492211,
+      "dynamic_coverage": 0.5303011344678011
+    }
+  }
+}

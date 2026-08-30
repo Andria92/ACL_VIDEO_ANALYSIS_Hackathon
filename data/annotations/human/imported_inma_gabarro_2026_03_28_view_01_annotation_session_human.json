@@ -1,0 +1,240 @@
+{
+  "provenance": {
+    "annotation_session_id": "27e9d216-5e8a-4b88-b677-c996460d2395",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-28T23:44:03.345509+00:00",
+    "updated_at": "2026-08-28T23:47:10.486432+00:00",
+    "case_id": "imported_inma_gabarro_2026_03_28_acl_candidate",
+    "source_id": "imported_inma_gabarro_2026_03_28_view_01",
+    "view_id": "imported_inma_gabarro_2026_03_28_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/Everton 2-3 Liverpool FC Women_2025_2026_51m55s863_51m58s863.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 13,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 137.5,
+        "y": 96.0,
+        "width": 164.0,
+        "height": 188.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 9,
+      "bbox": {
+        "x": 155.5,
+        "y": 94.0,
+        "width": 178.0,
+        "height": 198.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 14,
+      "bbox": {
+        "x": 184.5,
+        "y": 96.0,
+        "width": 127.0,
+        "height": 201.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 16,
+      "bbox": {
+        "x": 152.5,
+        "y": 88.0,
+        "width": 161.0,
+        "height": 216.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 190.5,
+        "y": 108.0,
+        "width": 122.0,
+        "height": 189.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 32,
+      "bbox": {
+        "x": 200.5,
+        "y": 106.0,
+        "width": 113.0,
+        "height": 194.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 37,
+      "bbox": {
+        "x": 203.5,
+        "y": 106.0,
+        "width": 86.0,
+        "height": 194.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 205.5,
+        "y": 107.0,
+        "width": 110.0,
+        "height": 197.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 48,
+      "bbox": {
+        "x": 204.5,
+        "y": 107.0,
+        "width": 129.0,
+        "height": 214.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 50,
+      "bbox": {
+        "x": 210.5,
+        "y": 108.0,
+        "width": 150.0,
+        "height": 200.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 52,
+      "bbox": {
+        "x": 229.5,
+        "y": 104.0,
+        "width": 135.0,
+        "height": 205.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 221.5,
+        "y": 112.0,
+        "width": 108.0,
+        "height": 209.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 71,
+      "bbox": {
+        "x": 228.5,
+        "y": 110.0,
+        "width": 102.0,
+        "height": 214.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 26,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 0,
+      "end_frame": 2,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 9,
+      "end_frame": 10,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 38,
+      "end_frame": 41,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 45,
+      "end_frame": 54,
+      "frame_count": 10,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 61,
+      "end_frame": 67,
+      "frame_count": 7,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 77,
+    "movement_end_timestamp_ms": 2566.666666666667,
+    "movement_duration_ms": 2566.666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_inma_gabarro_2026_03_28_acl_candidate",
+    "source_id": "imported_inma_gabarro_2026_03_28_view_01",
+    "view_id": "imported_inma_gabarro_2026_03_28_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 77,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 77,
+    "event_anchor_frame": 77,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

@@ -29,6 +29,50 @@ def test_draw_pose_overlay_preserves_frame_shape():
     assert output.sum() > 0
 
 
+def test_draw_pose_overlay_hides_very_low_confidence_landmarks_by_default():
+    frame = np.zeros((80, 120, 3), dtype=np.uint8)
+    landmarks = {
+        "left_shoulder": {
+            "x_px": 20.0,
+            "y_px": 20.0,
+            "confidence": 0.1,
+            "observed": True,
+        },
+        "right_shoulder": {
+            "x_px": 60.0,
+            "y_px": 20.0,
+            "confidence": 0.1,
+            "observed": True,
+        },
+    }
+
+    output = draw_pose_overlay(frame, landmarks)
+
+    assert output.sum() == 0
+
+
+def test_draw_pose_overlay_renders_provisional_pose_less_strongly():
+    frame = np.zeros((80, 120, 3), dtype=np.uint8)
+    supported = {
+        name: {
+            "x_px": x,
+            "y_px": 20.0,
+            "confidence": 0.9,
+            "observed": True,
+        }
+        for name, x in (("left_shoulder", 20.0), ("right_shoulder", 80.0))
+    }
+    provisional = {
+        name: {**landmark, "confidence": 0.3}
+        for name, landmark in supported.items()
+    }
+
+    supported_output = draw_pose_overlay(frame, supported)
+    provisional_output = draw_pose_overlay(frame, provisional)
+
+    assert np.count_nonzero(provisional_output) < np.count_nonzero(supported_output)
+
+
 def test_plot_joint_coordinate_diagnostics_writes_file(tmp_path):
     pose_df = pd.DataFrame(
         [

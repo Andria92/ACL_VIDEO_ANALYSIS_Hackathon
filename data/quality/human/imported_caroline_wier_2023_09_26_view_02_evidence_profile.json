@@ -1,0 +1,55 @@
+{
+  "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+  "source_id": "imported_caroline_wier_2023_09_26_view_02",
+  "view_id": "imported_caroline_wier_2023_09_26_view_02",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 20,
+  "target_tracking_coverage": 0.3859,
+  "pose_frame_coverage": 0.7283,
+  "upper_body_landmark_coverage": 0.3958333333333333,
+  "core_landmark_coverage": 0.39945,
+  "lower_limb_landmark_coverage": 0.38133333333333336,
+  "geometry_feature_coverage": 0.3746980676328502,
+  "dynamic_feature_coverage": 0.6293778295254191,
+  "interpolation_fraction": 0.0042,
+  "rejected_fraction": 0.6365,
+  "identity_uncertainty_fraction": 0.14130434782608695,
+  "target_loss_fraction": 0.2717391304347826,
+  "supported_feature_count": 0,
+  "limited_feature_count": 36,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 0,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 0,
+    "limited_features": 36,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.3746980676328502,
+    "dynamic_coverage": 0.6293778295254191,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 20,
+    "overall_quality_label": "LIMITED EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.0,
+      "limited_fraction": 1.0,
+      "geometry_coverage": 0.3746980676328502,
+      "dynamic_coverage": 0.6293778295254191
+    }
+  }
+}

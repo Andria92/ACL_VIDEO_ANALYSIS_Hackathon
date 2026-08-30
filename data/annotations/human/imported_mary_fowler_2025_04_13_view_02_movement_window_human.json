@@ -1,0 +1,54 @@
+{
+  "provenance": {
+    "annotation_session_id": "c8cdaa08-3c0d-477e-a890-f0ffe8525515",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T20:23:43.367614+00:00",
+    "updated_at": "2026-08-27T20:27:12.291540+00:00",
+    "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+    "source_id": "imported_mary_fowler_2025_04_13_view_02",
+    "view_id": "imported_mary_fowler_2025_04_13_view_02",
+    "video_path": "data/videos/analysis_clips/FULL MATCH _ Manchester City v Manchester United _ Semi-Final _ Adobe Women_s FA Cup 2024-25_20m29s552_20m34s552.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+  "source_id": "imported_mary_fowler_2025_04_13_view_02",
+  "view_id": "imported_mary_fowler_2025_04_13_view_02",
+  "manual_roi_keyframe_count": 8,
+  "manual_target_unavailable_frame_count": 27,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 62,
+      "end_frame": 88,
+      "frame_count": 27,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 22,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 99,
+      "end_frame": 120,
+      "frame_count": 22,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 122,
+    "movement_end_timestamp_ms": 4066.6666666666665,
+    "movement_duration_ms": 4066.6666666666665,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

@@ -14,6 +14,7 @@ from acl_motion.semantics.bilateral import (
 from acl_motion.semantics.models import MovementObservation
 from acl_motion.semantics.path import (
     PathAnalysisConfig,
+    body_center_from_processed_pose,
     compensate_projected_path,
     direction_change_summary,
     enforce_path_validation,
@@ -181,6 +182,38 @@ def test_path_validation_can_withhold_wrong_player_jump() -> None:
 
     assert validation["validation_status"] == "QA_REQUIRED"
     assert not enforced["path_status"].eq("SUPPORTED").any()
+
+
+def test_empty_body_center_and_path_preserve_unavailable_output_schema() -> None:
+    processed_pose = pd.DataFrame(
+        {
+            "source_frame_index": [3, 3],
+            "timestamp_ms": [100.0, 100.0],
+            "landmark_name": ["left_hip", "right_hip"],
+            "rejected": [True, True],
+            "smoothed_x": [None, None],
+            "smoothed_y": [None, None],
+        }
+    )
+
+    centers = body_center_from_processed_pose(processed_pose)
+    path = compensate_projected_path(
+        centers,
+        pd.DataFrame(),
+        scale_reference_px=1.0,
+    )
+    validation = validate_projected_path(path)
+    enforced = enforce_path_validation(path, validation)
+
+    assert centers.empty
+    assert "source_frame_index" in centers.columns
+    assert path.empty
+    assert "path_status" in path.columns
+    assert validation["validation_status"] == "UNAVAILABLE"
+    assert enforced.empty
+    assert {"path_validation_status", "path_validation_reason"}.issubset(
+        enforced.columns
+    )
 
 
 def test_semantic_outputs_remain_task_neutral() -> None:

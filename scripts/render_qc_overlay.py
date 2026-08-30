@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -34,8 +36,11 @@ def main() -> int:
     fps = float(capture.get(cv2.CAP_PROP_FPS) or 30.0)
     width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH) or 0)
     height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT) or 0)
+    intermediate_path = output_path.with_name(
+        f"{output_path.stem}.mp4v-intermediate.mp4"
+    )
     writer = cv2.VideoWriter(
-        str(output_path),
+        str(intermediate_path),
         cv2.VideoWriter_fourcc(*"mp4v"),
         fps / args.every_n,
         (width, height),
@@ -68,8 +73,51 @@ def main() -> int:
     finally:
         capture.release()
         writer.release()
+    _encode_browser_compatible_video(intermediate_path, output_path)
     print(f"Wrote {written} QC overlay frames to {output_path}")
     return 0
+
+
+def _encode_browser_compatible_video(source: Path, output: Path) -> None:
+    """Convert OpenCV's intermediate stream to browser-compatible H.264."""
+
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        source.unlink(missing_ok=True)
+        raise ValueError("ffmpeg is required to create browser-compatible skeleton videos.")
+    try:
+        result = subprocess.run(
+            [
+                ffmpeg,
+                "-y",
+                "-loglevel",
+                "error",
+                "-i",
+                str(source),
+                "-an",
+                "-c:v",
+                "libx264",
+                "-preset",
+                "veryfast",
+                "-crf",
+                "21",
+                "-pix_fmt",
+                "yuv420p",
+                "-movflags",
+                "+faststart",
+                str(output),
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise ValueError(
+                "Could not encode a browser-compatible skeleton video: "
+                + (result.stderr.strip() or "ffmpeg failed")
+            )
+    finally:
+        source.unlink(missing_ok=True)
 
 
 def parse_args() -> argparse.Namespace:

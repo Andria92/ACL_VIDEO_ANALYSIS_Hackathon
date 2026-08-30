@@ -1,0 +1,36 @@
+{
+  "provenance": {
+    "annotation_session_id": "102e4936-3b72-49c4-8f16-1bd88a59586e",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-28T08:18:39.727352+00:00",
+    "updated_at": "2026-08-28T08:18:41.763720+00:00",
+    "case_id": "imported_grace_wisnewski_2023_11_04_acl_candidate",
+    "source_id": "imported_grace_wisnewski_2023_11_04_view_01",
+    "view_id": "imported_grace_wisnewski_2023_11_04_view_01",
+    "video_path": "data/videos/analysis_clips/Road to Recovery Ep. 1_ Grace Wisnewski ACL Injury_00m08s430_00m12s000.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_grace_wisnewski_2023_11_04_acl_candidate",
+  "source_id": "imported_grace_wisnewski_2023_11_04_view_01",
+  "view_id": "imported_grace_wisnewski_2023_11_04_view_01",
+  "manual_roi_keyframe_count": 12,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 3,
+    "movement_start_timestamp_ms": 120.0,
+    "movement_end_frame": 27,
+    "movement_end_timestamp_ms": 1080.0,
+    "movement_duration_ms": 960.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

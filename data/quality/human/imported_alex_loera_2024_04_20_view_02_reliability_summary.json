@@ -1,0 +1,161 @@
+{
+  "total_frames": 76,
+  "target_tracking_coverage": 0.5526,
+  "pose_frame_coverage": 1.0,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 5,
+    "LOW_POSE_CONFIDENCE": 7,
+    "TARGET_IDENTITY_UNCERTAIN": 22,
+    "VALID_TARGET": 42
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 40,
+      "end_frame": 40
+    },
+    {
+      "start_frame": 43,
+      "end_frame": 44
+    },
+    {
+      "start_frame": 50,
+      "end_frame": 50
+    },
+    {
+      "start_frame": 52,
+      "end_frame": 54
+    }
+  ],
+  "target_loss_intervals": [],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 18,
+      "end_frame": 18
+    },
+    {
+      "start_frame": 32,
+      "end_frame": 32
+    },
+    {
+      "start_frame": 39,
+      "end_frame": 39
+    },
+    {
+      "start_frame": 41,
+      "end_frame": 42
+    },
+    {
+      "start_frame": 45,
+      "end_frame": 49
+    },
+    {
+      "start_frame": 55,
+      "end_frame": 63
+    },
+    {
+      "start_frame": 69,
+      "end_frame": 71
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 0,
+      "end_frame": 17,
+      "frame_count": 18
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 19,
+      "end_frame": 31,
+      "frame_count": 13
+    },
+    {
+      "segment_id": 3,
+      "start_frame": 33,
+      "end_frame": 38,
+      "frame_count": 6
+    },
+    {
+      "segment_id": 4,
+      "start_frame": 64,
+      "end_frame": 68,
+      "frame_count": 5
+    }
+  ],
+  "interpolated_frame_fraction": 0.1316,
+  "rejected_frame_fraction": 0.6711,
+  "interpolated_landmark_row_fraction": 0.0116,
+  "rejected_landmark_row_fraction": 0.4265,
+  "processing_status_counts": {
+    "INTERPOLATED": 15,
+    "RAW_VALID": 65,
+    "REJECTED_IDENTITY_UNCERTAIN": 374,
+    "REJECTED_INVALID_TRACK_SEGMENT": 85,
+    "REJECTED_LOW_CONFIDENCE": 92,
+    "SMOOTHED": 661
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 374,
+    "LOW_CONFIDENCE": 101,
+    "OBSERVED_VALID": 726,
+    "REJECTED": 85,
+    "TEMPORAL_OUTLIER": 6
+  },
+  "automatic_frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 5,
+    "LOW_POSE_CONFIDENCE": 7,
+    "TARGET_IDENTITY_UNCERTAIN": 22,
+    "VALID_TARGET": 42
+  },
+  "manual_review_decision_counts": {
+    "NOT_REVIEWED": 76
+  },
+  "manual_acceptance_override_frame_count": 0,
+  "manual_accepted_frame_count": 0,
+  "manual_accepted_usable_frame_count": 0,
+  "left_ankle_coverage": 0.5921,
+  "left_ear_coverage": 0.3289,
+  "left_elbow_coverage": 0.5789,
+  "left_eye_coverage": 0.4737,
+  "left_hip_coverage": 0.6447,
+  "left_knee_coverage": 0.6053,
+  "left_shoulder_coverage": 0.5921,
+  "left_wrist_coverage": 0.6316,
+  "nose_coverage": 0.5921,
+  "right_ankle_coverage": 0.5789,
+  "right_ear_coverage": 0.5658,
+  "right_elbow_coverage": 0.5526,
+  "right_eye_coverage": 0.5921,
+  "right_hip_coverage": 0.6184,
+  "right_knee_coverage": 0.6184,
+  "right_shoulder_coverage": 0.5526,
+  "right_wrist_coverage": 0.6316,
+  "core_landmark_coverage": 0.602,
+  "lower_limb_landmark_coverage": 0.6096,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35,
+    "competing_pose_iou_threshold": 0.05,
+    "competing_pose_center_distance_fraction_threshold": 0.45
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_alex_loera_2024_04_20_view_02_raw_pose.parquet"
+}

@@ -1,0 +1,4 @@
+start_frame,end_frame,frame_count,reason,note,view_id,annotation_source,annotation_session_id,annotator_id
+26,39,14,TARGET_NOT_VISIBLE,,imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01,human_ui,655ce2ae-0c83-4d52-ae42-fe2e0066481d,researcher_01
+50,55,6,TARGET_NOT_VISIBLE,,imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01,human_ui,655ce2ae-0c83-4d52-ae42-fe2e0066481d,researcher_01
+84,95,12,TARGET_NOT_VISIBLE,,imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m36s300_00m39s611_view_01,human_ui,655ce2ae-0c83-4d52-ae42-fe2e0066481d,researcher_01

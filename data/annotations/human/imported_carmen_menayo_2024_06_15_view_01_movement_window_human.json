@@ -1,0 +1,54 @@
+{
+  "provenance": {
+    "annotation_session_id": "9c46f957-b2a1-4edc-ac39-f862bc435689",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T23:23:16.214586+00:00",
+    "updated_at": "2026-08-27T23:30:25.955455+00:00",
+    "case_id": "imported_carmen_menayo_2024_06_15_acl_candidate",
+    "source_id": "imported_carmen_menayo_2024_06_15_view_01",
+    "view_id": "imported_carmen_menayo_2024_06_15_view_01",
+    "video_path": "data/videos/analysis_clips/HIGHLIGHTS _ Atle_tico de Madrid Femenino 1-0 Villarreal _ Liga F 2023-24_01m38s769_01m40s649.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_carmen_menayo_2024_06_15_acl_candidate",
+  "source_id": "imported_carmen_menayo_2024_06_15_view_01",
+  "view_id": "imported_carmen_menayo_2024_06_15_view_01",
+  "manual_roi_keyframe_count": 26,
+  "manual_target_unavailable_frame_count": 5,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 12,
+      "end_frame": 16,
+      "frame_count": 5,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 8,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 4,
+      "end_frame": 11,
+      "frame_count": 8,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 34,
+    "movement_end_timestamp_ms": 1360.0,
+    "movement_duration_ms": 1360.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

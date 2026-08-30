@@ -1,0 +1,55 @@
+{
+  "case_id": "imported_mary_fowler_2025_04_13_acl_candidate",
+  "source_id": "imported_mary_fowler_2025_04_13_view_02",
+  "view_id": "imported_mary_fowler_2025_04_13_view_02",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 8,
+  "target_tracking_coverage": 0.3659,
+  "pose_frame_coverage": 0.5447,
+  "upper_body_landmark_coverage": 0.3712666666666667,
+  "core_landmark_coverage": 0.39022500000000004,
+  "lower_limb_landmark_coverage": 0.3942833333333333,
+  "geometry_feature_coverage": 0.3554652213188798,
+  "dynamic_feature_coverage": 0.6004833640452667,
+  "interpolation_fraction": 0.0115,
+  "rejected_fraction": 0.681,
+  "identity_uncertainty_fraction": 0.07317073170731707,
+  "target_loss_fraction": 0.45528455284552843,
+  "supported_feature_count": 0,
+  "limited_feature_count": 36,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 0,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 0,
+    "limited_features": 36,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.3554652213188798,
+    "dynamic_coverage": 0.6004833640452667,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 8,
+    "overall_quality_label": "LIMITED EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.0,
+      "limited_fraction": 1.0,
+      "geometry_coverage": 0.3554652213188798,
+      "dynamic_coverage": 0.6004833640452667
+    }
+  }
+}

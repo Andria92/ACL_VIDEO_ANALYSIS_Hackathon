@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "imported_charlotte_newsham_2026_05_02_acl_candidate",
+  "source_id": "imported_charlotte_newsham_2026_05_02_view_01",
+  "view_id": "imported_charlotte_newsham_2026_05_02_view_01",
+  "case_slug": "imported_charlotte_newsham_2026_05_02_view_01",
+  "decision": "no",
+  "visible_event_in_supported_phase_interval": false,
+  "eligible_for_injury_event_comparison": false,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-08-29T22:46:20.571057+00:00",
+  "phase_status": "SUPPORTED_PARTIAL_WINDOW",
+  "phase_count": 4,
+  "supported_interval": {
+    "start_frame": 17,
+    "end_frame": 87
+  },
+  "movement_phases_sha256": "bd7921a98ae4e354ccb608c39dffea21f97ef62488713d76215ca58bccc5a5ad"
+}

@@ -72,6 +72,29 @@ def test_interpolated_landmark_metadata_propagates():
     assert bool(right_hka.input_smoothed) is True
 
 
+def test_interpolated_temporal_outlier_is_withheld_without_hiding_other_regions():
+    pose = _processed_pose(
+        interpolated={"right_ankle"},
+        landmark_statuses={"right_ankle": "TEMPORAL_OUTLIER"},
+    )
+
+    features, _ = compute_geometry_features(pose, injured_side=InjurySide.RIGHT)
+
+    right_hka = _feature(features, "right_hka_angle_2d_deg", 0)
+    injured_hka = _feature(features, "injured_hka_angle_2d_deg", 0)
+    trunk = _feature(features, "projected_trunk_axis_angle_deg", 0)
+
+    assert right_hka.status == FeatureStatus.INVALID_GEOMETRY.value
+    assert injured_hka.status == FeatureStatus.INVALID_GEOMETRY.value
+    assert bool(right_hka.input_interpolated) is True
+    assert bool(right_hka.observed) is False
+    assert "interpolated after temporal-outlier rejection" in right_hka.rejection_reason
+    assert right_hka.metadata["landmark_status_by_landmark"]["right_ankle"] == (
+        "TEMPORAL_OUTLIER"
+    )
+    assert trunk.status == FeatureStatus.SUPPORTED.value
+
+
 def test_partially_usable_frame_does_not_globally_disappear():
     pose = _processed_pose(missing={"left_ankle", "right_ankle"})
 
@@ -131,9 +154,11 @@ def _processed_pose(
     frame_status: str = "VALID_TARGET",
     missing: set[str] | None = None,
     interpolated: set[str] | None = None,
+    landmark_statuses: dict[str, str] | None = None,
 ) -> pd.DataFrame:
     missing = missing or set()
     interpolated = interpolated or set()
+    landmark_statuses = landmark_statuses or {}
     rows = []
     for landmark_name, point in BASE_POINTS.items():
         is_missing = landmark_name in missing
@@ -150,8 +175,14 @@ def _processed_pose(
                 "frame_status": frame_status,
                 "valid_target_frame": frame_status == "VALID_TARGET",
                 "valid_segment_id": 1 if frame_status == "VALID_TARGET" else pd.NA,
-                "landmark_status": "MISSING" if is_missing else "OBSERVED_VALID",
-                "processing_status": "MISSING" if is_missing else "SMOOTHED",
+                "landmark_status": (
+                    "MISSING"
+                    if is_missing
+                    else landmark_statuses.get(landmark_name, "OBSERVED_VALID")
+                ),
+                "processing_status": (
+                    "MISSING" if is_missing else "INTERPOLATED" if is_interpolated else "SMOOTHED"
+                ),
                 "clean_x": np.nan if is_missing else point[0],
                 "clean_y": np.nan if is_missing else point[1],
                 "smoothed_x": np.nan if is_missing else point[0],

@@ -14,8 +14,14 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-SIGNATURE_VERSION = "m5_9_1_case_movement_signature_v1"
-REGISTRY_VERSION = "m5_9_1_clustering_feature_registry_v1"
+from acl_motion.geometry.angular_semantics import (
+    angle_type_for_metric,
+    angular_difference,
+    measurement_range_for_metric,
+)
+
+SIGNATURE_VERSION = "m5_9_1_case_movement_signature_v2_angular_ranges"
+REGISTRY_VERSION = "m5_9_1_clustering_feature_registry_v2_angular_ranges"
 
 STANDARD_WINDOWS = {
     "whole_window": None,
@@ -396,6 +402,7 @@ def _descriptor_row(
                 supported,
                 str(entry["aggregation"]),
                 movement_window,
+                source_metric,
             )
             if np.isfinite(value):
                 evidence = "SUPPORTED"
@@ -516,6 +523,7 @@ def _aggregate(
     supported: pd.DataFrame,
     aggregation: str,
     movement_window: dict,
+    source_metric: str,
 ) -> tuple[float, float, float]:
     values = pd.to_numeric(supported["value"], errors="coerce").dropna()
     if values.empty:
@@ -526,14 +534,19 @@ def _aggregate(
     if aggregation == "iqr":
         return float(values.quantile(0.75) - values.quantile(0.25)), np.nan, np.nan
     if aggregation == "range":
-        return float(values.max() - values.min()), np.nan, np.nan
+        return measurement_range_for_metric(source_metric, values), np.nan, np.nan
     if aggregation == "maximum":
         row = ordered.loc[pd.to_numeric(ordered["value"], errors="coerce").idxmax()]
         return _value_with_timing(row, movement_window)
     if aggregation == "start_to_end_change":
         first = ordered.iloc[0]
         last = ordered.iloc[-1]
-        value = float(last["value"] - first["value"])
+        angle_type = angle_type_for_metric(source_metric)
+        value = (
+            angular_difference(float(first["value"]), float(last["value"]), angle_type)
+            if angle_type is not None
+            else float(last["value"] - first["value"])
+        )
         timing_ms = float(last.get("movement_end_relative_ms", np.nan))
         return value, timing_ms, _progress(last, movement_window)
     return np.nan, np.nan, np.nan

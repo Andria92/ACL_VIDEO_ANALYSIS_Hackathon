@@ -1,0 +1,250 @@
+{
+  "total_frames": 121,
+  "target_tracking_coverage": 0.438,
+  "pose_frame_coverage": 0.9174,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 28,
+    "LOW_POSE_CONFIDENCE": 2,
+    "TARGET_IDENTITY_UNCERTAIN": 28,
+    "TARGET_NOT_FOUND": 10,
+    "VALID_TARGET": 53
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 6,
+      "end_frame": 6
+    },
+    {
+      "start_frame": 114,
+      "end_frame": 114
+    }
+  ],
+  "target_loss_intervals": [
+    {
+      "start_frame": 5,
+      "end_frame": 5
+    },
+    {
+      "start_frame": 7,
+      "end_frame": 7
+    },
+    {
+      "start_frame": 100,
+      "end_frame": 100
+    },
+    {
+      "start_frame": 111,
+      "end_frame": 111
+    },
+    {
+      "start_frame": 113,
+      "end_frame": 113
+    },
+    {
+      "start_frame": 116,
+      "end_frame": 120
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 0,
+      "end_frame": 3
+    },
+    {
+      "start_frame": 10,
+      "end_frame": 10
+    },
+    {
+      "start_frame": 12,
+      "end_frame": 12
+    },
+    {
+      "start_frame": 15,
+      "end_frame": 15
+    },
+    {
+      "start_frame": 21,
+      "end_frame": 22
+    },
+    {
+      "start_frame": 26,
+      "end_frame": 26
+    },
+    {
+      "start_frame": 31,
+      "end_frame": 31
+    },
+    {
+      "start_frame": 40,
+      "end_frame": 40
+    },
+    {
+      "start_frame": 48,
+      "end_frame": 48
+    },
+    {
+      "start_frame": 56,
+      "end_frame": 56
+    },
+    {
+      "start_frame": 65,
+      "end_frame": 65
+    },
+    {
+      "start_frame": 73,
+      "end_frame": 73
+    },
+    {
+      "start_frame": 78,
+      "end_frame": 79
+    },
+    {
+      "start_frame": 84,
+      "end_frame": 84
+    },
+    {
+      "start_frame": 86,
+      "end_frame": 88
+    },
+    {
+      "start_frame": 90,
+      "end_frame": 90
+    },
+    {
+      "start_frame": 94,
+      "end_frame": 94
+    },
+    {
+      "start_frame": 107,
+      "end_frame": 110
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 16,
+      "end_frame": 20,
+      "frame_count": 5
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 32,
+      "end_frame": 39,
+      "frame_count": 8
+    },
+    {
+      "segment_id": 3,
+      "start_frame": 41,
+      "end_frame": 47,
+      "frame_count": 7
+    },
+    {
+      "segment_id": 4,
+      "start_frame": 49,
+      "end_frame": 55,
+      "frame_count": 7
+    },
+    {
+      "segment_id": 5,
+      "start_frame": 57,
+      "end_frame": 64,
+      "frame_count": 8
+    },
+    {
+      "segment_id": 6,
+      "start_frame": 66,
+      "end_frame": 72,
+      "frame_count": 7
+    },
+    {
+      "segment_id": 7,
+      "start_frame": 95,
+      "end_frame": 99,
+      "frame_count": 5
+    },
+    {
+      "segment_id": 8,
+      "start_frame": 101,
+      "end_frame": 106,
+      "frame_count": 6
+    }
+  ],
+  "interpolated_frame_fraction": 0.1488,
+  "rejected_frame_fraction": 0.7521,
+  "interpolated_landmark_row_fraction": 0.0146,
+  "rejected_landmark_row_fraction": 0.5756,
+  "processing_status_counts": {
+    "INTERPOLATED": 30,
+    "MISSING": 170,
+    "RAW_VALID": 52,
+    "REJECTED_IDENTITY_UNCERTAIN": 476,
+    "REJECTED_INVALID_TRACK_SEGMENT": 476,
+    "REJECTED_LOW_CONFIDENCE": 62,
+    "SMOOTHED": 791
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 476,
+    "LOW_CONFIDENCE": 92,
+    "MISSING": 170,
+    "OBSERVED_VALID": 843,
+    "REJECTED": 476
+  },
+  "automatic_frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 28,
+    "LOW_POSE_CONFIDENCE": 2,
+    "TARGET_IDENTITY_UNCERTAIN": 28,
+    "TARGET_NOT_FOUND": 10,
+    "VALID_TARGET": 53
+  },
+  "manual_review_decision_counts": {
+    "ACCEPTED": 5,
+    "NOT_REVIEWED": 116
+  },
+  "manual_acceptance_override_frame_count": 1,
+  "manual_accepted_frame_count": 5,
+  "manual_accepted_usable_frame_count": 0,
+  "left_ankle_coverage": 0.3802,
+  "left_ear_coverage": 0.4463,
+  "left_elbow_coverage": 0.4463,
+  "left_eye_coverage": 0.438,
+  "left_hip_coverage": 0.4463,
+  "left_knee_coverage": 0.4298,
+  "left_shoulder_coverage": 0.4545,
+  "left_wrist_coverage": 0.4463,
+  "nose_coverage": 0.4545,
+  "right_ankle_coverage": 0.3719,
+  "right_ear_coverage": 0.314,
+  "right_elbow_coverage": 0.4463,
+  "right_eye_coverage": 0.3967,
+  "right_hip_coverage": 0.4463,
+  "right_knee_coverage": 0.4298,
+  "right_shoulder_coverage": 0.4545,
+  "right_wrist_coverage": 0.4132,
+  "core_landmark_coverage": 0.4504,
+  "lower_limb_landmark_coverage": 0.4174,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35,
+    "competing_pose_iou_threshold": 0.05,
+    "competing_pose_center_distance_fraction_threshold": 0.45
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_chloe_kelly_acl_00m34s693_00m40s216_raw_pose.parquet"
+}

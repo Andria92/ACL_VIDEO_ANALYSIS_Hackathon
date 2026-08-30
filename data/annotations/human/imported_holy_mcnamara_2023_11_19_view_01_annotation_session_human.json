@@ -1,0 +1,276 @@
+{
+  "provenance": {
+    "annotation_session_id": "9c8350a8-6c0e-4ec5-be6f-5c501044283b",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T15:35:12.238857+00:00",
+    "updated_at": "2026-08-27T15:50:32.736320+00:00",
+    "case_id": "imported_holy_mcnamara_2023_11_19_acl_candidate",
+    "source_id": "imported_holy_mcnamara_2023_11_19_view_01",
+    "view_id": "imported_holy_mcnamara_2023_11_19_view_01",
+    "video_path": "data/videos/analysis_clips/aleagues_newcastle_jets_vs_melbourne_city_highlights_02m44s255_02m47s849.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 17,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 601.0714285714286,
+        "y": 160.71428571428572,
+        "width": 475.71428571428567,
+        "height": 634.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 2,
+      "bbox": {
+        "x": 586.0714285714286,
+        "y": 141.42857142857142,
+        "width": 520.7142857142857,
+        "height": 715.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 4,
+      "bbox": {
+        "x": 588.2142857142857,
+        "y": 120.0,
+        "width": 570.0000000000001,
+        "height": 848.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 21,
+      "bbox": {
+        "x": 613.9285714285714,
+        "y": 122.14285714285714,
+        "width": 612.8571428571428,
+        "height": 861.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 22,
+      "bbox": {
+        "x": 637.5,
+        "y": 96.42857142857143,
+        "width": 593.5714285714287,
+        "height": 949.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 46,
+      "bbox": {
+        "x": 637.5,
+        "y": 81.42857142857143,
+        "width": 394.2857142857142,
+        "height": 992.1428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 50,
+      "bbox": {
+        "x": 545.3571428571429,
+        "y": 55.714285714285715,
+        "width": 488.57142857142844,
+        "height": 1013.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 59,
+      "bbox": {
+        "x": 590.3571428571429,
+        "y": 16.071428571428573,
+        "width": 255.0,
+        "height": 1035.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 60,
+      "bbox": {
+        "x": 556.0714285714286,
+        "y": 32.78572082519531,
+        "width": 278.57142857142856,
+        "height": 1026.4285714285713
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 62,
+      "bbox": {
+        "x": 444.64285714285717,
+        "y": 8.571428571428571,
+        "width": 396.4285714285714,
+        "height": 1052.142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 493.92857142857144,
+        "y": 7.071435110909598,
+        "width": 327.8571428571429,
+        "height": 1054.2857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 65,
+      "bbox": {
+        "x": 519.6428571428571,
+        "y": 15.64286368233817,
+        "width": 315.0,
+        "height": 1052.142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 70,
+      "bbox": {
+        "x": 382.5,
+        "y": 6.428571428571429,
+        "width": 392.1428571428571,
+        "height": 1060.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 72,
+      "bbox": {
+        "x": 298.92857142857144,
+        "y": 6.428571428571429,
+        "width": 420.0,
+        "height": 1058.5714285714287
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 75,
+      "bbox": {
+        "x": 191.78571428571428,
+        "y": 12.857142857142858,
+        "width": 345.00000000000006,
+        "height": 1054.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 76,
+      "bbox": {
+        "x": 178.92857142857142,
+        "y": 15.0,
+        "width": 300.0,
+        "height": 1032.857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 157.5,
+        "y": 4.285714285714286,
+        "width": 300.0,
+        "height": 1058.5714285714287
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 18,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 51,
+      "end_frame": 52,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 54,
+      "end_frame": 63,
+      "frame_count": 10,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 68,
+      "end_frame": 68,
+      "frame_count": 1,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 73,
+      "end_frame": 77,
+      "frame_count": 5,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 77,
+    "movement_end_timestamp_ms": 3080.0,
+    "movement_duration_ms": 3080.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_holy_mcnamara_2023_11_19_acl_candidate",
+    "source_id": "imported_holy_mcnamara_2023_11_19_view_01",
+    "view_id": "imported_holy_mcnamara_2023_11_19_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 77,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 77,
+    "event_anchor_frame": 77,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

@@ -1,7 +1,7 @@
 {
   "overall_status": "QA_REQUIRED",
   "status_counts": {
-    "QA_REQUIRED": 108,
+    "QA_REQUIRED": 78,
     "LOW_BACKGROUND_FEATURE_COUNT": 3,
     "INSUFFICIENT_EVIDENCE": 2
   },
@@ -15,28 +15,25 @@
     "translation": {
       "validation_status": "QA_REQUIRED",
       "reason": "Projected path contains a large step relative to the median supported step.",
-      "supported_fraction": 0.6017699115044248,
-      "maximum_to_median_step_ratio": 24.226392489718865,
+      "supported_fraction": 0.7349397590361446,
+      "maximum_to_median_step_ratio": 27.414892114541388,
       "path_segment_counts": {
         "path_segment_001": 5,
         "path_segment_003": 5,
         "path_segment_004": 41,
         "path_segment_005": 5,
-        "path_segment_011": 5,
-        "path_segment_017": 7
+        "path_segment_011": 5
       }
     },
     "affine": {
       "validation_status": "QA_REQUIRED",
       "reason": "Projected path contains a large step relative to the median supported step.",
-      "supported_fraction": 0.9557522123893806,
-      "maximum_to_median_step_ratio": 21.68179580112259,
+      "supported_fraction": 0.9397590361445783,
+      "maximum_to_median_step_ratio": 33.28048673848397,
       "path_segment_counts": {
         "path_segment_001": 5,
         "path_segment_003": 5,
-        "path_segment_004": 82,
-        "path_segment_005": 9,
-        "path_segment_006": 7
+        "path_segment_004": 68
       }
     },
     "chosen_method": "affine_diagnostic_unavailable"

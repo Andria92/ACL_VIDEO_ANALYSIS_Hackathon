@@ -1,0 +1,227 @@
+{
+  "provenance": {
+    "annotation_session_id": "26658976-aed1-458d-8045-aee24e27272a",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T22:18:54.280731+00:00",
+    "updated_at": "2026-08-29T10:09:05.597637+00:00",
+    "case_id": "chloe_kelly_acl",
+    "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+    "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+    "video_path": "data/videos/analysis_clips/chloe_kelly_acl_00m34s693_00m40s216_2.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 14,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 472.0,
+        "y": 40.0,
+        "width": 92.0,
+        "height": 109.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 5,
+      "bbox": {
+        "x": 481.0,
+        "y": 39.0,
+        "width": 84.0,
+        "height": 114.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 13,
+      "bbox": {
+        "x": 485.0,
+        "y": 36.0,
+        "width": 97.0,
+        "height": 130.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 19,
+      "bbox": {
+        "x": 469.0,
+        "y": 50.0,
+        "width": 99.0,
+        "height": 136.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 30,
+      "bbox": {
+        "x": 448.0,
+        "y": 51.0,
+        "width": 115.0,
+        "height": 138.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 37,
+      "bbox": {
+        "x": 435.0,
+        "y": 50.0,
+        "width": 110.0,
+        "height": 140.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 412.0,
+        "y": 48.0,
+        "width": 119.0,
+        "height": 131.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 57,
+      "bbox": {
+        "x": 390.0,
+        "y": 51.0,
+        "width": 121.0,
+        "height": 132.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 61,
+      "bbox": {
+        "x": 400.0,
+        "y": 49.0,
+        "width": 103.0,
+        "height": 138.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 73,
+      "bbox": {
+        "x": 416.0,
+        "y": 47.0,
+        "width": 94.0,
+        "height": 142.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 96,
+      "bbox": {
+        "x": 433.0,
+        "y": 65.0,
+        "width": 67.0,
+        "height": 138.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 104,
+      "bbox": {
+        "x": 448.0,
+        "y": 68.0,
+        "width": 58.0,
+        "height": 151.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 113,
+      "bbox": {
+        "x": 465.0,
+        "y": 73.0,
+        "width": 51.0,
+        "height": 159.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 120,
+      "bbox": {
+        "x": 441.0,
+        "y": 90.0,
+        "width": 66.0,
+        "height": 120.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 5,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 112,
+      "end_frame": 114,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 117,
+      "end_frame": 118,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 120,
+    "movement_end_timestamp_ms": 4000.0,
+    "movement_duration_ms": 4000.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "chloe_kelly_acl",
+    "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+    "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 120,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 120,
+    "event_anchor_frame": 120,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

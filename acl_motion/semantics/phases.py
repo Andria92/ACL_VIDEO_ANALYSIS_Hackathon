@@ -12,7 +12,7 @@ import pandas as pd
 
 from acl_motion.geometry.angles import wrapped_angle_difference_deg
 
-PHASE_SEGMENTATION_VERSION = "m5_9_phase_refinement_v1"
+PHASE_SEGMENTATION_VERSION = "m5_10_case_smart_evidence_interval_v5"
 SEGMENTATION_EXCLUDED_FEATURE_PATTERNS = {
     "knee_ankle_distance_normalized": (
         "diagnostic-only projected segment-length / foreshortening measure"
@@ -38,6 +38,10 @@ class PhaseSegmentationConfig:
     minimum_dynamic_supported_fraction: float = 0.40
     minimum_continuous_supported_ms: float = 300.0
     minimum_eligible_descriptors: int = 4
+    enable_partial_window_segmentation: bool = True
+    minimum_evidence_interval_duration_ms: float = 300.0
+    minimum_partial_window_duration_ms: float = 500.0
+    minimum_partial_window_fraction: float = 0.15
     minimum_phase_duration_ms: float = 300.0
     minimum_boundary_separation_ms: float = 300.0
     smoothing_ms: float = 166.0
@@ -130,18 +134,35 @@ class PhaseSegmentationResult:
     def to_json_dict(self) -> dict:
         """Return the serializable phase-story payload."""
 
+        presentation_mode = str(self.metadata.get("presentation_mode") or "")
+        evidence_interval = presentation_mode == "SUPPORTED_EVIDENCE_INTERVAL"
         return {
             "metadata": self.metadata,
             "case_id": self.case_id,
             "source_id": self.source_id,
             "status": self.status,
+            "presentation_mode": presentation_mode or None,
             "sequence_summary": self.sequence_summary,
-            "phase_count": len(self.phases),
+            "phase_count": 0 if evidence_interval else len(self.phases),
+            "internal_segment_count": len(self.phases),
+            "supported_evidence_interval": (
+                _supported_evidence_interval_payload(self.phases[0])
+                if evidence_interval and self.phases
+                else None
+            ),
             "phases": [phase.to_dict() for phase in self.phases],
             "transitions": list(self.transitions),
             "eligible_descriptors": list(self.eligible_descriptors),
             "excluded_descriptors": list(self.excluded_descriptors),
         }
+
+
+def _supported_evidence_interval_payload(segment: MovementPhase) -> dict:
+    payload = segment.to_dict()
+    for key in ("phase_id", "phase_index", "title"):
+        payload.pop(key, None)
+    payload["interval_id"] = "supported_evidence_interval"
+    return payload
 
 
 def segment_movement_phases(
@@ -180,11 +201,29 @@ def segment_movement_phases(
         min_continuous_frames=min_continuous_frames,
     )
     if len(descriptors.metadata) < cfg.minimum_eligible_descriptors:
+        partial_result = _partial_window_result(
+            case_id=case_id,
+            source_id=source_id,
+            dynamic_df=dynamic_df,
+            case_summary=case_summary,
+            path_df=path_df,
+            frame_timing=frame_timing,
+            full_window=(start_frame, end_frame, duration_ms),
+            cfg=cfg,
+            global_excluded=excluded,
+        )
+        if partial_result is not None:
+            return partial_result
         frame_map = frame_timing.copy()
         frame_map["phase_id"] = None
         frame_map["phase_index"] = None
         frame_map["phase_title"] = "Phase segmentation unavailable"
         frame_map["change_score"] = np.nan
+        metadata = _metadata(cfg, fps, start_frame, end_frame, duration_ms)
+        metadata["presentation_mode"] = "PHASES_WITHHELD"
+        metadata["phase_decision_rationale"] = _phase_decision_rationale(
+            "INSUFFICIENT_CONTINUOUS_MULTIVARIATE_EVIDENCE"
+        )
         return PhaseSegmentationResult(
             case_id=case_id,
             source_id=source_id,
@@ -199,7 +238,7 @@ def segment_movement_phases(
             excluded_descriptors=tuple(excluded),
             change_signal=frame_map.copy(),
             frame_map=frame_map,
-            metadata=_metadata(cfg, fps, start_frame, end_frame, duration_ms),
+            metadata=metadata,
         )
 
     standardized = _standardize_descriptors(descriptors.values, descriptors.metadata, cfg)
@@ -248,8 +287,36 @@ def segment_movement_phases(
     else:
         transitions = initial_transitions
     frame_map = _phase_frame_map(frame_timing, phases, change_signal)
-    sequence_summary = _sequence_summary(duration_ms, phases, transitions)
+    is_phase_sequence = len(phases) >= 2 and bool(transitions)
+    sequence_summary = (
+        _sequence_summary(duration_ms, phases, transitions)
+        if is_phase_sequence
+        else _evidence_interval_summary(duration_ms, phases[0])
+    )
     metadata = _metadata(cfg, fps, start_frame, end_frame, duration_ms)
+    metadata["presentation_mode"] = (
+        "PHASE_SEQUENCE" if is_phase_sequence else "SUPPORTED_EVIDENCE_INTERVAL"
+    )
+    metadata["phase_decision_rationale"] = _phase_decision_rationale(
+        "SUPPORTED_MULTIVARIATE_TRANSITION"
+        if is_phase_sequence
+        else "NO_SUPPORTED_MULTIVARIATE_TRANSITION"
+    )
+    if not is_phase_sequence:
+        metadata["analysis_scope"] = {
+            "type": "FULL_MOVEMENT_WINDOW",
+            "start_frame": start_frame,
+            "end_frame": end_frame,
+            "frame_count": len(frame_timing),
+            "duration_ms": duration_ms,
+            "movement_window_fraction": 1.0,
+            "position_in_movement_window": "FULL_WINDOW",
+            "includes_annotated_movement_end": True,
+            "selection_rule": (
+                "The complete Movement Window met measurement-support rules, but no "
+                "sustained multivariate transition met the phase-boundary rule."
+            ),
+        }
     metadata["refinement"] = {
         "enabled": bool(cfg.enable_hierarchical_refinement),
         "original_phase_count": len(initial_phases),
@@ -257,10 +324,14 @@ def segment_movement_phases(
         "refined": len(phases) != len(initial_phases),
         "records": list(refinement_records),
     }
+    if not is_phase_sequence:
+        supported = frame_map["phase_id"].notna()
+        frame_map.loc[supported, "phase_index"] = np.nan
+        frame_map.loc[supported, "phase_title"] = "Supported Evidence Interval"
     return PhaseSegmentationResult(
         case_id=case_id,
         source_id=source_id,
-        status="SUPPORTED",
+        status=("SUPPORTED" if is_phase_sequence else "SUPPORTED_EVIDENCE_INTERVAL"),
         sequence_summary=sequence_summary,
         phases=tuple(phases),
         transitions=transitions,
@@ -269,6 +340,333 @@ def segment_movement_phases(
         change_signal=change_signal,
         frame_map=frame_map,
         metadata=metadata,
+    )
+
+
+def _partial_window_result(
+    *,
+    case_id: str,
+    source_id: str,
+    dynamic_df: pd.DataFrame,
+    case_summary: pd.DataFrame,
+    path_df: pd.DataFrame,
+    frame_timing: pd.DataFrame,
+    full_window: tuple[int, int, float],
+    cfg: PhaseSegmentationConfig,
+    global_excluded: tuple[dict, ...],
+) -> PhaseSegmentationResult | None:
+    """Return a labelled partial-window result for one strong continuous block.
+
+    This path is attempted only after the complete Movement Window fails the
+    descriptor rule. It never fills gaps and it never changes the complete-window
+    coverage recorded in the Movement Profile.
+    """
+
+    if not cfg.enable_partial_window_segmentation or frame_timing.empty:
+        return None
+    candidate = _partial_window_candidate(dynamic_df, frame_timing, cfg)
+    if candidate is None:
+        return None
+    local_summary = _case_summary_for_window(
+        case_summary,
+        dynamic_df,
+        candidate["start_frame"],
+        candidate["end_frame"],
+    )
+    local_cfg = replace(
+        cfg,
+        enable_partial_window_segmentation=False,
+    )
+    local_result = segment_movement_phases(
+        case_id=case_id,
+        source_id=source_id,
+        dynamic_df=dynamic_df,
+        case_summary=local_summary,
+        path_df=path_df,
+        movement_window={
+            "movement_start_frame": candidate["start_frame"],
+            "movement_end_frame": candidate["end_frame"],
+            "duration_ms": candidate["duration_ms"],
+        },
+        config=local_cfg,
+    )
+    if local_result.status not in {"SUPPORTED", "SUPPORTED_EVIDENCE_INTERVAL"} or not local_result.phases:
+        return None
+    local_is_phase_sequence = (
+        len(local_result.phases) >= 2 and bool(local_result.transitions)
+    )
+    if (
+        local_is_phase_sequence
+        and candidate["duration_ms"] < cfg.minimum_partial_window_duration_ms
+    ):
+        return None
+
+    phases = tuple(
+        replace(
+            phase,
+            metadata={
+                **phase.metadata,
+                "analysis_scope": "PARTIAL_MOVEMENT_WINDOW",
+                "full_movement_window_start_frame": full_window[0],
+                "full_movement_window_end_frame": full_window[1],
+            },
+        )
+        for phase in local_result.phases
+    )
+    eligible = tuple(
+        {
+            **item,
+            "analysis_scope": "PARTIAL_MOVEMENT_WINDOW",
+            "partial_window_start_frame": candidate["start_frame"],
+            "partial_window_end_frame": candidate["end_frame"],
+        }
+        for item in local_result.eligible_descriptors
+    )
+    full_change = _expand_partial_table(
+        frame_timing,
+        local_result.change_signal,
+    )
+    full_map = _phase_frame_map(frame_timing, list(phases), full_change)
+    outside = full_map["phase_id"].isna()
+    full_map.loc[outside, "phase_title"] = "Outside supported partial evidence block"
+    metadata = dict(local_result.metadata)
+    metadata["movement_window"] = {
+        "movement_start_frame": full_window[0],
+        "movement_end_frame": full_window[1],
+        "duration_ms": full_window[2],
+    }
+    metadata["configuration"] = cfg.to_dict()
+    metadata["analysis_scope"] = {
+        "type": "PARTIAL_MOVEMENT_WINDOW",
+        "start_frame": candidate["start_frame"],
+        "end_frame": candidate["end_frame"],
+        "frame_count": candidate["frame_count"],
+        "duration_ms": candidate["duration_ms"],
+        "movement_window_fraction": candidate["movement_window_fraction"],
+        "position_in_movement_window": _scope_position(
+            candidate["start_frame"],
+            candidate["end_frame"],
+            full_window[0],
+            full_window[1],
+        ),
+        "includes_annotated_movement_end": (
+            candidate["end_frame"] >= full_window[1]
+        ),
+        "minimum_supported_descriptors_per_frame": candidate[
+            "minimum_supported_descriptors_per_frame"
+        ],
+        "minimum_evidence_interval_duration_ms": (
+            cfg.minimum_evidence_interval_duration_ms
+        ),
+        "minimum_phase_sequence_window_duration_ms": (
+            cfg.minimum_partial_window_duration_ms
+        ),
+        "selection_rule": (
+            "Longest continuous block meeting the configured descriptor-count, "
+            "duration, and Movement Window fraction safeguards."
+        ),
+        "outside_scope_rule": (
+            "Frames outside this block remain unsegmented and are not silently filled."
+        ),
+    }
+    is_phase_sequence = len(phases) >= 2 and bool(local_result.transitions)
+    metadata["presentation_mode"] = (
+        "PHASE_SEQUENCE" if is_phase_sequence else "SUPPORTED_EVIDENCE_INTERVAL"
+    )
+    metadata["phase_decision_rationale"] = _phase_decision_rationale(
+        "SUPPORTED_MULTIVARIATE_TRANSITION"
+        if is_phase_sequence
+        else "NO_SUPPORTED_MULTIVARIATE_TRANSITION"
+    )
+    if not is_phase_sequence:
+        supported = full_map["phase_id"].notna()
+        full_map.loc[supported, "phase_index"] = np.nan
+        full_map.loc[supported, "phase_title"] = "Supported Evidence Interval"
+    if is_phase_sequence:
+        summary = (
+            f"Partial-window phase analysis covers source frames {candidate['start_frame']} to "
+            f"{candidate['end_frame']} ({candidate['duration_ms'] / 1000.0:.2f} seconds; "
+            f"{candidate['movement_window_fraction'] * 100.0:.1f}% of the human Movement "
+            "Window). Evidence outside this continuous block remains unsegmented. "
+            f"{local_result.sequence_summary}"
+        )
+    else:
+        summary = (
+            f"A supported evidence interval covers source frames {candidate['start_frame']} to "
+            f"{candidate['end_frame']} ({candidate['duration_ms'] / 1000.0:.2f} seconds; "
+            f"{candidate['movement_window_fraction'] * 100.0:.1f}% of the human Movement "
+            "Window). No sustained multivariate transition met the phase-boundary rule, "
+            "so this interval is not presented as a phase sequence. Evidence outside this "
+            "continuous block remains unsegmented. The interval does not establish injury timing."
+        )
+    return PhaseSegmentationResult(
+        case_id=case_id,
+        source_id=source_id,
+        status=(
+            "SUPPORTED_PARTIAL_WINDOW"
+            if is_phase_sequence
+            else "SUPPORTED_EVIDENCE_INTERVAL"
+        ),
+        sequence_summary=summary,
+        phases=phases,
+        transitions=local_result.transitions,
+        eligible_descriptors=eligible,
+        excluded_descriptors=global_excluded,
+        change_signal=full_change,
+        frame_map=full_map,
+        metadata=metadata,
+    )
+
+
+def _partial_window_candidate(
+    dynamic_df: pd.DataFrame,
+    frame_timing: pd.DataFrame,
+    cfg: PhaseSegmentationConfig,
+) -> dict[str, Any] | None:
+    feature_rows = dynamic_df[
+        dynamic_df["feature_status"].eq("SUPPORTED")
+        & dynamic_df["feature_value"].notna()
+        & ~dynamic_df["feature_name"].astype(str).map(
+            lambda name: bool(_segmentation_exclusion_reason(name))
+        )
+    ]
+    supported_counts = feature_rows.groupby("source_frame_index")["feature_name"].nunique()
+    timing = frame_timing[["source_frame_index", "timestamp_ms"]].copy()
+    timing["supported_descriptor_count"] = (
+        timing["source_frame_index"].map(supported_counts).fillna(0).astype(int)
+    )
+    timing["candidate"] = timing["supported_descriptor_count"].ge(
+        cfg.minimum_eligible_descriptors
+    )
+    runs: list[pd.DataFrame] = []
+    current_indices: list[int] = []
+    previous_frame: int | None = None
+    for index, row in timing.iterrows():
+        frame = int(row["source_frame_index"])
+        if bool(row["candidate"]) and (
+            previous_frame is None or frame == previous_frame + 1
+        ):
+            current_indices.append(index)
+        elif bool(row["candidate"]):
+            if current_indices:
+                runs.append(timing.loc[current_indices])
+            current_indices = [index]
+        else:
+            if current_indices:
+                runs.append(timing.loc[current_indices])
+            current_indices = []
+        previous_frame = frame
+    if current_indices:
+        runs.append(timing.loc[current_indices])
+    if not runs:
+        return None
+
+    candidates = []
+    for run in runs:
+        frame_count = len(run)
+        duration_ms = float(run["timestamp_ms"].iloc[-1] - run["timestamp_ms"].iloc[0])
+        fraction = frame_count / len(frame_timing)
+        if duration_ms < cfg.minimum_evidence_interval_duration_ms:
+            continue
+        if fraction < cfg.minimum_partial_window_fraction:
+            continue
+        candidates.append(
+            {
+                "start_frame": int(run["source_frame_index"].iloc[0]),
+                "end_frame": int(run["source_frame_index"].iloc[-1]),
+                "frame_count": frame_count,
+                "duration_ms": duration_ms,
+                "movement_window_fraction": float(fraction),
+                "minimum_supported_descriptors_per_frame": int(
+                    run["supported_descriptor_count"].min()
+                ),
+            }
+        )
+    if not candidates:
+        return None
+    return max(
+        candidates,
+        key=lambda item: (
+            item["duration_ms"],
+            item["frame_count"],
+            -item["start_frame"],
+        ),
+    )
+
+
+def _scope_position(
+    start_frame: int,
+    end_frame: int,
+    movement_start_frame: int,
+    movement_end_frame: int,
+) -> str:
+    if start_frame <= movement_start_frame and end_frame >= movement_end_frame:
+        return "FULL_WINDOW"
+    span = max(1, movement_end_frame - movement_start_frame)
+    midpoint_fraction = (
+        ((start_frame + end_frame) / 2.0) - movement_start_frame
+    ) / span
+    if midpoint_fraction < 1.0 / 3.0:
+        return "EARLY"
+    if midpoint_fraction < 2.0 / 3.0:
+        return "MIDDLE"
+    return "LATE"
+
+
+def _case_summary_for_window(
+    case_summary: pd.DataFrame,
+    dynamic_df: pd.DataFrame,
+    start_frame: int,
+    end_frame: int,
+) -> pd.DataFrame:
+    local = case_summary.copy()
+    window_rows = dynamic_df[
+        dynamic_df["source_frame_index"].astype(int).between(
+            start_frame, end_frame, inclusive="both"
+        )
+    ]
+    for index, row in local.iterrows():
+        feature_rows = window_rows[
+            window_rows["feature_name"].eq(row["feature_name"])
+        ]
+        if feature_rows.empty:
+            local.loc[index, "geometry_completeness"] = 0.0
+            local.loc[index, "dynamic_completeness"] = 0.0
+            local.loc[index, "quality_category"] = "UNAVAILABLE"
+            continue
+        geometry_supported = feature_rows["feature_status"].eq("SUPPORTED")
+        dynamic_eligible = geometry_supported & feature_rows["dynamic_status"].ne(
+            "NOT_DYNAMIC_FEATURE"
+        )
+        robust_supported = dynamic_eligible & feature_rows["dynamic_status"].eq(
+            "SUPPORTED"
+        )
+        local.loc[index, "geometry_completeness"] = float(geometry_supported.mean())
+        local.loc[index, "dynamic_completeness"] = (
+            float(robust_supported.sum() / dynamic_eligible.sum())
+            if dynamic_eligible.any()
+            else 0.0
+        )
+        local.loc[index, "quality_category"] = (
+            "SUPPORTED" if geometry_supported.any() else "UNAVAILABLE"
+        )
+    return local
+
+
+def _expand_partial_table(
+    frame_timing: pd.DataFrame,
+    partial: pd.DataFrame,
+) -> pd.DataFrame:
+    timing_columns = set(frame_timing.columns)
+    extra_columns = [
+        column
+        for column in partial.columns
+        if column not in timing_columns and column != "source_frame_index"
+    ]
+    return frame_timing.merge(
+        partial[["source_frame_index", *extra_columns]],
+        on="source_frame_index",
+        how="left",
     )
 
 
@@ -1676,6 +2074,19 @@ def _sequence_summary(
     )
 
 
+def _evidence_interval_summary(
+    duration_ms: float,
+    interval: MovementPhase,
+) -> str:
+    return (
+        f"A {duration_ms / 1000.0:.2f}-second supported evidence interval spans source "
+        f"frames {interval.start_frame} to {interval.end_frame}. No sustained multivariate "
+        "transition met the configured phase-boundary rule, so this result is not presented "
+        "as a phase sequence. It describes observable measurements only and does not "
+        "identify injury timing."
+    )
+
+
 def _readable_family(family: str) -> str:
     return {
         "movement_path": "movement path",
@@ -1706,6 +2117,71 @@ def _circular_mean_deg(values: pd.Series) -> float:
 def _odd_window(smoothing_ms: float, fps: float) -> int:
     frames = max(1, round(smoothing_ms / 1000.0 * fps))
     return frames if frames % 2 == 1 else frames + 1
+
+
+def _phase_decision_rationale(reason_code: str) -> dict[str, str]:
+    """Return the saved, user-facing rationale for the rule-based phase decision."""
+
+    method_note = (
+        "This decision was made by a deterministic rule-based procedure. No AI or "
+        "generative model was used."
+    )
+    if reason_code == "SUPPORTED_MULTIVARIATE_TRANSITION":
+        return {
+            "decision": "PHASE_SEQUENCE_PRODUCED",
+            "reason_code": reason_code,
+            "explanation": (
+                "The rule-based phase procedure produced a phase sequence because a sustained "
+                "multivariate transition satisfied the configured phase-boundary safeguards."
+            ),
+            "safety_rationale": (
+                "A boundary is shown only when several supported movement measurements change "
+                "together and the changed pattern persists."
+            ),
+            "evidence_preserved": (
+                "The supported measurements, boundary evidence, and analysis scope remain "
+                "available for human review."
+            ),
+            "method_note": method_note,
+        }
+    if reason_code == "NO_SUPPORTED_MULTIVARIATE_TRANSITION":
+        return {
+            "decision": "PHASES_NOT_PRODUCED",
+            "reason_code": reason_code,
+            "explanation": (
+                "The rule-based phase procedure did not produce distinct phases because no "
+                "sustained multivariate transition satisfied the configured phase-boundary rule."
+            ),
+            "safety_rationale": (
+                "Withholding a phase sequence avoids imposing a before/after structure or "
+                "implying an injury moment that the supported measurements do not establish."
+            ),
+            "evidence_preserved": (
+                "The supported framewise measurements and evidence interval remain visible, "
+                "including their scope and evidence gaps."
+            ),
+            "method_note": method_note,
+        }
+    if reason_code == "INSUFFICIENT_CONTINUOUS_MULTIVARIATE_EVIDENCE":
+        return {
+            "decision": "PHASES_NOT_PRODUCED",
+            "reason_code": reason_code,
+            "explanation": (
+                "The rule-based phase procedure did not produce phases because too few supported "
+                "movement descriptors formed a continuous block that satisfied the configured "
+                "evidence safeguards."
+            ),
+            "safety_rationale": (
+                "Withholding phases avoids turning unsupported values or fragmented evidence "
+                "into a seemingly complete movement story."
+            ),
+            "evidence_preserved": (
+                "Available measurements and frame-level support reasons remain visible for "
+                "human inspection."
+            ),
+            "method_note": method_note,
+        }
+    raise ValueError(f"Unsupported phase decision rationale reason: {reason_code}")
 
 
 def _metadata(

@@ -12,8 +12,14 @@ import pandas as pd
 
 from acl_motion.geometry.angles import wrapped_angle_difference_deg
 from acl_motion.geometry.angular_semantics import (
+    ANGULAR_STATISTICS_VERSION,
+    AngleType,
     angle_type_for_metric,
     angular_difference,
+    angular_mean,
+    angular_standard_deviation,
+    measurement_range_for_metric,
+    range_semantics_for_metric,
 )
 
 
@@ -130,7 +136,10 @@ def build_metric_explorer_payload(
             ),
             "future_similarity_note": (
                 "Future top-k similar cases and clusters should use standardized analytical "
-                "feature space with mutually valid descriptors, not UMAP display distance."
+                "feature space with mutually supported descriptors, report features used and "
+                "missing, and not use UMAP display distance. Similarity would describe only "
+                "the measured movement representation, not injury mechanism, biological cause, "
+                "tissue loading, or clinical condition."
             ),
         },
     }
@@ -164,9 +173,17 @@ def metric_statistics(
             "minimum": None,
             "maximum": None,
             "range": None,
+            "raw_range": None,
+            "range_semantics": range_semantics_for_metric(metric_name),
+            "angular_statistics_version": ANGULAR_STATISTICS_VERSION,
             "q1": None,
             "q3": None,
             "iqr": None,
+            "summary_semantics": (
+                "circular"
+                if angle_type_for_metric(metric_name) in {AngleType.DIRECTED, AngleType.AXIS}
+                else "linear"
+            ),
             "start_value": None,
             "end_value": None,
             "change": None,
@@ -186,8 +203,10 @@ def metric_statistics(
         }
     first = supported.iloc[0]
     last = supported.iloc[-1]
-    q1 = values.quantile(0.25)
-    q3 = values.quantile(0.75)
+    angle_type = angle_type_for_metric(metric_name)
+    circular_summary = angle_type in {AngleType.DIRECTED, AngleType.AXIS}
+    q1 = None if circular_summary else float(values.quantile(0.25))
+    q3 = None if circular_summary else float(values.quantile(0.75))
     min_row = supported.loc[pd.to_numeric(supported["value"], errors="coerce").idxmin()]
     max_row = supported.loc[pd.to_numeric(supported["value"], errors="coerce").idxmax()]
     frame_changes = _frame_to_frame_changes(metric_name, supported)
@@ -197,30 +216,57 @@ def metric_statistics(
         if not frame_changes.empty and np.isfinite(peak_change)
         else None
     )
-    change = _metric_change(metric_name, float(first["value"]), float(last["value"]))
-    display_fields = _canonical_change_fields(
-        metric_name,
-        float(first["value"]),
-        float(last["value"]),
-        change,
+    has_change_support = len(values) > 1
+    change = (
+        _metric_change(metric_name, float(first["value"]), float(last["value"]))
+        if has_change_support
+        else None
+    )
+    display_fields = (
+        _canonical_change_fields(
+            metric_name,
+            float(first["value"]),
+            float(last["value"]),
+            change,
+        )
+        if has_change_support
+        else {
+            "raw_start_angle": float(first["value"]) if _angle_type_value(metric_name) else None,
+            "raw_end_angle": float(last["value"]) if _angle_type_value(metric_name) else None,
+            "angle_type": _angle_type_value(metric_name),
+            "canonical_signed_change": None,
+            "canonical_absolute_change": None,
+        }
     )
     return {
         "supported_n": len(values),
         "relevant_n": relevant_n,
         "completeness": float(len(values) / relevant_n) if relevant_n else None,
-        "mean": float(values.mean()),
-        "median": float(values.median()),
-        "standard_deviation": float(values.std(ddof=1)) if len(values) > 1 else 0.0,
+        "mean": (
+            _finite_or_none(angular_mean(values, angle_type))
+            if circular_summary
+            else float(values.mean())
+        ),
+        "median": None if circular_summary else float(values.median()),
+        "standard_deviation": (
+            _finite_or_none(angular_standard_deviation(values, angle_type))
+            if circular_summary and has_change_support
+            else float(values.std(ddof=1)) if has_change_support else None
+        ),
         "minimum": float(values.min()),
         "maximum": float(values.max()),
-        "range": float(values.max() - values.min()),
-        "q1": float(q1),
-        "q3": float(q3),
-        "iqr": float(q3 - q1),
+        "range": measurement_range_for_metric(metric_name, values),
+        "raw_range": float(values.max() - values.min()),
+        "range_semantics": range_semantics_for_metric(metric_name),
+        "angular_statistics_version": ANGULAR_STATISTICS_VERSION,
+        "q1": q1,
+        "q3": q3,
+        "iqr": None if circular_summary else float(q3 - q1),
+        "summary_semantics": "circular" if circular_summary else "linear",
         "start_value": float(first["value"]),
         "end_value": float(last["value"]),
         "change": change,
-        "absolute_change": abs(change),
+        "absolute_change": abs(change) if change is not None else None,
         "total_absolute_change": _total_absolute_change(metric_name, values),
         "start_frame": int(first["source_frame_index"]),
         "end_frame": int(last["source_frame_index"]),
@@ -383,6 +429,8 @@ def _path_metric_series(path_df: pd.DataFrame) -> dict[str, pd.DataFrame]:
 
 
 def _heading_change_values(rows: pd.DataFrame) -> pd.Series:
+    if rows.empty:
+        return pd.Series(index=rows.index, dtype=float)
     values = rows["value"].to_numpy(dtype=float)
     changes = [np.nan]
     for previous, current in pairwise(values):
@@ -502,10 +550,10 @@ def _frame_to_frame_changes(metric_name: str, supported: pd.DataFrame) -> pd.Dat
     return pd.DataFrame(changes)
 
 
-def _total_absolute_change(metric_name: str, values: pd.Series) -> float:
+def _total_absolute_change(metric_name: str, values: pd.Series) -> float | None:
     numeric = values.to_numpy(dtype=float)
     if len(numeric) < 2:
-        return 0.0
+        return None
     total = 0.0
     for previous, current in pairwise(numeric):
         if np.isfinite(previous) and np.isfinite(current):
@@ -658,6 +706,10 @@ def _json_ready(value: Any) -> Any:
         number = float(value)
         return None if np.isnan(number) or np.isinf(number) else number
     return value
+
+
+def _finite_or_none(value: float) -> float | None:
+    return float(value) if np.isfinite(value) else None
 
 
 def _optional_float(value: Any) -> float | None:

@@ -7,8 +7,28 @@ from pathlib import Path
 from acl_motion.annotations.models import AnnotationCase
 from acl_motion.cases.models import InjurySide
 
-DEFAULT_VIDEO_ROOT = Path("/Users/andriagryffinpro/Desktop/injury_videos")
-DEFAULT_IMPORTED_CASES_PATH = Path("data/annotations/human/imported_video_cases_human.json")
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_VIDEO_ROOT = PROJECT_ROOT / "data" / "videos" / "analysis_clips"
+DEFAULT_IMPORTED_CASES_PATH = (
+    PROJECT_ROOT / "data" / "annotations" / "human" / "imported_video_cases_human.json"
+)
+
+
+def resolve_imported_video_path(
+    video_path: str | Path,
+    video_root: str | Path = DEFAULT_VIDEO_ROOT,
+) -> Path:
+    """Resolve both project-relative and video-root-relative registry paths."""
+
+    path = Path(video_path)
+    if path.is_absolute():
+        return path
+    if path.exists():
+        return path
+    project_relative = PROJECT_ROOT / path
+    if project_relative.exists():
+        return project_relative
+    return Path(video_root) / path
 
 
 def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tuple[AnnotationCase, ...]:
@@ -218,10 +238,10 @@ def imported_annotation_cases(
     cases = []
     root = Path(video_root)
     for record in payload.get("cases", ()):
+        if record.get("superseded_by"):
+            continue
         try:
-            video_path = Path(str(record["video_path"]))
-            if not video_path.is_absolute():
-                video_path = root / video_path
+            video_path = resolve_imported_video_path(record["video_path"], root)
             cases.append(
                 AnnotationCase(
                     slug=str(record["slug"]),

@@ -1,0 +1,273 @@
+{
+  "provenance": {
+    "annotation_session_id": "bf60c5b7-bbd4-4cfe-bc9a-7750a098e6b0",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T09:43:52.275708+00:00",
+    "updated_at": "2026-08-29T09:49:15.650793+00:00",
+    "case_id": "imported_charlotte_newsham_2026_05_02_acl_candidate",
+    "source_id": "imported_charlotte_newsham_2026_05_02_view_01",
+    "view_id": "imported_charlotte_newsham_2026_05_02_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/youtube_BvZ7SmkND6Q_retry_tv_01h27m18s149_01h27m23s649.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 16,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 47.5,
+        "y": 219.0,
+        "width": 83.0,
+        "height": 128.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 8,
+      "bbox": {
+        "x": 67.5,
+        "y": 223.0,
+        "width": 92.0,
+        "height": 128.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 17,
+      "bbox": {
+        "x": 94.5,
+        "y": 220.0,
+        "width": 100.0,
+        "height": 134.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 30,
+      "bbox": {
+        "x": 132.5,
+        "y": 219.0,
+        "width": 111.0,
+        "height": 127.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 42,
+      "bbox": {
+        "x": 124.5,
+        "y": 197.0,
+        "width": 111.0,
+        "height": 149.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 52,
+      "bbox": {
+        "x": 118.5,
+        "y": 179.0,
+        "width": 131.0,
+        "height": 156.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 58,
+      "bbox": {
+        "x": 163.5,
+        "y": 167.0,
+        "width": 104.0,
+        "height": 164.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 65,
+      "bbox": {
+        "x": 188.5,
+        "y": 131.0,
+        "width": 90.0,
+        "height": 192.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 69,
+      "bbox": {
+        "x": 197.5,
+        "y": 132.0,
+        "width": 116.0,
+        "height": 195.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 79,
+      "bbox": {
+        "x": 227.5,
+        "y": 125.0,
+        "width": 100.0,
+        "height": 198.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 86,
+      "bbox": {
+        "x": 208.5,
+        "y": 116.0,
+        "width": 131.0,
+        "height": 217.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 90,
+      "bbox": {
+        "x": 240.5,
+        "y": 115.0,
+        "width": 122.0,
+        "height": 226.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 96,
+      "bbox": {
+        "x": 275.5,
+        "y": 116.0,
+        "width": 102.0,
+        "height": 217.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 98,
+      "bbox": {
+        "x": 288.5,
+        "y": 115.0,
+        "width": 81.0,
+        "height": 209.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 100,
+      "bbox": {
+        "x": 289.5,
+        "y": 119.0,
+        "width": 66.0,
+        "height": 224.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 143,
+      "bbox": {
+        "x": 186.5,
+        "y": 160.0,
+        "width": 86.0,
+        "height": 143.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 13,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 1,
+      "end_frame": 3,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 89,
+      "end_frame": 90,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 92,
+      "end_frame": 94,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 97,
+      "end_frame": 98,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 107,
+      "end_frame": 109,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 143,
+    "movement_end_timestamp_ms": 4766.666666666667,
+    "movement_duration_ms": 4766.666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_charlotte_newsham_2026_05_02_acl_candidate",
+    "source_id": "imported_charlotte_newsham_2026_05_02_view_01",
+    "view_id": "imported_charlotte_newsham_2026_05_02_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 143,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 143,
+    "event_anchor_frame": 143,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

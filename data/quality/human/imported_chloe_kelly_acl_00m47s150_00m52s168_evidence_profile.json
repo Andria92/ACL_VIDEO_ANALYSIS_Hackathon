@@ -1,0 +1,53 @@
+{
+  "case_id": "chloe_kelly_acl",
+  "source_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+  "view_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 6,
+  "target_tracking_coverage": 0.4526,
+  "pose_frame_coverage": 0.6423,
+  "upper_body_landmark_coverage": 0.45259999999999995,
+  "core_landmark_coverage": 0.4526,
+  "lower_limb_landmark_coverage": 0.45259999999999995,
+  "geometry_feature_coverage": 0.4525547445255475,
+  "dynamic_feature_coverage": 0.6424731182795698,
+  "interpolation_fraction": 0.0056,
+  "rejected_fraction": 0.5535,
+  "identity_uncertainty_fraction": 0.10948905109489052,
+  "target_loss_fraction": 0.35766423357664234,
+  "supported_feature_count": 36,
+  "limited_feature_count": 0,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 32,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 36,
+    "limited_features": 0,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.4525547445255475,
+    "dynamic_coverage": 0.6424731182795698,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 6,
+    "overall_quality_label": "MODERATE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 1.0,
+      "limited_fraction": 0.0,
+      "geometry_coverage": 0.4525547445255475,
+      "dynamic_coverage": 0.6424731182795698
+    }
+  }
+}

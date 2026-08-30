@@ -1,0 +1,72 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 48
+  },
+  "supported_samples": 48,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 1.749908532250512,
+  "minimum_normalized_projected_speed_per_s": 0.020245670700853067,
+  "time_minimum_projected_speed_ms": -480.0,
+  "maximum_normalized_projected_speed_per_s": 4.781656879320929,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": -21.95615099335131,
+    "late_heading_deg": -10.897591631892134,
+    "projected_change_of_direction_angle_deg": 11.058559361459174,
+    "absolute_projected_change_of_direction_angle_deg": 11.058559361459174,
+    "source_frame_start": 19,
+    "source_frame_end": 79,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "SUPPORTED",
+    "window_start_ms": -500.0,
+    "mean_prior_projected_speed": 1.9624984602597666,
+    "mean_final_projected_speed": 1.259316390690694,
+    "projected_speed_change": -0.7031820695690727,
+    "descriptor": "PROJECTED_SLOWDOWN"
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 7,
+      "path_segment_002": 8,
+      "path_segment_003": 7,
+      "path_segment_004": 8,
+      "path_segment_005": 18
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 7,
+        "path_segment_002": 8,
+        "path_segment_003": 7,
+        "path_segment_004": 8,
+        "path_segment_005": 18
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 7,
+        "path_segment_002": 8,
+        "path_segment_003": 7,
+        "path_segment_004": 8,
+        "path_segment_005": 18
+      }
+    },
+    "chosen_method": "translation"
+  }
+}

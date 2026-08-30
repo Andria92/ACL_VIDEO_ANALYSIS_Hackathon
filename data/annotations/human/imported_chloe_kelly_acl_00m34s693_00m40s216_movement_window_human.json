@@ -1,0 +1,53 @@
+{
+  "provenance": {
+    "annotation_session_id": "26658976-aed1-458d-8045-aee24e27272a",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T22:18:54.280731+00:00",
+    "updated_at": "2026-08-29T10:09:05.597637+00:00",
+    "case_id": "chloe_kelly_acl",
+    "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+    "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+    "video_path": "data/videos/analysis_clips/chloe_kelly_acl_00m34s693_00m40s216_2.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "chloe_kelly_acl",
+  "source_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "view_id": "imported_chloe_kelly_acl_00m34s693_00m40s216_view_01",
+  "manual_roi_keyframe_count": 14,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 5,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 112,
+      "end_frame": 114,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 117,
+      "end_frame": 118,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 120,
+    "movement_end_timestamp_ms": 4000.0,
+    "movement_duration_ms": 4000.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

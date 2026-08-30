@@ -117,9 +117,23 @@ def parse_args() -> argparse.Namespace:
 
 
 def _summary(result) -> dict:
+    presentation_mode = str(result.metadata.get("presentation_mode") or "")
+    evidence_interval = presentation_mode == "SUPPORTED_EVIDENCE_INTERVAL"
     return {
         "status": result.status,
-        "phase_count": len(result.phases),
+        "presentation_mode": presentation_mode,
+        "phase_count": 0 if evidence_interval else len(result.phases),
+        "internal_segment_count": len(result.phases),
+        "supported_evidence_interval": (
+            {
+                "start_frame": result.phases[0].start_frame,
+                "end_frame": result.phases[0].end_frame,
+                "duration_ms": result.phases[0].duration_ms,
+                "evidence_status": result.phases[0].evidence_summary["evidence_status"],
+            }
+            if evidence_interval and result.phases
+            else None
+        ),
         "phases": [
             {
                 "phase_id": phase.phase_id,

@@ -1,0 +1,61 @@
+{
+  "provenance": {
+    "annotation_session_id": "1375bd6a-f162-417c-a7fc-99d9b7dfebb4",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-28T23:08:00.247729+00:00",
+    "updated_at": "2026-08-28T23:10:18.346372+00:00",
+    "case_id": "imported_lena_oberdorf_2025_10_19_acl_candidate",
+    "source_id": "imported_lena_oberdorf_2025_10_19_view_01",
+    "view_id": "imported_lena_oberdorf_2025_10_19_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/FC Bayern Mu_nchen _ 1. FC Ko_ln _ Frauen-Bundesliga_ 7. Spieltag 2025_26 _ sportstudio_02m13s238_02m16s404.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_lena_oberdorf_2025_10_19_acl_candidate",
+  "source_id": "imported_lena_oberdorf_2025_10_19_view_01",
+  "view_id": "imported_lena_oberdorf_2025_10_19_view_01",
+  "manual_roi_keyframe_count": 11,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 9,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 11,
+      "end_frame": 12,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 19,
+      "end_frame": 20,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 49,
+      "end_frame": 53,
+      "frame_count": 5,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 57,
+    "movement_end_timestamp_ms": 2280.0,
+    "movement_duration_ms": 2280.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

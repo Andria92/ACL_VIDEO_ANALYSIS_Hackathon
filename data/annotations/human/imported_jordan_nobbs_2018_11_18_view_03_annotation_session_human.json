@@ -1,0 +1,144 @@
+{
+  "provenance": {
+    "annotation_session_id": "0c34983a-ed19-4cbb-beb7-5cd9f1a66db7",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T16:26:20.538637+00:00",
+    "updated_at": "2026-08-27T16:26:21.321378+00:00",
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_2018_11_18_view_03",
+    "view_id": "imported_jordan_nobbs_2018_11_18_view_03",
+    "video_path": "data/videos/analysis_clips/jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_00m00s000_00m02s250.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 8,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 1381.0714285714287,
+        "y": 244.28571788369135,
+        "width": 235.71428571428555,
+        "height": 381.4285770464655
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 37,
+      "bbox": {
+        "x": 1175.357142857143,
+        "y": 277.5000040871757,
+        "width": 182.1428571428571,
+        "height": 357.8571481278637
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 43,
+      "bbox": {
+        "x": 1149.642857142857,
+        "y": 262.5000038662473,
+        "width": 195.0,
+        "height": 402.8571487906489
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 46,
+      "bbox": {
+        "x": 1121.7857142857142,
+        "y": 245.35714647090052,
+        "width": 218.57142857142867,
+        "height": 432.8571492325058
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 48,
+      "bbox": {
+        "x": 1108.9285714285713,
+        "y": 247.50000364531886,
+        "width": 233.57142857142867,
+        "height": 452.14286380227077
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 59,
+      "bbox": {
+        "x": 1072.5,
+        "y": 275.35714691275734,
+        "width": 175.71428571428578,
+        "height": 435.00000640692406
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 61,
+      "bbox": {
+        "x": 1018.9285714285714,
+        "y": 264.64286104066565,
+        "width": 186.42857142857144,
+        "height": 411.4285774883222
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 68,
+      "bbox": {
+        "x": 986.7857142857143,
+        "y": 266.785718215084,
+        "width": 173.57142857142856,
+        "height": 456.42857815110756
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 68,
+    "movement_end_timestamp_ms": 1133.3333333333333,
+    "movement_duration_ms": 1133.3333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_2018_11_18_view_03",
+    "view_id": "imported_jordan_nobbs_2018_11_18_view_03",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 68,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 68,
+    "event_anchor_frame": 68,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

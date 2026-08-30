@@ -1,0 +1,45 @@
+{
+  "provenance": {
+    "annotation_session_id": "ed1a0e66-db39-4e52-901f-d53132b5bd79",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-21T06:37:42.284632+00:00",
+    "updated_at": "2026-08-27T16:21:08.113654+00:00",
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+    "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+    "video_path": "data/videos/analysis_clips/jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "jordan_nobbs_acl",
+  "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+  "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+  "manual_roi_keyframe_count": 9,
+  "manual_target_unavailable_frame_count": 8,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 48,
+      "end_frame": 55,
+      "frame_count": 8,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 2,
+    "movement_start_timestamp_ms": 33.333333333333336,
+    "movement_end_frame": 63,
+    "movement_end_timestamp_ms": 1050.0,
+    "movement_duration_ms": 1016.6666666666666,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

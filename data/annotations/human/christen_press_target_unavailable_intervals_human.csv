@@ -1,0 +1,4 @@
+start_frame,end_frame,frame_count,reason,note,view_id,annotation_source,annotation_session_id,annotator_id
+83,96,14,TARGET_PARTIALLY_OCCLUDED,,christen_press_view_01,human_ui,f87f49be-9945-4c4a-a384-17c905b2b67f,researcher_01
+116,117,2,TARGET_PARTIALLY_OCCLUDED,,christen_press_view_01,human_ui,f87f49be-9945-4c4a-a384-17c905b2b67f,researcher_01
+130,136,7,TARGET_PARTIALLY_OCCLUDED,,christen_press_view_01,human_ui,f87f49be-9945-4c4a-a384-17c905b2b67f,researcher_01

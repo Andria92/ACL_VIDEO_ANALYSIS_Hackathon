@@ -1,0 +1,274 @@
+{
+  "provenance": {
+    "annotation_session_id": "cda0e473-913f-49a7-9380-a91b10f818cc",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T11:03:38.077285+00:00",
+    "updated_at": "2026-08-29T11:05:15.206709+00:00",
+    "case_id": "imported_sofie_lundgaard_2024_10_06_acl_candidate",
+    "source_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+    "view_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/youtube_ddZEEcHaaIU_32m41s929_32m45s763.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 19,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 250.5,
+        "y": 214.0,
+        "width": 65.0,
+        "height": 126.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 2,
+      "bbox": {
+        "x": 240.5,
+        "y": 213.0,
+        "width": 65.0,
+        "height": 130.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 4,
+      "bbox": {
+        "x": 215.5,
+        "y": 215.0,
+        "width": 80.0,
+        "height": 128.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 6,
+      "bbox": {
+        "x": 201.5,
+        "y": 211.0,
+        "width": 76.0,
+        "height": 133.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 8,
+      "bbox": {
+        "x": 184.5,
+        "y": 208.0,
+        "width": 80.0,
+        "height": 138.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 11,
+      "bbox": {
+        "x": 158.5,
+        "y": 215.0,
+        "width": 82.0,
+        "height": 134.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 13,
+      "bbox": {
+        "x": 134.5,
+        "y": 215.0,
+        "width": 105.0,
+        "height": 139.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 15,
+      "bbox": {
+        "x": 120.5,
+        "y": 214.0,
+        "width": 99.0,
+        "height": 144.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 83.5,
+        "y": 228.0,
+        "width": 113.0,
+        "height": 128.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 20,
+      "bbox": {
+        "x": 56.5,
+        "y": 229.0,
+        "width": 142.0,
+        "height": 126.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 24,
+      "bbox": {
+        "x": 37.5,
+        "y": 209.0,
+        "width": 106.0,
+        "height": 143.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 28,
+      "bbox": {
+        "x": 9.5,
+        "y": 217.0,
+        "width": 110.0,
+        "height": 139.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 45,
+      "bbox": {
+        "x": 6.5,
+        "y": 186.0,
+        "width": 130.0,
+        "height": 173.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 52,
+      "bbox": {
+        "x": 7.5,
+        "y": 149.0,
+        "width": 141.0,
+        "height": 211.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 59,
+      "bbox": {
+        "x": 29.5,
+        "y": 151.0,
+        "width": 133.0,
+        "height": 206.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 77.5,
+        "y": 140.0,
+        "width": 88.0,
+        "height": 208.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 68,
+      "bbox": {
+        "x": 77.5,
+        "y": 135.0,
+        "width": 100.0,
+        "height": 212.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 76,
+      "bbox": {
+        "x": 124.5,
+        "y": 94.0,
+        "width": 74.0,
+        "height": 237.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 83,
+      "bbox": {
+        "x": 123.5,
+        "y": 90.0,
+        "width": 92.0,
+        "height": 217.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 3,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 0,
+      "end_frame": 2,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 83,
+    "movement_end_timestamp_ms": 2766.6666666666665,
+    "movement_duration_ms": 2766.6666666666665,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_sofie_lundgaard_2024_10_06_acl_candidate",
+    "source_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+    "view_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 83,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 83,
+    "event_anchor_frame": 83,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

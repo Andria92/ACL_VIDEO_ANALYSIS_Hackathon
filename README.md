@@ -1,8 +1,12 @@
-# ACL Movement Explorer
+# ACL Movement Analytics Lab
 
 Fresh hackathon prototype for exploring markerless 2D pose feasibility around documented ACL injury events in professional women's football.
 
 This project is exploratory. It does not diagnose ACL injuries, predict ACL risk, estimate forces, infer true 3D joint angles, or classify safe/dangerous movement. Milestone 1 focuses only on whether stable, auditable whole-body 2D coordinates can be recovered from short clips.
+
+The project-specific intended use, uncertainty behavior, similarity interpretation, human
+oversight, bias/generalization limitations, and privacy/provenance requirements are documented in
+[`RESPONSIBLE_AI_V1.md`](RESPONSIBLE_AI_V1.md).
 
 ## Milestone 1 Scope
 
@@ -74,17 +78,21 @@ By default, scripts look for:
 data/models/pose_landmarker_lite.task
 ```
 
-Download the default YOLO pose fallback model:
+Download the YOLOv8n pose model:
 
 ```bash
 python scripts/download_yolo_pose_model.py
 ```
 
-By default, scripts look for:
+The annotation and analysis workflow uses:
 
 ```text
 data/models/yolov8n-pose.pt
 ```
+
+The fixed configuration uses a tight human-annotated ROI and selects the largest pose candidate
+inside that crop. Close player overlap can still mix joints, so target identity and skeleton
+placement require visual human review.
 
 ## Raw Pose Extraction
 
@@ -156,9 +164,14 @@ Then open:
 http://127.0.0.1:8765
 ```
 
-## Video Review Cutter
+This single server hosts the dashboard, annotation workspace, results, statistical explorer,
+and video cutter. All dashboard navigation uses same-origin routes, so `--port` may be changed
+without starting or reconfiguring a second UI process.
 
-Launch the local review-and-cut app:
+## Standalone Video Review Cutter (optional)
+
+The main UI already exposes the cutter at `/video-cutter`. For isolated cutter development,
+you can still launch its standalone server:
 
 ```bash
 python scripts/run_video_cutter_ui.py
@@ -175,7 +188,7 @@ a local video path in the browser, mark In and Out while reviewing playback, the
 clip under:
 
 ```text
-data/videos/cuts/
+data/videos/analysis_clips/
 ```
 
 Use `--video-root` to scan a different folder:
@@ -191,6 +204,10 @@ or clips visible limbs, mark Movement End, review the propagated boxes, and save
 Movement Start is inferred from the first manual ROI keyframe. Movement End is the frame where
 the visible movement sequence has effectively finished. The operator does not need to identify an
 ACL rupture frame, critical plant, initial contact, or injury instant.
+
+After validating a case, use **Generate analysis**. This runs the fixed YOLOv8n pose extraction,
+quality checks, measurements, and movement results. Automatic pose confidence and missing-joint
+counts are descriptive diagnostics only and do not establish target identity or accuracy.
 
 Human annotations are written separately under:
 
@@ -318,3 +335,9 @@ clustering, association rules, or archetype assignment.
 ## Scientific Boundary
 
 Outputs describe observable image-plane geometry from markerless pose estimates. Unavailable measurements should remain unavailable rather than being filled or inferred. Raw pose rows are never overwritten by smoothing or later processing.
+
+Similarity, if enabled after the current evidence gate, means similarity only within the mutually
+supported measured movement representation. It does not imply an identical injury mechanism,
+biological cause, tissue loading, or clinical condition. Public availability of source footage does
+not by itself grant unrestricted reuse rights; source and rights provenance must be recorded rather
+than assumed.

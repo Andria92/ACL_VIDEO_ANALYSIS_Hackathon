@@ -1,0 +1,197 @@
+{
+  "provenance": {
+    "annotation_session_id": "9d754adc-0eb3-4948-9c03-abe455ed2a7c",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-21T23:04:32.819822+00:00",
+    "updated_at": "2026-08-21T23:04:32.819893+00:00",
+    "case_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_acl_candidate",
+    "source_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_view_01",
+    "view_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_view_01",
+    "video_path": "data/videos/analysis_clips/3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 13,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 1058.7470997679814,
+        "y": 210.92092421042898,
+        "width": 271.7401392111369,
+        "height": 560.0314194552768
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 8,
+      "bbox": {
+        "x": 1029.048723897912,
+        "y": 238.1951816514327,
+        "width": 394.98839907192564,
+        "height": 530.9388781848729
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 1116.658932714617,
+        "y": 229.10376250443147,
+        "width": 234.61716937355004,
+        "height": 565.4862709434776
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 20,
+      "bbox": {
+        "x": 1140.4176334106728,
+        "y": 225.46719484563096,
+        "width": 261.3457076566126,
+        "height": 536.3937296730737
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 1140.4176334106728,
+        "y": 225.46719484563096,
+        "width": 288.07424593967517,
+        "height": 552.7582841376759
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 28,
+      "bbox": {
+        "x": 1138.9327146171693,
+        "y": 221.83062718683047,
+        "width": 402.41299303944334,
+        "height": 550.9400003082757
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 29,
+      "bbox": {
+        "x": 1134.4779582366589,
+        "y": 218.19405952802995,
+        "width": 484.08352668213456,
+        "height": 565.4862709434777
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 34,
+      "bbox": {
+        "x": 1230.997679814385,
+        "y": 212.7392080398292,
+        "width": 372.7146171693737,
+        "height": 605.4885151902831
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 38,
+      "bbox": {
+        "x": 1220.6032482598607,
+        "y": 209.10264038102872,
+        "width": 433.5962877030163,
+        "height": 641.8541917782882
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 40,
+      "bbox": {
+        "x": 1216.1484918793503,
+        "y": 149.09927401082047,
+        "width": 509.3271461716938,
+        "height": 714.5855449542983
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 42,
+      "bbox": {
+        "x": 1177.54060324826,
+        "y": 141.8261386932195,
+        "width": 562.7842227378189,
+        "height": 720.0403964424988
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 52,
+      "bbox": {
+        "x": 1055.7772621809745,
+        "y": 163.64554464602247,
+        "width": 500.4176334106728,
+        "height": 692.7661390014952
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 57,
+      "bbox": {
+        "x": 926.5893271461717,
+        "y": 172.73696379302373,
+        "width": 577.6334106728538,
+        "height": 670.9467330486922
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 63,
+    "movement_end_timestamp_ms": 3201.882352941176,
+    "movement_duration_ms": 3201.882352941176,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_acl_candidate",
+    "source_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_view_01",
+    "view_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 63,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 63,
+    "event_anchor_frame": 63,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

@@ -12,8 +12,11 @@ from acl_motion.annotations.models import (
     HumanAnnotationSession,
     MovementWindowAnnotation,
     RoiKeyframeAnnotation,
+    TargetAcceptedIntervalAnnotation,
+    TargetUnavailableIntervalAnnotation,
 )
 from acl_motion.cases.annotations import load_event_annotation, write_event_annotation
+from acl_motion.cases.models import InjurySide
 from acl_motion.video.roi import BBox, RoiTimeline
 
 
@@ -23,6 +26,7 @@ class HumanAnnotationPaths:
 
     session_json: Path
     roi_csv: Path
+    target_unavailable_csv: Path
     movement_window_json: Path
     event_json: Path
 
@@ -34,6 +38,7 @@ def human_annotation_paths(output_dir: str | Path, slug: str) -> HumanAnnotation
     return HumanAnnotationPaths(
         session_json=root / f"{slug}_annotation_session_human.json",
         roi_csv=root / f"{slug}_target_roi_human.csv",
+        target_unavailable_csv=root / f"{slug}_target_unavailable_intervals_human.csv",
         movement_window_json=root / f"{slug}_movement_window_human.json",
         event_json=root / f"{slug}_event_annotation_human.json",
     )
@@ -47,12 +52,19 @@ def save_human_annotation_session(
     """Save a human session plus pipeline-compatible ROI/event files."""
 
     paths = human_annotation_paths(output_dir, slug)
-    for path in (paths.session_json, paths.roi_csv, paths.movement_window_json, paths.event_json):
+    for path in (
+        paths.session_json,
+        paths.roi_csv,
+        paths.target_unavailable_csv,
+        paths.movement_window_json,
+        paths.event_json,
+    ):
         assert_human_annotation_path(path)
     paths.session_json.parent.mkdir(parents=True, exist_ok=True)
     write_session_json(session, paths.session_json)
     if session.roi_keyframes:
         write_roi_keyframes_csv(session, paths.roi_csv)
+    write_target_unavailable_intervals_csv(session, paths.target_unavailable_csv)
     if session.movement_window is not None:
         write_movement_window_json(session, paths.movement_window_json)
     if session.event_annotation is not None:
@@ -90,7 +102,17 @@ def write_movement_window_json(session: HumanAnnotationSession, path: str | Path
         "source_id": session.provenance.source_id,
         "view_id": session.provenance.view_id or session.provenance.source_id,
         "manual_roi_keyframe_count": session.manual_roi_keyframe_count,
+        "manual_target_unavailable_frame_count": session.manual_target_unavailable_frame_count,
+        "target_unavailable_intervals": [
+            interval.to_dict() for interval in session.target_unavailable_intervals
+        ],
+        "manual_target_accepted_frame_count": session.manual_target_accepted_frame_count,
+        "target_accepted_intervals": [
+            interval.to_dict() for interval in session.target_accepted_intervals
+        ],
         "movement_window": session.movement_window.to_dict(),
+        "injured_side": session.injured_side.value,
+        "injury_laterality_source": session.injury_laterality_source,
         "notes": session.notes,
     }
     output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -173,6 +195,70 @@ def load_roi_keyframes_csv(path: str | Path) -> tuple[RoiKeyframeAnnotation, ...
     return tuple(sorted(keyframes, key=lambda item: item.frame_index))
 
 
+def write_target_unavailable_intervals_csv(
+    session: HumanAnnotationSession,
+    path: str | Path,
+) -> Path:
+    """Write explicit human target-unavailable intervals with provenance."""
+
+    output = Path(path)
+    assert_human_annotation_path(output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open("w", newline="", encoding="utf-8") as handle:
+        fieldnames = [
+            "start_frame",
+            "end_frame",
+            "frame_count",
+            "reason",
+            "note",
+            "view_id",
+            "annotation_source",
+            "annotation_session_id",
+            "annotator_id",
+        ]
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        for interval in session.target_unavailable_intervals:
+            writer.writerow(
+                {
+                    "start_frame": interval.start_frame,
+                    "end_frame": interval.end_frame,
+                    "frame_count": interval.frame_count,
+                    "reason": interval.reason.value,
+                    "note": interval.note,
+                    "view_id": session.provenance.view_id or session.provenance.source_id,
+                    "annotation_source": "human_ui",
+                    "annotation_session_id": session.provenance.annotation_session_id,
+                    "annotator_id": session.provenance.annotator_id,
+                }
+            )
+    return output
+
+
+def load_target_unavailable_intervals_csv(
+    path: str | Path,
+) -> tuple[TargetUnavailableIntervalAnnotation, ...]:
+    """Load human target-unavailable intervals from CSV."""
+
+    intervals: list[TargetUnavailableIntervalAnnotation] = []
+    with Path(path).open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        required = {"start_frame", "end_frame", "reason"}
+        missing = required.difference(reader.fieldnames or [])
+        if missing:
+            raise ValueError(f"Target-unavailable interval CSV missing columns: {sorted(missing)}")
+        for row in reader:
+            intervals.append(
+                TargetUnavailableIntervalAnnotation(
+                    start_frame=int(row["start_frame"]),
+                    end_frame=int(row["end_frame"]),
+                    reason=row["reason"],
+                    note=row.get("note", ""),
+                )
+            )
+    return tuple(sorted(intervals, key=lambda item: (item.start_frame, item.end_frame)))
+
+
 def load_pipeline_roi_timeline(path: str | Path) -> RoiTimeline:
     """Load a saved human ROI file using the existing pipeline reader."""
 
@@ -193,9 +279,13 @@ def new_human_session(
     annotator_id: str,
     view_id: str | None = None,
     roi_keyframes: tuple[RoiKeyframeAnnotation, ...] = (),
+    target_unavailable_intervals: tuple[TargetUnavailableIntervalAnnotation, ...] = (),
+    target_accepted_intervals: tuple[TargetAcceptedIntervalAnnotation, ...] = (),
     movement_window: MovementWindowAnnotation | None = None,
     event_annotation=None,
     event_confidence_label=None,
+    injured_side: InjurySide | str = InjurySide.UNKNOWN,
+    injury_laterality_source: str = "",
     notes: str = "",
     finalized: bool = False,
     existing_provenance: AnnotationProvenance | None = None,
@@ -225,9 +315,13 @@ def new_human_session(
     return HumanAnnotationSession(
         provenance=provenance,
         roi_keyframes=roi_keyframes,
+        target_unavailable_intervals=target_unavailable_intervals,
+        target_accepted_intervals=target_accepted_intervals,
         movement_window=movement_window,
         event_annotation=event_annotation,
         event_confidence_label=event_confidence_label,
+        injured_side=InjurySide(injured_side),
+        injury_laterality_source=injury_laterality_source,
         notes=notes,
         finalized=finalized,
     )

@@ -32,6 +32,48 @@ def test_metric_statistics_exclude_unsupported_values() -> None:
     assert stats["maximum_frame"] == 3
 
 
+def test_one_supported_sample_does_not_become_zero_change_or_zero_uncertainty() -> None:
+    rows = _metric_rows([None, 4.0, None], ["UNAVAILABLE", "SUPPORTED", "UNAVAILABLE"])
+
+    stats = metric_statistics(rows)
+
+    assert stats["supported_n"] == 1
+    assert stats["mean"] == 4.0
+    assert stats["standard_deviation"] is None
+    assert stats["change"] is None
+    assert stats["absolute_change"] is None
+    assert stats["total_absolute_change"] is None
+
+
+@pytest.mark.parametrize(
+    ("metric_name", "values", "expected_mean", "expected_range"),
+    [
+        ("projected_trunk_axis_angle_deg", [179.0, -179.0], -180.0, 2.0),
+        ("projected_hip_line_angle_deg", [1.0, 179.0], 0.0, 2.0),
+    ],
+)
+def test_orientation_statistics_use_circular_summaries(
+    metric_name,
+    values,
+    expected_mean,
+    expected_range,
+) -> None:
+    rows = _metric_rows(values, ["SUPPORTED", "SUPPORTED"])
+    rows["metric_name"] = metric_name
+    rows["unit"] = "deg"
+
+    stats = metric_statistics(rows)
+
+    assert stats["summary_semantics"] == "circular"
+    assert stats["mean"] == pytest.approx(expected_mean)
+    assert stats["standard_deviation"] == pytest.approx(1.0, abs=0.01)
+    assert stats["range"] == pytest.approx(expected_range)
+    assert stats["median"] is None
+    assert stats["q1"] is None
+    assert stats["q3"] is None
+    assert stats["iqr"] is None
+
+
 def test_selection_statistics_for_single_and_five_frame_window() -> None:
     rows = _metric_rows([1.0, None, 4.0, 7.0, 10.0], ["SUPPORTED", "UNAVAILABLE", "SUPPORTED", "SUPPORTED", "SUPPORTED"])
 
@@ -51,11 +93,11 @@ def test_selection_statistics_for_single_and_five_frame_window() -> None:
 
 
 @pytest.mark.parametrize(
-    ("metric_name", "values", "angle_type", "raw_change", "canonical_change"),
+    ("metric_name", "values", "angle_type", "raw_change", "canonical_change", "expected_range"),
     [
-        ("injured_hka_angle_2d_deg", [158.6, 85.5], "internal", -73.1, -73.1),
-        ("projected_trunk_axis_angle_deg", [-175.0, 178.0], "directed", 353.0, -7.0),
-        ("projected_hip_line_angle_deg", [-0.1, 173.9], "axis", 174.0, -6.0),
+        ("injured_hka_angle_2d_deg", [158.6, 85.5], "internal", -73.1, -73.1, 73.1),
+        ("projected_trunk_axis_angle_deg", [-175.0, 178.0], "directed", 353.0, -7.0, 7.0),
+        ("projected_hip_line_angle_deg", [-0.1, 173.9], "axis", 174.0, -6.0, 6.0),
     ],
 )
 def test_metric_statistics_add_canonical_display_change_without_altering_existing_change(
@@ -64,6 +106,7 @@ def test_metric_statistics_add_canonical_display_change_without_altering_existin
     angle_type,
     raw_change,
     canonical_change,
+    expected_range,
 ) -> None:
     rows = _metric_rows(values, ["SUPPORTED", "SUPPORTED"])
     rows["metric_name"] = metric_name
@@ -79,6 +122,13 @@ def test_metric_statistics_add_canonical_display_change_without_altering_existin
     assert stats["angle_type"] == angle_type
     assert stats["canonical_signed_change"] == pytest.approx(canonical_change)
     assert stats["canonical_absolute_change"] == pytest.approx(abs(canonical_change))
+    assert stats["range"] == pytest.approx(expected_range)
+    assert stats["raw_range"] == pytest.approx(max(values) - min(values))
+    assert stats["range_semantics"] in {
+        "linear",
+        "shortest_directed_arc",
+        "shortest_axial_arc",
+    }
 
 
 def test_visualisation_registry_covers_every_metric() -> None:
@@ -124,6 +174,20 @@ def test_visualisation_registry_covers_every_metric() -> None:
         assert metric_name in payload["series"]
         assert metric_name in payload["whole_movement_statistics"]
         assert metric_name in payload["phase_statistics"]
+
+
+def test_empty_projected_path_remains_available_as_unavailable_metric_series() -> None:
+    payload = build_metric_explorer_payload(
+        dynamic_df=_dynamic_df(),
+        path_df=_path_df().iloc[0:0],
+        movement_story={"phases": []},
+    )
+
+    assert payload["series"]["path:projected_heading_deg"] == []
+    assert payload["series"]["path:projected_heading_change_deg"] == []
+    assert payload["whole_movement_statistics"]["path:projected_heading_deg"][
+        "supported_n"
+    ] == 0
 
 
 def _metric_rows(values: list[float | None], statuses: list[str]) -> pd.DataFrame:

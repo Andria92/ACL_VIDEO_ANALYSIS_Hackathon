@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,64,64,1.0,0,
+contralateral_hka_angle_2d_deg,64,64,1.0,0,
+elbow_projected_bilateral_absolute_difference_deg,62,64,0.96875,2,"Required landmarks were interpolated after temporal-outlier rejection: ['right_elbow', 'right_wrist']."
+elbow_projected_bilateral_difference_deg,62,64,0.96875,2,"Required landmarks were interpolated after temporal-outlier rejection: ['right_elbow', 'right_wrist']."
+hka_projected_bilateral_absolute_difference_deg,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+hka_projected_bilateral_difference_deg,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+injured_elbow_angle_2d_deg,62,64,0.96875,2,"Required landmarks were interpolated after temporal-outlier rejection: ['right_elbow', 'right_wrist']."
+injured_hka_angle_2d_deg,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+knee_line_deviation_bilateral_absolute_difference,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+knee_line_deviation_bilateral_difference,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+knee_line_deviation_normalized_bilateral_absolute_difference,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+knee_line_deviation_normalized_bilateral_difference,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+left_elbow_angle_2d_deg,64,64,1.0,0,
+left_hka_angle_2d_deg,64,64,1.0,0,
+left_knee_ankle_distance_normalized,64,64,1.0,0,
+left_knee_ankle_x_offset_normalized,64,64,1.0,0,
+left_knee_line_deviation_2d,64,64,1.0,0,
+left_knee_line_deviation_normalized,64,64,1.0,0,
+left_upper_arm_orientation_2d_deg,64,64,1.0,0,
+left_wrist_pelvis_distance_normalized,64,64,1.0,0,
+left_wrist_pelvis_x_offset_normalized,64,64,1.0,0,
+projected_hip_line_angle_deg,64,64,1.0,0,
+projected_shoulder_line_angle_deg,64,64,1.0,0,
+projected_shoulder_pelvis_orientation_difference_deg,64,64,1.0,0,
+projected_shoulder_pelvis_x_offset_normalized,64,64,1.0,0,
+projected_shoulder_pelvis_x_offset_px,64,64,1.0,0,
+projected_trunk_axis_angle_deg,64,64,1.0,0,
+right_elbow_angle_2d_deg,62,64,0.96875,2,"Required landmarks were interpolated after temporal-outlier rejection: ['right_elbow', 'right_wrist']."
+right_hka_angle_2d_deg,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+right_knee_ankle_distance_normalized,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+right_knee_ankle_x_offset_normalized,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+right_knee_line_deviation_2d,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+right_knee_line_deviation_normalized,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_ankle'].
+right_upper_arm_orientation_2d_deg,63,64,0.984375,1,Required landmarks were interpolated after temporal-outlier rejection: ['right_elbow'].
+right_wrist_pelvis_distance_normalized,62,64,0.96875,2,Required landmarks were interpolated after temporal-outlier rejection: ['right_wrist'].
+right_wrist_pelvis_x_offset_normalized,62,64,0.96875,2,Required landmarks were interpolated after temporal-outlier rejection: ['right_wrist'].

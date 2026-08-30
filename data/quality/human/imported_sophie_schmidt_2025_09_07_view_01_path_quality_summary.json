@@ -1,0 +1,56 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 12
+  },
+  "supported_samples": 12,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 0.8817647078657117,
+  "minimum_normalized_projected_speed_per_s": 0.048142585844254855,
+  "time_minimum_projected_speed_ms": -300.0,
+  "maximum_normalized_projected_speed_per_s": 1.653143289727442,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": -168.68644975364043,
+    "late_heading_deg": 26.166016970026202,
+    "projected_change_of_direction_angle_deg": -165.14753327633338,
+    "absolute_projected_change_of_direction_angle_deg": 165.14753327633338,
+    "source_frame_start": 69,
+    "source_frame_end": 80,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "UNAVAILABLE",
+    "reason": "Insufficient supported speed samples in comparison windows."
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 12
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 12
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 12
+      }
+    },
+    "chosen_method": "translation"
+  }
+}

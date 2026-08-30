@@ -1,0 +1,131 @@
+{
+  "provenance": {
+    "annotation_session_id": "99dd7899-8a15-4c20-834d-3d4bc1789e6a",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T22:25:04.152664+00:00",
+    "updated_at": "2026-08-29T10:11:47.736990+00:00",
+    "case_id": "chloe_kelly_acl",
+    "source_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+    "view_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+    "video_path": "data/videos/analysis_clips/chloe_kelly_acl_00m47s150_00m52s168_2.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 6,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 182.0,
+        "y": 56.0,
+        "width": 155.0,
+        "height": 215.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 75,
+      "bbox": {
+        "x": 154.0,
+        "y": 46.0,
+        "width": 126.0,
+        "height": 243.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 147.0,
+        "y": 52.0,
+        "width": 125.0,
+        "height": 261.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 80,
+      "bbox": {
+        "x": 153.0,
+        "y": 55.0,
+        "width": 114.0,
+        "height": 230.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 84,
+      "bbox": {
+        "x": 190.0,
+        "y": 66.0,
+        "width": 78.0,
+        "height": 235.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 136,
+      "bbox": {
+        "x": 27.0,
+        "y": 114.0,
+        "width": 125.0,
+        "height": 177.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 43,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 88,
+      "end_frame": 130,
+      "frame_count": 43,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 136,
+    "movement_end_timestamp_ms": 4533.333333333333,
+    "movement_duration_ms": 4533.333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "chloe_kelly_acl",
+    "source_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+    "view_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 136,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 136,
+    "event_anchor_frame": 136,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

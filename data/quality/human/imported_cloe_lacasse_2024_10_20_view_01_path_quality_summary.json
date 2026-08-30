@@ -1,0 +1,57 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 72
+  },
+  "supported_samples": 72,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "partial affine/RANSAC sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 1.9356291218292723,
+  "minimum_normalized_projected_speed_per_s": 0.10148233378278382,
+  "time_minimum_projected_speed_ms": -1733.3333333333335,
+  "maximum_normalized_projected_speed_per_s": 6.182468189299542,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": -48.30038498341055,
+    "late_heading_deg": 161.796675309066,
+    "projected_change_of_direction_angle_deg": -149.90293970752344,
+    "absolute_projected_change_of_direction_angle_deg": 149.90293970752344,
+    "source_frame_start": 0,
+    "source_frame_end": 71,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "UNAVAILABLE",
+    "reason": "Insufficient supported speed samples in comparison windows."
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 72
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "QA_REQUIRED",
+      "reason": "Supported path fraction is too low for movement-path semantics.",
+      "supported_fraction": 0.25,
+      "path_segment_counts": {
+        "path_segment_009": 5,
+        "path_segment_025": 13
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 72
+      }
+    },
+    "chosen_method": "affine"
+  }
+}

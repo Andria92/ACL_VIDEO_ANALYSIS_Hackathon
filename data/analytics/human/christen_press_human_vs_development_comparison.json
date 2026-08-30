@@ -387,7 +387,7 @@
     "updated_at": "2026-08-16T09:41:00.006181+00:00",
     "case_id": "christen_press_acl",
     "source_id": "christen_press_view_01",
-    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/02_YvnMYc6OdT8_160s-166s.mp4",
+    "video_path": "data/videos/analysis_clips/02_YvnMYc6OdT8_160s-166s.mp4",
     "ui_tool_version": "m5_5_annotation_ui_v1"
   },
   "coverage": {

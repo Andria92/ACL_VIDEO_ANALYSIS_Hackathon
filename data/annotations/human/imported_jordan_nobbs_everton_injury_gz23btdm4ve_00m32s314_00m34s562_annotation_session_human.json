@@ -1,0 +1,164 @@
+{
+  "provenance": {
+    "annotation_session_id": "ed1a0e66-db39-4e52-901f-d53132b5bd79",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-21T06:37:42.284632+00:00",
+    "updated_at": "2026-08-27T16:21:08.113654+00:00",
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+    "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+    "video_path": "data/videos/analysis_clips/jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 9,
+  "roi_keyframes": [
+    {
+      "frame_index": 2,
+      "bbox": {
+        "x": 1353.7120622568093,
+        "y": 254.1556730428349,
+        "width": 271.9377431906614,
+        "height": 366.28317585585035
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 39,
+      "bbox": {
+        "x": 1177.4007782101166,
+        "y": 287.0464072013194,
+        "width": 182.2879377431907,
+        "height": 369.2732425975307
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 42,
+      "bbox": {
+        "x": 1143.035019455253,
+        "y": 296.0166074263607,
+        "width": 212.17120622568086,
+        "height": 364.7881424850101
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 45,
+      "bbox": {
+        "x": 1123.6108949416343,
+        "y": 276.581173605438,
+        "width": 201.7120622568093,
+        "height": 394.6888099018142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 1060.8560311284048,
+        "y": 257.1457397845153,
+        "width": 259.98443579766536,
+        "height": 397.6788766434946
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 59,
+      "bbox": {
+        "x": 1032.4669260700389,
+        "y": 264.62090663871635,
+        "width": 212.17120622568086,
+        "height": 381.2335095642523
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 981.6653696498055,
+        "y": 300.50170753888125,
+        "width": 219.64202334630352,
+        "height": 393.19377653097405
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 69,
+      "bbox": {
+        "x": 906.9571984435797,
+        "y": 278.0762069762782,
+        "width": 243.54863813229576,
+        "height": 411.1341769810565
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 101,
+      "bbox": {
+        "x": 939.828793774319,
+        "y": 272.09607349291736,
+        "width": 403.4241245136187,
+        "height": 403.65901012685543
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 8,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 48,
+      "end_frame": 55,
+      "frame_count": 8,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 2,
+    "movement_start_timestamp_ms": 33.333333333333336,
+    "movement_end_frame": 63,
+    "movement_end_timestamp_ms": 1050.0,
+    "movement_duration_ms": 1016.6666666666666,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "jordan_nobbs_acl",
+    "source_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+    "view_id": "imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_view_01",
+    "analysis_start_frame": 2,
+    "analysis_end_frame": 63,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 63,
+    "event_anchor_frame": 63,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

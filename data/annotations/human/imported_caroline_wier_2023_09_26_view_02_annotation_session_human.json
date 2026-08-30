@@ -1,0 +1,285 @@
+{
+  "provenance": {
+    "annotation_session_id": "f6dfc93c-3d03-4b99-bec5-6ab6c4bc62ee",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T18:37:57.531854+00:00",
+    "updated_at": "2026-08-27T18:40:31.852376+00:00",
+    "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+    "source_id": "imported_caroline_wier_2023_09_26_view_02",
+    "view_id": "imported_caroline_wier_2023_09_26_view_02",
+    "video_path": "data/videos/analysis_clips/YTDown.com_YouTube_Scotland-v-Belgium-Uefa-Women-s-Nations-_Media_zUVLcmUHYAs_001_720p_29m56s034_30m00s073.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 20,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 746.4285714285714,
+        "y": 302.85714285714283,
+        "width": 191.42857142857144,
+        "height": 235.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 20,
+      "bbox": {
+        "x": 700.7142857142857,
+        "y": 305.7142857142857,
+        "width": 144.28571428571433,
+        "height": 252.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 26,
+      "bbox": {
+        "x": 652.1428571428571,
+        "y": 304.2857142857143,
+        "width": 152.8571428571429,
+        "height": 225.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 30,
+      "bbox": {
+        "x": 625.0,
+        "y": 330.0,
+        "width": 135.71428571428567,
+        "height": 198.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 33,
+      "bbox": {
+        "x": 582.1428571428571,
+        "y": 330.0,
+        "width": 168.57142857142856,
+        "height": 200.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 40,
+      "bbox": {
+        "x": 545.0,
+        "y": 324.2857142857143,
+        "width": 152.8571428571429,
+        "height": 201.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 45,
+      "bbox": {
+        "x": 539.2857142857143,
+        "y": 317.14285714285717,
+        "width": 124.28571428571422,
+        "height": 208.5714285714285
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 55,
+      "bbox": {
+        "x": 506.42857142857144,
+        "y": 311.42857142857144,
+        "width": 102.85714285714289,
+        "height": 211.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 64,
+      "bbox": {
+        "x": 497.85714285714283,
+        "y": 311.42857142857144,
+        "width": 117.14285714285717,
+        "height": 205.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 74,
+      "bbox": {
+        "x": 542.1428571428571,
+        "y": 285.7142857142857,
+        "width": 94.28571428571433,
+        "height": 217.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 84,
+      "bbox": {
+        "x": 597.8571428571429,
+        "y": 272.85714285714283,
+        "width": 71.42857142857144,
+        "height": 192.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 89,
+      "bbox": {
+        "x": 619.2857142857143,
+        "y": 288.57142857142856,
+        "width": 78.57142857142856,
+        "height": 172.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 99,
+      "bbox": {
+        "x": 676.4285714285714,
+        "y": 288.57142857142856,
+        "width": 51.428571428571445,
+        "height": 165.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 125,
+      "bbox": {
+        "x": 797.8571428571429,
+        "y": 288.57142857142856,
+        "width": 38.571428571428555,
+        "height": 92.85714285714289
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 133,
+      "bbox": {
+        "x": 807.8571428571429,
+        "y": 281.42857142857144,
+        "width": 57.14285714285711,
+        "height": 142.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 138,
+      "bbox": {
+        "x": 816.4285714285714,
+        "y": 290.0,
+        "width": 77.14285714285711,
+        "height": 135.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 143,
+      "bbox": {
+        "x": 855.0,
+        "y": 284.2857142857143,
+        "width": 62.85714285714289,
+        "height": 137.14285714285717
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 148,
+      "bbox": {
+        "x": 880.7142857142857,
+        "y": 290.0,
+        "width": 78.57142857142867,
+        "height": 102.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 163,
+      "bbox": {
+        "x": 933.5714285714286,
+        "y": 295.7142857142857,
+        "width": 82.85714285714289,
+        "height": 140.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 178,
+      "bbox": {
+        "x": 935.0,
+        "y": 300.0,
+        "width": 107.14285714285711,
+        "height": 152.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 10,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 100,
+      "end_frame": 109,
+      "frame_count": 10,
+      "reason": "PLAYER_OVERLAP",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 183,
+    "movement_end_timestamp_ms": 3660.0,
+    "movement_duration_ms": 3660.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+    "source_id": "imported_caroline_wier_2023_09_26_view_02",
+    "view_id": "imported_caroline_wier_2023_09_26_view_02",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 183,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 183,
+    "event_anchor_frame": 183,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

@@ -1,0 +1,89 @@
+{
+  "run_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01_20260825T222511Z",
+  "timestamp_utc": "2026-08-25T22:25:11.144505+00:00",
+  "case_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_acl_candidate",
+  "source_id": "imported_chloe_kelly_acl_00m47s150_00m52s168_view_01",
+  "pose_backend": "yolo",
+  "model_name": "Ultralytics YOLO pose",
+  "model_path": "data/models/yolov8n-pose.pt",
+  "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/chloe_kelly_acl_00m47s150_00m52s168_2.mp4",
+  "fps": 30.0,
+  "width": 640,
+  "height": 360,
+  "frame_count_video": 150,
+  "frame_count_processed": 137,
+  "landmark_row_count": 2329,
+  "start_frame": 0,
+  "end_frame": 136,
+  "every_n": 1,
+  "roi": null,
+  "roi_keyframes": "data/annotations/human/imported_chloe_kelly_acl_00m47s150_00m52s168_target_roi_human.csv",
+  "roi_keyframe_count": 7,
+  "roi_keyframe_records": [
+    {
+      "frame_index": 0,
+      "x": 182.0,
+      "y": 56.0,
+      "width": 155.0,
+      "height": 215.0
+    },
+    {
+      "frame_index": 75,
+      "x": 154.0,
+      "y": 46.0,
+      "width": 126.0,
+      "height": 243.0
+    },
+    {
+      "frame_index": 77,
+      "x": 147.0,
+      "y": 52.0,
+      "width": 125.0,
+      "height": 261.0
+    },
+    {
+      "frame_index": 80,
+      "x": 153.0,
+      "y": 55.0,
+      "width": 114.0,
+      "height": 230.0
+    },
+    {
+      "frame_index": 84,
+      "x": 190.0,
+      "y": 66.0,
+      "width": 78.0,
+      "height": 235.0
+    },
+    {
+      "frame_index": 130,
+      "x": 73.0,
+      "y": 99.0,
+      "width": 87.0,
+      "height": 182.0
+    },
+    {
+      "frame_index": 136,
+      "x": 27.0,
+      "y": 114.0,
+      "width": 125.0,
+      "height": 177.0
+    }
+  ],
+  "human_annotation_session": "data/annotations/human/imported_chloe_kelly_acl_00m47s150_00m52s168_annotation_session_human.json",
+  "human_target_unavailable_interval_count": 1,
+  "human_target_unavailable_frame_count": 42,
+  "human_target_unavailable_intervals": [
+    {
+      "start_frame": 88,
+      "end_frame": 129,
+      "frame_count": 42,
+      "reason": "TARGET_NOT_VISIBLE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "roi_pad": 0.2,
+  "yolo_selection_strategy": "center",
+  "notes": "Raw pose extraction only. Manual ROI keyframe records are preserved unchanged; roi_pad records the symmetric context margin applied only to the pose crop. No biomechanical interpretation."
+}

@@ -1,32 +1,44 @@
 {
   "total_frames": 156,
-  "target_tracking_coverage": 0.7244,
-  "pose_frame_coverage": 1.0,
+  "target_tracking_coverage": 0.5321,
+  "pose_frame_coverage": 0.8526,
   "frame_status_counts": {
-    "INVALID_TRACK_SEGMENT": 9,
-    "LOW_POSE_CONFIDENCE": 2,
-    "TARGET_IDENTITY_UNCERTAIN": 32,
-    "VALID_TARGET": 113
+    "INVALID_TRACK_SEGMENT": 5,
+    "TARGET_IDENTITY_UNCERTAIN": 45,
+    "TARGET_NOT_FOUND": 23,
+    "VALID_TARGET": 83
   },
-  "low_confidence_intervals": [
+  "low_confidence_intervals": [],
+  "target_loss_intervals": [
+    {
+      "start_frame": 83,
+      "end_frame": 96
+    },
     {
       "start_frame": 116,
       "end_frame": 117
+    },
+    {
+      "start_frame": 130,
+      "end_frame": 136
     }
   ],
-  "target_loss_intervals": [],
   "identity_uncertainty_intervals": [
     {
       "start_frame": 97,
-      "end_frame": 99
+      "end_frame": 109
     },
     {
-      "start_frame": 109,
-      "end_frame": 114
+      "start_frame": 112,
+      "end_frame": 112
+    },
+    {
+      "start_frame": 114,
+      "end_frame": 115
     },
     {
       "start_frame": 118,
-      "end_frame": 123
+      "end_frame": 125
     },
     {
       "start_frame": 127,
@@ -34,18 +46,10 @@
     },
     {
       "start_frame": 137,
-      "end_frame": 137
-    },
-    {
-      "start_frame": 139,
       "end_frame": 145
     },
     {
-      "start_frame": 149,
-      "end_frame": 149
-    },
-    {
-      "start_frame": 151,
+      "start_frame": 147,
       "end_frame": 155
     }
   ],
@@ -53,61 +57,61 @@
     {
       "segment_id": 1,
       "start_frame": 0,
-      "end_frame": 96,
-      "frame_count": 97
-    },
-    {
-      "segment_id": 2,
-      "start_frame": 100,
-      "end_frame": 108,
-      "frame_count": 9
-    },
-    {
-      "segment_id": 3,
-      "start_frame": 130,
-      "end_frame": 136,
-      "frame_count": 7
+      "end_frame": 82,
+      "frame_count": 83
     }
   ],
-  "interpolated_frame_fraction": 0.2885,
-  "rejected_frame_fraction": 0.8846,
-  "interpolated_landmark_row_fraction": 0.0347,
-  "rejected_landmark_row_fraction": 0.3235,
+  "interpolated_frame_fraction": 0.1026,
+  "rejected_frame_fraction": 0.9167,
+  "interpolated_landmark_row_fraction": 0.0064,
+  "rejected_landmark_row_fraction": 0.509,
   "processing_status_counts": {
-    "INTERPOLATED": 92,
-    "RAW_VALID": 24,
-    "REJECTED_IDENTITY_UNCERTAIN": 544,
-    "REJECTED_INVALID_TRACK_SEGMENT": 153,
-    "REJECTED_LOW_CONFIDENCE": 159,
-    "REJECTED_TEMPORAL_OUTLIER": 2,
-    "SMOOTHED": 1678
+    "INTERPOLATED": 17,
+    "MISSING": 391,
+    "REJECTED_IDENTITY_UNCERTAIN": 765,
+    "REJECTED_INVALID_TRACK_SEGMENT": 85,
+    "REJECTED_LOW_CONFIDENCE": 109,
+    "SMOOTHED": 1285
   },
   "landmark_status_counts": {
-    "IDENTITY_UNCERTAIN": 544,
-    "LOW_CONFIDENCE": 192,
-    "OBSERVED_VALID": 1702,
-    "REJECTED": 153,
-    "TEMPORAL_OUTLIER": 61
+    "IDENTITY_UNCERTAIN": 765,
+    "LOW_CONFIDENCE": 126,
+    "MISSING": 391,
+    "OBSERVED_VALID": 1285,
+    "REJECTED": 85
   },
-  "left_ankle_coverage": 0.7308,
-  "left_ear_coverage": 0.6282,
-  "left_elbow_coverage": 0.7244,
-  "left_eye_coverage": 0.2051,
-  "left_hip_coverage": 0.7372,
-  "left_knee_coverage": 0.7372,
-  "left_shoulder_coverage": 0.7372,
-  "left_wrist_coverage": 0.7179,
-  "nose_coverage": 0.6538,
-  "right_ankle_coverage": 0.7372,
-  "right_ear_coverage": 0.641,
-  "right_elbow_coverage": 0.7308,
-  "right_eye_coverage": 0.5769,
-  "right_hip_coverage": 0.7372,
-  "right_knee_coverage": 0.7372,
-  "right_shoulder_coverage": 0.7372,
-  "right_wrist_coverage": 0.7308,
-  "core_landmark_coverage": 0.7372,
-  "lower_limb_landmark_coverage": 0.7361,
+  "automatic_frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 5,
+    "TARGET_IDENTITY_UNCERTAIN": 45,
+    "TARGET_NOT_FOUND": 23,
+    "VALID_TARGET": 83
+  },
+  "manual_review_decision_counts": {
+    "EXCLUDED": 23,
+    "NOT_REVIEWED": 133
+  },
+  "manual_acceptance_override_frame_count": 0,
+  "manual_accepted_frame_count": 0,
+  "manual_accepted_usable_frame_count": 0,
+  "left_ankle_coverage": 0.5321,
+  "left_ear_coverage": 0.4872,
+  "left_elbow_coverage": 0.5321,
+  "left_eye_coverage": 0.1667,
+  "left_hip_coverage": 0.5321,
+  "left_knee_coverage": 0.5321,
+  "left_shoulder_coverage": 0.5321,
+  "left_wrist_coverage": 0.5192,
+  "nose_coverage": 0.4679,
+  "right_ankle_coverage": 0.5321,
+  "right_ear_coverage": 0.4487,
+  "right_elbow_coverage": 0.5321,
+  "right_eye_coverage": 0.4038,
+  "right_hip_coverage": 0.5321,
+  "right_knee_coverage": 0.5321,
+  "right_shoulder_coverage": 0.5321,
+  "right_wrist_coverage": 0.5321,
+  "core_landmark_coverage": 0.5321,
+  "lower_limb_landmark_coverage": 0.5321,
   "quality_config": {
     "landmark_confidence_threshold": 0.25,
     "frame_median_confidence_threshold": 0.35,
@@ -117,12 +121,15 @@
     "min_lower_limb_observed": 4,
     "temporal_jump_body_scale_multiplier": 0.55,
     "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
     "scale_jump_fraction": 0.55,
     "suspicious_padding_frames": 1,
     "min_valid_segment_frames": 5,
     "roi_centroid_padding_fraction": 0.15,
     "minimum_pose_roi_overlap_fraction": 0.45,
-    "overlap_jump_body_scale_multiplier": 0.35
+    "overlap_jump_body_scale_multiplier": 0.35,
+    "competing_pose_iou_threshold": 0.05,
+    "competing_pose_center_distance_fraction_threshold": 0.45
   },
   "processing_config": {
     "max_interpolation_gap_frames": 2,

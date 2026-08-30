@@ -1,0 +1,53 @@
+{
+  "case_id": "imported_carmen_menayo_2024_06_15_acl_candidate",
+  "source_id": "imported_carmen_menayo_2024_06_15_view_01",
+  "view_id": "imported_carmen_menayo_2024_06_15_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 26,
+  "target_tracking_coverage": 0.5143,
+  "pose_frame_coverage": 0.8,
+  "upper_body_landmark_coverage": 0.5143,
+  "core_landmark_coverage": 0.5143,
+  "lower_limb_landmark_coverage": 0.5143,
+  "geometry_feature_coverage": 0.5095238095238093,
+  "dynamic_feature_coverage": 0.5130718954248368,
+  "interpolation_fraction": 0.0269,
+  "rejected_fraction": 0.5143,
+  "identity_uncertainty_fraction": 0.14285714285714285,
+  "target_loss_fraction": 0.2,
+  "supported_feature_count": 33,
+  "limited_feature_count": 3,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 29,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "Feature value is unavailable.",
+    "Local trajectory residuals are high relative to local movement.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 33,
+    "limited_features": 3,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.5095238095238093,
+    "dynamic_coverage": 0.5130718954248368,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "Feature value is unavailable.",
+      "Local trajectory residuals are high relative to local movement.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 26,
+    "overall_quality_label": "MODERATE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.9166666666666666,
+      "limited_fraction": 0.08333333333333333,
+      "geometry_coverage": 0.5095238095238093,
+      "dynamic_coverage": 0.5130718954248368
+    }
+  }
+}

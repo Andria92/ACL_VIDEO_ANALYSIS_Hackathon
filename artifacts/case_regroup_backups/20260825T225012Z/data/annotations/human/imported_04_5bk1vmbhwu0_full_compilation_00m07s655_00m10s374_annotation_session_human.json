@@ -1,0 +1,219 @@
+{
+  "provenance": {
+    "annotation_session_id": "efc69e3e-8ff8-41f7-9cd2-0dce657f37ac",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T17:10:43.186359+00:00",
+    "updated_at": "2026-08-25T17:13:36.547797+00:00",
+    "case_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_acl_candidate",
+    "source_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_view_01",
+    "view_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_view_01",
+    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_2.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 15,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 12.857142857142858,
+        "y": 78.57142857142857,
+        "width": 474.28571428571433,
+        "height": 598.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 7,
+      "bbox": {
+        "x": 161.42857142857142,
+        "y": 78.57142857142857,
+        "width": 338.57142857142856,
+        "height": 611.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 13,
+      "bbox": {
+        "x": 185.71428571428572,
+        "y": 71.42857142857143,
+        "width": 361.4285714285714,
+        "height": 627.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 17,
+      "bbox": {
+        "x": 194.28571428571428,
+        "y": 64.28571428571429,
+        "width": 388.5714285714286,
+        "height": 618.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 21,
+      "bbox": {
+        "x": 232.85714285714286,
+        "y": 62.857142857142854,
+        "width": 420.0,
+        "height": 632.8571428571428
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 31,
+      "bbox": {
+        "x": 380.0,
+        "y": 64.28571428571429,
+        "width": 295.71428571428567,
+        "height": 630.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 35,
+      "bbox": {
+        "x": 387.14285714285717,
+        "y": 62.857142857142854,
+        "width": 371.4285714285714,
+        "height": 630.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 37,
+      "bbox": {
+        "x": 384.2857142857143,
+        "y": 62.857142857142854,
+        "width": 501.4285714285714,
+        "height": 641.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 41,
+      "bbox": {
+        "x": 501.42857142857144,
+        "y": 44.285714285714285,
+        "width": 397.1428571428571,
+        "height": 655.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 43,
+      "bbox": {
+        "x": 518.5714285714286,
+        "y": 41.42857142857143,
+        "width": 390.0,
+        "height": 658.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 522.8571428571429,
+        "y": 41.42857142857143,
+        "width": 387.1428571428571,
+        "height": 662.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 51,
+      "bbox": {
+        "x": 550.0,
+        "y": 42.857142857142854,
+        "width": 374.28571428571433,
+        "height": 661.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 55,
+      "bbox": {
+        "x": 592.8571428571429,
+        "y": 131.42857142857142,
+        "width": 365.71428571428567,
+        "height": 567.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 56,
+      "bbox": {
+        "x": 545.7142857142857,
+        "y": 41.42857142857143,
+        "width": 461.42857142857144,
+        "height": 675.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 65,
+      "bbox": {
+        "x": 487.14285714285717,
+        "y": 62.857142857142854,
+        "width": 475.7142857142857,
+        "height": 647.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 72,
+    "movement_end_timestamp_ms": 2400.0,
+    "movement_duration_ms": 2400.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_acl_candidate",
+    "source_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_view_01",
+    "view_id": "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 72,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 72,
+    "event_anchor_frame": 72,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

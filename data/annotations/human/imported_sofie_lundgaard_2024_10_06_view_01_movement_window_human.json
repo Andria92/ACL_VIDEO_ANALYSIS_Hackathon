@@ -1,0 +1,45 @@
+{
+  "provenance": {
+    "annotation_session_id": "cda0e473-913f-49a7-9380-a91b10f818cc",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T11:03:38.077285+00:00",
+    "updated_at": "2026-08-29T11:05:15.206709+00:00",
+    "case_id": "imported_sofie_lundgaard_2024_10_06_acl_candidate",
+    "source_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+    "view_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/youtube_ddZEEcHaaIU_32m41s929_32m45s763.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_sofie_lundgaard_2024_10_06_acl_candidate",
+  "source_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+  "view_id": "imported_sofie_lundgaard_2024_10_06_view_01",
+  "manual_roi_keyframe_count": 19,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 3,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 0,
+      "end_frame": 2,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 83,
+    "movement_end_timestamp_ms": 2766.6666666666665,
+    "movement_duration_ms": 2766.6666666666665,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

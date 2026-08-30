@@ -1,0 +1,411 @@
+{
+  "provenance": {
+    "annotation_session_id": "f38fa2b9-5bd2-4a1f-8d36-b4afde778309",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-27T18:45:50.628193+00:00",
+    "updated_at": "2026-08-27T18:52:06.911901+00:00",
+    "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+    "source_id": "imported_caroline_wier_2023_09_26_view_01",
+    "view_id": "imported_caroline_wier_2023_09_26_view_01",
+    "video_path": "data/videos/analysis_clips/YTDown.com_YouTube_Scotland-v-Belgium-Uefa-Women-s-Nations-_Media_zUVLcmUHYAs_001_720p_29m49s105_29m52s885.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 30,
+  "roi_keyframes": [
+    {
+      "frame_index": 9,
+      "bbox": {
+        "x": 343.57142857142856,
+        "y": 144.28571428571428,
+        "width": 282.8571428571429,
+        "height": 442.85714285714283
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 14,
+      "bbox": {
+        "x": 386.42857142857144,
+        "y": 132.85714285714286,
+        "width": 294.2857142857142,
+        "height": 452.8571428571428
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 429.2857142857143,
+        "y": 131.42857142857142,
+        "width": 352.85714285714283,
+        "height": 495.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 21,
+      "bbox": {
+        "x": 519.2857142857143,
+        "y": 121.42857142857143,
+        "width": 301.42857142857133,
+        "height": 484.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 563.5714285714286,
+        "y": 127.14285714285714,
+        "width": 302.8571428571429,
+        "height": 501.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 44,
+      "bbox": {
+        "x": 595.0,
+        "y": 122.85714285714286,
+        "width": 242.8571428571429,
+        "height": 524.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 553.5714285714286,
+        "y": 158.57142857142858,
+        "width": 254.28571428571433,
+        "height": 478.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 51,
+      "bbox": {
+        "x": 490.7142857142857,
+        "y": 174.28571428571428,
+        "width": 274.2857142857143,
+        "height": 440.00000000000006
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 61,
+      "bbox": {
+        "x": 506.42857142857144,
+        "y": 304.2857142857143,
+        "width": 205.71428571428567,
+        "height": 325.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 75,
+      "bbox": {
+        "x": 565.0,
+        "y": 148.28569684709822,
+        "width": 175.71428571428567,
+        "height": 488.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 78,
+      "bbox": {
+        "x": 546.4285714285714,
+        "y": 158.2857186453683,
+        "width": 217.1428571428571,
+        "height": 487.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 80,
+      "bbox": {
+        "x": 500.7142857142857,
+        "y": 151.42857142857142,
+        "width": 234.28571428571428,
+        "height": 481.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 82,
+      "bbox": {
+        "x": 532.1428571428571,
+        "y": 156.85714721679688,
+        "width": 194.28571428571433,
+        "height": 484.28571428571433
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 85,
+      "bbox": {
+        "x": 525.0,
+        "y": 152.85714285714286,
+        "width": 195.71428571428567,
+        "height": 482.8571428571428
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 87,
+      "bbox": {
+        "x": 549.2857142857143,
+        "y": 152.5714329310826,
+        "width": 167.1428571428571,
+        "height": 499.99999999999994
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 90,
+      "bbox": {
+        "x": 519.2857142857143,
+        "y": 174.000004359654,
+        "width": 221.42857142857133,
+        "height": 471.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 95,
+      "bbox": {
+        "x": 462.14285714285717,
+        "y": 169.71429007393974,
+        "width": 298.5714285714285,
+        "height": 490.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 98,
+      "bbox": {
+        "x": 435.0,
+        "y": 202.5714329310826,
+        "width": 332.8571428571429,
+        "height": 427.14285714285717
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 105,
+      "bbox": {
+        "x": 393.57142857142856,
+        "y": 157.14285714285714,
+        "width": 380.0,
+        "height": 495.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 108,
+      "bbox": {
+        "x": 406.42857142857144,
+        "y": 188.2857186453683,
+        "width": 275.71428571428567,
+        "height": 458.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 111,
+      "bbox": {
+        "x": 396.42857142857144,
+        "y": 199.71429007393974,
+        "width": 301.42857142857144,
+        "height": 488.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 115,
+      "bbox": {
+        "x": 357.85714285714283,
+        "y": 164.28571428571428,
+        "width": 348.5714285714286,
+        "height": 514.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 117,
+      "bbox": {
+        "x": 363.57142857142856,
+        "y": 194.000004359654,
+        "width": 255.71428571428578,
+        "height": 485.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 120,
+      "bbox": {
+        "x": 310.7142857142857,
+        "y": 162.85714285714286,
+        "width": 305.7142857142857,
+        "height": 500.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 127,
+      "bbox": {
+        "x": 300.7142857142857,
+        "y": 161.42857142857142,
+        "width": 271.4285714285714,
+        "height": 532.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 137,
+      "bbox": {
+        "x": 262.14285714285717,
+        "y": 147.14285714285714,
+        "width": 278.5714285714285,
+        "height": 534.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 142,
+      "bbox": {
+        "x": 223.57142857142858,
+        "y": 144.28571428571428,
+        "width": 281.42857142857144,
+        "height": 540.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 152,
+      "bbox": {
+        "x": 139.28571428571428,
+        "y": 110.0,
+        "width": 291.42857142857144,
+        "height": 574.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 164,
+      "bbox": {
+        "x": 90.71428571428571,
+        "y": 95.71428571428571,
+        "width": 257.1428571428571,
+        "height": 585.7142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 169,
+      "bbox": {
+        "x": 49.285714285714285,
+        "y": 130.0,
+        "width": 242.8571428571429,
+        "height": 550.0
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 15,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 23,
+      "end_frame": 25,
+      "frame_count": 3,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 47,
+      "end_frame": 56,
+      "frame_count": 10,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 74,
+      "end_frame": 75,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 9,
+    "movement_start_timestamp_ms": 180.0,
+    "movement_end_frame": 169,
+    "movement_end_timestamp_ms": 3380.0,
+    "movement_duration_ms": 3200.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_caroline_wier_2023_09_26_acl_candidate",
+    "source_id": "imported_caroline_wier_2023_09_26_view_01",
+    "view_id": "imported_caroline_wier_2023_09_26_view_01",
+    "analysis_start_frame": 9,
+    "analysis_end_frame": 169,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 169,
+    "event_anchor_frame": 169,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

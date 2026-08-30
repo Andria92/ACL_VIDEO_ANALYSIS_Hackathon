@@ -1,0 +1,43 @@
+{
+  "provenance": {
+    "annotation_session_id": "4184163f-66bb-4ddf-9c50-64cbb901e596",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-25T19:04:52.671623+00:00",
+    "updated_at": "2026-08-25T19:04:53.437158+00:00",
+    "case_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_acl_candidate",
+    "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+    "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+    "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_acl_candidate",
+  "source_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+  "view_id": "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_view_01",
+  "manual_roi_keyframe_count": 9,
+  "manual_target_unavailable_frame_count": 16,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 34,
+      "end_frame": 49,
+      "frame_count": 16,
+      "reason": "TARGET_PARTIALLY_OCCLUDED",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 9,
+    "movement_start_timestamp_ms": 300.0,
+    "movement_end_frame": 50,
+    "movement_end_timestamp_ms": 1666.6666666666667,
+    "movement_duration_ms": 1366.6666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

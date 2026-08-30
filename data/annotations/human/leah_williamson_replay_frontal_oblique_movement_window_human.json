@@ -1,0 +1,30 @@
+{
+  "provenance": {
+    "annotation_session_id": "97787e5f-313f-420e-9512-85b4155eef5e",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-20T10:39:10.184908+00:00",
+    "updated_at": "2026-08-20T13:03:33.772823+00:00",
+    "case_id": "leah_williamson_acl",
+    "source_id": "leah_williamson_replay_frontal_oblique_03",
+    "view_id": "leah_williamson_replay_frontal_oblique_03",
+    "video_path": "data/videos/analysis_clips/10_leah_williamson_TygjH39bmfU_00m48s869_00m52s235.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "leah_williamson_acl",
+  "source_id": "leah_williamson_replay_frontal_oblique_03",
+  "view_id": "leah_williamson_replay_frontal_oblique_03",
+  "manual_roi_keyframe_count": 14,
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 56,
+    "movement_end_timestamp_ms": 1866.6666666666667,
+    "movement_duration_ms": 1866.6666666666667,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "notes": ""
+}

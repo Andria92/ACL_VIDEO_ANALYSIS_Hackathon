@@ -1,0 +1,19 @@
+{
+  "run_id": "imported_grace_wisnewski_2023_11_04_acl_candidate_m3_20260828T083418Z",
+  "generated_at": "2026-08-28T08:34:18.907745+00:00",
+  "case_id": "imported_grace_wisnewski_2023_11_04_acl_candidate",
+  "source_id": "imported_grace_wisnewski_2023_11_04_view_01",
+  "processed_pose_input": "data/processed/human/imported_grace_wisnewski_2023_11_04_view_01_processed_pose.parquet",
+  "pose_backend": "yolo",
+  "pose_model": "Ultralytics YOLO pose",
+  "geometry_version": "m3_geometry_primitives_v1",
+  "feature_set_version": "m3_projected_geometry_core_v1",
+  "injured_side": "left",
+  "normalisation_method": "median_torso_length_valid_processed_frames",
+  "normalisation_reference": {
+    "normalisation_method": "median_torso_length_valid_processed_frames",
+    "reference_value_px": NaN,
+    "frames_used_for_reference": [],
+    "frames_used_count": 0
+  }
+}

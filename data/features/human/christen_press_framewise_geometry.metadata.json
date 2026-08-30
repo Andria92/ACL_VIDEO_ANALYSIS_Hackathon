@@ -1,6 +1,6 @@
 {
-  "run_id": "christen_press_acl_m3_20260816T185926Z",
-  "generated_at": "2026-08-16T18:59:26.550899+00:00",
+  "run_id": "christen_press_acl_m3_20260827T215434Z",
+  "generated_at": "2026-08-27T21:54:34.154976+00:00",
   "case_id": "christen_press_acl",
   "source_id": "christen_press_view_01",
   "processed_pose_input": "data/processed/human/christen_press_processed_pose.parquet",
@@ -12,7 +12,7 @@
   "normalisation_method": "median_torso_length_valid_processed_frames",
   "normalisation_reference": {
     "normalisation_method": "median_torso_length_valid_processed_frames",
-    "reference_value_px": 141.27915307086545,
+    "reference_value_px": 142.23658979668997,
     "frames_used_for_reference": [
       0,
       1,
@@ -96,40 +96,8 @@
       79,
       80,
       81,
-      82,
-      83,
-      84,
-      85,
-      86,
-      87,
-      88,
-      89,
-      90,
-      91,
-      92,
-      93,
-      94,
-      95,
-      96,
-      100,
-      101,
-      102,
-      103,
-      104,
-      105,
-      106,
-      107,
-      108,
-      116,
-      117,
-      130,
-      131,
-      132,
-      133,
-      134,
-      135,
-      136
+      82
     ],
-    "frames_used_count": 115
+    "frames_used_count": 83
   }
 }

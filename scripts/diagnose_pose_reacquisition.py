@@ -124,7 +124,7 @@ def main() -> int:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--video", default="/Users/andriagryffinpro/Desktop/injury_videos/02_YvnMYc6OdT8_160s-166s.mp4")
+    parser.add_argument("--video", default="data/videos/analysis_clips/02_YvnMYc6OdT8_160s-166s.mp4")
     parser.add_argument("--model-path", default="data/models/yolov8n-pose.pt")
     parser.add_argument("--raw-pose", default="data/pose/human/christen_press_raw_pose.parquet")
     parser.add_argument("--frame-quality", default="data/quality/human/christen_press_frame_quality.csv")

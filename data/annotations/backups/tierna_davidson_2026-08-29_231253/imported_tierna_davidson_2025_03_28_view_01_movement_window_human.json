@@ -1,0 +1,36 @@
+{
+  "provenance": {
+    "annotation_session_id": "7ddf5d7f-a368-43d0-9444-1714b63c323a",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-29T20:12:36.673983+00:00",
+    "updated_at": "2026-08-29T20:12:53.002658+00:00",
+    "case_id": "imported_tierna_davidson_2025_03_28_acl_candidate",
+    "source_id": "imported_tierna_davidson_2025_03_28_view_01",
+    "view_id": "imported_tierna_davidson_2025_03_28_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Houston Dash vs. Gotham FC - Replay _779099__53m09s591_53m17s026.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "case_id": "imported_tierna_davidson_2025_03_28_acl_candidate",
+  "source_id": "imported_tierna_davidson_2025_03_28_view_01",
+  "view_id": "imported_tierna_davidson_2025_03_28_view_01",
+  "manual_roi_keyframe_count": 15,
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 0,
+  "target_accepted_intervals": [],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 187,
+    "movement_end_timestamp_ms": 6233.333333333333,
+    "movement_duration_ms": 6233.333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "notes": ""
+}

@@ -1,0 +1,48 @@
+{
+  "run_metadata": {
+    "run_id": "imported_grace_wisnewski_2023_11_04_acl_candidate_m4_1_20260828T083421Z",
+    "generated_at": "2026-08-28T08:34:21.467751+00:00",
+    "case_id": "imported_grace_wisnewski_2023_11_04_acl_candidate",
+    "source_id": "imported_grace_wisnewski_2023_11_04_view_01",
+    "view_id": "imported_grace_wisnewski_2023_11_04_view_01",
+    "event_annotation_file": "data/annotations/human/imported_grace_wisnewski_2023_11_04_view_01_event_annotation_human.json",
+    "event_features_file": "data/events/human/imported_grace_wisnewski_2023_11_04_view_01_movement_relative_features.parquet",
+    "dynamic_reliability_version": "m4_1_dynamic_reliability_v1",
+    "robust_dynamic_method": "local_linear_regression_slope",
+    "robust_dynamic_parameters": {
+      "half_window_samples": 2,
+      "minimum_samples": 3,
+      "temporal_outlier_residual_ratio": 1.25,
+      "low_confidence_residual_ratio": 0.75,
+      "reversal_rate_multiplier": 2.5,
+      "epsilon": 1e-09
+    },
+    "dynamic_qc_basis": "local trajectory residuals and simple reversal checks; no biological rate ceiling"
+  },
+  "total_eligible_dynamic_samples": 0,
+  "raw_supported_dynamic_samples": 0,
+  "supported_robust_dynamic_samples": 0,
+  "raw_dynamic_completeness": 0.0,
+  "robust_dynamic_completeness": 0.0,
+  "dynamic_status_counts": {
+    "MISSING_FEATURE": 800,
+    "NOT_DYNAMIC_FEATURE": 100
+  },
+  "raw_dynamic_status_counts": {
+    "NOT_DYNAMIC_FEATURE": 100,
+    "UNSUPPORTED_FEATURE": 800
+  },
+  "dynamic_quality_counts": {
+    "NOT_APPLICABLE": 100,
+    "UNAVAILABLE": 800
+  },
+  "top_raw_rate": null,
+  "top_robust_supported_rate": null,
+  "feature_dynamic_coverage": {},
+  "features_with_strongest_dynamic_coverage": [],
+  "features_with_weakest_dynamic_coverage": [],
+  "main_dynamic_rejection_reasons": {
+    "Feature is not configured for dynamic analysis.": 100,
+    "Feature value is unavailable.": 800
+  }
+}

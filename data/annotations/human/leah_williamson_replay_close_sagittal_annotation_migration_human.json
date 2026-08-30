@@ -1,0 +1,10 @@
+{
+  "migrated_at": "2026-08-20T13:35:27.892507+00:00",
+  "source_slug": "imported_10_leah_williamson_tygjh39bmfu_01m33s519_01m37s685",
+  "target_slug": "leah_williamson_replay_close_sagittal",
+  "source_annotation_session_id": "50433b9a-d9eb-41f0-be55-598adb9a4507",
+  "source_video_sha256": "60d78b0fb7a64bd63717423052445a141aa9eac59f24933bd31c1e3f0c376f75",
+  "target_video_sha256": "60d78b0fb7a64bd63717423052445a141aa9eac59f24933bd31c1e3f0c376f75",
+  "reason": "Imported and canonical sagittal clips are byte-identical; human annotation reassigned to canonical Leah multi-view record.",
+  "original_files_preserved": true
+}

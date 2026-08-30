@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "christen_press_acl",
+  "source_id": "christen_press_view_01",
+  "view_id": "christen_press_view_01",
+  "case_slug": "christen_press",
+  "decision": "no",
+  "visible_event_in_supported_phase_interval": false,
+  "eligible_for_injury_event_comparison": false,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-08-29T22:46:20.568847+00:00",
+  "phase_status": "SUPPORTED_PARTIAL_WINDOW",
+  "phase_count": 3,
+  "supported_interval": {
+    "start_frame": 0,
+    "end_frame": 82
+  },
+  "movement_phases_sha256": "889553bd4ae5e32d254161f82e213759e64fa070d5cd69a1948889fae7406357"
+}

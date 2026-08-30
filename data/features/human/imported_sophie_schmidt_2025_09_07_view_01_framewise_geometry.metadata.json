@@ -1,0 +1,32 @@
+{
+  "run_id": "imported_sophie_schmidt_2025_09_07_acl_candidate_m3_20260830T095154Z",
+  "generated_at": "2026-08-30T09:51:54.190518+00:00",
+  "case_id": "imported_sophie_schmidt_2025_09_07_acl_candidate",
+  "source_id": "imported_sophie_schmidt_2025_09_07_view_01",
+  "processed_pose_input": "data/processed/human/imported_sophie_schmidt_2025_09_07_view_01_processed_pose.parquet",
+  "pose_backend": "yolo",
+  "pose_model": "Ultralytics YOLO pose",
+  "geometry_version": "m3_geometry_primitives_v1",
+  "feature_set_version": "m3_projected_geometry_core_v1",
+  "injured_side": "left",
+  "normalisation_method": "median_torso_length_valid_processed_frames",
+  "normalisation_reference": {
+    "normalisation_method": "median_torso_length_valid_processed_frames",
+    "reference_value_px": 155.80798262522927,
+    "frames_used_for_reference": [
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77,
+      78,
+      79,
+      80
+    ],
+    "frames_used_count": 12
+  }
+}

@@ -36,7 +36,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", default="data/annotations/human")
     parser.add_argument(
         "--video-root",
-        default="/Users/andriagryffinpro/Desktop/injury_videos",
+        default="data/videos/analysis_clips",
         help="Local directory containing registered validation clips.",
     )
     parser.add_argument(

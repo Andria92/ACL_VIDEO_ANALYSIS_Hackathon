@@ -1,0 +1,143 @@
+{
+  "total_frames": 62,
+  "target_tracking_coverage": 0.0968,
+  "pose_frame_coverage": 0.871,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 13,
+    "LOW_POSE_CONFIDENCE": 1,
+    "TARGET_IDENTITY_UNCERTAIN": 34,
+    "TARGET_NOT_FOUND": 8,
+    "VALID_TARGET": 6
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 30,
+      "end_frame": 30
+    }
+  ],
+  "target_loss_intervals": [
+    {
+      "start_frame": 48,
+      "end_frame": 55
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 8,
+      "end_frame": 19
+    },
+    {
+      "start_frame": 24,
+      "end_frame": 24
+    },
+    {
+      "start_frame": 26,
+      "end_frame": 27
+    },
+    {
+      "start_frame": 31,
+      "end_frame": 33
+    },
+    {
+      "start_frame": 35,
+      "end_frame": 35
+    },
+    {
+      "start_frame": 37,
+      "end_frame": 37
+    },
+    {
+      "start_frame": 42,
+      "end_frame": 47
+    },
+    {
+      "start_frame": 56,
+      "end_frame": 63
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 2,
+      "end_frame": 7,
+      "frame_count": 6
+    }
+  ],
+  "interpolated_frame_fraction": 0.0,
+  "rejected_frame_fraction": 1.0,
+  "interpolated_landmark_row_fraction": 0.0,
+  "rejected_landmark_row_fraction": 0.9013,
+  "processing_status_counts": {
+    "MISSING": 136,
+    "RAW_VALID": 8,
+    "REJECTED_IDENTITY_UNCERTAIN": 578,
+    "REJECTED_INVALID_TRACK_SEGMENT": 221,
+    "REJECTED_LOW_CONFIDENCE": 15,
+    "SMOOTHED": 96
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 578,
+    "LOW_CONFIDENCE": 15,
+    "MISSING": 136,
+    "OBSERVED_VALID": 104,
+    "REJECTED": 221
+  },
+  "automatic_frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 13,
+    "LOW_POSE_CONFIDENCE": 1,
+    "TARGET_IDENTITY_UNCERTAIN": 34,
+    "TARGET_NOT_FOUND": 8,
+    "VALID_TARGET": 6
+  },
+  "manual_review_decision_counts": {
+    "EXCLUDED": 8,
+    "NOT_REVIEWED": 54
+  },
+  "manual_acceptance_override_frame_count": 0,
+  "manual_accepted_frame_count": 0,
+  "manual_accepted_usable_frame_count": 0,
+  "left_ankle_coverage": 0.1129,
+  "left_ear_coverage": 0.0968,
+  "left_elbow_coverage": 0.0968,
+  "left_eye_coverage": 0.0968,
+  "left_hip_coverage": 0.1129,
+  "left_knee_coverage": 0.1129,
+  "left_shoulder_coverage": 0.0968,
+  "left_wrist_coverage": 0.1129,
+  "nose_coverage": 0.0968,
+  "right_ankle_coverage": 0.1129,
+  "right_ear_coverage": 0.0,
+  "right_elbow_coverage": 0.0968,
+  "right_eye_coverage": 0.0968,
+  "right_hip_coverage": 0.1129,
+  "right_knee_coverage": 0.1129,
+  "right_shoulder_coverage": 0.0968,
+  "right_wrist_coverage": 0.1129,
+  "core_landmark_coverage": 0.1048,
+  "lower_limb_landmark_coverage": 0.1129,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35,
+    "competing_pose_iou_threshold": 0.05,
+    "competing_pose_center_distance_fraction_threshold": 0.45
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_jordan_nobbs_everton_injury_gz23btdm4ve_00m32s314_00m34s562_raw_pose.parquet"
+}

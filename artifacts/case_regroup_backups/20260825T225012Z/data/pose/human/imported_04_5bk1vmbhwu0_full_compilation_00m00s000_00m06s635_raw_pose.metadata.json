@@ -1,0 +1,173 @@
+{
+  "run_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_view_01_20260825T131413Z",
+  "timestamp_utc": "2026-08-25T13:14:13.931887+00:00",
+  "case_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_acl_candidate",
+  "source_id": "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_view_01",
+  "pose_backend": "yolo",
+  "model_name": "Ultralytics YOLO pose",
+  "model_path": "data/models/yolov8n-pose.pt",
+  "video_path": "/Users/andriagryffinpro/Desktop/injury_videos/04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_2.mp4",
+  "fps": 30.0,
+  "width": 1280,
+  "height": 720,
+  "frame_count_video": 200,
+  "frame_count_processed": 168,
+  "landmark_row_count": 2856,
+  "start_frame": 0,
+  "end_frame": 167,
+  "every_n": 1,
+  "roi": null,
+  "roi_keyframes": "data/annotations/human/imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_target_roi_human.csv",
+  "roi_keyframe_count": 19,
+  "roi_keyframe_records": [
+    {
+      "frame_index": 0,
+      "x": 795.7142857142857,
+      "y": 328.57142857142856,
+      "width": 248.57142857142856,
+      "height": 315.7142857142858
+    },
+    {
+      "frame_index": 11,
+      "x": 897.1428571428571,
+      "y": 324.2857142857143,
+      "width": 228.57142857142867,
+      "height": 334.2857142857143
+    },
+    {
+      "frame_index": 27,
+      "x": 958.5714285714286,
+      "y": 321.42857142857144,
+      "width": 251.42857142857144,
+      "height": 348.57142857142856
+    },
+    {
+      "frame_index": 50,
+      "x": 951.4285714285714,
+      "y": 284.2857142857143,
+      "width": 268.57142857142856,
+      "height": 392.85714285714283
+    },
+    {
+      "frame_index": 53,
+      "x": 881.4285714285714,
+      "y": 271.42857142857144,
+      "width": 308.57142857142856,
+      "height": 402.8571428571429
+    },
+    {
+      "frame_index": 62,
+      "x": 797.1428571428571,
+      "y": 255.71428571428572,
+      "width": 390.0,
+      "height": 425.7142857142857
+    },
+    {
+      "frame_index": 72,
+      "x": 780.0,
+      "y": 221.42857142857142,
+      "width": 288.57142857142867,
+      "height": 462.8571428571429
+    },
+    {
+      "frame_index": 112,
+      "x": 671.4285714285714,
+      "y": 158.57142857142858,
+      "width": 344.2857142857142,
+      "height": 492.8571428571429
+    },
+    {
+      "frame_index": 115,
+      "x": 691.4285714285714,
+      "y": 154.28571428571428,
+      "width": 308.57142857142856,
+      "height": 460.00000000000006
+    },
+    {
+      "frame_index": 117,
+      "x": 715.7142857142857,
+      "y": 152.85714285714286,
+      "width": 240.0,
+      "height": 462.8571428571428
+    },
+    {
+      "frame_index": 120,
+      "x": 727.1428571428571,
+      "y": 147.14285714285714,
+      "width": 241.42857142857144,
+      "height": 481.42857142857144
+    },
+    {
+      "frame_index": 123,
+      "x": 734.2857142857143,
+      "y": 150.0,
+      "width": 224.28571428571422,
+      "height": 480.0
+    },
+    {
+      "frame_index": 125,
+      "x": 744.2857142857143,
+      "y": 140.0,
+      "width": 238.57142857142856,
+      "height": 488.57142857142856
+    },
+    {
+      "frame_index": 131,
+      "x": 754.2857142857143,
+      "y": 142.85714285714286,
+      "width": 195.71428571428567,
+      "height": 480.0
+    },
+    {
+      "frame_index": 154,
+      "x": 645.7142857142857,
+      "y": 201.42857142857142,
+      "width": 152.8571428571429,
+      "height": 410.0
+    },
+    {
+      "frame_index": 158,
+      "x": 628.5714285714286,
+      "y": 197.14285714285714,
+      "width": 220.0,
+      "height": 404.28571428571433
+    },
+    {
+      "frame_index": 161,
+      "x": 645.7142857142857,
+      "y": 228.57142857142858,
+      "width": 224.28571428571433,
+      "height": 370.0
+    },
+    {
+      "frame_index": 164,
+      "x": 665.7142857142857,
+      "y": 248.57142857142858,
+      "width": 214.28571428571433,
+      "height": 361.42857142857144
+    },
+    {
+      "frame_index": 167,
+      "x": 675.7142857142857,
+      "y": 254.28571428571428,
+      "width": 211.42857142857144,
+      "height": 335.7142857142857
+    }
+  ],
+  "human_annotation_session": "data/annotations/human/imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_annotation_session_human.json",
+  "human_target_unavailable_interval_count": 1,
+  "human_target_unavailable_frame_count": 19,
+  "human_target_unavailable_intervals": [
+    {
+      "start_frame": 134,
+      "end_frame": 152,
+      "frame_count": 19,
+      "reason": "TARGET_PARTIALLY_OCCLUDED",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "roi_pad": 0.2,
+  "yolo_selection_strategy": "center",
+  "notes": "Raw pose extraction only. Manual ROI keyframe records are preserved unchanged; roi_pad records the symmetric context margin applied only to the pose crop. No biomechanical interpretation."
+}

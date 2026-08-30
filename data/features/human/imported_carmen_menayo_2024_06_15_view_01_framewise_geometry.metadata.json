@@ -1,0 +1,38 @@
+{
+  "run_id": "imported_carmen_menayo_2024_06_15_acl_candidate_m3_20260827T233034Z",
+  "generated_at": "2026-08-27T23:30:34.829942+00:00",
+  "case_id": "imported_carmen_menayo_2024_06_15_acl_candidate",
+  "source_id": "imported_carmen_menayo_2024_06_15_view_01",
+  "processed_pose_input": "data/processed/human/imported_carmen_menayo_2024_06_15_view_01_processed_pose.parquet",
+  "pose_backend": "yolo",
+  "pose_model": "Ultralytics YOLO pose",
+  "geometry_version": "m3_geometry_primitives_v1",
+  "feature_set_version": "m3_projected_geometry_core_v1",
+  "injured_side": "right",
+  "normalisation_method": "median_torso_length_valid_processed_frames",
+  "normalisation_reference": {
+    "normalisation_method": "median_torso_length_valid_processed_frames",
+    "reference_value_px": 55.96401360284061,
+    "frames_used_for_reference": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26
+    ],
+    "frames_used_count": 18
+  }
+}

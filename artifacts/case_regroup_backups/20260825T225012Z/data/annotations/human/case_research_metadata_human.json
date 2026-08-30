@@ -1,0 +1,130 @@
+{
+  "metadata_version": "case_research_metadata_v2",
+  "cases": {
+    "imported_screen_recording_2026_08_22_at_3_26_40_pm_00m08s281_00m11s236_acl_candidate": {
+      "player_name": "Screen Recording 2026-08-22 at 3.26.40 PM 00m08s281 00m11s236",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-24T11:33:29.093482+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    },
+    "christen_press_acl": {
+      "player_name": "Christen Press",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-24T22:59:23.831855+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    },
+    "imported_04_5bk1vmbhwu0_full_compilation_00m00s000_00m06s635_acl_candidate": {
+      "player_name": "Beth Mead",
+      "injury_date": "",
+      "competition": "",
+      "team": "Arsenal",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-25T14:06:44.347914+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01",
+        "team": "human_operator_annotation_ui:researcher_01"
+      },
+      "opponent": ""
+    },
+    "jordan_nobbs_acl": {
+      "statistical_unit_id": "jordan_nobbs_acl",
+      "player_name": "Jordan Nobbs",
+      "contact_mechanism": "unknown",
+      "contact_mechanism_source": ""
+    },
+    "imported_04_5bk1vmbhwu0_full_compilation_00m07s655_00m10s374_acl_candidate": {
+      "player_name": "04 5BK1vmbhWu0 full compilation 00m07s655 00m10s374",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "opponent": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-25T17:13:36.554434+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    },
+    "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m03s351_00m06s647_acl_candidate": {
+      "player_name": "Delphine Cascarino Out Of World Cup Injury vs PSG 21 5 23 00m03s351 00m06s647",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "opponent": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-25T19:00:02.146947+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    },
+    "imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_acl_candidate": {
+      "player_name": "Delphine Cascarino Out Of World Cup Injury vs PSG 21 5 23 00m07s579 00m09s769",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "opponent": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-25T19:04:53.447620+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    },
+    "imported_chloe_kelly_acl_00m34s693_00m40s216_acl_candidate": {
+      "player_name": "Chloe Kelly ACL 00m34s693 00m40s216",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "opponent": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-25T22:18:55.089906+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    },
+    "imported_chloe_kelly_acl_00m47s150_00m52s168_acl_candidate": {
+      "player_name": "Chloe Kelly ACL 00m47s150 00m52s168",
+      "injury_date": "",
+      "competition": "",
+      "team": "",
+      "opponent": "",
+      "position_group": "unknown",
+      "match_minute": "",
+      "date_of_birth": "",
+      "metadata_source": "human_operator_annotation_ui:researcher_01",
+      "updated_at": "2026-08-25T22:25:05.330050+00:00",
+      "field_provenance": {
+        "player_name": "human_operator_annotation_ui:researcher_01"
+      }
+    }
+  }
+}

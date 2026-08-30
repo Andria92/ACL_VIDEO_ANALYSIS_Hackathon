@@ -1,0 +1,1383 @@
+{
+  "schema_version": "acl_mechanism_evidence_v1",
+  "reviewed_at": "2026-08-31",
+  "review_standard": "Mechanism labels require explicit wording, a detailed incident description, or reviewable injury footage with adequate visibility from a reputable source. A report of a challenge, collision, tackle, or ACL diagnosis alone is not treated as proof of direct or indirect contact. Earlier contact is classified as indirect only when it remains mechanically linked to the apparent injury action; contact followed by restored independent movement does not automatically convert a later unsupported action into indirect contact. Footage-based labels are marked as supported interpretations rather than explicit source labels, and uncertainty is retained when the injured knee or injury timing is obscured.",
+  "methodology": {
+    "title": "Systematic video analysis of ACL injuries in professional Spanish male football (soccer): injury mechanisms, situational patterns, biomechanics and neurocognitive errors",
+    "publisher": "BMJ Open Sport & Exercise Medicine / PubMed Central",
+    "published_date": "2024",
+    "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11440205/",
+    "definitions": {
+      "non_contact": "No external contact is mechanically linked to the injury frame. Earlier contact followed by restored independent movement does not by itself disqualify a later action from this category.",
+      "indirect_contact": "External contact or force not directly to the injured knee remains mechanically linked to the injury action.",
+      "direct_contact": "External force was applied directly to the injured knee.",
+      "unclear": "The available source does not resolve whether contact occurred or where it was applied. This includes contact-unspecified reports."
+    }
+  },
+  "cases": {
+    "beth_mead_acl": {
+      "canonical_player_name": "Beth Mead",
+      "injury_date": "2022-11-19",
+      "previous_classification": "direct_contact",
+      "classification": "indirect_contact",
+      "confidence": "high",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "player_account_plus_official_footage",
+      "change_status": "changed",
+      "rationale": "Mead's own account says she planted and was nudged in another direction. Arsenal's documentary footage shows the perturbation at her upper body while the right leg is planted, without a direct blow to the right knee. This supports indirect contact; the taxonomy term is the reviewers' interpretation, not Mead's wording.",
+      "sources": [
+        {
+          "title": "Beth Mead: The people who understand ACL injuries are the players who have gone through it",
+          "publisher": "FIFPRO",
+          "published_date": "2024-09-11",
+          "url": "https://www.fifpro.org/en/articles/2024/09/beth-mead-the-people-who-understand-acl-injuries-are-the-players-who-have-gone-through-it",
+          "source_type": "player_interview",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Mead says the 93rd-minute injury happened with contact while she tried to keep the ball in play."
+        },
+        {
+          "title": "STEP BY STEP | Vivianne Miedema & Beth Mead | Football Was My Happy Place | Episode One",
+          "publisher": "Arsenal",
+          "published_date": "2023-12-19",
+          "url": "https://www.youtube.com/watch?v=vxHrH2nCqR8",
+          "source_type": "official_club_documentary",
+          "evidence_form": "player_account_plus_frame_review",
+          "evidence": "At approximately 5:15, Mead explains that she planted and was nudged in a different direction. The replay shows contact at the upper body rather than a direct force to the planted right knee."
+        }
+      ]
+    },
+    "case_01_acl_candidate": {
+      "canonical_player_name": "Vivianne Miedema",
+      "injury_date": "2022-12-15",
+      "previous_classification": "non_contact",
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "unchanged",
+      "rationale": "A detailed report describes a missed attempt at a loose ball followed by an awkward landing and knee twist, with no opponent contact in the reported injury sequence. The source does not itself use the taxonomy label, so this remains an interpretation.",
+      "sources": [
+        {
+          "title": "Miedema stretchered off in tears amid ACL injury fears during Arsenal's Champions League clash against Lyon",
+          "publisher": "Goal",
+          "published_date": "2022-12-15",
+          "url": "https://www.goal.com/en-za/news/miedema-stretchered-off-tears-injury-arsenal-champions-league-lyon/bltbcfafd01b277e015",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Miedema missed the loose ball, landed awkwardly on her foot, and appeared to twist her knee; the described sequence contains no opponent contact."
+        }
+      ]
+    },
+    "leah_williamson_acl": {
+      "canonical_player_name": "Leah Williamson",
+      "injury_date": "2023-04-19",
+      "previous_classification": "non_contact",
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "unchanged",
+      "rationale": "The report attributes the incident to Williamson catching her studs in the turf and collapsing. No player contact is described, but the report does not explicitly call the mechanism non-contact.",
+      "sources": [
+        {
+          "title": "Leah Williamson sparks England fears after knee injury in WSL showdown",
+          "publisher": "The Guardian",
+          "published_date": "2023-04-19",
+          "url": "https://www.theguardian.com/football/2023/apr/19/leah-williamson-injured-arsenal-england-wsl-manchester-united",
+          "source_type": "match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Williamson appeared to catch her studs in the turf before collapsing with the knee injury."
+        }
+      ]
+    },
+    "jordan_nobbs_acl": {
+      "canonical_player_name": "Jordan Nobbs",
+      "injury_date": "2018-11-18",
+      "previous_classification": "direct_contact",
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "project_reviewer_footage_review_plus_contemporary_reports",
+      "change_status": "changed",
+      "rationale": "Contemporary reporting and Nobbs's federation profile establish that a challenge immediately preceded the injury. After reviewing the stored tight and wide replays, the project reviewer classified the event as indirect contact: the challenge perturbed Nobbs without a direct force to the injured left knee. The taxonomy label is the project reviewer's footage interpretation, not an explicit label used by the public sources.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "project_reviewer_resolution_after_third_pass",
+      "investigation_status": "reviewer_resolved",
+      "investigation_note": "Resolved as indirect contact by the project footage reviewer on 2026-08-30. No independent second-review confirmation is recorded.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_decision_date": "2026-08-30",
+      "sources": [
+        {
+          "title": "Arsenal Women's stroll against Everton marred by injury to Jordan Nobbs",
+          "publisher": "The Guardian",
+          "published_date": "2018-11-18",
+          "url": "https://www.theguardian.com/football/2018/nov/18/arsenal-women-everton-ladies-super-league-match-report",
+          "source_type": "match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Nobbs went down in agony after a challenge from Chloe Kelly; the report does not locate the contact."
+        },
+        {
+          "title": "Nobbs: I'm proud of what I have overcome after a rollercoaster few years",
+          "publisher": "England Football",
+          "published_date": "2022-01-14",
+          "url": "https://www.englandfootball.com/articles/2022/Jan/14/jordan-nobbs-euro-2022-20220114",
+          "source_type": "official_federation_player_feature",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The federation profile says Nobbs pressed the ball and immediately knew she was in trouble after a routine challenge; it does not identify the contact location."
+        },
+        {
+          "title": "Jordan Nobbs: England and Arsenal star suffers serious knee injury",
+          "publisher": "BBC Sport",
+          "published_date": "2018-11-19",
+          "url": "https://www.bbc.co.uk/sport/football/46264415",
+          "source_type": "trusted_broadcaster_report_with_match_highlights",
+          "evidence_form": "diagnosis_plus_frame_review",
+          "evidence": "BBC confirms a left ACL rupture and hosts the Everton-Arsenal highlights. The preserved tight and wide replays show a challenge and lower-limb overlap, but neither view resolves whether force reached the left knee."
+        }
+      ]
+    },
+    "chloe_kelly_acl": {
+      "canonical_player_name": "Chloe Kelly",
+      "injury_date": "2021-05-02",
+      "previous_classification": "direct_contact",
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "changed",
+      "rationale": "The FA report describes minimal player contact combined with Kelly's planted foot and turn. It does not describe a blow to the knee, so indirect contact is the best-supported interpretation rather than verified direct contact.",
+      "sources": [
+        {
+          "title": "Manchester City 4-0 Birmingham",
+          "publisher": "The Football Association",
+          "published_date": "2021-05-02",
+          "url": "https://womenscompetitions.thefa.com/en/Article/manchester-city-birmingham-20210502",
+          "source_type": "official_match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Following minimal contact with Rebecca Holloway, Kelly went down clutching her right knee while her foot was planted as she turned."
+        },
+        {
+          "title": "Kelly brace helps City beat Birmingham",
+          "publisher": "Manchester City FC",
+          "published_date": "2021-05-02",
+          "url": "https://www.mancity.com/news/womens/city-v-birmingham-city-fawsl-match-report-2-may-63755562",
+          "source_type": "official_club_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The club report confirms a collision with Birmingham defender Rebecca Holloway before Kelly was stretchered off."
+        }
+      ]
+    },
+    "christen_press_acl": {
+      "canonical_player_name": "Christen Press",
+      "injury_date": "2022-06-11",
+      "previous_classification": "non_contact",
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "player_feature_plus_single_angle_frame_review",
+      "change_status": "changed",
+      "rationale": "ESPN explicitly places Press's collapse after contact during a challenge, contradicting the previous non-contact label. Frame-by-frame review of the available broadcast angle shows the defender perturbing Press at the upper body and hip immediately before the right-leg collapse, without a visible direct force to the right knee. This supports indirect contact as a provisional interpretation, not an explicit source label.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "third_pass_multilingual_and_frame_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Low-confidence indirect-contact working label. The right knee is partly obscured at the decisive instant; retain the flag until a reverse angle or player description identifies the contact location.",
+      "sources": [
+        {
+          "title": "Christen Press' transformative journey back from injury",
+          "publisher": "ESPN",
+          "published_date": "2024-08-23",
+          "url": "https://www.espn.com/soccer/story/_/id/40933449/christen-press-transformative-journey-back-injury",
+          "source_type": "player_feature",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Press tracked back, committed to a challenge, and collapsed after contact; the report does not say where the contact occurred."
+        },
+        {
+          "title": "Forward Christen Press sustains season-ending knee injury",
+          "publisher": "Angel City FC",
+          "published_date": "2022-06-14",
+          "url": "https://angelcity.com/acfc-post/forward-christen-press-sustains-season-ending-knee-injury",
+          "source_type": "official_medical_update",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The club confirms a right ACL tear during the June 11 match but gives no mechanism detail."
+        },
+        {
+          "title": "Christen Press Injury vs Racing Louisville",
+          "publisher": "FootFem",
+          "published_date": "2022-06-13",
+          "url": "https://www.youtube.com/watch?v=YvnMYc6OdT8",
+          "source_type": "public_match_footage_archive",
+          "evidence_form": "frame_review",
+          "evidence": "The available broadcast clip shows contact at Press's upper body and hip during the challenge and no visible direct force to the right knee. Because only one angle is available and the knee is partly obscured at the decisive instant, the indirect-contact interpretation remains low confidence."
+        }
+      ]
+    },
+    "delphine_cascarino_acl": {
+      "canonical_player_name": "Delphine Cascarino",
+      "injury_date": "2023-05-21",
+      "previous_classification": "direct_contact",
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "contemporary_reports_plus_two_angle_frame_review",
+      "change_status": "changed",
+      "rationale": "Contemporary reports describe De Almeida's charge during the duel. Third-pass review of two replay angles shows sustained shoulder and trunk contact that perturbs Cascarino immediately before the right-leg collapse, without a visible direct force to the right knee. Because the lower limbs overlap and one view is partly occluded by the goalkeeper, indirect contact is provisional and low confidence.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "third_pass_multilingual_and_frame_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Low-confidence indirect-contact working label. Seek a field-level or reverse angle that fully separates the players' lower limbs before treating the classification as verified.",
+      "sources": [
+        {
+          "title": "Cascarino touchée au genou lors de PSG - OL (0-1)",
+          "publisher": "Olympique-et-Lyonnais",
+          "published_date": "2023-05-22",
+          "url": "https://www.olympique-et-lyonnais.com/cascarino-touchee-au-genou-lors-de-psg-ol-0-1%2C289143.html",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Cascarino remained down after Elisa De Almeida's charge at the end of a duel; the contact location is not specified."
+        },
+        {
+          "title": "OL féminin : opérée du genou mardi, Delphine Cascarino déjà tournée vers l'avenir",
+          "publisher": "Le Progrès",
+          "published_date": "2023-06-01",
+          "url": "https://www.leprogres.fr/sport/2023/06/01/ol-feminin-operee-du-genou-mardi-delphine-cascarino-deja-tournee-vers-l-avenir",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report describes a very tightly contested duel with the defender before the partial right-ACL tear, but does not locate the contact."
+        },
+        {
+          "title": "Résumé PSG - OL | J21 D1 Arkema | Olympique Lyonnais",
+          "publisher": "Olympique Lyonnais",
+          "published_date": "2023-05-21",
+          "url": "https://www.youtube.com/watch?v=cQ3OcNesMl8",
+          "source_type": "official_club_match_footage",
+          "evidence_form": "two_angle_frame_review",
+          "evidence": "The two replay views show De Almeida applying sustained shoulder and trunk contact as Cascarino's right leg loads. No direct force to the right knee is visible, but lower-limb overlap prevents higher confidence."
+        }
+      ]
+    },
+    "ellie_carpenter_acl": {
+      "canonical_player_name": "Ellie Carpenter",
+      "injury_date": "2022-05-21",
+      "statistical_unit_id": "ellie_carpenter_acl",
+      "previous_classification": "non_contact",
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "project_reviewer_injury_timing_confirmation_plus_reports",
+      "change_status": "changed",
+      "rationale": "Public reporting describes both an earlier challenge with Fridolina Rolfö and a later collapse after Carpenter attempted to continue. The project reviewer has confirmed from the analyzed footage that the ACL rupture occurred during the challenge with Rolfö and classified the mechanism as indirect contact. The rupture timing and taxonomy label are therefore project-reviewer determinations rather than explicit claims made by the public reports.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "project_reviewer_resolution_after_third_pass",
+      "investigation_status": "reviewer_resolved",
+      "investigation_note": "Resolved by the project footage reviewer on 2026-08-30: ACL rupture during the challenge with Fridolina Rolfö; mechanism classified as indirect contact. No independent second-review confirmation is recorded.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_injury_moment": "challenge_with_fridolina_rolfo",
+      "project_reviewer_decision_date": "2026-08-30",
+      "sources": [
+        {
+          "title": "Australia's Ellie Carpenter stretchered off with knee injury in Lyon's Women's Champions League final win over Barcelona",
+          "publisher": "ABC News Australia",
+          "published_date": "2022-05-22",
+          "url": "https://www.abc.net.au/news/2022-05-22/knee-injury-sours-ellie-carpenters-womens-champions-league-win/101088994",
+          "source_type": "match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Carpenter's knee gave way in open play after she had hurt it a few minutes earlier while challenging Fridolina Rolfö."
+        },
+        {
+          "title": "23 - Ellie Carpenter: If I’ve inspired one girl or boy to put on their boots, I’m very happy",
+          "publisher": "CommBank Matildas",
+          "published_date": "2024-01-02",
+          "url": "https://matildas.com.au/news/23-ellie-carpenter-if-ive-inspired-one-girl-or-boy-put-their-boots-im-very-happy",
+          "source_type": "official_federation_player_feature",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The federation profile says Carpenter went down, was cleared to continue, and then went down again shortly afterward; it does not establish which event ruptured the ACL."
+        }
+      ]
+    },
+    "imported_ellie_carpenter_2000_04_28_acl_candidate": {
+      "canonical_player_name": "Ellie Carpenter",
+      "injury_date": "2022-05-21",
+      "statistical_unit_id": "ellie_carpenter_acl",
+      "same_event_as": "ellie_carpenter_acl",
+      "previous_classification": "non_contact",
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "project_reviewer_injury_timing_confirmation_plus_reports",
+      "change_status": "changed",
+      "rationale": "This is a second registered view of the same Carpenter event. The project reviewer has confirmed that the ACL rupture occurred during the challenge with Fridolina Rolfö and classified the mechanism as indirect contact. The rupture timing and taxonomy label are project-reviewer determinations rather than explicit claims made by the public reports.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "project_reviewer_resolution_after_third_pass",
+      "investigation_status": "reviewer_resolved",
+      "investigation_note": "Resolved by the project footage reviewer on 2026-08-30: ACL rupture during the challenge with Fridolina Rolfö; mechanism classified as indirect contact. No independent second-review confirmation is recorded.",
+      "project_reviewer_decision": "indirect_contact",
+      "project_reviewer_injury_moment": "challenge_with_fridolina_rolfo",
+      "project_reviewer_decision_date": "2026-08-30",
+      "sources": [
+        {
+          "title": "Australia's Ellie Carpenter stretchered off with knee injury in Lyon's Women's Champions League final win over Barcelona",
+          "publisher": "ABC News Australia",
+          "published_date": "2022-05-22",
+          "url": "https://www.abc.net.au/news/2022-05-22/knee-injury-sours-ellie-carpenters-womens-champions-league-win/101088994",
+          "source_type": "match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Carpenter's knee gave way in open play after she had hurt it a few minutes earlier while challenging Fridolina Rolfö."
+        },
+        {
+          "title": "23 - Ellie Carpenter: If I’ve inspired one girl or boy to put on their boots, I’m very happy",
+          "publisher": "CommBank Matildas",
+          "published_date": "2024-01-02",
+          "url": "https://matildas.com.au/news/23-ellie-carpenter-if-ive-inspired-one-girl-or-boy-put-their-boots-im-very-happy",
+          "source_type": "official_federation_player_feature",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The federation profile says Carpenter went down, was cleared to continue, and then went down again shortly afterward; it does not establish which event ruptured the ACL."
+        }
+      ]
+    },
+    "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_acl_candidate": {
+      "canonical_player_name": "Kirsten van de Westeringh",
+      "injury_date": "2023-09-17",
+      "previous_classification": "indirect_contact",
+      "classification": "indirect_contact",
+      "confidence": "high",
+      "verification_status": "verified_explicit",
+      "evidence_basis": "player_account_contact_away_from_knee",
+      "change_status": "unchanged",
+      "rationale": "Van de Westeringh's own account identifies a push in her back immediately before the knee injury. Contact was away from the injured knee, which explicitly matches indirect contact.",
+      "sources": [
+        {
+          "title": "Mijn 2023 | Feyenoord-speelster Van de Westeringh na drama: 'Was heel erg in paniek'",
+          "publisher": "NOS Sport",
+          "published_date": "2023-12-22",
+          "url": "https://nos.nl/artikel/2502485-mijn-2023-feyenoord-speelster-van-de-westeringh-na-drama-was-heel-erg-in-paniek",
+          "source_type": "player_interview",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Van de Westeringh recalls a small push in her back immediately before hearing and feeling her knee crack."
+        }
+      ]
+    },
+    "imported_holy_mcnamara_2023_11_19_acl_candidate": {
+      "canonical_player_name": "Holly McNamara",
+      "injury_date": "2023-11-19",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "collision_report_plus_official_match_footage",
+      "change_status": "newly_classified",
+      "rationale": "A reputable report explicitly confirms McNamara collided with goalkeeper Izzy Nino. Frame-by-frame review of the official A-Leagues highlight shows the goalkeeper's slide reaching McNamara's feet and lower legs rather than applying a direct force to the injured right knee. This supports indirect contact, but only one useful angle was available.",
+      "sources": [
+        {
+          "title": "Devastating: City star ruled out for the season days after Matildas recall",
+          "publisher": "A-Leagues",
+          "published_date": "2023-11-21",
+          "url": "https://aleagues.com.au/news/a-league-women-news-melbourne-city-matildas-holly-mcnamara/",
+          "source_type": "league_injury_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The goalkeeper was sprawling at McNamara's feet; McNamara reached for her knee after making impact with the turf."
+        },
+        {
+          "title": "Holly McNamara cruelled by injury after Matildas call-up",
+          "publisher": "ESPN / Australian Associated Press",
+          "published_date": "2023-11-20",
+          "url": "https://www.espn.com.au/football/story/_/id/38938107/holly-mcnamara-cruelled-injury-matildas-call-up",
+          "source_type": "sports_journalism",
+          "evidence_form": "explicit_contact_report",
+          "evidence": "The report states that McNamara collided with Jets goalkeeper Izzy Nino while scoring her second goal."
+        },
+        {
+          "title": "Newcastle Jets vs Melbourne City – 19 Nov 2023",
+          "publisher": "A-Leagues",
+          "published_date": "2023-11-19",
+          "url": "https://aleagues.com.au/match/a-league-women/newcastle-jets-vs-melbourne-city-19-11-2023/",
+          "source_type": "official_match_footage",
+          "evidence_form": "frame_review",
+          "evidence": "The archived official highlight shows Nino sliding into McNamara's feet and lower legs; no direct force to McNamara's right knee is visible in the available angle."
+        }
+      ]
+    },
+    "imported_caroline_wier_2023_09_26_acl_candidate": {
+      "canonical_player_name": "Caroline Weir",
+      "injury_date": "2023-09-26",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "player_account_plus_archived_broadcast_frame_review",
+      "change_status": "newly_classified",
+      "rationale": "Weir's first-person account identifies the tackle and immediate noise from her left knee. Third-pass review of two locally preserved BBC broadcast views shows the Belgian challenge perturbing her from the side and rear, with visible contact away from the left knee and no direct knee blow. Indirect contact is therefore the best-supported interpretation, but remains low confidence because the original public upload is no longer reliably retrievable and parts of the lower-limb sequence overlap.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "third_pass_multilingual_and_frame_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Low-confidence indirect-contact working label. Preserve the flag until a stable public copy, reverse angle, or first-person description independently confirms that the force was away from the left knee.",
+      "sources": [
+        {
+          "title": "Caroline Weir medical report",
+          "publisher": "Real Madrid CF",
+          "published_date": "2023-09-28",
+          "url": "https://www.realmadrid.com/en-US/news/football/first-team/medical-reports/caroline-weir-medical-report-28-09-2023",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Real Madrid confirms a left ACL rupture during Scotland versus Belgium but provides no mechanism detail."
+        },
+        {
+          "title": "Caroline Weir: Scotland star on ACL recovery, dreams of playing for Real Madrid, plus inspiring girls",
+          "publisher": "Sky Sports",
+          "published_date": "2024-02-23",
+          "url": "https://www.skysports.com/football/news/11835/13078322/caroline-weir-scotland-star-on-acl-recovery-dreams-of-playing-for-real-madrid-plus-inspiring-girls",
+          "source_type": "player_interview",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Weir recalls the tackle, a noise from somewhere in her knee, and trying to play for another five minutes; she does not identify the opponent's contact location."
+        },
+        {
+          "title": "Scotland v Belgium | UEFA Women's Nations League",
+          "publisher": "BBC Scotland broadcast (locally archived clip)",
+          "published_date": "2023-09-26",
+          "url": "https://www.youtube.com/watch?v=zUVLcmUHYAs",
+          "source_type": "broadcast_footage_archive",
+          "evidence_form": "two_view_frame_review",
+          "evidence": "Two preserved BBC broadcast views show the tackle perturbing Weir from the side and rear, with contact away from the left knee and no visible direct knee blow. The original public upload is no longer reliably retrievable, which limits independent verification."
+        }
+      ]
+    },
+    "imported_mary_fowler_2025_04_13_acl_candidate": {
+      "canonical_player_name": "Mary Fowler",
+      "injury_date": "2025-04-13",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "newly_classified",
+      "rationale": "Contemporaneous reporting says Fowler appeared to wrench her right knee while overstretching for the ball. No player contact is described, so non-contact is the best-supported interpretation rather than an explicit source label; Manchester City confirms the ACL diagnosis from that match.",
+      "sources": [
+        {
+          "title": "Manchester City wary as Mary Fowler suffers knee injury",
+          "publisher": "ESPN / Australian Associated Press",
+          "published_date": "2025-04-14",
+          "url": "https://www.espn.com.sg/soccer/story/_/id/44663526/manchester-city-wary-mary-fowler-suffers-knee-injury",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report says Fowler appeared to wrench her right knee while overstretching for the ball; it does not describe player contact."
+        },
+        {
+          "title": "Mary Fowler fitness update",
+          "publisher": "Manchester City FC",
+          "published_date": "2025-04-16",
+          "url": "https://www.mancity.com/news/womens/mary-fowler-injury-update-manchester-city-63880390",
+          "source_type": "official_medical_update",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Manchester City confirms the ACL rupture occurred in the April 13 FA Cup semi-final."
+        }
+      ]
+    },
+    "imported_carmen_menayo_2024_06_15_acl_candidate": {
+      "canonical_player_name": "Carmen Menayo",
+      "injury_date": "2024-06-15",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_official_club_footage",
+      "change_status": "newly_classified",
+      "rationale": "Atlético's medical report confirms the right-knee ACL graft rupture. The official highlight shows an opponent perturbing Menayo at the upper body and hip as she turns, without a visible direct blow to the right knee. Because the lower legs partly overlap and only one angle is available, indirect contact is provisional and low confidence.",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Have an independent second reviewer inspect the injury frames and seek another angle that separates both players' lower limbs.",
+      "sources": [
+        {
+          "title": "Menayo sufre una rotura de la plastia del ligamento cruzado anterior",
+          "publisher": "Club Atlético de Madrid",
+          "published_date": "2024-06-17",
+          "url": "https://www.atleticodemadrid.com/noticias/menayo-sufre-una-rotura-de-la-plastia-del-ligamento-cruzado-anterior-y-lesion-de-menisco-externo-asociada-en-la-rodilla-derecha",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Atlético confirms the right-knee ACL graft rupture after Menayo was substituted in the 74th minute, without mechanism detail."
+        },
+        {
+          "title": "HIGHLIGHTS | Atlético de Madrid Femenino 1-0 Villarreal | Liga F 2023-24",
+          "publisher": "Club Atlético de Madrid",
+          "published_date": "2024-06-15",
+          "url": "https://www.youtube.com/watch?v=hVa8SsnDjJY",
+          "source_type": "official_club_footage",
+          "evidence_form": "frame_review",
+          "evidence": "The injury sequence shows upper-body and hip contact while Menayo turns; no direct force to the right knee is visible, although the lower legs overlap in the single available angle."
+        }
+      ]
+    },
+    "imported_grace_wisnewski_2023_11_04_acl_candidate": {
+      "canonical_player_name": "Grace Wisnewski",
+      "injury_date": "2023-11-04",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_report_plus_official_club_footage",
+      "change_status": "newly_classified",
+      "rationale": "The club identifies the injury action as Wisnewski's tackle on Tameka Yallop. The club documentary replay shows upper-body contact and contact around the foot or lower leg while the injured left knee is flexed, without a visible direct blow to that knee. This supports indirect contact from a single useful angle.",
+      "sources": [
+        {
+          "title": "Worst fears realised for young Phoenix midfielder",
+          "publisher": "Wellington Phoenix FC",
+          "published_date": "2023-11-09",
+          "url": "https://wellingtonphoenix.com/news/worst-fears-realised-for-young-phoenix-midfielder/",
+          "source_type": "official_injury_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The club says Wisnewski ruptured her left ACL while making a tackle on Tameka Yallop in the opening 20 seconds."
+        },
+        {
+          "title": "Road to Recovery Ep. 1: Grace Wisnewski ACL Injury",
+          "publisher": "Wellington Phoenix FC",
+          "published_date": "2024-03-25",
+          "url": "https://www.youtube.com/watch?v=0J5plT3LWSg",
+          "source_type": "official_club_documentary",
+          "evidence_form": "frame_review",
+          "evidence": "The replay at the start of the documentary shows Yallop perturbing Wisnewski at the upper body and around the foot or lower leg during the tackle; no direct force to the left knee is visible."
+        }
+      ]
+    },
+    "imported_ludmila_da_silva_2023_03_12_acl_candidate": {
+      "canonical_player_name": "Ludmila da Silva",
+      "injury_date": "2023-03-12",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "contemporary_reports_plus_official_single_angle_frame_review",
+      "change_status": "newly_classified",
+      "rationale": "Reporting separates an earlier ankle blow from the later ACL event and describes the later action inconsistently as a collision, a foul by Ludmila, or a hard plant while pressing Ivana Andrés. Frame-by-frame review of Atlético's official replay shows the opponent arriving from the side and rear with contact around the foot, ankle, or distal leg as Ludmila loads and turns; no direct force to the right knee is visible. This supports indirect contact provisionally, but the low-resolution single angle and lower-limb overlap keep confidence low.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "third_pass_multilingual_and_frame_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Low-confidence indirect-contact working label. A higher-resolution reverse angle is still needed to confirm the apparent distal-leg contact and exclude a direct force to the right knee.",
+      "sources": [
+        {
+          "title": "Ludmila, adiós a la temporada con el Atleti y al Mundial",
+          "publisher": "Diario AS",
+          "published_date": "2023-03-13",
+          "url": "https://as.com/futbol/femenino/ludmila-adios-a-la-temporada-con-el-atleti-y-al-mundial-n/",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Ludmila pressed Ivana Andrés and was left in severe pain after their collision; the contact location is not stated."
+        },
+        {
+          "title": "Un derbi sin dueño",
+          "publisher": "Diario AS",
+          "published_date": "2023-03-12",
+          "url": "https://as.com/futbol/femenino/un-derbi-sin-dueno-n/",
+          "source_type": "match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report says Ludmila first took a blow to the ankle; shortly afterward, while she committed a foul on Ivana Andrés, her knee made an abnormal movement and she left in tears."
+        },
+        {
+          "title": "Las mejores jugadas del Atleti 0-0 Real Madrid",
+          "publisher": "Club Atlético de Madrid",
+          "published_date": "2023-03-12",
+          "url": "https://www.atleticodemadrid.com/videos/las-mejores-jugadas-del-atleti-0-0-real-madrid",
+          "source_type": "official_club_footage",
+          "evidence_form": "frame_review",
+          "evidence": "The official replay shows Ivana Andrés arriving from the side and rear with apparent contact around Ludmila's foot, ankle, or distal leg as the right leg loads and turns. No direct knee blow is visible, but lower-limb overlap and low resolution limit confidence."
+        },
+        {
+          "title": "El derbi le sale caro al Atleti: Escalofriantes lesiones de Ludmila y Marta Cardona",
+          "publisher": "Mundo Deportivo",
+          "published_date": "2023-03-12",
+          "url": "https://www.mundodeportivo.com/futbol/atletico-madrid/20230312/1001963058/escalofriante-lesion-ludmila-derbi-real-madrid.html",
+          "source_type": "contemporary_sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report says Ludmila planted hard while pressing Ivana Andrés and injured her right knee. It does not mention or locate contact, illustrating the inconsistency in contemporary descriptions."
+        },
+        {
+          "title": "Ludmila da Silva sufre una grave lesión de rodilla y se despide de la temporada y del Mundial",
+          "publisher": "Europa Press",
+          "published_date": "2023-03-13",
+          "url": "https://www.europapress.es/deportes/futbol-00162/noticia-ludmila-da-silva-sufre-grave-lesion-rodilla-despide-temporada-mundial-20230313202035.html",
+          "source_type": "news_agency_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Europa Press describes Ludmila hurting herself in an incident with Ivana Andrés but does not specify the contact location."
+        }
+      ]
+    },
+    "imported_laura_wienroither_2023_05_01_acl_candidate": {
+      "canonical_player_name": "Laura Wienroither",
+      "injury_date": "2023-05-01",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "newly_classified",
+      "rationale": "Manchester City's retrospective gives a detailed change-of-direction sequence in which the left knee gave way as Wienroither moved to tackle. It does not describe external contact, but it does not itself use the non-contact taxonomy label.",
+      "sources": [
+        {
+          "title": "The inspiring stories behind City's new recruits",
+          "publisher": "Manchester City FC",
+          "published_date": "2025",
+          "url": "https://www.mancity.com/features/city%27s-new-recruits/",
+          "source_type": "official_player_feature",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Wienroither changed direction to tackle Sveindís Jane Jónsdóttir and her left knee gave way; no external contact is described."
+        },
+        {
+          "title": "Arsenal confirm ruptured ACL for Laura Wienroither",
+          "publisher": "Sports Mole",
+          "published_date": "2023-05-04",
+          "url": "https://www.sportsmole.co.uk/football/arsenal-women/women-champions-league/news/arsenal-confirm-ruptured-acl-for-laura-wienroither_513018.html",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The contemporaneous report describes the knee jolting before Wienroither hit the turf and confirms the ACL diagnosis."
+        }
+      ]
+    },
+    "imported_aurora_galli_2024_09_21_acl_candidate": {
+      "canonical_player_name": "Aurora Galli",
+      "injury_date": "2024-09-21",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "newly_classified",
+      "rationale": "A later player feature gives a detailed sequence in which Galli's standing leg buckled as she attempted a challenge, with no external contact described. This is a supported interpretation rather than an explicit source label.",
+      "sources": [
+        {
+          "title": "The night before I dreamt about my ACL: Everton's Aurora Galli on the long way back from injury",
+          "publisher": "The Guardian",
+          "published_date": "2026-06-17",
+          "url": "https://www.theguardian.com/football/2026/jun/17/the-night-before-i-dreamt-about-my-acl-evertons-aurora-galli-on-the-long-way-back-from-injury",
+          "source_type": "player_feature",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Galli attempted to challenge for the ball and her standing leg buckled; no opponent contact is described."
+        }
+      ]
+    },
+    "imported_lena_oberdorf_2025_10_19_acl_candidate": {
+      "canonical_player_name": "Lena Oberdorf",
+      "injury_date": "2025-10-19",
+      "previous_classification": null,
+      "classification": "direct_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "contact_to_injured_limb",
+      "change_status": "newly_classified",
+      "rationale": "Sportschau reports that the opponent struck Oberdorf's right leg during the duel; Bayern confirms the resulting ACL tear was in the right knee. This supports direct contact to the injured limb, although the report says leg rather than identifying the knee joint itself.",
+      "sources": [
+        {
+          "title": "Wieder das Knie - Sorgen um Bayerns Lena Oberdorf",
+          "publisher": "Sportschau / ARD",
+          "published_date": "2025-10-19",
+          "url": "https://www.sportschau.de/fussball/frauen-bundesliga/wieder-knie-sorgen-um-lena-oberdorf%2Clena-oberdorf-148.html",
+          "source_type": "match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Adriana Achcińska struck Oberdorf's right leg during a duel."
+        },
+        {
+          "title": "Lena Oberdorf out with cruciate ligament tear",
+          "publisher": "FC Bayern München",
+          "published_date": "2025-10-20",
+          "url": "https://fcbayern.com/frauen/en/news/2025/10/lena-oberdorf-out-with-cruciate-ligament-tear",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Bayern confirms a cruciate ligament tear in Oberdorf's right knee from the Köln match."
+        }
+      ]
+    },
+    "imported_inma_gabarro_2026_03_28_acl_candidate": {
+      "canonical_player_name": "Inma Gabarro",
+      "injury_date": "2026-03-28",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_club_statement_plus_official_league_footage",
+      "change_status": "newly_classified",
+      "rationale": "Everton confirms the left ACL injury. The official WSL full-match footage shows an opponent perturbing Gabarro from behind and at the upper body while she runs, without a visible direct blow to the left knee. Because only one useful angle is available, indirect contact is provisional and low confidence.",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Have an independent second reviewer inspect the sequence and seek a second angle with an unobscured view of the left knee and both players' feet.",
+      "sources": [
+        {
+          "title": "Everton Women injury confirmation for Inma Gabarro",
+          "publisher": "Everton Women",
+          "published_date": "2026-03-31",
+          "url": "https://x.com/EvertonWomen/status/2039024981632291005",
+          "source_type": "official_club_statement",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Everton confirms an ACL injury against Liverpool but gives no account of contact or the injury action."
+        },
+        {
+          "title": "FULL MATCH: Everton v Liverpool | Barclays WSL 25/26",
+          "publisher": "Barclays Women's Super League",
+          "published_date": "2026-03-28",
+          "url": "https://www.youtube.com/watch?v=bkaRa5RQqe4",
+          "source_type": "official_league_footage",
+          "evidence_form": "frame_review",
+          "evidence": "Around 51:55 of the upload, the Liverpool player contacts Gabarro from behind and at the upper body as she runs; no direct force to the left knee is visible in the single useful angle."
+        },
+        {
+          "title": "Inma Gabarro se rompe: Vuelvo a sentir esto que ninguna futbolista quiere sentir",
+          "publisher": "Diario AS",
+          "published_date": "2026-03-31",
+          "url": "https://as.com/futbol/femenino/inma-gabarro-se-rompe-vuelvo-a-sentir-esto-que-ninguna-futbolista-quiere-sentir-f202603-n/",
+          "source_type": "player_statement_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Gabarro confirms that the left ACL ruptured again in the Liverpool match, but her reported statement does not describe the injury mechanism."
+        }
+      ]
+    },
+    "imported_marie_h_binger_2025_10_12_acl_candidate": {
+      "canonical_player_name": "Marie Höbinger",
+      "injury_date": "2025-10-12",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_report_plus_official_match_footage",
+      "change_status": "newly_classified",
+      "rationale": "Liverpool's wording alone is insufficient, but the official WSL full-match footage shows sustained body contact from the opponent at Höbinger's back and hip immediately before the left-leg plant and collapse. No direct force to the left knee is visible in the available angle, supporting indirect contact.",
+      "sources": [
+        {
+          "title": "Liverpool suffer late WSL defeat against Manchester City at Anfield",
+          "publisher": "Liverpool FC",
+          "published_date": "2025-10-12",
+          "url": "https://www.liverpoolfc.com/news/liverpool-suffer-late-wsl-defeat-against-manchester-city-anfield/",
+          "source_type": "official_match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Höbinger fell awkwardly while defending in her own box; the report does not address player contact."
+        },
+        {
+          "title": "Marie Höbinger injury update",
+          "publisher": "Liverpool FC",
+          "published_date": "2025-10-14",
+          "url": "https://www.liverpoolfc.com/news/marie-hobinger-injury-update-0",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Liverpool confirms the ACL injury from the Manchester City match."
+        },
+        {
+          "title": "FULL MATCH: Liverpool v Manchester City | Barclays WSL 25/26",
+          "publisher": "Barclays Women's Super League",
+          "published_date": "2025-10-12",
+          "url": "https://www.youtube.com/watch?v=ITcLN1qnmTo",
+          "source_type": "official_match_footage",
+          "evidence_form": "frame_review",
+          "evidence": "At approximately 21:59, Höbinger is contacted at the back and hip while defending. Her left knee remains visible without a direct strike before she plants and collapses."
+        }
+      ]
+    },
+    "imported_charlotte_newsham_2026_05_02_acl_candidate": {
+      "canonical_player_name": "Charlotte Newsham",
+      "injury_date": "2026-05-02",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "injury_report_plus_official_club_footage",
+      "change_status": "newly_classified",
+      "rationale": "The injury report confirms the ACL-associated injury. Charlton's official footage shows sustained shoulder and upper-body contact from the opponent while Newsham loads and collapses, without a visible direct blow to the injured knee. The legs overlap in the single angle, so indirect contact is provisional and low confidence.",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Have an independent second reviewer inspect the sequence and seek a second angle that separates the players' lower limbs.",
+      "sources": [
+        {
+          "title": "Charlton Athletic defender Newsham sustains long-term injury blow",
+          "publisher": "WSL Full-Time via Yahoo Sports",
+          "published_date": "2026-05-13",
+          "url": "https://sports.yahoo.com/articles/charlton-athletic-defender-newsham-sustains-205500729.html",
+          "source_type": "sports_journalism",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report confirms ACL, LCL, posterolateral-corner, and hamstring-tendon injuries from the Birmingham match, without mechanism detail."
+        },
+        {
+          "title": "Highlights: Charlton 0 Birmingham 2 (May 2026)",
+          "publisher": "Charlton Athletic FC",
+          "published_date": "2026-05-02",
+          "url": "https://www.charltonafc.com/video/player/0_uw9gzaw5",
+          "source_type": "official_club_footage",
+          "evidence_form": "frame_review",
+          "evidence": "The injury sequence shows sustained shoulder and upper-body contact during Newsham's loaded step and collapse; no direct force to the injured knee is visible, although the legs overlap in the available angle."
+        }
+      ]
+    },
+    "imported_sofie_lundgaard_2024_10_06_acl_candidate": {
+      "canonical_player_name": "Sofie Lundgaard",
+      "injury_date": "2024-10-06",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_two_footage_views",
+      "change_status": "newly_classified",
+      "rationale": "Liverpool's medical report confirms the ACL rupture. Two views from the official WSL match footage show sustained shoulder and torso contact from the Tottenham player while Lundgaard's left leg is loaded, without a visible direct blow to the left knee. This supports indirect contact.",
+      "sources": [
+        {
+          "title": "Sofie Lundgaard to undergo surgery on knee injury",
+          "publisher": "Liverpool FC",
+          "published_date": "2024-10-08",
+          "url": "https://www.liverpoolfc.com/news/sofie-lundgaard-undergo-surgery-knee-injury",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Liverpool confirms an ACL rupture during the Tottenham match but gives no contact or movement detail."
+        },
+        {
+          "title": "Full Match: Tottenham Hotspur v Liverpool | Barclays WSL 2024-25",
+          "publisher": "Barclays Women's Super League",
+          "published_date": "2024-10-06",
+          "url": "https://www.youtube.com/watch?v=ddZEEcHaaIU",
+          "source_type": "official_match_footage",
+          "evidence_form": "two_view_frame_review",
+          "evidence": "At approximately 32:42 and again in the replay from 32:48, Lundgaard is perturbed at the shoulder and torso while the left leg is loaded; no direct force to the left knee is visible."
+        }
+      ]
+    },
+    "imported_kosovare_asllani_2026_03_29_acl_candidate": {
+      "canonical_player_name": "Kosovare Asllani",
+      "injury_date": "2026-03-29",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "detailed_incident_description",
+      "change_status": "newly_classified",
+      "rationale": "TT's account describes Asllani's foot sticking in the turf and her knee twisting, without player contact in the injury sequence. The source does not explicitly apply the non-contact taxonomy label.",
+      "sources": [
+        {
+          "title": "Asllani efter skadan: Det alla fotbollsspelare fruktar",
+          "publisher": "Omni / TT Nyhetsbyrån",
+          "published_date": "2026-03-30",
+          "url": "https://omni.se/asllani-efter-skadan-det-alla-fotbollsspelare-fruktar/a/RjjQ1x",
+          "source_type": "news_agency_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Asllani's foot stuck in the turf and her knee twisted; no external player contact is described."
+        },
+        {
+          "title": "Kosovare Asllani pens new contract",
+          "publisher": "London City Lionesses",
+          "published_date": "2026-07-14",
+          "url": "https://www.londoncitylionesses.com/post/kosovare-asllani-pens-new-contract",
+          "source_type": "official_club_update",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The club confirms recovery from the complex multi-ligament injury, including the ACL, sustained against West Ham."
+        }
+      ]
+    },
+    "imported_tierna_davidson_2025_03_28_acl_candidate": {
+      "canonical_player_name": "Tierna Davidson",
+      "injury_date": "2025-03-28",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "high",
+      "verification_status": "verified_explicit",
+      "evidence_basis": "explicit_source_statement",
+      "change_status": "newly_classified",
+      "rationale": "A contemporaneous specialist report explicitly identifies the incident as non-contact; Gotham's official update confirms the left ACL tear from that match.",
+      "sources": [
+        {
+          "title": "Gotham and USWNT defender Tierna Davidson suffers serious knee injury",
+          "publisher": "Spotrac News",
+          "published_date": "2025-03-28",
+          "url": "https://www.spotrac.com/news/_/id/2739/gotham-and-uswnt-defender-tierna-davidson-suffers-serious-knee-injury",
+          "source_type": "specialist_sports_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The contemporaneous report explicitly describes Davidson's left-knee incident as non-contact."
+        },
+        {
+          "title": "Gotham FC captain Tierna Davidson out for season",
+          "publisher": "Gotham FC",
+          "published_date": "2025-04-02",
+          "url": "https://www.gothamfc.com/news/gotham-fc-captain-tierna-davidson-out-for-season",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Gotham confirms a left ACL tear in the Houston match."
+        }
+      ]
+    },
+    "imported_malou_marcetto_2026_05_16_acl_candidate": {
+      "canonical_player_name": "Malou Marcetto",
+      "injury_date": "2026-05-16",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_report_plus_two_angle_official_footage",
+      "change_status": "newly_classified",
+      "rationale": "The official match report confirms a heavy clash with Miri Taylor. Third-pass review of the official WSL full match and its two replay angles shows Taylor perturbing Marcetto at the upper body and hip immediately before the right-leg collapse, without a visible direct force to the right knee. This supports indirect contact provisionally; lower-limb overlap in one view keeps confidence low.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "third_pass_multilingual_and_frame_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Low-confidence indirect-contact working label. Keep flagged until a field-level or reverse angle, or a player/medical description, independently locates the force relative to the right knee.",
+      "sources": [
+        {
+          "title": "London City Lionesses 2, Aston Villa 1",
+          "publisher": "London City Lionesses",
+          "published_date": "2026-05-19",
+          "url": "https://www.londoncitylionesses.com/post/london-city-lionesses-2-aston-villa-1",
+          "source_type": "official_match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Marcetto was stretchered off after a heavy clash with Miri Taylor; the contact location is not stated."
+        },
+        {
+          "title": "Injury update: Malou Marcetto",
+          "publisher": "London City Lionesses",
+          "published_date": "2026-05-19",
+          "url": "https://www.londoncitylionesses.com/post/injury-update-malou-marcetto",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The club confirms MCL and ACL injuries from the Aston Villa match."
+        },
+        {
+          "title": "Malou Marcetto båret fra banen under sæsonafslutter",
+          "publisher": "Fodbold for Piger",
+          "published_date": "2026-05-17",
+          "url": "https://www.fodboldforpiger.dk/2026/05/malou-marcetto-baaret-fra-banen-under-saesonafslutter/",
+          "source_type": "sports_journalism_with_embedded_highlights",
+          "evidence_form": "tight_paraphrase_plus_frame_review",
+          "evidence": "The report says Marcetto was tackled during a transition and points to the injury sequence in the embedded highlights. The available views confirm a heavy contact event, but the injured-knee contact location is hidden."
+        },
+        {
+          "title": "FULL MATCH: London City Lionesses v Aston Villa | Barclays WSL 25/26",
+          "publisher": "Barclays Women's Super League",
+          "published_date": "2026-05-16",
+          "url": "https://www.youtube.com/watch?v=2sgN7xGkfkI",
+          "source_type": "official_league_full_match_footage",
+          "evidence_form": "two_angle_frame_review",
+          "evidence": "The official full-match broadcast provides two replay angles. Both show upper-body and hip contact immediately before Marcetto's right-leg collapse, with no visible direct force to the right knee; one view retains lower-limb overlap."
+        }
+      ]
+    },
+    "imported_kayla_duran_2026_04_04_acl_candidate": {
+      "canonical_player_name": "Kayla Duran",
+      "injury_date": "2026-04-04",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_broadcast_footage",
+      "change_status": "newly_classified",
+      "rationale": "Gotham confirms the right ACL injury. The CBS/NWSL broadcast sequence and replay show an opponent perturbing Duran at the body and hip immediately before the right-leg collapse, without a visible direct blow to the right knee. Because the lower limbs are close and partly occluded, indirect contact is provisional and low confidence.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "source_and_two_view_stored_replay_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Have an independent second reviewer inspect both broadcast views and seek a field-level or reverse angle that fully separates the players' lower limbs.",
+      "sources": [
+        {
+          "title": "Gotham FC's Kayla Duran placed on season-ending injury list",
+          "publisher": "Gotham FC",
+          "published_date": "2026-04-10",
+          "url": "https://www.gothamfc.com/news/gotham-fcs-kayla-duran-placed-on-seasonending-injury-list",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Gotham confirms a right ACL injury from the April 4 Kansas City match but provides no mechanism detail."
+        },
+        {
+          "title": "Gotham FC falls 2-1 to Kansas City Current",
+          "publisher": "Gotham FC",
+          "published_date": "2026-04-04",
+          "url": "https://www.gothamfc.com/news/gotham-fc-falls-21-to-kansas-city-current",
+          "source_type": "official_match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The match report notes that Duran left early with a suspected knee injury but does not describe the incident."
+        },
+        {
+          "title": "NWSL Highlights: Kansas City Current vs Gotham FC (4/4)",
+          "publisher": "CBS Sports",
+          "published_date": "2026-04-04",
+          "url": "https://www.cbssports.com/watch/nwsl/video/nwsl-highlights-kansas-city-current-vs-gotham-fc-44?ftag=CBS-16-10aci9g",
+          "source_type": "league_broadcast_footage",
+          "evidence_form": "two_view_frame_review",
+          "evidence": "The live sequence and replay show body and hip contact immediately before Duran's right-leg collapse; no direct force to the right knee is visible, but the lower limbs are close and partly occluded."
+        }
+      ]
+    },
+    "imported_alana_cook_2025_05_16_acl_candidate": {
+      "canonical_player_name": "Alana Cook",
+      "injury_date": "2025-05-16",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "high",
+      "verification_status": "verified_explicit",
+      "evidence_basis": "explicit_source_statement_plus_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "A contemporaneous Sports Illustrated report explicitly describes Cook's injury as non-contact. Kansas City Current confirms the ACL, MCL and meniscus injuries from the same match, and the stored replay is consistent with the published non-contact classification.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "source_and_stored_replay_review",
+      "investigation_status": "complete",
+      "sources": [
+        {
+          "title": "Kansas City Current defender Alana Cook placed on season ending injury list",
+          "publisher": "Kansas City Current",
+          "published_date": "2025-05-22",
+          "url": "https://www.kansascitycurrent.com/news/kansas-city-current-defender-alana-cook-placed-on-season-end",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Kansas City confirms torn ACL, MCL and meniscus injuries sustained against Orlando Pride; the club report does not specify the contact mechanism."
+        },
+        {
+          "title": "Kansas City Current confirms Alana Cook's season-ending ACL injury",
+          "publisher": "Sports Illustrated",
+          "published_date": "2025-05-22",
+          "url": "https://www.si.com/soccer/kansas-city-current-confirms-alana-cook-s-season-ending-acl-injury",
+          "source_type": "sports_journalism",
+          "evidence_form": "explicit_source_label",
+          "evidence": "The report explicitly identifies Cook's May 16 injury as non-contact."
+        }
+      ]
+    },
+    "imported_julie_dufour_2025_09_20_acl_candidate": {
+      "canonical_player_name": "Julie Dufour",
+      "injury_date": "2025-09-20",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Portland confirms the left ACL injury but does not publish a contact mechanism. Project review of the stored broadcast replay shows body or shoulder interaction with the opponent during Dufour's planting action, without a clear external force applied directly to the injured left knee. This supports indirect contact as a replay-based interpretation.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "source_and_stored_replay_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Medium-confidence indirect-contact working label. Retain as a supported interpretation until an independent reviewer or an additional angle confirms that no force was applied directly to the left knee.",
+      "sources": [
+        {
+          "title": "Portland Thorns forward Julie Dufour placed on SEI list",
+          "publisher": "Portland Thorns",
+          "published_date": "2025-09-25",
+          "url": "https://portland-thorns.webflow.io/news/portland-thorns-forward-julie-dufour-placed-on-sei-list",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Portland confirms a left-knee ACL injury sustained against San Diego Wave; the report gives no mechanism detail."
+        },
+        {
+          "title": "Project-stored Portland Thorns vs San Diego Wave broadcast replay",
+          "publisher": "Project video archive",
+          "published_date": "2025-09-20",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "frame_review",
+          "evidence": "The stored replay shows body or shoulder interaction during the plant, with no clear direct force to Dufour's injured left knee."
+        }
+      ]
+    },
+    "imported_sophie_schmidt_2025_09_07_acl_candidate": {
+      "canonical_player_name": "Sophie Schmidt",
+      "injury_date": "2025-09-07",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "high",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_knee_injury_report_plus_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Houston confirms a season-ending knee injury and surgery but does not publicly identify the injured ligament or contact mechanism. Project review of the stored replay shows clear separation from the nearest opponent before and at Schmidt's knee collapse, supporting a non-contact mechanism. The mechanism is visually well supported, while the ACL diagnosis remains unconfirmed by the official club source.",
+      "last_reviewed_at": "2026-08-30",
+      "review_pass": "source_and_stored_replay_review",
+      "investigation_status": "diagnosis_needs_further_investigation",
+      "investigation_note": "The non-contact mechanism is high-confidence from the stored replay. Keep the ACL diagnosis flagged until a primary medical or player source specifies the ligament injury.",
+      "sources": [
+        {
+          "title": "Houston Dash midfielder Sophie Schmidt placed on SEI list",
+          "publisher": "Houston Dash",
+          "published_date": "2025-09-13",
+          "url": "https://www.houstondynamofc.com/houstondash/news/houston-dash-midfielder-sophie-schmidt-placed-on-sei-list",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Houston confirms a knee injury in the September 7 match, successful surgery and season-ending status; the club does not specify ACL or mechanism."
+        },
+        {
+          "title": "Project-stored Houston Dash vs San Diego Wave broadcast replay",
+          "publisher": "Project video archive",
+          "published_date": "2025-09-07",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "frame_review",
+          "evidence": "The stored replay shows separation from the nearest opponent before and at the knee collapse, with no visible external contact."
+        }
+      ]
+    },
+    "imported_caiya_hanks_2025_06_15_acl_candidate": {
+      "canonical_player_name": "Caiya Hanks",
+      "injury_date": "2025-06-15",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_contemporary_incident_report_plus_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Portland confirms the left ACL injury, and AP reports that Hanks was brought down by another player. Frame-by-frame review of the stored sequence shows upper-body and right-side pressure remaining mechanically linked to the apparent left-knee failure, with no recovered independent movement and no visible direct force to the left knee. This supports indirect contact as a project interpretation.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Medium-confidence indirect-contact label. A reverse or field-level angle would be needed to exclude obscured lower-limb contact with greater confidence.",
+      "sources": [
+        {
+          "title": "An Update on Caiya Hanks",
+          "publisher": "Portland Thorns",
+          "published_date": "2025-06-20",
+          "url": "https://www.thorns.com/news/an-update-on-caiya-hanks",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Portland confirms that Hanks sustained an ACL injury to her left knee against Washington Spirit. The report does not state the contact mechanism."
+        },
+        {
+          "title": "Thorns beat Spirit 2-0, snapping Spirit's 5-game road winning streak",
+          "publisher": "Associated Press via SeattlePI",
+          "published_date": "2025-06-15",
+          "url": "https://www.seattlepi.com/sports/article/thorns-beat-spirit-2-0-snapping-spirit-s-5-game-20378543.php",
+          "source_type": "wire_service_match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "AP reports that Hanks was brought down by another player on a breakaway and then held her left knee; it does not locate the force relative to the knee."
+        },
+        {
+          "title": "Project-stored Portland Thorns vs Washington Spirit broadcast sequence",
+          "publisher": "Project video archive",
+          "published_date": "2025-06-15",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "frame_review",
+          "evidence": "The stored sequence shows sustained upper-body and right-side pressure into the left-knee failure, without a visible direct force to the left knee or recovered independent movement before collapse."
+        }
+      ]
+    },
+    "imported_midge_purce_2024_03_24_acl_candidate": {
+      "canonical_player_name": "Midge Purce",
+      "injury_date": "2024-03-24",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_three_episode_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Gotham confirms an ACL injury during the Portland match but does not identify the injury frame or mechanism. The three stored clips show separate episodes, not three camera angles. In the final apparent injury episode Purce separates from the defender, completes several uncontacted strides, and then drops, supporting a provisional non-contact label. Because the actual ACL rupture could have occurred during an earlier contact episode, confidence remains low.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Provisional non-contact working label. The precise rupture episode is unresolved; retain the case as uncertain until a medical/player account or additional continuous footage identifies the injury onset.",
+      "sources": [
+        {
+          "title": "Gotham FC Forward Midge Purce Suffers Season-Ending Injury",
+          "publisher": "Gotham FC",
+          "published_date": "2024-03-27",
+          "url": "https://www.gothamfc.com/news/gotham-fc-forward-midge-purce-suffers-season-ending-injury",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Gotham confirms a season-ending ACL injury during the Portland match but does not state the mechanism or exact injury episode."
+        },
+        {
+          "title": "Project-stored Gotham FC vs Portland Thorns broadcast sequences",
+          "publisher": "Project video archive",
+          "published_date": "2024-03-24",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "three_episode_frame_review",
+          "evidence": "The clips contain three separate episodes. In the final apparent injury episode Purce separates, takes several uncontacted strides and then drops; the clips do not establish which episode contains the ACL rupture."
+        }
+      ]
+    },
+    "imported_alex_loera_2024_04_20_acl_candidate": {
+      "canonical_player_name": "Alex Loera",
+      "injury_date": "2024-04-20",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_contemporary_match_report_plus_two_view_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Bay FC confirms the ACL tear, and contemporary reporting places the injury after contact during Loera's challenge on Bia Zaneratto. Both stored views show contact and entanglement continuing into the apparent right-knee injury action, with no recovered independent movement. No direct force to the right knee is visible, supporting indirect contact, although partial occlusion prevents high confidence.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Medium-confidence indirect-contact label. Retain the direct-versus-indirect distinction as reviewable because the right knee and lower-limb interaction are partly obscured.",
+      "sources": [
+        {
+          "title": "Bay FC midfielder Alex Loera to miss remainder of 2024 season with knee injury",
+          "publisher": "Bay FC",
+          "published_date": "2024-04-24",
+          "url": "https://bayfc.com/press-releases/bay-fc-midfielder-alex-loera-to-miss-remainder-of-2024-season-with-knee-injury/",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Bay FC confirms a torn ACL sustained in the Kansas City match but does not state the mechanism."
+        },
+        {
+          "title": "KC opens up offense on Bay FC at CPKC Stadium 5-2",
+          "publisher": "Sports Radio Service",
+          "published_date": "2024-04-20",
+          "url": "https://sportsradioservice.com/2024/04/20/kc-opens-up-offense-on-bay-fc-at-cpkc-stadium-5-2/",
+          "source_type": "contemporary_match_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report says Loera went down after contact while challenging Bia Zaneratto; it does not locate the force relative to Loera's knee."
+        },
+        {
+          "title": "Project-stored Bay FC vs Kansas City Current broadcast views",
+          "publisher": "Project video archive",
+          "published_date": "2024-04-20",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "two_view_frame_review",
+          "evidence": "Contact and entanglement continue into the apparent right-knee injury action. No direct right-knee impact is visible, but the relevant lower-limb area is partly occluded."
+        }
+      ]
+    },
+    "imported_andi_sullivan_2024_10_06_acl_candidate": {
+      "canonical_player_name": "Andi Sullivan",
+      "injury_date": "2024-10-06",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_detailed_incident_report_plus_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Washington Spirit confirms the ACL tear, while the Washington Post reports that Sullivan's right knee buckled as she challenged Summer Yates. The stored sequence shows upper-body or hip contact immediately linked to the buckle, with no recovery steps and no visible direct force to the right knee. This supports indirect contact, but the contact point is partly obscured.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Medium-confidence indirect-contact label. An additional angle is needed to confirm the upper-body or hip contact point and fully exclude direct right-knee contact.",
+      "sources": [
+        {
+          "title": "Washington Spirit Midfielder Andi Sullivan to Miss Remainder of 2024 Season with Injury",
+          "publisher": "Washington Spirit",
+          "published_date": "2024-10-09",
+          "url": "https://washingtonspirit.com/blog/2024/10/09/washington-spirit-midfielder-andi-sullivan-to-miss-remainder-of-2024-season-with-injury/",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Washington Spirit confirms a torn ACL sustained late against Orlando but does not state the contact mechanism."
+        },
+        {
+          "title": "Washington Spirit midfielder Andi Sullivan out for the year with torn ACL",
+          "publisher": "The Washington Post",
+          "published_date": "2024-10-09",
+          "url": "https://www.washingtonpost.com/sports/2024/10/09/andi-sullivan-acl-injury/",
+          "source_type": "detailed_incident_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "The report states that Sullivan's right knee buckled as she challenged Summer Yates; it does not explicitly classify or locate contact."
+        },
+        {
+          "title": "Project-stored Washington Spirit vs Orlando Pride broadcast sequence",
+          "publisher": "Project video archive",
+          "published_date": "2024-10-06",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "frame_review",
+          "evidence": "Upper-body or hip contact appears immediately linked to the right-knee buckle. No recovery steps or visible direct force to the right knee are present, though the contact point is partly obscured."
+        }
+      ]
+    },
+    "imported_gabrielle_robinson_2024_05_25_acl_candidate": {
+      "canonical_player_name": "Gabrielle Robinson",
+      "injury_date": "2024-05-25",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "high",
+      "verification_status": "verified_explicit",
+      "evidence_basis": "explicit_contemporary_source_statement_plus_official_medical_report_plus_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "A contemporary Kansas City Star report explicitly states that Robinson went to ground without contact in the 22nd minute. Kansas City Current confirms the ACL tear, and the stored replay is consistent: Robinson is separated from the nearest opponent before the independent plant and right-knee collapse. Non-contact is high confidence.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "complete",
+      "sources": [
+        {
+          "title": "Kansas City Current defender Gabrielle Robinson suffers torn ACL",
+          "publisher": "Kansas City Current",
+          "published_date": "2024-05-30",
+          "url": "https://www.kansascitycurrent.com/news/kansas-city-current-defender-gabrielle-robinson-suffers-torn",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Kansas City confirms a torn ACL from the Utah match but does not state the contact mechanism."
+        },
+        {
+          "title": "Kansas City Current injury report on Gabrielle Robinson",
+          "publisher": "The Kansas City Star",
+          "published_date": "2024-05-30",
+          "url": "https://www.kansascity.com/sports/soccer/kc-current/article285969476.html",
+          "source_type": "contemporary_sports_report",
+          "evidence_form": "explicit_source_label",
+          "evidence": "The report explicitly describes Robinson going to the ground without contact in the 22nd minute."
+        },
+        {
+          "title": "Project-stored Kansas City Current vs Utah Royals broadcast sequence",
+          "publisher": "Project video archive",
+          "published_date": "2024-05-25",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "frame_review",
+          "evidence": "Robinson is separated from the nearest opponent before the independent plant and apparent right-knee collapse, with no visible contact at the injury action."
+        }
+      ]
+    },
+    "imported_cloe_lacasse_2024_10_20_acl_candidate": {
+      "canonical_player_name": "Cloé Lacasse",
+      "injury_date": "2024-10-20",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Utah Royals confirms an ACL rupture and MCL sprain but does not state the mechanism. Frame-by-frame review shows Sarah Gorden's shoulder or hip contact from Lacasse's right remaining active through the apparent left-leg collapse, without a visible direct force to the left knee. This supports indirect contact as a project interpretation.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "Medium-confidence indirect-contact label. An additional angle would be needed to fully exclude hidden direct contact to the injured left knee.",
+      "sources": [
+        {
+          "title": "URFC Forward Cloé Lacasse Added To Season-Ending Injury List",
+          "publisher": "Utah Royals",
+          "published_date": "2024-10-30",
+          "url": "https://www.rsl.com/utahroyals/news/urfc-forward-cloe-lacasse-added-to-season-ending-injury-list",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Utah Royals confirms an ACL rupture and MCL sprain from the Angel City match but does not state the contact mechanism."
+        },
+        {
+          "title": "Project-stored Utah Royals vs Angel City broadcast sequence",
+          "publisher": "Project video archive",
+          "published_date": "2024-10-20",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "frame_review",
+          "evidence": "Shoulder or hip contact from Lacasse's right remains active through the apparent left-leg collapse; no direct force to the left knee is visible."
+        }
+      ]
+    },
+    "imported_alex_pfeiffer_2024_06_28_acl_candidate": {
+      "canonical_player_name": "Alex Pfeiffer",
+      "injury_date": "2024-06-28",
+      "previous_classification": null,
+      "classification": "non_contact",
+      "confidence": "medium",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_official_match_record_plus_two_view_project_stored_replay_review",
+      "change_status": "newly_classified",
+      "rationale": "Kansas City Current confirms ACL and meniscus tears but does not identify the injury frame or mechanism. On second-pass review, earlier contact has ended and Pfeiffer completes several controlled, uncontacted steps before the first apparent right-foot plant and collapse; the second stored collapse is also unsupported. This supports non-contact. Confidence is medium rather than high because the match record shows that she continued playing until minute 84, leaving the exact ACL rupture time unresolved.",
+      "last_reviewed_at": "2026-08-31",
+      "review_pass": "second_pass_temporal_contact_review",
+      "investigation_status": "injury_frame_needs_further_investigation",
+      "investigation_note": "The observed collapses are non-contact, but the exact ACL rupture frame is not externally confirmed because Pfeiffer continued playing until minute 84.",
+      "sources": [
+        {
+          "title": "Kansas City Current forward Alex Pfeiffer placed on Season Ending Injury List",
+          "publisher": "Kansas City Current",
+          "published_date": "2024-07-04",
+          "url": "https://www.kansascitycurrent.com/news/kansas-city-current-forward-alex-pfeiffer-placed-on-season-e",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Kansas City confirms ACL and meniscus tears sustained in the Houston match but does not state the mechanism or exact injury frame."
+        },
+        {
+          "title": "Match Report: Kansas City Current extends unbeaten streak to NWSL record 17 matches with 2-0 victory over Houston Dash",
+          "publisher": "Kansas City Current",
+          "published_date": "2024-06-28",
+          "url": "https://www.kansascitycurrent.com/news/match-report-kansas-city-current-extends-unbeaten-streak-to-nwsl-record-17-matches-with-2-0-victory-over-houston-dash",
+          "source_type": "official_match_report",
+          "evidence_form": "lineup_and_substitution_record",
+          "evidence": "The official lineup records Pfeiffer entering in minute 67 and leaving in minute 84, which limits certainty about which apparent collapse corresponds to the ACL rupture."
+        },
+        {
+          "title": "Project-stored Kansas City Current vs Houston Dash broadcast views",
+          "publisher": "Project video archive",
+          "published_date": "2024-06-28",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "two_view_frame_review",
+          "evidence": "Earlier contact ends before Pfeiffer takes several controlled, uncontacted steps and collapses on an unsupported plant; the second stored collapse is likewise uncontacted."
+        }
+      ]
+    }
+  }
+}

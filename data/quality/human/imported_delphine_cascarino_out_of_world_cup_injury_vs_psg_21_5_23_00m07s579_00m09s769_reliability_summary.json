@@ -1,0 +1,103 @@
+{
+  "total_frames": 42,
+  "target_tracking_coverage": 0.5476,
+  "pose_frame_coverage": 0.619,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 1,
+    "TARGET_IDENTITY_UNCERTAIN": 2,
+    "TARGET_NOT_FOUND": 16,
+    "VALID_TARGET": 23
+  },
+  "low_confidence_intervals": [],
+  "target_loss_intervals": [
+    {
+      "start_frame": 34,
+      "end_frame": 49
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 26,
+      "end_frame": 26
+    },
+    {
+      "start_frame": 33,
+      "end_frame": 33
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 9,
+      "end_frame": 25,
+      "frame_count": 17
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 27,
+      "end_frame": 32,
+      "frame_count": 6
+    }
+  ],
+  "interpolated_frame_fraction": 0.0952,
+  "rejected_frame_fraction": 0.6667,
+  "interpolated_landmark_row_fraction": 0.007,
+  "rejected_landmark_row_fraction": 0.465,
+  "processing_status_counts": {
+    "INTERPOLATED": 5,
+    "MISSING": 272,
+    "REJECTED_IDENTITY_UNCERTAIN": 34,
+    "REJECTED_INVALID_TRACK_SEGMENT": 17,
+    "REJECTED_LOW_CONFIDENCE": 9,
+    "SMOOTHED": 377
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 34,
+    "LOW_CONFIDENCE": 14,
+    "MISSING": 272,
+    "OBSERVED_VALID": 377,
+    "REJECTED": 17
+  },
+  "left_ankle_coverage": 0.5476,
+  "left_ear_coverage": 0.4048,
+  "left_elbow_coverage": 0.5476,
+  "left_eye_coverage": 0.5476,
+  "left_hip_coverage": 0.5476,
+  "left_knee_coverage": 0.5476,
+  "left_shoulder_coverage": 0.5476,
+  "left_wrist_coverage": 0.5476,
+  "nose_coverage": 0.5476,
+  "right_ankle_coverage": 0.5476,
+  "right_ear_coverage": 0.4762,
+  "right_elbow_coverage": 0.5476,
+  "right_eye_coverage": 0.5476,
+  "right_hip_coverage": 0.5476,
+  "right_knee_coverage": 0.5476,
+  "right_shoulder_coverage": 0.5476,
+  "right_wrist_coverage": 0.5476,
+  "core_landmark_coverage": 0.5476,
+  "lower_limb_landmark_coverage": 0.5476,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_delphine_cascarino_out_of_world_cup_injury_vs_psg_21_5_23_00m07s579_00m09s769_raw_pose.parquet"
+}

@@ -1,0 +1,361 @@
+{
+  "provenance": {
+    "annotation_session_id": "263277a9-cb44-4162-be5b-f6a8d42350e9",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-08-30T13:14:29.517933+00:00",
+    "updated_at": "2026-08-30T13:18:40.956568+00:00",
+    "case_id": "imported_caiya_hanks_2025_06_15_acl_candidate",
+    "source_id": "imported_caiya_hanks_2025_06_15_view_01",
+    "view_id": "imported_caiya_hanks_2025_06_15_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Portland Thorns vs. Washington Spirit - Replay _813962__01h00m05s851_01h00m11s017.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 24,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 502.14285714285717,
+        "y": 114.28571428571429,
+        "width": 354.2857142857143,
+        "height": 501.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 12,
+      "bbox": {
+        "x": 579.2857142857143,
+        "y": 118.57142857142857,
+        "width": 324.2857142857142,
+        "height": 527.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 633.5714285714286,
+        "y": 107.14285714285714,
+        "width": 304.28571428571433,
+        "height": 601.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 23,
+      "bbox": {
+        "x": 623.5714285714286,
+        "y": 151.42857142857142,
+        "width": 382.8571428571429,
+        "height": 502.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 33,
+      "bbox": {
+        "x": 719.2857142857143,
+        "y": 157.14285714285714,
+        "width": 267.1428571428571,
+        "height": 532.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 38,
+      "bbox": {
+        "x": 710.7142857142857,
+        "y": 145.71428571428572,
+        "width": 248.57142857142867,
+        "height": 557.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 40,
+      "bbox": {
+        "x": 602.1428571428571,
+        "y": 112.85714285714286,
+        "width": 314.28571428571433,
+        "height": 565.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 43,
+      "bbox": {
+        "x": 480.7142857142857,
+        "y": 111.42857142857143,
+        "width": 388.5714285714286,
+        "height": 561.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 45,
+      "bbox": {
+        "x": 405.0,
+        "y": 117.14285714285714,
+        "width": 434.28571428571433,
+        "height": 562.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 47,
+      "bbox": {
+        "x": 395.0,
+        "y": 127.14285714285714,
+        "width": 420.0,
+        "height": 554.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 50,
+      "bbox": {
+        "x": 453.57142857142856,
+        "y": 127.14285714285714,
+        "width": 304.28571428571433,
+        "height": 548.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 53,
+      "bbox": {
+        "x": 446.42857142857144,
+        "y": 130.0,
+        "width": 280.0,
+        "height": 541.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 56,
+      "bbox": {
+        "x": 445.0,
+        "y": 140.0,
+        "width": 265.71428571428567,
+        "height": 552.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 60,
+      "bbox": {
+        "x": 437.85714285714283,
+        "y": 142.85714285714286,
+        "width": 245.71428571428572,
+        "height": 554.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 72,
+      "bbox": {
+        "x": 425.0,
+        "y": 125.71428571428571,
+        "width": 298.57142857142856,
+        "height": 564.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 385.0,
+        "y": 122.85714285714286,
+        "width": 348.57142857142856,
+        "height": 545.7142857142857
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 83,
+      "bbox": {
+        "x": 429.2857142857143,
+        "y": 124.28571428571429,
+        "width": 327.14285714285717,
+        "height": 541.4285714285713
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 92,
+      "bbox": {
+        "x": 533.5714285714286,
+        "y": 131.42857142857142,
+        "width": 260.0,
+        "height": 538.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 99,
+      "bbox": {
+        "x": 495.0,
+        "y": 128.57142857142858,
+        "width": 271.42857142857144,
+        "height": 574.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 102,
+      "bbox": {
+        "x": 475.0,
+        "y": 117.14285714285714,
+        "width": 278.57142857142856,
+        "height": 560.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 106,
+      "bbox": {
+        "x": 340.7142857142857,
+        "y": 108.57142857142857,
+        "width": 324.2857142857143,
+        "height": 574.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 111,
+      "bbox": {
+        "x": 273.57142857142856,
+        "y": 98.57142857142857,
+        "width": 412.8571428571429,
+        "height": 601.4285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 120,
+      "bbox": {
+        "x": 382.14285714285717,
+        "y": 100.0,
+        "width": 279.99999999999994,
+        "height": 618.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 132,
+      "bbox": {
+        "x": 339.2857142857143,
+        "y": 137.14285714285714,
+        "width": 272.85714285714283,
+        "height": 572.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 25,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 25,
+      "end_frame": 36,
+      "frame_count": 12,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 42,
+      "end_frame": 42,
+      "frame_count": 1,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 60,
+      "end_frame": 63,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 83,
+      "end_frame": 86,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 101,
+      "end_frame": 104,
+      "frame_count": 4,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 132,
+    "movement_end_timestamp_ms": 4400.0,
+    "movement_duration_ms": 4400.0,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_caiya_hanks_2025_06_15_acl_candidate",
+    "source_id": "imported_caiya_hanks_2025_06_15_view_01",
+    "view_id": "imported_caiya_hanks_2025_06_15_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 132,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 132,
+    "event_anchor_frame": 132,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

@@ -26,6 +26,7 @@ def main() -> int:
         port=args.port,
         video_roots=video_roots,
         output_dir=args.output_dir,
+        main_menu_url=args.main_menu_url,
     )
     return 0
 
@@ -42,7 +43,12 @@ def parse_args() -> argparse.Namespace:
             "Defaults to data/videos and the local injury_videos folder."
         ),
     )
-    parser.add_argument("--output-dir", default="data/videos/cuts")
+    parser.add_argument("--output-dir", default="data/videos/analysis_clips")
+    parser.add_argument(
+        "--main-menu-url",
+        default="http://127.0.0.1:8765/",
+        help="URL opened by the Video Cutter's Main menu button.",
+    )
     parser.add_argument(
         "--smoke-test",
         action="store_true",

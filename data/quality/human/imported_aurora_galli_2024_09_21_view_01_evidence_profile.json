@@ -1,0 +1,51 @@
+{
+  "case_id": "imported_aurora_galli_2024_09_21_acl_candidate",
+  "source_id": "imported_aurora_galli_2024_09_21_view_01",
+  "view_id": "imported_aurora_galli_2024_09_21_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 3,
+  "target_tracking_coverage": 0.0,
+  "pose_frame_coverage": 0.0889,
+  "upper_body_landmark_coverage": 0.0,
+  "core_landmark_coverage": 0.0,
+  "lower_limb_landmark_coverage": 0.0,
+  "geometry_feature_coverage": 0.0,
+  "dynamic_feature_coverage": 0.0,
+  "interpolation_fraction": 0.0,
+  "rejected_fraction": 1.0,
+  "identity_uncertainty_fraction": 0.0,
+  "target_loss_fraction": 0.9111111111111111,
+  "supported_feature_count": 0,
+  "limited_feature_count": 0,
+  "unavailable_feature_count": 36,
+  "analytics_ready_feature_count": 0,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 0,
+    "limited_features": 0,
+    "unavailable_features": 36,
+    "geometry_coverage": 0.0,
+    "dynamic_coverage": 0.0,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 3,
+    "overall_quality_label": "UNAVAILABLE EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.0,
+      "limited_fraction": 0.0,
+      "geometry_coverage": 0.0,
+      "dynamic_coverage": 0.0
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "overall_status": "SUPPORTED",
+  "status_counts": {
+    "SUPPORTED": 100
+  },
+  "supported_samples": 100,
+  "center_source": "pelvis_midpoint",
+  "camera_compensation_method": "partial affine/RANSAC sparse optical flow with human ROI masked",
+  "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
+  "speed_method": "body-scale-normalized projected speed; not m/s",
+  "mean_normalized_projected_speed_per_s": 1.804956789799766,
+  "minimum_normalized_projected_speed_per_s": 0.1397549444800564,
+  "time_minimum_projected_speed_ms": -899.9999999999995,
+  "maximum_normalized_projected_speed_per_s": 8.115110077542711,
+  "direction_change": {
+    "evidence_status": "SUPPORTED",
+    "incoming_heading_deg": -166.7254797475622,
+    "late_heading_deg": -77.48386870820892,
+    "projected_change_of_direction_angle_deg": 89.2416110393533,
+    "absolute_projected_change_of_direction_angle_deg": 89.2416110393533,
+    "source_frame_start": 7,
+    "source_frame_end": 106,
+    "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
+  },
+  "projected_speed_change_final_500ms": {
+    "evidence_status": "SUPPORTED",
+    "window_start_ms": -500.0,
+    "mean_prior_projected_speed": 1.8682594867428655,
+    "mean_final_projected_speed": 1.4765740494074353,
+    "projected_speed_change": -0.39168543733543015,
+    "descriptor": "RELATIVELY_STABLE_PROJECTED_SPEED"
+  },
+  "validation": {
+    "validation_status": "SUPPORTED",
+    "reason": "",
+    "supported_fraction": 1.0,
+    "path_segment_counts": {
+      "path_segment_001": 100
+    }
+  },
+  "candidate_comparison": {
+    "translation": {
+      "validation_status": "QA_REQUIRED",
+      "reason": "Projected path contains a large step relative to the median supported step.",
+      "supported_fraction": 0.89,
+      "maximum_to_median_step_ratio": 6.175674820115558,
+      "path_segment_counts": {
+        "path_segment_001": 8,
+        "path_segment_002": 15,
+        "path_segment_005": 11,
+        "path_segment_006": 55
+      }
+    },
+    "affine": {
+      "validation_status": "SUPPORTED",
+      "reason": "",
+      "supported_fraction": 1.0,
+      "path_segment_counts": {
+        "path_segment_001": 100
+      }
+    },
+    "chosen_method": "affine"
+  }
+}
