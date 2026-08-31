@@ -215,6 +215,33 @@ def render_exploration_page() -> str:
       font-weight: 850;
     }
     .chart-summary { margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid var(--accent); background: #f7f9fb; }
+    .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .chart-grid h3 { margin: 2px 4px 8px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 12px 0;
+    }
+    .stat-card { padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .stat-card span { display: block; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .stat-card strong { display: block; margin-top: 4px; font-size: 17px; }
+    .stat-card small { display: block; margin-top: 3px; color: var(--muted); }
+    .category-legend { margin-top: 12px; }
+    .measurement-help {
+      margin: -2px 0 14px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: #f7f9fb;
+      line-height: 1.45;
+    }
+    .measurement-help strong { display: block; margin-bottom: 3px; }
+    .measurement-help p { margin: 0; color: var(--muted); }
+    .measurement-help-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .chart-reference { display: flex; align-items: center; gap: 8px; margin: 2px 4px 8px; color: var(--muted); font-size: 12px; font-weight: 750; }
+    .chart-reference-line { width: 28px; border-top: 2px dashed #735b24; }
     .eligibility-result {
       min-height: 98px;
       margin-top: 12px;
@@ -277,6 +304,9 @@ def render_exploration_page() -> str:
       .source-toolbar { grid-template-columns: 1fr; }
       .source-card-head { flex-direction: column; }
       .source-badges { justify-content: flex-start; }
+      .measurement-help-grid { grid-template-columns: 1fr; }
+      .chart-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       canvas { min-height: 240px; aspect-ratio: 1.5 / 1; }
     }
     __APP_SHELL_CSS__
@@ -314,6 +344,7 @@ def render_exploration_page() -> str:
     <nav class="tabs" aria-label="Data exploration views" role="tablist">
       <button class="tab active" id="overviewTab" type="button" role="tab" aria-selected="true" aria-controls="overviewView" tabindex="0" data-view="overviewView">Overview</button>
       <button class="tab" id="sourcesTab" type="button" role="tab" aria-selected="false" aria-controls="sourcesView" tabindex="-1" data-view="sourcesView">Sources / Injury Reports</button>
+      <button class="tab" id="breakdownsTab" type="button" role="tab" aria-selected="false" aria-controls="breakdownsView" tabindex="-1" data-view="breakdownsView">Case breakdowns</button>
       <button class="tab" id="distributionTab" type="button" role="tab" aria-selected="false" aria-controls="distributionView" tabindex="-1" data-view="distributionView">Compare cases</button>
       <button class="tab" id="relationshipTab" type="button" role="tab" aria-selected="false" aria-controls="relationshipView" tabindex="-1" data-view="relationshipView">Compare two measurements</button>
       <button class="tab" id="testBuilderTab" type="button" role="tab" aria-selected="false" aria-controls="testBuilderView" tabindex="-1" data-view="testBuilderView">Can these groups be compared?</button>
@@ -323,7 +354,7 @@ def render_exploration_page() -> str:
       <details class="band overview-disclosure" open>
         <summary><h2>Case Library</h2><span>Completed analyses grouped by registered injury event.</span></summary>
         <div class="table-wrap" role="region" aria-label="Case library table" tabindex="0"><table>
-          <thead><tr><th>Case</th><th>Supplied case metadata</th><th>Team / competition</th><th>Position</th><th>Views</th><th>Geometry support</th><th>Dynamic support</th><th>Median frame coverage</th></tr></thead>
+          <thead><tr><th>Case</th><th>Supplied case metadata</th><th>Team / league / competition</th><th>Position</th><th>Views</th><th>Geometry support</th><th>Dynamic support</th><th>Median frame coverage</th></tr></thead>
           <tbody id="caseRows"><tr><td colspan="8" class="empty">Loading cases</td></tr></tbody>
         </table></div>
       </details>
@@ -348,6 +379,27 @@ def render_exploration_page() -> str:
           <tbody id="technicalIdentifierRows"></tbody>
         </table></div></div>
       </details>
+    </section>
+
+    <section class="view" id="breakdownsView" role="tabpanel" aria-labelledby="breakdownsTab">
+      <div class="band">
+        <h2>Case Breakdowns</h2>
+        <p class="section-copy">See how many independent injury cases fall into each recorded category. These are case counts, not risk rates.</p>
+        <div class="controls">
+          <label><span>Break cases down by</span><select id="breakdownVariable">
+            <option value="position_group">Player position</option>
+            <option value="league">Domestic league</option>
+            <option value="age_group">Age at injury</option>
+            <option value="contact_mechanism">Contact mechanism</option>
+          </select></label>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-shell"><h3>Bar chart</h3><canvas id="breakdownBarCanvas" role="img" aria-label="Case counts by selected category shown as bars."></canvas></div>
+          <div class="chart-shell"><h3>Pie chart</h3><canvas id="breakdownPieCanvas" role="img" aria-label="Case proportions by selected category shown as a pie."></canvas></div>
+        </div>
+        <p class="chart-summary" id="breakdownSummary"></p>
+        <ul id="breakdownLegend" class="chart-legend category-legend" aria-label="Category counts"></ul>
+      </div>
     </section>
 
     <section class="view" id="sourcesView" role="tabpanel" aria-labelledby="sourcesTab">
@@ -384,7 +436,12 @@ def render_exploration_page() -> str:
           <label><span>Measurement</span><select id="distributionFeature"></select></label>
           <label><span>How to summarise each case</span><select id="distributionStatistic"></select></label>
         </div>
-        <div class="chart-shell"><canvas id="distributionCanvas" class="tall-chart" role="img" aria-label="Named case comparison chart; values are also listed in the table below."></canvas></div>
+        <div class="measurement-help" id="distributionFeatureHelp" aria-live="polite"></div>
+        <div class="stats-grid" id="distributionStats" aria-label="Descriptive statistics for supported case values"></div>
+        <div class="chart-shell">
+          <div class="chart-reference"><span class="chart-reference-line" aria-hidden="true"></span><span>Dashed line = median; box = middle 50%; diamond = mean</span></div>
+          <canvas id="distributionCanvas" class="tall-chart" role="img" aria-label="Named case comparison chart; values are also listed in the table below."></canvas>
+        </div>
         <p class="chart-summary" id="distributionSummary"></p>
         <div class="table-wrap"><table>
           <thead><tr><th>Case</th><th>Value</th><th>Support</th><th>Evidence view</th><th>Relevant coverage</th></tr></thead>
@@ -402,6 +459,7 @@ def render_exploration_page() -> str:
           <label><span>Second measurement</span><select id="relationshipY"></select></label>
           <label><span>How to summarise each case</span><select id="relationshipStatistic"></select></label>
         </div>
+        <div class="measurement-help-grid" id="relationshipFeatureHelp" aria-live="polite"></div>
         <div class="chart-shell">
           <canvas id="relationshipCanvas" role="img" aria-label="Two-measurement case comparison chart; values are also listed in the table below."></canvas>
           <ol id="relationshipLegend" class="chart-legend" aria-label="Case labels for numbered chart points"></ol>
@@ -427,9 +485,10 @@ def render_exploration_page() -> str:
           <label><span>How to summarise each case</span><select id="testStatistic"></select></label>
           <label><span>Compare groups by</span><select id="testGroup">
             <option value="contact_mechanism">Contact mechanism</option>
-            <option value="injured_side">Injured knee</option>
+            <option value="preferred_foot_knee_injured">Preferred-foot knee injured</option>
           </select></label>
         </div>
+        <div class="measurement-help" id="testFeatureHelp" aria-live="polite"></div>
         <button class="active" id="checkEligibility" type="button">Check whether comparison is possible</button>
         <div class="eligibility-result caution" id="eligibilityResult">
           Select an outcome and check whether the current evidence supports a group comparison.
@@ -461,6 +520,13 @@ def render_exploration_page() -> str:
       geometry_completeness: "Geometry coverage",
       dynamic_completeness: "Dynamic coverage",
     };
+    const breakdownLabels = {
+      position_group: "player position",
+      league: "domestic league",
+      age_group: "age at injury",
+      contact_mechanism: "contact mechanism",
+    };
+    const chartColours = ["#215f9a", "#18744a", "#b26a1b", "#7a4fa3", "#b7435c", "#377f8c", "#6d7f32", "#795548"];
 
     function escapeHtml(value) {
       return String(value ?? "").replace(/[&<>"']/g, char => ({
@@ -478,6 +544,26 @@ def render_exploration_page() -> str:
 
     function featureLabel(name) {
       return app.data.features.find(item => item.feature_name === name)?.label || name;
+    }
+
+    function featureInfo(name) {
+      return app.data.features.find(item => item.feature_name === name) || {
+        label: name,
+        description: "A supported two-dimensional measurement from the video.",
+      };
+    }
+
+    function measurementHelpHtml(name, prefix) {
+      const feature = featureInfo(name);
+      return `<div class="measurement-help"><strong>${escapeHtml(`${prefix}: ${feature.label}`)}</strong><p>${escapeHtml(feature.description)}</p></div>`;
+    }
+
+    function renderMeasurementHelp() {
+      const distribution = featureInfo($("distributionFeature").value);
+      $("distributionFeatureHelp").innerHTML = `<strong>${escapeHtml(distribution.label)}</strong><p>${escapeHtml(distribution.description)}</p>`;
+      $("relationshipFeatureHelp").innerHTML = measurementHelpHtml($("relationshipX").value, "First") + measurementHelpHtml($("relationshipY").value, "Second");
+      const testFeature = featureInfo($("testFeature").value);
+      $("testFeatureHelp").innerHTML = `<strong>${escapeHtml(testFeature.label)}</strong><p>${escapeHtml(testFeature.description)}</p>`;
     }
 
     function readableValue(value, fallback = "Not recorded") {
@@ -578,6 +664,38 @@ def render_exploration_page() -> str:
       return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
     }
 
+    function mean(values) {
+      return values.length ? values.reduce((sum, value) => sum + Number(value), 0) / values.length : null;
+    }
+
+    function sampleStandardDeviation(values) {
+      if (values.length < 2) return null;
+      const centre = mean(values);
+      return Math.sqrt(values.reduce((sum, value) => sum + (Number(value) - centre) ** 2, 0) / (values.length - 1));
+    }
+
+    function quantile(values, probability) {
+      const sorted = values.map(Number).sort((a, b) => a - b);
+      if (!sorted.length) return null;
+      const position = (sorted.length - 1) * probability;
+      const lower = Math.floor(position);
+      const fraction = position - lower;
+      return sorted[lower + 1] === undefined
+        ? sorted[lower]
+        : sorted[lower] + fraction * (sorted[lower + 1] - sorted[lower]);
+    }
+
+    function categoryLabel(value, variable = "") {
+      if (variable === "preferred_foot_knee_injured") {
+        if (value === true || value === "true") return "Preferred-foot knee injured";
+        if (value === false || value === "false") return "Other knee injured";
+      }
+      const text = readableValue(value, "Not recorded");
+      return text === text.toLowerCase()
+        ? text.replace(/(^|[\s-])([a-z])/g, (_, boundary, letter) => boundary + letter.toUpperCase())
+        : text;
+    }
+
     function setSelectOptions(select, items, valueKey, labelKey) {
       select.innerHTML = items.map(item =>
         `<option value="${escapeHtml(item[valueKey])}">${escapeHtml(item[labelKey])}</option>`
@@ -610,11 +728,16 @@ def render_exploration_page() -> str:
           event.injury_date || null,
           event.match_minute ? `minute ${event.match_minute}` : null,
         ].filter(Boolean);
-        const teamCompetition = [readableValue(event.team), readableValue(event.competition)]
+        const teamCompetition = [readableValue(event.team), readableValue(event.league), readableValue(event.competition)]
           .filter(value => value !== "Not recorded");
+        const preferredSide = event.preferred_foot_knee_injured === true
+          ? "preferred-foot knee injured"
+          : event.preferred_foot_knee_injured === false
+            ? "other knee injured"
+            : "preferred-foot comparison unavailable";
         return `<tr>
           <td><strong>${escapeHtml(event.player_name)}</strong></td>
-          <td>${injuryParts.map(escapeHtml).join(" · ")}<br><span class="badge ${knownContact ? "good" : "caution"}">${escapeHtml(mechanismLabel(contact))}</span></td>
+          <td>${injuryParts.map(escapeHtml).join(" · ")}<br><span class="badge ${knownContact ? "good" : "caution"}">${escapeHtml(mechanismLabel(contact))}</span><br><span class="muted">${escapeHtml(categoryLabel(event.preferred_foot, ""))} foot · ${escapeHtml(preferredSide)}</span></td>
           <td>${teamCompetition.length ? teamCompetition.map(escapeHtml).join("<br>") : '<span class="muted">Not recorded</span>'}</td>
           <td>${escapeHtml(readableValue(event.position_group))}</td>
           <td>${event.analysed_view_count}</td>
@@ -630,7 +753,7 @@ def render_exploration_page() -> str:
         const geometryWidth = valueAvailable(feature.median_geometry_completeness)
           ? Math.round(feature.median_geometry_completeness * 100) : 0;
         return `<tr>
-          <td><strong>${escapeHtml(feature.label)}</strong></td>
+          <td><strong>${escapeHtml(feature.label)}</strong><br><span class="muted">${escapeHtml(feature.description)}</span></td>
           <td>${escapeHtml(feature.body_region.replaceAll("_", " "))}</td>
           <td>${feature.supported_case_count} / ${feature.relevant_case_count}</td>
           <td>${feature.dynamic_supported_case_count} / ${feature.relevant_case_count}</td>
@@ -662,7 +785,9 @@ def render_exploration_page() -> str:
           const searchable = [
             event.player_name,
             event.team,
+            event.league,
             event.competition,
+            event.preferred_foot_source,
             event.mechanism_rationale,
             event.mechanism_investigation_note,
             ...sources.flatMap(source => [source.title, source.publisher, source.evidence]),
@@ -681,6 +806,9 @@ def render_exploration_page() -> str:
         const resolved = mechanismIsResolved(event.contact_mechanism);
         const sources = Array.isArray(event.mechanism_sources) ? event.mechanism_sources : [];
         const registeredIds = Array.isArray(event.registered_case_ids) ? event.registered_case_ids : [];
+        const preferredFootSource = event.preferred_foot_source_url
+          ? `<a href="${escapeHtml(event.preferred_foot_source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(event.preferred_foot_source || "preferred-foot source")}</a>`
+          : escapeHtml(event.preferred_foot_source || "source not recorded");
         const sourceItems = sources.map(source => `<li class="report-item">
           <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(source.title || "Open source")}</a>
           <span class="report-meta">${[source.publisher, source.published_date, readableValue(source.source_type, "")].filter(Boolean).map(escapeHtml).join(" · ")}</span>
@@ -696,6 +824,7 @@ def render_exploration_page() -> str:
           </div>
           <p class="source-assessment"><strong>${escapeHtml(changeStatusLabel(event))}.</strong> ${escapeHtml(event.mechanism_rationale || "No mechanism assessment is available.")}</p>
           <p class="source-provenance">${escapeHtml(evidenceStatusLabel(event.mechanism_verification_status))} · Evidence basis: ${escapeHtml(readableValue(event.mechanism_evidence_basis, "not recorded"))}${registeredIds.length > 1 ? ` · ${registeredIds.length} registered views of this event` : ""}</p>
+          <p class="source-provenance"><strong>Preferred foot:</strong> ${escapeHtml(categoryLabel(event.preferred_foot, ""))} · ${preferredFootSource}${event.ea_fc_audit_status === "not_listed" ? " · EAFC record unavailable" : ""}</p>
           ${event.mechanism_investigation_status === "needs_further_investigation" ?
             `<p class="source-assessment"><span class="badge caution">Needs further investigation</span> ${escapeHtml(event.mechanism_investigation_note || "An additional independent review or clearer angle is still needed.")}</p>` : ""}
           <ul class="report-list">${sourceItems}</ul>
@@ -728,6 +857,84 @@ def render_exploration_page() -> str:
         setSelectOptions($(id), statistics, "value", "label")
       );
       if (features.length > 1) $("relationshipY").selectedIndex = 1;
+      renderMeasurementHelp();
+    }
+
+    function breakdownCounts(variable) {
+      const counts = new Map();
+      app.data.events.forEach(event => {
+        let value = event[variable];
+        if (variable === "contact_mechanism" && !mechanismIsResolved(value)) value = "unclear";
+        if (value === null || value === undefined || value === "") value = "unknown";
+        const key = String(value);
+        counts.set(key, (counts.get(key) || 0) + 1);
+      });
+      return [...counts.entries()]
+        .map(([value, count]) => ({value, label: categoryLabel(value, variable), count}))
+        .sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+    }
+
+    function renderBreakdowns() {
+      const variable = $("breakdownVariable").value;
+      const rows = breakdownCounts(variable);
+      const total = rows.reduce((sum, row) => sum + row.count, 0);
+      const barCanvas = $("breakdownBarCanvas");
+      barCanvas.style.height = `${Math.max(300, rows.length * 48 + 90)}px`;
+      const bar = canvasContext(barCanvas);
+      bar.context.clearRect(0, 0, bar.width, bar.height);
+      const barMargin = {left: Math.min(190, Math.max(118, bar.width * 0.3)), right: 28, top: 20, bottom: 44};
+      const maxCount = Math.max(...rows.map(row => row.count), 1);
+      const plotWidth = bar.width - barMargin.left - barMargin.right;
+      const rowHeight = (bar.height - barMargin.top - barMargin.bottom) / Math.max(rows.length, 1);
+      rows.forEach((row, index) => {
+        const y = barMargin.top + index * rowHeight + rowHeight * 0.18;
+        const height = rowHeight * 0.64;
+        const width = row.count / maxCount * plotWidth;
+        bar.context.fillStyle = chartColours[index % chartColours.length];
+        bar.context.fillRect(barMargin.left, y, width, height);
+        bar.context.fillStyle = "#1f2a33";
+        bar.context.font = "12px system-ui";
+        bar.context.textAlign = "right";
+        bar.context.fillText(row.label, barMargin.left - 9, y + height / 2 + 4, barMargin.left - 18);
+        bar.context.textAlign = "left";
+        bar.context.font = "800 12px system-ui";
+        bar.context.fillText(String(row.count), Math.min(barMargin.left + width + 7, bar.width - 18), y + height / 2 + 4);
+      });
+      bar.context.fillStyle = "#617080";
+      bar.context.textAlign = "center";
+      bar.context.font = "700 12px system-ui";
+      bar.context.fillText("Independent injury cases", barMargin.left + plotWidth / 2, bar.height - 13);
+
+      const pie = canvasContext($("breakdownPieCanvas"));
+      pie.context.clearRect(0, 0, pie.width, pie.height);
+      const radius = Math.min(pie.width, pie.height) * 0.31;
+      const centreX = pie.width / 2;
+      const centreY = pie.height / 2;
+      let angle = -Math.PI / 2;
+      rows.forEach((row, index) => {
+        const sweep = total ? row.count / total * Math.PI * 2 : 0;
+        pie.context.fillStyle = chartColours[index % chartColours.length];
+        pie.context.beginPath();
+        pie.context.moveTo(centreX, centreY);
+        pie.context.arc(centreX, centreY, radius, angle, angle + sweep);
+        pie.context.closePath();
+        pie.context.fill();
+        angle += sweep;
+      });
+      pie.context.fillStyle = "#fff";
+      pie.context.beginPath();
+      pie.context.arc(centreX, centreY, radius * 0.48, 0, Math.PI * 2);
+      pie.context.fill();
+      pie.context.fillStyle = "#1f2a33";
+      pie.context.textAlign = "center";
+      pie.context.font = "800 24px system-ui";
+      pie.context.fillText(String(total), centreX, centreY + 2);
+      pie.context.fillStyle = "#617080";
+      pie.context.font = "11px system-ui";
+      pie.context.fillText("cases", centreX, centreY + 20);
+
+      $("breakdownSummary").textContent = `${total} independent injury cases grouped by ${breakdownLabels[variable]}. Counts describe this case library only; they do not estimate injury incidence or risk.`;
+      $("breakdownLegend").innerHTML = rows.map((row, index) => `<li><span class="chart-key" style="background:${chartColours[index % chartColours.length]}">${row.count}</span><span>${escapeHtml(row.label)} · ${total ? Math.round(row.count / total * 100) : 0}%</span></li>`).join("");
     }
 
     function canvasContext(canvas) {
@@ -820,8 +1027,22 @@ def render_exploration_page() -> str:
       const statistic = $("distributionStatistic").value;
       const allRecords = app.data.records.filter(record => record.feature_name === feature);
       const records = selectedRecords(feature, statistic).sort((a, b) => Number(a[statistic]) - Number(b[statistic]));
+      const values = records.map(record => Number(record[statistic]));
+      const centre = median(values);
+      const average = mean(values);
+      const standardDeviation = sampleStandardDeviation(values);
+      const minimumRecord = records[0];
+      const maximumRecord = records.at(-1);
+      const statisticCard = (label, value, detail = "") => `<div class="stat-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>${detail ? `<small>${escapeHtml(detail)}</small>` : ""}</div>`;
+      $("distributionStats").innerHTML = records.length ? [
+        statisticCard("Mean", formatValue(average, feature, statistic)),
+        statisticCard("Median", formatValue(centre, feature, statistic)),
+        statisticCard("Sample SD", standardDeviation === null ? "Needs 2+ cases" : formatValue(standardDeviation, feature, statistic)),
+        statisticCard("Minimum", formatValue(minimumRecord[statistic], feature, statistic), minimumRecord.player_name),
+        statisticCard("Maximum", formatValue(maximumRecord[statistic], feature, statistic), maximumRecord.player_name),
+      ].join("") : statisticCard("Summary", "No supported values");
       const canvas = $("distributionCanvas");
-      canvas.style.height = `${Math.max(360, records.length * 34 + 100)}px`;
+      canvas.style.height = `${Math.max(420, records.length * 34 + 165)}px`;
       const {context, width, height} = canvasContext(canvas);
       if (!records.length) {
         drawNoData(context, width, height, "No supported case values for this selection.");
@@ -829,18 +1050,46 @@ def render_exploration_page() -> str:
       } else {
         context.clearRect(0, 0, width, height);
         const unit = unitLabel(feature, statistic);
-        const margin = {left: Math.min(210, Math.max(145, width * 0.23)), right: 28, top: 24, bottom: 58};
-        const values = records.map(record => Number(record[statistic]));
+        const margin = {left: Math.min(210, Math.max(145, width * 0.23)), right: 28, top: 92, bottom: 58};
         const [min, max] = numericDomain(values);
         drawLinearTicks(context, width, height, margin, [min, max], "x", unit);
         const plotWidth = width - margin.left - margin.right;
         const plotHeight = height - margin.top - margin.bottom;
-        const centre = median(values);
         const medianX = margin.left + (centre - min) / (max - min) * plotWidth;
+        const q1 = quantile(values, 0.25);
+        const q3 = quantile(values, 0.75);
+        const minimumX = margin.left + (Math.min(...values) - min) / (max - min) * plotWidth;
+        const maximumX = margin.left + (Math.max(...values) - min) / (max - min) * plotWidth;
+        const q1X = margin.left + (q1 - min) / (max - min) * plotWidth;
+        const q3X = margin.left + (q3 - min) / (max - min) * plotWidth;
+        const meanX = margin.left + (average - min) / (max - min) * plotWidth;
+        const boxY = 48;
+        context.save();
+        context.strokeStyle = "#215f9a";
+        context.fillStyle = "#e9f2fb";
+        context.lineWidth = 2;
+        context.beginPath(); context.moveTo(minimumX, boxY); context.lineTo(maximumX, boxY); context.stroke();
+        context.beginPath(); context.moveTo(minimumX, boxY - 9); context.lineTo(minimumX, boxY + 9); context.moveTo(maximumX, boxY - 9); context.lineTo(maximumX, boxY + 9); context.stroke();
+        context.fillRect(q1X, boxY - 15, Math.max(q3X - q1X, 1), 30);
+        context.strokeRect(q1X, boxY - 15, Math.max(q3X - q1X, 1), 30);
+        context.beginPath(); context.moveTo(medianX, boxY - 15); context.lineTo(medianX, boxY + 15); context.stroke();
+        context.fillStyle = "#18744a";
+        context.beginPath(); context.moveTo(meanX, boxY - 8); context.lineTo(meanX + 8, boxY); context.lineTo(meanX, boxY + 8); context.lineTo(meanX - 8, boxY); context.closePath(); context.fill();
+        context.restore();
         context.save();
         context.strokeStyle = "#735b24";
         context.setLineDash([6, 5]);
         context.beginPath(); context.moveTo(medianX, margin.top); context.lineTo(medianX, height - margin.bottom); context.stroke();
+        context.setLineDash([]);
+        context.font = "700 11px system-ui";
+        const medianLabel = "Median";
+        const medianLabelWidth = context.measureText(medianLabel).width + 12;
+        const medianLabelX = Math.min(Math.max(medianX - medianLabelWidth / 2, margin.left), width - margin.right - medianLabelWidth);
+        context.fillStyle = "#fff8e1";
+        context.fillRect(medianLabelX, margin.top + 3, medianLabelWidth, 20);
+        context.fillStyle = "#735b24";
+        context.textAlign = "center";
+        context.fillText(medianLabel, medianLabelX + medianLabelWidth / 2, margin.top + 17);
         context.restore();
         records.forEach((record, index) => {
           const x = margin.left + (Number(record[statistic]) - min) / (max - min) * plotWidth;
@@ -860,9 +1109,9 @@ def render_exploration_page() -> str:
         context.font = "700 13px system-ui";
         context.textAlign = "center";
         context.fillText(unit, margin.left + plotWidth / 2, height - 16);
-        canvas.setAttribute("aria-label", `${featureLabel(feature)} comparison across ${records.length} named injury cases. Full values are listed in the table below.`);
+        canvas.setAttribute("aria-label", `${featureLabel(feature)} box plot and named case points across ${records.length} injury cases. The dashed line is the median and the diamond is the mean. Full values are listed below.`);
         const omitted = allRecords.length - records.length;
-        $("distributionSummary").textContent = `${records.length} of ${allRecords.length} independent cases contribute supported values; ${omitted} ${omitted === 1 ? "case is" : "cases are"} unavailable or limited. Median: ${formatValue(centre, feature, statistic)}. Dashed line = median. This is a named case comparison, not a population distribution.`;
+        $("distributionSummary").textContent = `${records.length} of ${allRecords.length} independent cases contribute supported values; ${omitted} ${omitted === 1 ? "case is" : "cases are"} unavailable or limited. The box covers the middle 50% of supported values. This is a named case comparison, not a population distribution.`;
       }
       const tableRows = [...allRecords].sort((left, right) => {
         const leftSupported = measurementStatus(left, statistic) === "Supported";
@@ -1011,35 +1260,40 @@ def render_exploration_page() -> str:
       const feature = $("testFeature").value;
       const statistic = $("testStatistic").value;
       const groupVariable = $("testGroup").value;
-      const records = selectedRecords(feature, statistic).filter(record =>
-        !["unknown", "uncertain", "unclear", ""].includes(String(record[groupVariable] || "unknown"))
-      );
+      const records = selectedRecords(feature, statistic).filter(record => {
+        const value = record[groupVariable];
+        return value !== null && value !== undefined &&
+          !["unknown", "uncertain", "unclear", ""].includes(String(value));
+      });
       const groups = {};
       records.forEach(record => {
-        const group = record[groupVariable];
+        const group = String(record[groupVariable]);
         groups[group] = (groups[group] || 0) + 1;
       });
       const entries = Object.entries(groups);
       const result = $("eligibilityResult");
       if (entries.length < 2) {
         result.className = "eligibility-result caution";
-        result.innerHTML = `<h3>These groups cannot be compared yet</h3><p>At least two groups with recorded cases are needed. Current eligible counts: ${entries.length ? entries.map(([name, count]) => `${escapeHtml(name)} = ${count}`).join(", ") : "no classified cases"}. Add the missing case details or analyse more independent cases before comparing groups.</p>`;
+        result.innerHTML = `<h3>These groups cannot be compared yet</h3><p>At least two groups with recorded cases are needed. Current eligible counts: ${entries.length ? entries.map(([name, count]) => `${escapeHtml(categoryLabel(name, groupVariable))} = ${count}`).join(", ") : "no classified cases"}. Add the missing case details or analyse more independent cases before comparing groups.</p>`;
         return;
       }
       const minimum = Math.min(...entries.map(([, count]) => count));
       if (minimum < 5) {
         result.className = "eligibility-result caution";
-        result.innerHTML = `<h3>Not enough independent cases yet</h3><p>${entries.map(([name, count]) => `${escapeHtml(name)} = ${count}`).join(", ")}. Each group needs at least five separate injury cases for this exploratory check. Extra frames and replay views do not increase the number of cases.</p>`;
+        result.innerHTML = `<h3>Not enough independent cases yet</h3><p>${entries.map(([name, count]) => `${escapeHtml(categoryLabel(name, groupVariable))} = ${count}`).join(", ")}. Each group needs at least five separate injury cases for this exploratory check. Extra frames and replay views do not increase the number of cases.</p>`;
         return;
       }
       const methods = entries.length === 2
         ? "Welch t-test, Mann-Whitney U, or a permutation test"
         : "Welch ANOVA, Kruskal-Wallis, or permutation ANOVA";
+      const groupCounts = entries.map(([name, count]) => `${categoryLabel(name, groupVariable)} = ${count}`).join(", ");
       result.className = "eligibility-result good";
-      result.innerHTML = `<h3>Exploratory comparison available</h3><p>Candidate methods: ${methods}. The final choice still requires distribution and outlier checks, effect sizes, confidence intervals, and multiple-testing correction.</p>`;
+      result.innerHTML = `<h3>Exploratory comparison available</h3><p>${escapeHtml(groupCounts)}. Candidate methods: ${methods}. The final choice still requires distribution and outlier checks, effect sizes, confidence intervals, and multiple-testing correction.</p>`;
     }
 
     function redrawActiveCharts() {
+      if (!app.data) return;
+      if ($("breakdownsView").classList.contains("active")) renderBreakdowns();
       if ($("distributionView").classList.contains("active")) renderDistribution();
       if ($("relationshipView").classList.contains("active")) renderRelationship();
     }
@@ -1071,8 +1325,10 @@ def render_exploration_page() -> str:
       });
     });
 
-    ["distributionFeature", "distributionStatistic"].forEach(id => $(id).addEventListener("change", renderDistribution));
-    ["relationshipX", "relationshipY", "relationshipStatistic"].forEach(id => $(id).addEventListener("change", renderRelationship));
+    ["distributionFeature", "distributionStatistic"].forEach(id => $(id).addEventListener("change", () => { renderMeasurementHelp(); renderDistribution(); }));
+    $("breakdownVariable").addEventListener("change", renderBreakdowns);
+    ["relationshipX", "relationshipY", "relationshipStatistic"].forEach(id => $(id).addEventListener("change", () => { renderMeasurementHelp(); renderRelationship(); }));
+    $("testFeature").addEventListener("change", renderMeasurementHelp);
     $("sourceSearch").addEventListener("input", renderSources);
     ["sourceMechanismFilter", "sourceEvidenceFilter"].forEach(id => $(id).addEventListener("change", renderSources));
     $("checkEligibility").addEventListener("click", checkTestEligibility);
@@ -1091,6 +1347,8 @@ def render_exploration_page() -> str:
         renderSources();
         populateControls();
         renderReadiness();
+        renderBreakdowns();
+        redrawActiveCharts();
         if (window.location.hash === "#sources") activateTab($("sourcesTab"));
       })
       .catch(error => {

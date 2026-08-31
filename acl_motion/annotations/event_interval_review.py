@@ -8,6 +8,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from acl_motion.annotations.models import AnnotationCase
+from acl_motion.persistence import atomic_write_json
 
 EVENT_INTERVAL_REVIEW_VERSION = "human_event_interval_review_v1"
 EVENT_INTERVAL_REVIEW_QUESTION = (
@@ -131,9 +132,7 @@ def save_event_interval_review(
         "supported_interval": _supported_interval(movement_story, phases),
         "movement_phases_sha256": _sha256(phase_path),
     }
-    temporary_path = path.with_suffix(path.suffix + ".tmp")
-    temporary_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    temporary_path.replace(path)
+    atomic_write_json(path, payload, trailing_newline=True)
     return {**payload, "path": path.name}
 
 

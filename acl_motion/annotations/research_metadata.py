@@ -9,8 +9,10 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
 
+from acl_motion.persistence import atomic_write_json, path_lock
+
 RESEARCH_METADATA_FILENAME = "case_research_metadata_human.json"
-RESEARCH_METADATA_VERSION = "case_research_metadata_v2"
+RESEARCH_METADATA_VERSION = "case_research_metadata_v3_harmonized_taxonomy"
 
 POSITION_GROUPS = (
     "unknown",
@@ -23,6 +25,7 @@ POSITION_GROUPS = (
 CASE_DETAIL_FIELDS = (
     "player_name",
     "injury_date",
+    "league",
     "competition",
     "team",
     "opponent",
@@ -76,6 +79,7 @@ def case_details(
     return {
         "player_name": str(record.get("player_name") or fallback_player_name).strip(),
         "injury_date": str(record.get("injury_date", "")).strip(),
+        "league": str(record.get("league", "")).strip(),
         "competition": str(record.get("competition", "")).strip(),
         "team": str(record.get("team", "")).strip(),
         "opponent": str(record.get("opponent", "")).strip(),
@@ -96,30 +100,52 @@ def save_case_details(
     """Merge operator-supplied case details while preserving other research fields."""
 
     metadata_path = Path(path)
-    cases = load_research_metadata(metadata_path)
-    existing = dict(cases.get(str(case_id), {}))
     normalized = _normalize_case_details(
         details,
         fallback_player_name=fallback_player_name,
     )
-    source = f"human_operator_annotation_ui:{annotator_id.strip() or 'researcher_01'}"
-    existing.update(normalized)
-    existing["metadata_source"] = source
-    existing["updated_at"] = datetime.now(UTC).isoformat()
-    provenance = dict(existing.get("field_provenance", {}))
-    for field in CASE_DETAIL_FIELDS:
-        if normalized[field] and normalized[field] != "unknown":
-            provenance[field] = source
-    existing["field_provenance"] = provenance
-    cases[str(case_id)] = existing
-
-    metadata_path.parent.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "metadata_version": RESEARCH_METADATA_VERSION,
-        "cases": cases,
-    }
-    metadata_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    with path_lock(metadata_path):
+        cases = load_research_metadata(metadata_path)
+        existing = dict(cases.get(str(case_id), {}))
+        source = f"human_operator_annotation_ui:{annotator_id.strip() or 'researcher_01'}"
+        existing.update(normalized)
+        existing["metadata_source"] = source
+        existing["updated_at"] = datetime.now(UTC).isoformat()
+        provenance = dict(existing.get("field_provenance", {}))
+        for field in CASE_DETAIL_FIELDS:
+            if normalized[field] and normalized[field] != "unknown":
+                provenance[field] = source
+        existing["field_provenance"] = provenance
+        cases[str(case_id)] = existing
+        atomic_write_json(
+            metadata_path,
+            {
+                "metadata_version": RESEARCH_METADATA_VERSION,
+                "cases": cases,
+            },
+        )
     return normalized
+
+
+def delete_case_details(path: str | Path, case_id: str) -> None:
+    """Atomically remove one case while preserving concurrently stored metadata."""
+
+    metadata_path = Path(path)
+    with path_lock(metadata_path):
+        if not metadata_path.exists():
+            return
+        cases = load_research_metadata(metadata_path)
+        if str(case_id) not in cases:
+            return
+        cases.pop(str(case_id), None)
+        atomic_write_json(
+            metadata_path,
+            {
+                "metadata_version": RESEARCH_METADATA_VERSION,
+                "cases": cases,
+            },
+            trailing_newline=True,
+        )
 
 
 def _normalize_case_details(
@@ -136,6 +162,7 @@ def _normalize_case_details(
     return {
         "player_name": player_name,
         "injury_date": injury_date,
+        "league": str(details.get("league", "")).strip(),
         "competition": str(details.get("competition", "")).strip(),
         "team": str(details.get("team", "")).strip(),
         "opponent": str(details.get("opponent", "")).strip(),

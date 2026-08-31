@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import json
 import mimetypes
+import queue
 import re
 import shutil
 import subprocess
+from contextlib import contextmanager
 from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from email.parser import BytesParser
@@ -14,7 +16,7 @@ from email.policy import default as email_policy
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from threading import Lock, Thread
+from threading import Lock, RLock, Thread
 from typing import BinaryIO
 from urllib.parse import parse_qs, quote, urlparse
 
@@ -22,7 +24,10 @@ from acl_motion.analytics.exploration import (
     load_cached_exploration_summary_payload,
     load_exploration_payload,
 )
-from acl_motion.analytics.similarity import build_similarity_payload
+from acl_motion.analytics.similarity import (
+    SimilarityComputationCancelled,
+    build_similarity_payload,
+)
 from acl_motion.annotations.event_interval_review import save_event_interval_review
 from acl_motion.annotations.models import (
     ANNOTATION_UI_VERSION,
@@ -41,6 +46,7 @@ from acl_motion.annotations.registry import (
 )
 from acl_motion.annotations.research_metadata import (
     case_details,
+    delete_case_details,
     research_metadata_path,
     save_case_details,
 )
@@ -60,6 +66,13 @@ from acl_motion.annotations.view_alignment import (
     save_view_alignment,
 )
 from acl_motion.cases.models import InjurySide
+from acl_motion.persistence import (
+    CaseArtifactTransaction,
+    atomic_write_bytes,
+    atomic_write_json,
+    path_lock,
+)
+from acl_motion.runtime import ensure_supported_runtime
 from acl_motion.ui.app_shell import app_shell_css, app_site_header
 from acl_motion.ui.comparison import render_comparison_page
 from acl_motion.ui.exploration import render_exploration_page
@@ -83,16 +96,6 @@ from acl_motion.ui.results import (
     undo_result_mask_prompt,
 )
 from acl_motion.ui.similarity_validation import render_similarity_validation_page
-from acl_motion.validation.expert_judgements import (
-    ExpertPairwiseJudgement,
-    PairwiseChoice,
-    append_expert_judgement,
-    build_blinded_assignments,
-    evaluate_expert_judgements,
-    load_expert_judgements,
-    next_blinded_assignment,
-)
-from acl_motion.validation.similarity import build_internal_similarity_validation_report
 from acl_motion.ui.video_cutter import (
     VideoCutterState,
     assign_analysis_clip,
@@ -105,6 +108,16 @@ from acl_motion.ui.video_cutter import (
     video_cutter_video_path,
     video_cutter_videos_response,
 )
+from acl_motion.validation.expert_judgements import (
+    ExpertPairwiseJudgement,
+    PairwiseChoice,
+    append_expert_judgement,
+    build_blinded_assignments,
+    evaluate_expert_judgements,
+    load_expert_judgements,
+    next_blinded_assignment,
+)
+from acl_motion.validation.similarity import build_internal_similarity_validation_report
 from acl_motion.video.io import VideoMetadata, read_video_metadata
 from acl_motion.video.roi import BBox, RoiTimeline
 
@@ -124,6 +137,45 @@ class AnnotationUiState:
     trash_dir: Path | None = None
     analysis_jobs: dict[str, dict] = field(default_factory=dict)
     analysis_jobs_lock: Lock = field(default_factory=Lock, repr=False)
+    analysis_queue: queue.Queue = field(default_factory=queue.Queue, repr=False)
+    analysis_worker_lock: Lock = field(default_factory=Lock, repr=False)
+    analysis_worker_started: bool = False
+    catalog_lock: RLock = field(default_factory=RLock, repr=False)
+    case_locks: dict[str, RLock] = field(default_factory=dict, repr=False)
+    case_locks_lock: Lock = field(default_factory=Lock, repr=False)
+    case_revisions: dict[str, int] = field(default_factory=dict)
+    comparison_cache: dict[tuple[int, str], dict] = field(default_factory=dict, repr=False)
+    comparison_cache_lock: Lock = field(default_factory=Lock, repr=False)
+    comparison_generation: int = 0
+    comparison_request_lock: Lock = field(default_factory=Lock, repr=False)
+    comparison_latest_requests: dict[str, str] = field(default_factory=dict, repr=False)
+
+
+class StateConflictError(RuntimeError):
+    """Raised when a stale or concurrent operation cannot be applied safely."""
+
+
+@contextmanager
+def _guard_case_mutation(
+    state: AnnotationUiState,
+    case_id: str,
+    operation: str,
+):
+    """Reject overlapping writes instead of blocking an HTTP request indefinitely."""
+
+    operation_lock = _case_lock(state, case_id)
+    if not operation_lock.acquire(blocking=False):
+        raise StateConflictError(
+            f"Another operation is already changing this case. Retry {operation} when it finishes."
+        )
+    try:
+        if _case_has_active_analysis(state, case_id):
+            raise StateConflictError(
+                f"Analysis is queued or running for this case. Wait for it to finish before {operation}."
+            )
+        yield
+    finally:
+        operation_lock.release()
 
 
 def run_annotation_ui(
@@ -135,6 +187,7 @@ def run_annotation_ui(
 ) -> None:
     """Run the local annotation UI until interrupted."""
 
+    ensure_supported_runtime()
     output_path = Path(output_dir)
     root = Path(video_root)
     state = AnnotationUiState(
@@ -165,6 +218,7 @@ def build_server(
 ) -> ThreadingHTTPServer:
     """Build a configured HTTP server for tests or local launch."""
 
+    _hydrate_analysis_jobs(state)
     _hydrate_case_display_names(state)
     handler = make_handler(state)
     return ThreadingHTTPServer((host, port), handler)
@@ -186,11 +240,146 @@ def _analysis_job_payload(state: AnnotationUiState, case_slug: str) -> dict:
         return dict(job)
 
 
+def _case_has_active_analysis(state: AnnotationUiState, case_id: str) -> bool:
+    with state.analysis_jobs_lock:
+        return any(
+            job.get("case_id") == case_id
+            and job.get("status") in {"queued", "running"}
+            for job in state.analysis_jobs.values()
+        )
+
+
+def _case_lock(state: AnnotationUiState, case_id: str) -> RLock:
+    """Return the stable in-process lock for one injury case and all of its views."""
+
+    with state.case_locks_lock:
+        return state.case_locks.setdefault(case_id, RLock())
+
+
+def _case_revision(state: AnnotationUiState, case_id: str) -> int:
+    with state.case_locks_lock:
+        return state.case_revisions.setdefault(case_id, 0)
+
+
+def _bump_case_revision(state: AnnotationUiState, case_id: str) -> int:
+    with state.case_locks_lock:
+        revision = state.case_revisions.get(case_id, 0) + 1
+        state.case_revisions[case_id] = revision
+        return revision
+
+
+def _invalidate_comparison_cache(state: AnnotationUiState) -> None:
+    with state.comparison_cache_lock:
+        state.comparison_generation += 1
+        state.comparison_cache.clear()
+
+
+def _movement_comparison_response(
+    state: AnnotationUiState,
+    selected_case_id: str = "",
+    *,
+    client_id: str = "",
+    request_id: str = "",
+) -> dict:
+    """Build each comparison generation once, then reuse it across requests."""
+
+    if client_id and request_id:
+        with state.comparison_request_lock:
+            state.comparison_latest_requests[client_id] = request_id
+
+    def cancelled() -> bool:
+        if not client_id or not request_id:
+            return False
+        with state.comparison_request_lock:
+            return state.comparison_latest_requests.get(client_id) != request_id
+
+    with state.comparison_cache_lock:
+        generation = state.comparison_generation
+        cache_key = (generation, selected_case_id)
+        cached = state.comparison_cache.get(cache_key)
+        if cached is not None:
+            return cached
+        exploration_key = (generation, "__exploration_payload__")
+        exploration = state.comparison_cache.get(exploration_key)
+        if exploration is None:
+            exploration = load_exploration_payload(
+                tuple(state.cases),
+                research_metadata_path=research_metadata_path(state.output_dir),
+                data_root=_annotation_data_root(state),
+            )
+            state.comparison_cache[exploration_key] = exploration
+        try:
+            payload = build_similarity_payload(
+                exploration["similarity_records"],
+                exploration["events"],
+                view_records=exploration["similarity_view_records"],
+                selected_case_id=selected_case_id,
+                cancelled=cancelled,
+            )
+        except SimilarityComputationCancelled as exc:
+            raise StateConflictError(str(exc)) from exc
+        state.comparison_cache[cache_key] = payload
+        return payload
+
+
+def _analysis_jobs_path(state: AnnotationUiState) -> Path:
+    return state.output_dir / ".analysis_jobs_human.json"
+
+
+def _persist_analysis_jobs_locked(state: AnnotationUiState) -> None:
+    atomic_write_json(
+        _analysis_jobs_path(state),
+        {
+            "updated_at": datetime.now(UTC).isoformat(),
+            "jobs": state.analysis_jobs,
+        },
+    )
+
+
+def _hydrate_analysis_jobs(state: AnnotationUiState) -> None:
+    """Recover terminal job history and mark abandoned work after a restart."""
+
+    path = _analysis_jobs_path(state)
+    if not path.exists():
+        return
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return
+    jobs = payload.get("jobs", {})
+    if not isinstance(jobs, dict):
+        return
+    now = datetime.now(UTC).isoformat()
+    with state.analysis_jobs_lock:
+        state.analysis_jobs = {
+            str(slug): dict(job)
+            for slug, job in jobs.items()
+            if isinstance(job, dict)
+        }
+        changed = False
+        for job in state.analysis_jobs.values():
+            if job.get("status") in {"queued", "running"}:
+                job.update(
+                    status="failed",
+                    stage="interrupted_by_restart",
+                    error=(
+                        "The application restarted before this analysis completed. "
+                        "The saved annotation is intact; start analysis again."
+                    ),
+                    updated_at=now,
+                    result_url=None,
+                )
+                changed = True
+        if changed:
+            _persist_analysis_jobs_locked(state)
+
+
 def _update_analysis_job(state: AnnotationUiState, case_slug: str, **changes) -> dict:
     with state.analysis_jobs_lock:
         job = state.analysis_jobs[case_slug]
         job.update(changes)
         job["updated_at"] = datetime.now(UTC).isoformat()
+        _persist_analysis_jobs_locked(state)
         return dict(job)
 
 
@@ -202,8 +391,9 @@ def _run_analysis_job(case: AnnotationCase, state: AnnotationUiState) -> None:
         stage="warming_runtime_and_running_pipeline",
     )
     try:
-        result = generate_human_analysis_from_annotation(case)
-    except Exception as exc:  # Background jobs must always reach a terminal state.
+        with _case_lock(state, case.case_id):
+            result = generate_human_analysis_from_annotation(case)
+    except Exception as exc:  # noqa: BLE001 - jobs must always reach a terminal state.
         _update_analysis_job(
             state,
             case.slug,
@@ -213,6 +403,8 @@ def _run_analysis_job(case: AnnotationCase, state: AnnotationUiState) -> None:
             result_url=None,
         )
         return
+    _bump_case_revision(state, case.case_id)
+    _invalidate_comparison_cache(state)
     _update_analysis_job(
         state,
         case.slug,
@@ -223,30 +415,61 @@ def _run_analysis_job(case: AnnotationCase, state: AnnotationUiState) -> None:
     )
 
 
+def _analysis_worker(state: AnnotationUiState) -> None:
+    """Run analysis transitions serially so expensive pose jobs cannot stampede."""
+
+    while True:
+        case = state.analysis_queue.get()
+        try:
+            _run_analysis_job(case, state)
+        finally:
+            state.analysis_queue.task_done()
+
+
+def _ensure_analysis_worker(state: AnnotationUiState) -> None:
+    with state.analysis_worker_lock:
+        if state.analysis_worker_started:
+            return
+        Thread(
+            target=_analysis_worker,
+            args=(state,),
+            name="analysis-queue",
+            daemon=True,
+        ).start()
+        state.analysis_worker_started = True
+
+
 def _start_analysis_job(case: AnnotationCase, state: AnnotationUiState) -> dict:
     """Start one guarded analysis transition without blocking the HTTP request."""
 
     now = datetime.now(UTC).isoformat()
-    with state.analysis_jobs_lock:
-        existing = state.analysis_jobs.get(case.slug)
-        if existing and existing.get("status") in {"queued", "running"}:
-            return {**existing, "already_running": True}
-        state.analysis_jobs[case.slug] = {
-            "case": case.slug,
-            "status": "queued",
-            "stage": "queued",
-            "started_at": now,
-            "updated_at": now,
-            "result_url": None,
-            "error": None,
-            "already_running": False,
-        }
-    Thread(
-        target=_run_analysis_job,
-        args=(case, state),
-        name=f"analysis-{case.slug}",
-        daemon=True,
-    ).start()
+    operation_lock = _case_lock(state, case.case_id)
+    if not operation_lock.acquire(blocking=False):
+        raise StateConflictError(
+            "This case is currently being saved, trimmed, or deleted. Retry analysis when "
+            "that operation finishes."
+        )
+    try:
+        with state.analysis_jobs_lock:
+            existing = state.analysis_jobs.get(case.slug)
+            if existing and existing.get("status") in {"queued", "running"}:
+                return {**existing, "already_running": True}
+            state.analysis_jobs[case.slug] = {
+                "case": case.slug,
+                "case_id": case.case_id,
+                "status": "queued",
+                "stage": "queued",
+                "started_at": now,
+                "updated_at": now,
+                "result_url": None,
+                "error": None,
+                "already_running": False,
+            }
+            _persist_analysis_jobs_locked(state)
+    finally:
+        operation_lock.release()
+    _ensure_analysis_worker(state)
+    state.analysis_queue.put(case)
     return _analysis_job_payload(state, case.slug)
 
 
@@ -346,18 +569,14 @@ def make_handler(state: AnnotationUiState):
                 elif parsed.path == "/api/movement-comparison":
                     query = parse_qs(parsed.query)
                     selected_case_id = _one(query, "case", "")
-                    exploration = load_exploration_payload(
-                        state.cases,
-                        research_metadata_path=research_metadata_path(state.output_dir),
-                        data_root=_annotation_data_root(state),
+                    self._send_json(
+                        _movement_comparison_response(
+                            state,
+                            selected_case_id,
+                            client_id=_one(query, "client_id", ""),
+                            request_id=_one(query, "request_id", ""),
+                        )
                     )
-                    payload = build_similarity_payload(
-                        exploration["similarity_records"],
-                        exploration["events"],
-                        view_records=exploration["similarity_view_records"],
-                        selected_case_id=selected_case_id,
-                    )
-                    self._send_json(payload)
                 elif parsed.path == "/api/similarity-validation/assignment":
                     self._send_json(
                         _similarity_validation_assignment_response(
@@ -459,13 +678,27 @@ def make_handler(state: AnnotationUiState):
                     self.send_error(HTTPStatus.NOT_FOUND, "Unknown route")
             except (BrokenPipeError, ConnectionResetError):
                 return
+            except StateConflictError as exc:
+                self._send_json({"error": str(exc)}, HTTPStatus.CONFLICT)
             except (json.JSONDecodeError, KeyError, OSError, ValueError) as exc:
                 self._send_json({"error": str(exc)}, HTTPStatus.BAD_REQUEST)
 
         def do_HEAD(self) -> None:
             parsed = urlparse(self.path)
             try:
-                if parsed.path in {"/video-cutter", "/video-cutter/"}:
+                if parsed.path == "/":
+                    self._send_html(render_home_page(), send_body=False)
+                elif parsed.path == "/annotate":
+                    self._send_html(render_annotation_page(), send_body=False)
+                elif parsed.path == "/results":
+                    self._send_html(render_results_page(), send_body=False)
+                elif parsed.path == "/compare":
+                    self._send_html(render_comparison_page(), send_body=False)
+                elif parsed.path == "/validate-similarity":
+                    self._send_html(render_similarity_validation_page(), send_body=False)
+                elif parsed.path == "/explore":
+                    self._send_html(render_exploration_page(), send_body=False)
+                elif parsed.path in {"/video-cutter", "/video-cutter/"}:
                     self._send_html(
                         render_video_cutter_page(
                             main_menu_url="/",
@@ -532,12 +765,16 @@ def make_handler(state: AnnotationUiState):
                     self._send_json(open_video_path_response(self._read_json(), cutter_state))
                     return
                 if parsed.path == f"{cutter_api_base}/assign-analysis-clip":
-                    response, case = assign_analysis_clip(
-                        self._read_json(),
-                        cutter_state,
-                        cases=state.cases,
-                    )
-                    state.cases.append(case)
+                    with state.catalog_lock:
+                        response, case = assign_analysis_clip(
+                            self._read_json(),
+                            cutter_state,
+                            cases=state.cases,
+                        )
+                        if not any(existing.slug == case.slug for existing in state.cases):
+                            state.cases.append(case)
+                        _bump_case_revision(state, case.case_id)
+                        _invalidate_comparison_cache(state)
                     self._send_json(response, HTTPStatus.CREATED)
                     return
                 if parsed.path == "/api/cases/delete":
@@ -560,57 +797,94 @@ def make_handler(state: AnnotationUiState):
                     return
                 if parsed.path == "/api/results/mask-prompt":
                     payload = self._read_json()
-                    response = save_result_mask_prompt(
-                        _case_by_slug(str(payload["case"]), state.cases),
-                        source_frame_index=int(payload["frame"]),
-                        x_px=float(payload["x"]),
-                        y_px=float(payload["y"]),
-                        label=str(payload["label"]),
-                    )
+                    case = _case_by_slug(str(payload["case"]), state.cases)
+                    with _guard_case_mutation(state, case.case_id, "saving mask prompts"):
+                        response = save_result_mask_prompt(
+                            case,
+                            source_frame_index=int(payload["frame"]),
+                            x_px=float(payload["x"]),
+                            y_px=float(payload["y"]),
+                            label=str(payload["label"]),
+                            data_root=_annotation_data_root(state),
+                        )
+                        _bump_case_revision(state, case.case_id)
                     self._send_json(response)
                     return
                 if parsed.path == "/api/results/mask-prompts/undo":
                     payload = self._read_json()
-                    response = undo_result_mask_prompt(
-                        _case_by_slug(str(payload["case"]), state.cases),
-                        source_frame_index=int(payload["frame"]),
-                    )
+                    case = _case_by_slug(str(payload["case"]), state.cases)
+                    with _guard_case_mutation(state, case.case_id, "undoing mask prompts"):
+                        response = undo_result_mask_prompt(
+                            case,
+                            source_frame_index=int(payload["frame"]),
+                            data_root=_annotation_data_root(state),
+                        )
+                        _bump_case_revision(state, case.case_id)
                     self._send_json(response)
                     return
                 if parsed.path == "/api/results/mask-prompts/clear":
                     payload = self._read_json()
-                    response = clear_result_mask_prompts(
-                        _case_by_slug(str(payload["case"]), state.cases),
-                        source_frame_index=int(payload["frame"]),
-                    )
+                    case = _case_by_slug(str(payload["case"]), state.cases)
+                    with _guard_case_mutation(state, case.case_id, "clearing mask prompts"):
+                        response = clear_result_mask_prompts(
+                            case,
+                            source_frame_index=int(payload["frame"]),
+                            data_root=_annotation_data_root(state),
+                        )
+                        _bump_case_revision(state, case.case_id)
                     self._send_json(response)
                     return
                 if parsed.path == "/api/results/trim-analysis-window":
                     payload = self._read_json()
-                    response = trim_human_analysis_window_and_regenerate(
-                        _case_by_slug(str(payload["case"]), state.cases),
-                        movement_end_frame=int(payload["frame"]),
-                        rationale=str(
-                            payload.get(
-                                "rationale",
-                                "Post-injury frames excluded by human operator.",
+                    case = _case_by_slug(str(payload["case"]), state.cases)
+                    operation_lock = _case_lock(state, case.case_id)
+                    if not operation_lock.acquire(blocking=False):
+                        raise StateConflictError(
+                            "Another operation is already changing this case. Retry when it finishes."
+                        )
+                    try:
+                        if _case_has_active_analysis(state, case.case_id):
+                            raise StateConflictError(
+                                "Analysis is already queued or running for this case. Wait for it "
+                                "to finish before changing the analysis boundary."
                             )
-                        ),
-                        annotator_id=str(payload.get("annotator_id", "researcher_01")),
-                    )
+                        response = trim_human_analysis_window_and_regenerate(
+                            case,
+                            movement_end_frame=int(payload["frame"]),
+                            rationale=str(
+                                payload.get(
+                                    "rationale",
+                                    "Post-injury frames excluded by human operator.",
+                                )
+                            ),
+                            annotator_id=str(
+                                payload.get("annotator_id", "researcher_01")
+                            ),
+                            data_root=_annotation_data_root(state),
+                        )
+                        _bump_case_revision(state, case.case_id)
+                        _invalidate_comparison_cache(state)
+                    finally:
+                        operation_lock.release()
                     self._send_json(response)
                     return
                 if parsed.path == "/api/results/event-interval-review":
                     payload = self._read_json()
                     case = _case_by_slug(str(payload["case"]), state.cases)
-                    self._send_json(
-                        save_event_interval_review(
+                    with _guard_case_mutation(
+                        state,
+                        case.case_id,
+                        "saving the event-interval review",
+                    ):
+                        response = save_event_interval_review(
                             case,
                             decision=str(payload.get("decision", "")),
                             reviewer_id=str(payload.get("reviewer_id", "researcher_01")),
                             data_root=_annotation_data_root(state),
                         )
-                    )
+                        _bump_case_revision(state, case.case_id)
+                        _invalidate_comparison_cache(state)
+                    self._send_json(response)
                     return
                 if parsed.path == "/api/generate-analysis":
                     payload = self._read_json()
@@ -620,20 +894,22 @@ def make_handler(state: AnnotationUiState):
                 if parsed.path == "/api/view-alignment":
                     payload = self._read_json()
                     case = _case_by_slug(str(payload["case"]), state.cases)
-                    existing = load_view_alignment(state.output_dir, case.case_id)
-                    anchor = ViewAlignmentAnchor(
-                        anchor_id=str(payload["anchor_id"]),
-                        label=str(payload["label"]),
-                        case_id=case.case_id,
-                        view_frames={
-                            str(view): int(frame)
-                            for view, frame in dict(payload["view_frames"]).items()
-                        },
-                        notes=str(payload.get("notes", "")),
-                        created_by=str(payload.get("created_by", "researcher_01")),
-                    )
-                    updated = existing.upsert(anchor)
-                    path = save_view_alignment(updated, state.output_dir)
+                    with _guard_case_mutation(state, case.case_id, "saving view alignment"):
+                        existing = load_view_alignment(state.output_dir, case.case_id)
+                        anchor = ViewAlignmentAnchor(
+                            anchor_id=str(payload["anchor_id"]),
+                            label=str(payload["label"]),
+                            case_id=case.case_id,
+                            view_frames={
+                                str(view): int(frame)
+                                for view, frame in dict(payload["view_frames"]).items()
+                            },
+                            notes=str(payload.get("notes", "")),
+                            created_by=str(payload.get("created_by", "researcher_01")),
+                        )
+                        updated = existing.upsert(anchor)
+                        path = save_view_alignment(updated, state.output_dir)
+                        _bump_case_revision(state, case.case_id)
                     self._send_json({"saved": True, "path": str(path), **updated.to_dict()})
                     return
                 if parsed.path == "/api/import-video":
@@ -649,6 +925,8 @@ def make_handler(state: AnnotationUiState):
                 self._send_json(response, status)
             except (BrokenPipeError, ConnectionResetError):
                 return
+            except StateConflictError as exc:
+                self._send_json({"error": str(exc)}, HTTPStatus.CONFLICT)
             except (
                 json.JSONDecodeError,
                 KeyError,
@@ -688,7 +966,10 @@ def make_handler(state: AnnotationUiState):
             self.send_header("Cache-Control", "no-store")
             self.end_headers()
             if send_body:
-                self.wfile.write(data)
+                try:
+                    self.wfile.write(data)
+                except (BrokenPipeError, ConnectionResetError):
+                    return
 
         def _send_bytes(
             self,
@@ -703,7 +984,10 @@ def make_handler(state: AnnotationUiState):
             self.send_header("Cache-Control", "no-store")
             self.end_headers()
             if send_body:
-                self.wfile.write(data)
+                try:
+                    self.wfile.write(data)
+                except (BrokenPipeError, ConnectionResetError):
+                    return
 
         def _send_file(
             self,
@@ -947,14 +1231,13 @@ def _load_imported_cases(output_dir: Path, video_root: Path) -> tuple[Annotation
 
 def _save_imported_cases(state: AnnotationUiState) -> Path:
     path = _imported_cases_path(state.output_dir)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    records = [
-        _imported_case_record(case)
-        for case in state.cases
-        if case.slug.startswith(IMPORTED_CASE_SLUG_PREFIX)
-    ]
-    path.write_text(json.dumps({"cases": records}, indent=2), encoding="utf-8")
-    return path
+    with path_lock(path):
+        records = [
+            _imported_case_record(case)
+            for case in state.cases
+            if case.slug.startswith(IMPORTED_CASE_SLUG_PREFIX)
+        ]
+        return atomic_write_json(path, {"cases": records})
 
 
 def _ensure_primary_views(cases: list[AnnotationCase]) -> list[AnnotationCase]:
@@ -979,7 +1262,7 @@ def _trash_destination(bundle: Path, path: Path, data_root: Path | None) -> Path
 def _move_case_files_to_trash(
     removed_cases: list[AnnotationCase],
     state: AnnotationUiState,
-) -> tuple[Path, int]:
+) -> tuple[Path, list[tuple[Path, Path]]]:
     trash_root = state.trash_dir or Path.home() / ".Trash" / "ACL Movement Explorer"
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
     bundle = trash_root / f"deleted-case-{stamp}"
@@ -1008,47 +1291,73 @@ def _move_case_files_to_trash(
         )
 
     bundle.mkdir(parents=True, exist_ok=False)
-    moved = []
-    for path in sorted(paths):
-        destination = _trash_destination(bundle, path, data_root)
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        if destination.exists():
-            destination = destination.with_name(
-                f"{destination.stem}-{len(moved) + 1}{destination.suffix}"
-            )
-        shutil.move(str(path), destination)
-        moved.append(path)
-    (bundle / "deletion_manifest.json").write_text(
-        json.dumps(
+    moved: list[tuple[Path, Path]] = []
+    try:
+        for path in sorted(paths):
+            destination = _trash_destination(bundle, path, data_root)
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if destination.exists():
+                destination = destination.with_name(
+                    f"{destination.stem}-{len(moved) + 1}{destination.suffix}"
+                )
+            shutil.move(str(path), destination)
+            moved.append((path, destination))
+        atomic_write_json(
+            bundle / "deletion_manifest.json",
             {
                 "deleted_at": datetime.now(UTC).isoformat(),
                 "case_ids": sorted({case.case_id for case in removed_cases}),
                 "view_slugs": [case.slug for case in removed_cases],
                 "moved_file_count": len(moved),
+                "moves": [
+                    {"source": str(source), "trash": str(destination)}
+                    for source, destination in moved
+                ],
             },
-            indent=2,
-        ),
-        encoding="utf-8",
-    )
-    return bundle, len(moved)
+        )
+    except Exception:
+        _restore_case_files_from_trash(moved, bundle)
+        raise
+    return bundle, moved
+
+
+def _restore_case_files_from_trash(
+    moved: list[tuple[Path, Path]],
+    bundle: Path,
+) -> None:
+    for source, destination in reversed(moved):
+        if not destination.exists():
+            continue
+        source.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(destination), source)
+    shutil.rmtree(bundle, ignore_errors=True)
 
 
 def _remove_case_metadata(output_dir: Path, case_id: str) -> None:
-    path = research_metadata_path(output_dir)
-    if not path.exists():
-        return
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    cases = payload.get("cases", {})
-    if isinstance(cases, dict):
-        cases.pop(case_id, None)
-    elif isinstance(cases, list):
-        payload["cases"] = [
-            record for record in cases if str(record.get("case_id", "")) != case_id
-        ]
-    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    delete_case_details(research_metadata_path(output_dir), case_id)
 
 
 def _delete_case_entry(payload: dict, state: AnnotationUiState) -> dict:
+    case_id = str(payload.get("case_id", "")).strip()
+    if not case_id:
+        raise ValueError("A case_id is required.")
+    operation_lock = _case_lock(state, case_id)
+    if not operation_lock.acquire(blocking=False):
+        raise StateConflictError(
+            "Another operation is already changing this case. Retry deletion when it finishes."
+        )
+    try:
+        if _case_has_active_analysis(state, case_id):
+            raise StateConflictError(
+                "Analysis is queued or running for this case. Wait for it to finish before deleting."
+            )
+        with state.catalog_lock:
+            return _delete_case_entry_unlocked(payload, state)
+    finally:
+        operation_lock.release()
+
+
+def _delete_case_entry_unlocked(payload: dict, state: AnnotationUiState) -> dict:
     """Remove a registered case/view and send all of its files to system Trash."""
 
     scope = str(payload.get("scope", "case")).strip().lower()
@@ -1073,15 +1382,61 @@ def _delete_case_entry(payload: dict, state: AnnotationUiState) -> dict:
             raise ValueError("Delete the case to remove its only video view.")
         removed = [target]
 
-    trash_bundle, moved_file_count = _move_case_files_to_trash(removed, state)
+    registry_path = _imported_cases_path(state.output_dir)
+    metadata_path = research_metadata_path(state.output_dir)
+    with path_lock(registry_path), path_lock(metadata_path):
+        return _delete_case_catalog_entry(
+            scope=scope,
+            case_id=case_id,
+            removed=removed,
+            state=state,
+            registry_path=registry_path,
+            metadata_path=metadata_path,
+        )
+
+
+def _delete_case_catalog_entry(
+    *,
+    scope: str,
+    case_id: str,
+    removed: list[AnnotationCase],
+    state: AnnotationUiState,
+    registry_path: Path,
+    metadata_path: Path,
+) -> dict:
+    """Apply one deletion while both shared case catalogs are locked."""
+
+    registry_before = registry_path.read_bytes() if registry_path.exists() else None
+    metadata_before = metadata_path.read_bytes() if metadata_path.exists() else None
+    cases_before = list(state.cases)
+    trash_bundle, moved = _move_case_files_to_trash(removed, state)
     removed_slugs = {case.slug for case in removed}
-    state.cases[:] = _ensure_primary_views(
-        [case for case in state.cases if case.slug not in removed_slugs]
-    )
-    _save_imported_cases(state)
-    remaining_view_count = sum(case.case_id == case_id for case in state.cases)
-    if not remaining_view_count:
-        _remove_case_metadata(state.output_dir, case_id)
+    try:
+        state.cases[:] = _ensure_primary_views(
+            [case for case in state.cases if case.slug not in removed_slugs]
+        )
+        _save_imported_cases(state)
+        remaining_view_count = sum(case.case_id == case_id for case in state.cases)
+        if not remaining_view_count:
+            _remove_case_metadata(state.output_dir, case_id)
+    except Exception:
+        state.cases[:] = cases_before
+        if registry_before is None:
+            registry_path.unlink(missing_ok=True)
+        else:
+            atomic_write_bytes(registry_path, registry_before)
+        if metadata_before is None:
+            metadata_path.unlink(missing_ok=True)
+        else:
+            atomic_write_bytes(metadata_path, metadata_before)
+        _restore_case_files_from_trash(moved, trash_bundle)
+        raise
+    _bump_case_revision(state, case_id)
+    _invalidate_comparison_cache(state)
+    with state.analysis_jobs_lock:
+        for slug in removed_slugs:
+            state.analysis_jobs.pop(slug, None)
+        _persist_analysis_jobs_locked(state)
     return {
         "deleted": True,
         "scope": scope,
@@ -1089,7 +1444,7 @@ def _delete_case_entry(payload: dict, state: AnnotationUiState) -> dict:
         "removed_view_slugs": sorted(removed_slugs),
         "remaining_view_count": remaining_view_count,
         "source_files_preserved": False,
-        "moved_file_count": moved_file_count,
+        "moved_file_count": len(moved),
         "trash_bundle": str(trash_bundle),
     }
 
@@ -1262,6 +1617,13 @@ def _results_navigation_payload(
 
 
 def _session_response(case: AnnotationCase, state: AnnotationUiState) -> dict:
+    with _case_lock(state, case.case_id):
+        response = _session_response_unlocked(case, state)
+        response["revision"] = _case_revision(state, case.case_id)
+        return response
+
+
+def _session_response_unlocked(case: AnnotationCase, state: AnnotationUiState) -> dict:
     paths = human_annotation_paths(state.output_dir, case.slug)
     if paths.session_json.exists():
         session = load_human_annotation_session(paths.session_json)
@@ -1317,6 +1679,55 @@ def _session_response(case: AnnotationCase, state: AnnotationUiState) -> dict:
 
 
 def _save_response(payload: dict, state: AnnotationUiState) -> dict:
+    case = _case_by_slug(str(payload["case_slug"]), state.cases)
+    operation_lock = _case_lock(state, case.case_id)
+    if not operation_lock.acquire(blocking=False):
+        raise StateConflictError(
+            "Another operation is already changing this case. Retry saving when it finishes."
+        )
+    try:
+        if _case_has_active_analysis(state, case.case_id):
+            raise StateConflictError(
+                "Analysis is queued or running for this case. Wait for it to finish before saving."
+            )
+        expected = payload.get("revision")
+        current = _case_revision(state, case.case_id)
+        if expected is not None and int(expected) != current:
+            raise StateConflictError(
+                "This case changed in another tab. Reload it before saving so newer work "
+                "is not overwritten."
+            )
+        registry_path = _imported_cases_path(state.output_dir)
+        metadata_path = research_metadata_path(state.output_dir)
+        with path_lock(registry_path), path_lock(metadata_path):
+            registry_before = registry_path.read_bytes() if registry_path.exists() else None
+            metadata_before = metadata_path.read_bytes() if metadata_path.exists() else None
+            cases_before = list(state.cases)
+            try:
+                with CaseArtifactTransaction(state.output_dir, case.slug):
+                    response = _save_response_unlocked(payload, state)
+            except Exception:
+                state.cases[:] = cases_before
+                _restore_optional_file(registry_path, registry_before)
+                _restore_optional_file(metadata_path, metadata_before)
+                raise
+        response["revision"] = _bump_case_revision(state, case.case_id)
+        _invalidate_comparison_cache(state)
+        return response
+    finally:
+        operation_lock.release()
+
+
+def _restore_optional_file(path: Path, previous: bytes | None) -> None:
+    """Restore a small catalog file after a failed multi-file operation."""
+
+    if previous is None:
+        path.unlink(missing_ok=True)
+    else:
+        atomic_write_bytes(path, previous)
+
+
+def _save_response_unlocked(payload: dict, state: AnnotationUiState) -> dict:
     case = _case_by_slug(str(payload["case_slug"]), state.cases)
     paths = human_annotation_paths(state.output_dir, case.slug)
     existing = load_human_annotation_session(paths.session_json) if paths.session_json.exists() else None
@@ -1538,10 +1949,10 @@ def _similarity_validation_context(
         ]
         if not candidate_views:
             continue
-        selected_view = sorted(
+        selected_view = min(
             candidate_views,
             key=lambda case: (not case.primary_view, case.slug),
-        )[0]
+        )
         sources.append(
             {
                 "case_id": statistical_unit_id,
@@ -2873,7 +3284,11 @@ let app = {
   poseReviewIntervals: [],
   frameImageRequest: 0,
   annotationDirty: false,
-  saveInProgress: false
+  saveInProgress: false,
+  revision: 0,
+  caseLoadVersion: 0,
+  caseLoadAbortController: null,
+  handlingPopState: false
 };
 
 const canvas = document.getElementById("frameCanvas");
@@ -2909,6 +3324,21 @@ function renderCaseSelect(selectedSlug) {
   if (selectedSlug) $("caseSelect").value = selectedSlug;
 }
 
+function syncAnnotationUrl(slug, mode = "replace") {
+  const url = new URL(window.location.href);
+  url.searchParams.set("case", slug);
+  url.searchParams.delete("frame");
+  const method = mode === "push" ? "pushState" : "replaceState";
+  window.history[method]({case: slug}, "", url);
+}
+
+function stopReviewPlayback() {
+  if (app.reviewTimer) clearTimeout(app.reviewTimer);
+  app.reviewTimer = null;
+  const reviewButton = $("review");
+  if (reviewButton) reviewButton.textContent = "Review play";
+}
+
 async function init() {
   flags.forEach(flag => {
     const label = document.createElement("label");
@@ -2932,9 +3362,24 @@ async function init() {
   await loadCase(initialCase.slug, requestedFrame);
 }
 
-async function loadCase(slug, requestedFrame = null) {
-  const data = await api(`/api/session?case=${encodeURIComponent(slug)}`);
+async function loadCase(slug, requestedFrame = null, {historyMode = "replace"} = {}) {
+  const requestVersion = ++app.caseLoadVersion;
+  if (app.caseLoadAbortController) app.caseLoadAbortController.abort();
+  const controller = new AbortController();
+  app.caseLoadAbortController = controller;
+  stopReviewPlayback();
+  app.history = [];
+  app.pendingUnavailableStart = null;
+  app.pendingAcceptedStart = null;
+  app.frameImageRequest += 1;
+  app.poseReviewRequest += 1;
+  const data = await api(
+    `/api/session?case=${encodeURIComponent(slug)}`,
+    {signal: controller.signal}
+  );
+  if (requestVersion !== app.caseLoadVersion) return false;
   app.currentCase = data.case;
+  app.revision = Number(data.revision || 0);
   $("caseClipsLink").href = `/?case=${encodeURIComponent(app.currentCase.case_id)}`;
   $("caseSelect").value = app.currentCase.slug;
   $("viewAnalysis").href = `/results?case=${encodeURIComponent(app.currentCase.slug)}`;
@@ -2976,13 +3421,17 @@ async function loadCase(slug, requestedFrame = null) {
   if (app.hasPreviousPoseReview) {
     try {
       const timelineData = await api(
-        `/api/pose-review/timeline?case=${encodeURIComponent(app.currentCase.slug)}`
+        `/api/pose-review/timeline?case=${encodeURIComponent(app.currentCase.slug)}`,
+        {signal: controller.signal}
       );
+      if (requestVersion !== app.caseLoadVersion) return false;
       app.poseReviewIntervals = timelineData.intervals || [];
     } catch (error) {
+      if (error.name === "AbortError") return false;
       app.poseReviewIntervals = [];
     }
   }
+  if (requestVersion !== app.caseLoadVersion) return false;
   setReviewMode(
     app.editMode && app.hasPreviousPoseReview ? "pose" : "roi",
     false
@@ -3005,6 +3454,7 @@ async function loadCase(slug, requestedFrame = null) {
   updateAcceptedControls();
   $("editWorkflowHint").hidden = !app.editMode;
   await loadFrame(app.frame);
+  if (requestVersion !== app.caseLoadVersion) return false;
   renderTimeline();
   syncWorkflowSteps(true);
   app.annotationDirty = false;
@@ -3015,6 +3465,8 @@ async function loadCase(slug, requestedFrame = null) {
       ? "Resumed saved human annotation."
       : "New independent human annotation session.";
   setStatus(status);
+  syncAnnotationUrl(app.currentCase.slug, historyMode);
+  return true;
 }
 
 function bindControls() {
@@ -3076,6 +3528,20 @@ function bindControls() {
     event.preventDefault();
     event.returnValue = "";
   });
+  window.addEventListener("popstate", async () => {
+    const requested = new URLSearchParams(window.location.search).get("case");
+    const target = app.cases.find(item => item.slug === requested);
+    if (!target) {
+      if (app.currentCase) syncAnnotationUrl(app.currentCase.slug, "replace");
+      return;
+    }
+    if (target.slug === app.currentCase?.slug) return;
+    try {
+      await loadCase(target.slug, null, {historyMode: "replace"});
+    } catch (error) {
+      if (error.name !== "AbortError") setStatus(`Could not restore that clip. ${error.message}`);
+    }
+  });
   canvas.addEventListener("mousedown", startDraw);
   canvas.addEventListener("mousemove", moveDraw);
   canvas.addEventListener("mouseup", finishDraw);
@@ -3091,8 +3557,9 @@ async function handleCaseChange() {
     return;
   }
   try {
-    await loadCase(selectedSlug);
+    await loadCase(selectedSlug, null, {historyMode: "push"});
   } catch (error) {
+    if (error.name === "AbortError") return;
     $("caseSelect").value = currentSlug;
     setStatus(`Could not open the selected clip. ${error.message}`);
   }
@@ -3830,7 +4297,8 @@ async function saveSession(finalized) {
     target_accepted_intervals: app.acceptedIntervals,
     movement_window: app.movementWindow,
     notes: $("sessionNotes").value || "",
-    finalized
+    finalized,
+    revision: app.revision
   };
   const saveButtons = [$("save"), $("finalSave")];
   app.saveInProgress = true;
@@ -3864,6 +4332,7 @@ async function saveSession(finalized) {
       `Case details file: ${response.paths.case_research_metadata_json}`,
     ];
     app.annotationDirty = false;
+    app.revision = Number(response.revision ?? app.revision);
     if (response.validation.ok) {
       updateAnalysisActions(response.human_results_available, finalized);
       setSaveFeedback(finalized ? "Saved and ready for analysis." : "All changes saved.", "saved");
@@ -3995,9 +4464,7 @@ async function compareAnnotations() {
 
 function toggleReview() {
   if (app.reviewTimer) {
-    clearTimeout(app.reviewTimer);
-    app.reviewTimer = null;
-    $("review").textContent = "Review play";
+    stopReviewPlayback();
     return;
   }
   $("review").textContent = "Stop review";

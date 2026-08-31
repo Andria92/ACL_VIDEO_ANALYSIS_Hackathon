@@ -1,15 +1,15 @@
 {
   "cache_version": "exploration_home_summary_cache_v1",
-  "fingerprint": "93a170190f98f84294aa5262f8ffad9618eb87d04202bd3637c231b24769ba69",
+  "fingerprint": "2a513674e5c2f966119e86eee6576a9b61fcdc1916137842fd4d5101b5726a75",
   "payload": {
     "summary": {
       "analysed_case_count": 36,
       "analysed_view_count": 50,
       "feature_count": 36,
       "known_injury_side_count": 34,
-      "known_contact_mechanism_count": 29,
-      "unclear_contact_mechanism_count": 7,
-      "mechanism_source_count": 29,
+      "known_contact_mechanism_count": 36,
+      "unclear_contact_mechanism_count": 0,
+      "mechanism_source_count": 36,
       "phase_supported_case_count": 23
     },
     "similarity": {

@@ -12,6 +12,7 @@ from typing import Any
 from acl_motion.annotations.models import AnnotationCase
 from acl_motion.annotations.research_metadata import case_details, save_case_details
 from acl_motion.cases.models import InjurySide
+from acl_motion.persistence import atomic_write_bytes, atomic_write_json, path_lock
 
 
 def injury_case_options(
@@ -72,6 +73,42 @@ def register_analysis_clip(
     research_metadata_path: str | Path,
 ) -> tuple[AnnotationCase, dict[str, str]]:
     """Register a cut as a new view of a new or existing injury case."""
+
+    registry_path = Path(imported_cases_path)
+    metadata_path = Path(research_metadata_path)
+    with path_lock(registry_path), path_lock(metadata_path):
+        registry_before = registry_path.read_bytes() if registry_path.exists() else None
+        metadata_before = metadata_path.read_bytes() if metadata_path.exists() else None
+        try:
+            return _register_analysis_clip_unlocked(
+                payload,
+                video_path=video_path,
+                cases=cases,
+                imported_cases_path=registry_path,
+                research_metadata_path=metadata_path,
+            )
+        except Exception:
+            _restore_file(registry_path, registry_before)
+            _restore_file(metadata_path, metadata_before)
+            raise
+
+
+def _restore_file(path: Path, previous: bytes | None) -> None:
+    if previous is None:
+        path.unlink(missing_ok=True)
+    else:
+        atomic_write_bytes(path, previous)
+
+
+def _register_analysis_clip_unlocked(
+    payload: Mapping[str, Any],
+    *,
+    video_path: str | Path,
+    cases: Iterable[AnnotationCase],
+    imported_cases_path: str | Path,
+    research_metadata_path: str | Path,
+) -> tuple[AnnotationCase, dict[str, str]]:
+    """Perform one registration while both catalog files are locked."""
 
     clip_path = Path(video_path).resolve()
     if not clip_path.exists() or not clip_path.is_file():
@@ -192,16 +229,6 @@ def _append_case_record(
     clip_start_seconds: Any,
     clip_end_seconds: Any,
 ) -> Path:
-    registry_path = Path(path)
-    records: list[dict[str, Any]] = []
-    if registry_path.exists():
-        try:
-            loaded = json.loads(registry_path.read_text(encoding="utf-8"))
-            records = [dict(item) for item in loaded.get("cases", ()) if isinstance(item, dict)]
-        except (OSError, json.JSONDecodeError):
-            records = []
-    if any(str(item.get("slug")) == case.slug for item in records):
-        raise ValueError("A video view with this identifier is already registered.")
     record = {
         "slug": case.slug,
         "case_id": case.case_id,
@@ -224,9 +251,21 @@ def _append_case_record(
         "clip_start_seconds": _optional_float(clip_start_seconds),
         "clip_end_seconds": _optional_float(clip_end_seconds),
     }
-    records.append(record)
-    registry_path.parent.mkdir(parents=True, exist_ok=True)
-    registry_path.write_text(json.dumps({"cases": records}, indent=2), encoding="utf-8")
+    registry_path = Path(path)
+    with path_lock(registry_path):
+        records: list[dict[str, Any]] = []
+        if registry_path.exists():
+            try:
+                loaded = json.loads(registry_path.read_text(encoding="utf-8"))
+                records = [
+                    dict(item) for item in loaded.get("cases", ()) if isinstance(item, dict)
+                ]
+            except (OSError, json.JSONDecodeError):
+                records = []
+        if any(str(item.get("slug")) == case.slug for item in records):
+            raise ValueError("A video view with this identifier is already registered.")
+        records.append(record)
+        atomic_write_json(registry_path, {"cases": records})
     return registry_path
 
 

@@ -33,6 +33,7 @@ from acl_motion.annotations.storage import (
 )
 from acl_motion.annotations.view_alignment import load_view_alignment
 from acl_motion.cases.models import InjurySide
+from acl_motion.persistence import CaseArtifactTransaction, atomic_write_json
 from acl_motion.pose.profiles import pose_analysis_profile
 from acl_motion.segmentation.target_mask import (
     MaskPrompt,
@@ -1125,25 +1126,29 @@ def trim_human_analysis_window_and_regenerate(
         finalized=True,
     )
     injured_side = _required_human_injured_side(updated_session)
-    save_human_annotation_session(updated_session, root / "annotations" / "human", case.slug)
-    decision_path = _append_analysis_boundary_decision(
-        root,
-        case,
-        previous_end=previous_end,
-        movement_end_frame=end_frame,
-        rationale=rationale,
-        annotator_id=annotator_id,
-    )
-
-    commands = build_human_analysis_regeneration_commands(
-        case,
-        movement_start_frame=start_frame,
-        movement_end_frame=end_frame,
-        data_root=root,
-        python_executable=python_executable,
-        injured_side=injured_side,
-    )
-    command_results = [_run_regeneration_command(command) for command in commands]
+    with CaseArtifactTransaction(root, case.slug):
+        save_human_annotation_session(
+            updated_session,
+            root / "annotations" / "human",
+            case.slug,
+        )
+        decision_path = _append_analysis_boundary_decision(
+            root,
+            case,
+            previous_end=previous_end,
+            movement_end_frame=end_frame,
+            rationale=rationale,
+            annotator_id=annotator_id,
+        )
+        commands = build_human_analysis_regeneration_commands(
+            case,
+            movement_start_frame=start_frame,
+            movement_end_frame=end_frame,
+            data_root=root,
+            python_executable=python_executable,
+            injured_side=injured_side,
+        )
+        command_results = [_run_regeneration_command(command) for command in commands]
     return {
         "regenerated": True,
         "case": case.to_dict(),
@@ -1186,15 +1191,16 @@ def generate_human_analysis_from_annotation(
 
     _warm_pose_runtime(str(python_executable))
 
-    commands = build_human_analysis_regeneration_commands(
-        case,
-        movement_start_frame=int(session.movement_window.movement_start_frame),
-        movement_end_frame=int(session.movement_window.movement_end_frame),
-        data_root=root,
-        python_executable=python_executable,
-        injured_side=injured_side,
-    )
-    command_results = [_run_regeneration_command(command) for command in commands]
+    with CaseArtifactTransaction(root, case.slug):
+        commands = build_human_analysis_regeneration_commands(
+            case,
+            movement_start_frame=int(session.movement_window.movement_start_frame),
+            movement_end_frame=int(session.movement_window.movement_end_frame),
+            data_root=root,
+            python_executable=python_executable,
+            injured_side=injured_side,
+        )
+        command_results = [_run_regeneration_command(command) for command in commands]
     paths = _results_paths(case.slug, root)
     return {
         "generated": True,
@@ -1724,8 +1730,7 @@ def _append_analysis_boundary_decision(
             "preserves_source_video": True,
         }
     )
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return path
+    return atomic_write_json(path, payload)
 
 
 def _analysis_boundary_note(previous_end: int | None, movement_end_frame: int, rationale: str) -> str:
@@ -4635,7 +4640,7 @@ SIMPLE_RESULTS_HTML = r"""
 
 <script>
 const params = new URLSearchParams(window.location.search);
-const caseSlug = params.get('case') || 'christen_press';
+const caseSlug = params.get('case') || '';
 const $ = (id) => document.getElementById(id);
 
 let result = null;
@@ -4869,7 +4874,13 @@ const FEATURE_CATEGORIES = {
 
 fetch('/api/results?case=' + encodeURIComponent(caseSlug))
   .then((response) => {
-    if (!response.ok) throw new Error('Results are unavailable.');
+    if (!response.ok) {
+      const error = new Error(response.status < 500
+        ? 'This analysis link does not identify an available case view.'
+        : 'Results are temporarily unavailable.');
+      error.status = response.status;
+      throw error;
+    }
     return response.json();
   })
   .then((payload) => {
@@ -4893,12 +4904,15 @@ fetch('/api/results?case=' + encodeURIComponent(caseSlug))
     renderAll();
   })
   .catch((error) => {
+    const retry = Number(error.status || 0) >= 500
+      ? '<a class="button primary" href="' + escapeHtml(window.location.href) + '">Try again</a> '
+      : '';
     document.body.innerHTML = '<main><section class="panel" role="alert"><h1>Analysis unavailable</h1>'
       + '<p>We could not load this movement analysis. Your saved annotation and existing analysis files have not been changed.</p>'
       + '<p class="subtle">' + escapeHtml(error.message || 'Results are unavailable.') + '</p>'
-      + '<p><a class="button primary" href="' + escapeHtml(window.location.href) + '">Try again</a> '
-      + '<a class="button" href="/annotate?case=' + encodeURIComponent(caseSlug) + '">Open this clip\'s annotation</a> '
-      + '<a class="button" href="/?case=' + encodeURIComponent(caseSlug) + '">View this case\'s clips</a></p></section></main>';
+      + '<p>' + retry
+      + '<a class="button" href="/annotate">Open annotation workspace</a> '
+      + '<a class="button" href="/">Return to the case library</a></p></section></main>';
   });
 
 function initialiseControls() {

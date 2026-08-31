@@ -625,8 +625,12 @@ COMPARISON_HTML = r"""
     const app = {
       index: null,
       comparison: null,
-      selectedCaseId: "",
+      selectedCaseId: new URLSearchParams(window.location.search).get("case") || "",
       comparisonRequestId: 0,
+      comparisonAbortController: null,
+      comparisonClientId: (window.crypto && typeof window.crypto.randomUUID === "function")
+        ? window.crypto.randomUUID()
+        : `comparison-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       search: "",
     };
 
@@ -774,10 +778,21 @@ COMPARISON_HTML = r"""
         `</article>`;
       }).join("");
     }
-    async function selectCase(caseId) {
+    function syncComparisonUrl(caseId, historyMode = "replace") {
+      const url = new URL(window.location.href);
+      if (caseId) url.searchParams.set("case", caseId);
+      else url.searchParams.delete("case");
+      const method = historyMode === "push" ? "pushState" : "replaceState";
+      window.history[method]({caseId: caseId || ""}, "", url);
+    }
+    async function selectCase(caseId, {historyMode = "push"} = {}) {
       if (!caseId) return;
+      if (app.comparisonAbortController) app.comparisonAbortController.abort();
+      const controller = new AbortController();
+      app.comparisonAbortController = controller;
       const requestId = ++app.comparisonRequestId;
       app.selectedCaseId = caseId;
+      if (historyMode) syncComparisonUrl(caseId, historyMode);
       renderPlayerList();
       const pendingCase = app.index?.cases?.find(item => item.case_id === caseId);
       if (pendingCase) {
@@ -788,13 +803,19 @@ COMPARISON_HTML = r"""
       $("engineStatus").textContent = "Comparing";
       $("rankingList").innerHTML = '<div class="app-football-loader" role="status" aria-live="polite"><span class="app-loader-pitch" aria-hidden="true"><span class="app-loader-ball">⚽</span></span><span class="app-loader-copy"><strong>Checking the match-ups…</strong><small>Comparing only mutually supported movement measurements.</small></span></div>';
       try {
-        const response = await fetch(`/api/movement-comparison?case=${encodeURIComponent(caseId)}`);
+        const response = await fetch(
+          `/api/movement-comparison?case=${encodeURIComponent(caseId)}`
+            + `&client_id=${encodeURIComponent(app.comparisonClientId)}`
+            + `&request_id=${encodeURIComponent(requestId)}`,
+          {signal: controller.signal},
+        );
         if (!response.ok) throw new Error("Movement comparison could not be loaded.");
         const comparison = await response.json();
         if (requestId !== app.comparisonRequestId || caseId !== app.selectedCaseId) return;
         app.comparison = comparison;
         renderRankings();
       } catch (error) {
+        if (error.name === "AbortError") return;
         if (requestId !== app.comparisonRequestId || caseId !== app.selectedCaseId) return;
         app.comparison = null;
         $("engineStatus").className = "badge neutral";
@@ -813,7 +834,10 @@ COMPARISON_HTML = r"""
         const availableCaseIds = new Set((app.index.cases || []).map(item => item.case_id));
         if (!availableCaseIds.has(app.selectedCaseId)) app.selectedCaseId = "";
         renderPlayerList();
-        if (app.index.cases.length) await selectCase(app.selectedCaseId || app.index.cases[0].case_id);
+        if (app.index.cases.length) await selectCase(
+          app.selectedCaseId || app.index.cases[0].case_id,
+          {historyMode: "replace"},
+        );
         else {
           $("engineStatus").textContent = "Unavailable";
           $("playerList").innerHTML = '<div class="empty-state">No analysed injury cases are ready for comparison.</div>';
@@ -836,6 +860,15 @@ COMPARISON_HTML = r"""
     $("playerSearch").addEventListener("input", event => {
       app.search = event.target.value;
       renderPlayerList();
+    });
+    window.addEventListener("popstate", () => {
+      if (!app.index?.cases?.length) return;
+      const requested = new URLSearchParams(window.location.search).get("case") || "";
+      const available = app.index.cases.some(item => item.case_id === requested);
+      const fallback = app.index.cases[0].case_id;
+      selectCase(available ? requested : fallback, {
+        historyMode: available ? null : "replace",
+      });
     });
     renderEducation();
     loadComparisonIndex();

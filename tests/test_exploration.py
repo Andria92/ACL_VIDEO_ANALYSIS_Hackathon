@@ -6,6 +6,7 @@ from pathlib import Path
 import pandas as pd
 
 from acl_motion.analytics.exploration import (
+    FEATURE_PLAIN_LANGUAGE,
     assess_group_test_eligibility,
     load_cached_exploration_summary_payload,
     load_exploration_payload,
@@ -32,6 +33,12 @@ def test_explorer_keeps_charts_readable_and_technical_ids_progressive() -> None:
     assert "The athlete could not be detected reliably in this view." in html
     assert '<tbody id="technicalIdentifierRows">' in html
     assert "Source evidence:" in html
+
+
+def test_every_current_exploration_measurement_has_plain_language_help() -> None:
+    assert len(FEATURE_PLAIN_LANGUAGE) == 36
+    assert all(len(description.split()) >= 8 for description in FEATURE_PLAIN_LANGUAGE.values())
+    assert "three-dimensional" in FEATURE_PLAIN_LANGUAGE["projected_hip_line_angle_deg"]
 
 
 def test_current_case_registry_uses_canonical_player_names() -> None:
@@ -142,10 +149,17 @@ def test_exploration_preserves_human_contact_metadata(tmp_path: Path) -> None:
                         "contact_mechanism": "indirect_contact",
                         "contact_mechanism_source": "human_reviewer",
                         "injury_date": "2026-08-01",
+                        "date_of_birth": "2000-08-02",
+                        "league": "Women's Super League",
                         "competition": "Example League",
                         "team": "Example FC",
                         "position_group": "midfielder",
                         "match_minute": "67",
+                        "preferred_foot": "right",
+                        "preferred_foot_source": "EA SPORTS FC 26",
+                        "preferred_foot_source_url": "https://example.test/ea-fc-player",
+                        "preferred_foot_knee_injured": False,
+                        "ea_fc_audit_status": "verified",
                     }
                 }
             }
@@ -171,10 +185,16 @@ def test_exploration_preserves_human_contact_metadata(tmp_path: Path) -> None:
 
     assert payload["events"][0]["contact_mechanism"] == "indirect_contact"
     assert payload["events"][0]["injury_date"] == "2026-08-01"
+    assert payload["events"][0]["league"] == "Women's Super League"
     assert payload["events"][0]["competition"] == "Example League"
     assert payload["events"][0]["team"] == "Example FC"
     assert payload["events"][0]["position_group"] == "midfielder"
     assert payload["events"][0]["match_minute"] == "67"
+    assert payload["events"][0]["age_at_injury"] == 25
+    assert payload["events"][0]["age_group"] == "21–25"
+    assert payload["events"][0]["preferred_foot"] == "right"
+    assert payload["events"][0]["preferred_foot_knee_injured"] is False
+    assert payload["records"][0]["preferred_foot_knee_injured"] is False
     assert payload["records"][0]["team"] == "Example FC"
     assert payload["summary"]["known_contact_mechanism_count"] == 1
     assert payload["readiness"]["contact_group_comparison"]["eligible"] is False
@@ -317,6 +337,7 @@ def test_case_details_preserve_existing_research_metadata_and_provenance(
         {
             "player_name": "Player A",
             "injury_date": "2026-08-01",
+            "league": "Women's Super League",
             "competition": "Example League",
             "team": "Example FC",
             "position_group": "midfielder",
@@ -328,6 +349,7 @@ def test_case_details_preserve_existing_research_metadata_and_provenance(
 
     record = load_research_metadata(metadata_path)["case_a"]
     assert saved["match_minute"] == "45+2"
+    assert saved["league"] == "Women's Super League"
     assert record["statistical_unit_id"] == "event_a"
     assert record["contact_mechanism"] == "direct_contact"
     assert record["metadata_source"] == "human_operator_annotation_ui:researcher_01"

@@ -13,11 +13,13 @@ from html import escape
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from threading import RLock
 from urllib.parse import parse_qs, urlparse
 
 from acl_motion.annotations.case_intake import injury_case_options, register_analysis_clip
 from acl_motion.annotations.registry import analysis_annotation_cases
-from acl_motion.annotations.research_metadata import RESEARCH_METADATA_FILENAME
+from acl_motion.annotations.research_metadata import RESEARCH_METADATA_FILENAME, case_details
+from acl_motion.runtime import ensure_supported_runtime
 from acl_motion.ui.app_shell import app_shell_css, app_site_header
 from acl_motion.video.context import (
     CONTEXT_CLIP_ROLE,
@@ -47,6 +49,9 @@ class VideoCutterState:
         default_factory=lambda: context_clip_registry_path().resolve()
     )
     manual_videos: set[Path] = field(default_factory=set)
+    operation_lock: RLock = field(default_factory=RLock)
+    cut_requests: dict[str, tuple[str, dict]] = field(default_factory=dict)
+    assignment_requests: dict[str, tuple[str, dict, object]] = field(default_factory=dict)
 
 
 def create_video_cutter_state(
@@ -78,6 +83,7 @@ def run_video_cutter_ui(
 ) -> None:
     """Run the local video cutter UI until interrupted."""
 
+    ensure_supported_runtime()
     state = create_video_cutter_state(
         video_roots=video_roots,
         output_dir=output_dir,
@@ -220,7 +226,10 @@ def make_handler(state: VideoCutterState):
             self.send_header("Content-Length", str(len(data)))
             self.end_headers()
             if send_body:
-                self.wfile.write(data)
+                try:
+                    self.wfile.write(data)
+                except (BrokenPipeError, ConnectionResetError):
+                    return
 
         def _send_file(
             self,
@@ -321,6 +330,43 @@ def cut_video_response(
 ) -> dict:
     """Cut a video and tailor browser URLs to the route hosting the cutter."""
 
+    request_id = str(payload.get("request_id", "")).strip()
+    signature = json.dumps(
+        {
+            key: payload.get(key)
+            for key in (
+                "video_id",
+                "start_seconds",
+                "end_seconds",
+                "output_name",
+                "mode",
+                "clip_role",
+                "case_id",
+            )
+        },
+        sort_keys=True,
+        default=str,
+    )
+    with state.operation_lock:
+        if request_id and request_id in state.cut_requests:
+            stored_signature, stored_response = state.cut_requests[request_id]
+            if stored_signature != signature:
+                raise ValueError("This cut request identifier was already used for another cut.")
+            return dict(stored_response)
+        result = _cut_video_response_unlocked(payload, state, api_base=api_base)
+        if request_id:
+            state.cut_requests[request_id] = (signature, dict(result))
+        return result
+
+
+def _cut_video_response_unlocked(
+    payload: dict,
+    state: VideoCutterState,
+    *,
+    api_base: str,
+) -> dict:
+    """Perform one cut while the cutter operation lock is held."""
+
     video_path = _decode_video_id(str(payload["video_id"]), state)
     result = cut_video_segment(
         video_path=video_path,
@@ -396,26 +442,70 @@ def assign_analysis_clip(
 ) -> tuple[dict, object]:
     """Attach one cut analysis clip to a new or existing injury event."""
 
-    video_path = _decode_video_id(str(payload["video_id"]), state)
-    registered_cases = tuple(cases) if cases is not None else _registered_cases(state)
-    case, details = register_analysis_clip(
-        payload,
-        video_path=video_path,
-        cases=registered_cases,
-        imported_cases_path=_imported_cases_path(state),
-        research_metadata_path=_research_path(state),
-    )
-    case_payload = case.to_dict()
-    case_payload["video_path"] = case.video_path.name
-    return (
+    request_id = str(payload.get("request_id", "")).strip()
+    signature = json.dumps(
         {
+            key: payload.get(key)
+            for key in (
+                "video_id",
+                "assignment_mode",
+                "case_id",
+                "player_name",
+                "injury_date",
+                "view_label",
+            )
+        },
+        sort_keys=True,
+        default=str,
+    )
+    with state.operation_lock:
+        if request_id and request_id in state.assignment_requests:
+            stored_signature, stored_response, stored_case = state.assignment_requests[
+                request_id
+            ]
+            if stored_signature != signature:
+                raise ValueError(
+                    "This assignment request identifier was already used for another view."
+                )
+            return dict(stored_response), stored_case
+
+        video_path = _decode_video_id(str(payload["video_id"]), state)
+        registered_cases = tuple(cases) if cases is not None else _registered_cases(state)
+        existing_case = next(
+            (
+                item
+                for item in registered_cases
+                if item.video_path.resolve() == video_path.resolve()
+            ),
+            None,
+        )
+        if existing_case is not None:
+            case = existing_case
+            details = case_details(
+                _research_path(state),
+                case.case_id,
+                fallback_player_name=case.player_name,
+            )
+        else:
+            case, details = register_analysis_clip(
+                payload,
+                video_path=video_path,
+                cases=registered_cases,
+                imported_cases_path=_imported_cases_path(state),
+                research_metadata_path=_research_path(state),
+            )
+        case_payload = case.to_dict()
+        case_payload["video_path"] = case.video_path.name
+        response = {
             "assigned": True,
+            "already_assigned": existing_case is not None,
             "case": case_payload,
             "case_details": details,
             "annotation_status": "needs_annotation",
-        },
-        case,
-    )
+        }
+        if request_id:
+            state.assignment_requests[request_id] = (signature, dict(response), case)
+        return response, case
 
 
 def _imported_cases_path(state: VideoCutterState) -> Path:
@@ -1500,6 +1590,8 @@ const app = {
   activeCaseLabel: "",
   activeCasePlayerName: "",
   requestedVideoApplied: false,
+  cutState: "idle",
+  operationId: "",
 };
 
 const player = $("player");
@@ -1731,7 +1823,7 @@ function setWorkspaceEnabled(enabled) {
     player.pause();
   }
   setVideoControlsEnabled(enabled && app.videoReady);
-  $("cutButton").disabled = !enabled || !app.selected || !app.videoReady || !$("sourceVerifiedInput").checked;
+  updateCutButtonState();
 }
 
 function setVideoControlsEnabled(enabled) {
@@ -1819,6 +1911,8 @@ function changeCaseWorkflow() {
   app.activeCaseLabel = "";
   app.activeCasePlayerName = "";
   app.latestCut = null;
+  app.operationId = "";
+  setCutState("idle");
   $("clipRoleSelect").value = "ANALYSIS_CLIP";
   setClipRole("ANALYSIS_CLIP");
   setCaseFieldsDisabled(false);
@@ -1991,6 +2085,25 @@ function setStatus(text) {
   $("status").textContent = text;
 }
 
+function newOperationId() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") {
+    return window.crypto.randomUUID();
+  }
+  return `cut-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function updateCutButtonState() {
+  const busy = ["cutting", "assigning", "assigned"].includes(app.cutState);
+  $("cutButton").disabled = busy || Boolean(app.latestCut) || !app.caseReady
+    || !app.selected || !app.videoReady || !$("sourceVerifiedInput").checked;
+}
+
+function setCutState(nextState) {
+  app.cutState = nextState;
+  updateCutButtonState();
+  $("assignClipButton").disabled = nextState === "assigning" || nextState === "assigned";
+}
+
 function videoUrl(id, reloadToken = "") {
   const suffix = reloadToken ? `&reload=${encodeURIComponent(reloadToken)}` : "";
   return `${apiBase}/video?id=${encodeURIComponent(id)}${suffix}`;
@@ -2075,6 +2188,7 @@ async function openPath() {
 
 async function cutVideo() {
   if (!app.selected) return;
+  if (["cutting", "assigning", "assigned"].includes(app.cutState)) return;
   if (!app.caseReady) {
     setStatus("Create or choose the player injury case before cutting video.");
     return;
@@ -2109,7 +2223,8 @@ async function cutVideo() {
   player.pause();
   updateInputs();
   updateTimeline();
-  $("cutButton").disabled = true;
+  if (!app.operationId || app.cutState === "idle") app.operationId = newOperationId();
+  setCutState("cutting");
   setStatus("Cutting video...");
   $("output").classList.remove("is-visible");
   const response = await fetch(`${apiBase}/cut`, {
@@ -2124,10 +2239,10 @@ async function cutVideo() {
       clip_role: app.clipRole,
       case_id: app.activeCaseId,
       created_by: "researcher_01",
+      request_id: app.operationId,
     }),
   });
   const data = await response.json();
-  $("cutButton").disabled = false;
   if (!response.ok) throw new Error(data.error || "Could not cut video.");
   app.latestCut = data;
   const preparedViewLabel = app.clipRole === "REAL_TIME_CONTEXT"
@@ -2138,17 +2253,23 @@ async function cutVideo() {
   $("outputPath").textContent = data.path;
   $("output").classList.add("is-visible");
   const context = data.context_clip;
-  $("assignmentPanel").hidden = Boolean(context);
+  $("assignmentPanel").hidden = false;
   $("assignClipButton").hidden = true;
   $("assignClipButton").disabled = false;
   $("annotateAssignedLink").hidden = true;
   $("assignmentTitle").textContent = "Adding video view to case…";
   $("assignmentFeedback").textContent = "Saving this view to the active case…";
+  if (context) {
+    $("assignmentTitle").textContent = "Context clip saved";
+    $("assignmentFeedback").textContent = "Ready to cut another view for this case.";
+  }
   setStatus(context
     ? `Saved as real-time context for ${context.player_name}. It is now available on Results.`
     : `Cut created with ${data.method}. Attaching it to ${app.activeCaseLabel}…`
   );
+  if (!context) setCutState("assigning");
   if (!context) await assignAnalysisClip();
+  else setCutState("assigned");
 }
 
 async function assignAnalysisClip() {
@@ -2166,39 +2287,45 @@ async function assignAnalysisClip() {
     $("assignmentFeedback").textContent = "Choose the match / injury date for the new case.";
     return;
   }
-  $("assignClipButton").disabled = true;
+  setCutState("assigning");
   $("assignmentFeedback").textContent = "Assigning video view…";
-  const response = await fetch(`${apiBase}/assign-analysis-clip`, {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      video_id: app.latestCut.video_id,
-      assignment_mode: mode,
-      case_id: app.activeCaseId,
-      player_name: $("casePlayerInput").value,
-      injury_date: $("caseDateInput").value,
-      team: $("caseTeamInput").value,
-      opponent: $("caseOpponentInput").value,
-      competition: $("caseCompetitionInput").value,
-      position_group: $("casePositionSelect").value,
-      injured_side: $("caseInjuredSideSelect").value,
-      match_minute: $("caseMatchMinuteInput").value,
-      view_label: $("viewLabelInput").value,
-      perspective: $("perspectiveSelect").value,
-      slow_motion: $("slowMotionInput").checked,
-      cropped_or_zoomed: $("croppedInput").checked,
-      source_video_path: app.latestCut.source_video_path,
-      clip_start_seconds: app.latestCut.start_seconds,
-      clip_end_seconds: app.latestCut.end_seconds,
-      created_by: "researcher_01",
-    }),
-  });
-  const data = await response.json();
-  $("assignClipButton").disabled = false;
-  if (!response.ok) {
+  let data;
+  try {
+    const response = await fetch(`${apiBase}/assign-analysis-clip`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        video_id: app.latestCut.video_id,
+        assignment_mode: mode,
+        case_id: app.activeCaseId,
+        player_name: $("casePlayerInput").value,
+        injury_date: $("caseDateInput").value,
+        team: $("caseTeamInput").value,
+        opponent: $("caseOpponentInput").value,
+        competition: $("caseCompetitionInput").value,
+        position_group: $("casePositionSelect").value,
+        injured_side: $("caseInjuredSideSelect").value,
+        match_minute: $("caseMatchMinuteInput").value,
+        view_label: $("viewLabelInput").value,
+        perspective: $("perspectiveSelect").value,
+        slow_motion: $("slowMotionInput").checked,
+        cropped_or_zoomed: $("croppedInput").checked,
+        source_video_path: app.latestCut.source_video_path,
+        clip_start_seconds: app.latestCut.start_seconds,
+        clip_end_seconds: app.latestCut.end_seconds,
+        created_by: "researcher_01",
+        request_id: `${app.operationId}:assign`,
+      }),
+    });
+    data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Could not assign this video view.");
+  } catch (error) {
+    setCutState("error");
     $("assignClipButton").hidden = false;
-    $("assignmentFeedback").textContent = data.error || "Could not assign this video view.";
-    throw new Error(data.error || "Could not assign this video view.");
+    $("assignClipButton").disabled = false;
+    $("assignmentFeedback").textContent = `${error.message || "Could not assign this video view."} The cut is safe; retry assignment.`;
+    setStatus("The cut was created, but assignment needs to be retried.");
+    return;
   }
   const item = data.case;
   const details = data.case_details || {};
@@ -2239,13 +2366,15 @@ async function assignAnalysisClip() {
   $("annotateAssignedLink").href = `${annotateBase}?case=${encodeURIComponent(item.slug)}`;
   $("annotateAssignedLink").hidden = false;
   $("assignClipButton").hidden = true;
-  $("assignClipButton").disabled = true;
+  setCutState("assigned");
   setStatus("Video view added successfully. Choose the next action below.");
   window.requestAnimationFrame(() => $("output").scrollIntoView({block: "nearest"}));
 }
 
 function prepareAnotherView() {
   app.latestCut = null;
+  app.operationId = "";
+  setCutState("idle");
   $("output").classList.remove("is-visible");
   $("viewLabelInput").value = "";
   $("perspectiveSelect").value = "unknown";
@@ -2311,7 +2440,7 @@ $("videoSearchInput").addEventListener("input", () => {
   }
 });
 $("sourceVerifiedInput").addEventListener("change", event => {
-  $("cutButton").disabled = !event.target.checked || !app.caseReady || !app.selected || !app.videoReady;
+  updateCutButtonState();
   if (event.target.checked) {
     setStatus("Source verified. Set the In and Out points, review the selection, then add the view.");
   }
@@ -2325,7 +2454,7 @@ $("reloadPlayerButton").addEventListener("click", () => {
   reloadCurrentVideo("Reloaded video.");
 });
 $("cutButton").addEventListener("click", () => cutVideo().catch(error => {
-  $("cutButton").disabled = false;
+  setCutState("error");
   setStatus(error.message);
 }));
 $("backFiveButton").addEventListener("click", () => seekBy(-5));
@@ -2341,10 +2470,7 @@ $("assignmentModeSelect").addEventListener("change", event => setAssignmentMode(
 $("beginCaseButton").addEventListener("click", beginCaseWorkflow);
 $("changeCaseButton").addEventListener("click", changeCaseWorkflow);
 $("cutAnotherViewButton").addEventListener("click", prepareAnotherView);
-$("assignClipButton").addEventListener("click", () => assignAnalysisClip().catch(error => {
-  $("assignClipButton").disabled = false;
-  $("assignmentFeedback").textContent = error.message;
-}));
+$("assignClipButton").addEventListener("click", assignAnalysisClip);
 $("startInput").addEventListener("change", event => setIn(Number(event.target.value)));
 $("endInput").addEventListener("change", event => setOut(Number(event.target.value)));
 player.addEventListener("loadedmetadata", () => {
@@ -2357,7 +2483,7 @@ player.addEventListener("loadedmetadata", () => {
   updateTimeline();
   setVideoControlsEnabled(true);
   $("sourceVerifiedInput").disabled = false;
-  $("cutButton").disabled = !app.caseReady || !app.selected || !$("sourceVerifiedInput").checked;
+  updateCutButtonState();
   setStatus("Video ready. Verify the athlete and injury event, then set the In and Out points.");
 });
 player.addEventListener("timeupdate", () => {

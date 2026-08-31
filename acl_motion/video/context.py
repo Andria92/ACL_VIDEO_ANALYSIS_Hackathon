@@ -8,6 +8,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from uuid import uuid4
 
+from acl_motion.persistence import atomic_write_json, path_lock
+
 CONTEXT_CLIP_ROLE = "REAL_TIME_CONTEXT"
 CONTEXT_CLIPS_FILENAME = "context_video_clips_human.json"
 
@@ -134,13 +136,17 @@ def save_context_video_clip(clip: ContextVideoClip, path: str | Path) -> Path:
     """Append or replace one context clip in the human registry."""
 
     registry_path = Path(path)
-    clips = [item for item in load_context_video_clips(registry_path) if item.clip_id != clip.clip_id]
-    clips.append(clip)
-    registry_path.parent.mkdir(parents=True, exist_ok=True)
-    registry_path.write_text(
-        json.dumps({"clips": [item.to_dict() for item in clips]}, indent=2),
-        encoding="utf-8",
-    )
+    with path_lock(registry_path):
+        clips = [
+            item
+            for item in load_context_video_clips(registry_path)
+            if item.clip_id != clip.clip_id
+        ]
+        clips.append(clip)
+        atomic_write_json(
+            registry_path,
+            {"clips": [item.to_dict() for item in clips]},
+        )
     return registry_path
 
 

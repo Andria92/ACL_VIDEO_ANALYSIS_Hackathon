@@ -17,6 +17,7 @@ from typing import Any
 
 import numpy as np
 
+from acl_motion.persistence import atomic_write_json, path_lock
 from acl_motion.video.roi import BBox
 
 MASK_VERSION = "m5_9_target_mask_grabcut_prompt_v1"
@@ -78,43 +79,39 @@ def append_mask_prompt(path: str | Path, prompt: MaskPrompt) -> dict:
     """Append one human target-mask prompt and return the saved payload."""
 
     prompt_path = Path(path)
-    prompt_path.parent.mkdir(parents=True, exist_ok=True)
-    existing = list(load_mask_prompts(prompt_path))
-    existing.append(prompt)
-    payload = {
-        "mask_version": MASK_VERSION,
-        "updated_at": datetime.now(UTC).isoformat(),
-        "prompts": [item.to_dict() for item in existing],
-    }
-    prompt_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return payload
+    with path_lock(prompt_path):
+        existing = list(load_mask_prompts(prompt_path))
+        existing.append(prompt)
+        return _write_prompt_payload(prompt_path, existing)
 
 
 def pop_mask_prompt(path: str | Path, frame_index: int | None = None) -> dict:
     """Remove the most recent prompt, optionally restricted to one frame."""
 
     prompt_path = Path(path)
-    existing = list(load_mask_prompts(prompt_path))
-    for index in range(len(existing) - 1, -1, -1):
-        if frame_index is None or existing[index].frame_index == int(frame_index):
-            existing.pop(index)
-            break
-    return _write_prompt_payload(prompt_path, existing)
+    with path_lock(prompt_path):
+        existing = list(load_mask_prompts(prompt_path))
+        for index in range(len(existing) - 1, -1, -1):
+            if frame_index is None or existing[index].frame_index == int(frame_index):
+                existing.pop(index)
+                break
+        return _write_prompt_payload(prompt_path, existing)
 
 
 def clear_mask_prompts(path: str | Path, frame_index: int | None = None) -> dict:
     """Clear saved prompts, optionally only for one source frame."""
 
     prompt_path = Path(path)
-    if frame_index is None:
-        remaining: list[MaskPrompt] = []
-    else:
-        remaining = [
-            prompt
-            for prompt in load_mask_prompts(prompt_path)
-            if prompt.frame_index != int(frame_index)
-        ]
-    return _write_prompt_payload(prompt_path, remaining)
+    with path_lock(prompt_path):
+        if frame_index is None:
+            remaining: list[MaskPrompt] = []
+        else:
+            remaining = [
+                prompt
+                for prompt in load_mask_prompts(prompt_path)
+                if prompt.frame_index != int(frame_index)
+            ]
+        return _write_prompt_payload(prompt_path, remaining)
 
 
 def target_mask_for_frame(
@@ -203,13 +200,12 @@ def draw_mask_prompt_overlay(
 
 
 def _write_prompt_payload(path: Path, prompts: list[MaskPrompt]) -> dict:
-    path.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "mask_version": MASK_VERSION,
         "updated_at": datetime.now(UTC).isoformat(),
         "prompts": [item.to_dict() for item in prompts],
     }
-    path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    atomic_write_json(path, payload)
     return payload
 
 

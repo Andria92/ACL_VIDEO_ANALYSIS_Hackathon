@@ -668,7 +668,28 @@ def render_home_page() -> str:
       const rightTime = Date.parse(right.latest_analysis_at || "") || 0;
       return rightTime - leftTime || byPlayer;
     }
-    function renderCaseList() {
+    function syncCaseUrl(caseId, historyMode = "replace") {
+      const url = new URL(window.location.href);
+      if (caseId) url.searchParams.set("case", caseId);
+      else url.searchParams.delete("case");
+      const method = historyMode === "push" ? "pushState" : "replaceState";
+      window.history[method]({caseId: caseId || ""}, "", url);
+    }
+    function showNoFilteredSelection() {
+      app.selectedCaseId = null;
+      $("selectedCaseName").textContent = "No visible injury case selected";
+      $("selectedCaseView").textContent = "Adjust the search or filter to select a case.";
+      $("selectedMeta").innerHTML = '<span class="chip">No matching case</span>';
+      $("caseFacts").innerHTML = "";
+      $("caseViews").innerHTML = "";
+      $("technicalDetails").hidden = true;
+      $("deleteCaseButton").disabled = true;
+      $("addViewButton").href = "/video-cutter";
+      $("continueCaseButton").href = "/";
+      $("editCaseButton").href = "/annotate";
+      syncCaseUrl(null, "replace");
+    }
+    function renderCaseList({reconcileSelection = true} = {}) {
       const query = $("caseSearch").value.trim().toLocaleLowerCase();
       const filter = $("caseFilter").value;
       const sort = $("caseSort").value;
@@ -682,7 +703,11 @@ def render_home_page() -> str:
       list.setAttribute("aria-busy", "false");
       if (!app.filtered.length) {
         list.innerHTML = '<div class="list-message"><div><strong>No matching injury cases</strong><br><span>Adjust the search or case filter.</span></div></div>';
+        if (reconcileSelection) showNoFilteredSelection();
         return;
+      }
+      if (reconcileSelection && !app.filtered.some(item => item.case_id === app.selectedCaseId)) {
+        selectCase(app.filtered[0].case_id, {historyMode: "replace", renderList: false});
       }
       list.innerHTML = app.filtered.map(item => {
         const selected = item.case_id === app.selectedCaseId;
@@ -740,9 +765,9 @@ def render_home_page() -> str:
         note: "Attach a video clip to begin this case."
       };
     }
-    function selectCase(caseId) {
+    function selectCase(caseId, {historyMode = "push", renderList = true} = {}) {
       const item = app.cases.find(candidate => candidate.case_id === caseId);
-      if (!item) return;
+      if (!item) return false;
       app.selectedCaseId = item.case_id;
       const details = item.details || {};
       const primaryView = item.views[0];
@@ -783,7 +808,9 @@ def render_home_page() -> str:
       $("editCaseButton").href = "/annotate?case=" + encodeURIComponent(primaryView.slug);
       $("deleteCaseButton").disabled = false;
       $("deletionStatus").textContent = "";
-      renderCaseList();
+      if (historyMode) syncCaseUrl(item.case_id, historyMode);
+      if (renderList) renderCaseList({reconcileSelection: false});
+      return true;
     }
     function renderCases(views) {
       app.views = Array.isArray(views) ? views : [];
@@ -800,6 +827,7 @@ def render_home_page() -> str:
       $("reviewStepState").textContent = analysisCount ? analysisCount + " ready" : "Not ready";
       if (!count) {
         app.selectedCaseId = null;
+        syncCaseUrl(null, "replace");
         $("caseList").setAttribute("aria-busy", "false");
         $("caseList").innerHTML = '<div class="list-message"><div><strong>No injury cases yet</strong><br><span>Use the workflow below to create the first case.</span></div></div>';
         $("selectedCaseName").textContent = "No injury case selected";
@@ -824,9 +852,7 @@ def render_home_page() -> str:
         (left, right) => compareCases(left, right, $("caseSort").value)
       );
       const initial = app.cases.find(item => item.case_id === requested || item.views.some(view => view.slug === requested)) || orderedCases[0];
-      app.selectedCaseId = initial.case_id;
-      renderCaseList();
-      selectCase(initial.case_id);
+      selectCase(initial.case_id, {historyMode: "replace"});
     }
     function showAnalysisError(message) {
       $("analysisCount").innerHTML = '<span class="status-dot" aria-hidden="true"></span>Case library unavailable';
@@ -937,6 +963,20 @@ def render_home_page() -> str:
     $("caseSort").addEventListener("change", renderCaseList);
     $("retryAnalyses").addEventListener("click", loadCases);
     $("deleteCaseButton").addEventListener("click", deleteSelectedCase);
+    window.addEventListener("popstate", () => {
+      const requested = new URLSearchParams(window.location.search).get("case");
+      const item = app.cases.find(candidate => (
+        candidate.case_id === requested || candidate.views.some(view => view.slug === requested)
+      ));
+      if (item) {
+        $("caseSearch").value = "";
+        $("caseFilter").value = "all";
+        selectCase(item.case_id, {historyMode: null});
+      } else if (app.cases.length) {
+        const fallback = app.cases.find(candidate => candidate.case_id === app.selectedCaseId) || app.cases[0];
+        selectCase(fallback.case_id, {historyMode: "replace"});
+      }
+    });
     loadCases().finally(loadEvidenceSummary);
   </script>
 </body>

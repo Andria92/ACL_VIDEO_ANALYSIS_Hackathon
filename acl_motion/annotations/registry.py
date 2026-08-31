@@ -47,6 +47,10 @@ def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tup
             view_id="christen_press_view_01",
             view_label="Primary broadcast view",
             primary_view=True,
+            injured_side=InjurySide.RIGHT,
+            injury_laterality_source=(
+                "human_operator_codex_chat:researcher_01:2026-08-31"
+            ),
             player_name="Christen Press",
             video_path=root / "02_YvnMYc6OdT8_160s-166s.mp4",
             development_roi_path=Path("data/annotations/christen_press_roi_keyframes.csv"),
@@ -60,6 +64,10 @@ def default_annotation_cases(video_root: str | Path = DEFAULT_VIDEO_ROOT) -> tup
             view_id="case_01_view_01",
             view_label="Primary broadcast view",
             primary_view=True,
+            injured_side=InjurySide.LEFT,
+            injury_laterality_source=(
+                "human_operator_codex_chat:researcher_01:2026-08-31"
+            ),
             player_name="Vivianne Miedema",
             video_path=root / "01_YXpvkHw2BP8_135s-145s.mp4",
             notes=(

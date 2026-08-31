@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from acl_motion.annotations.registry import default_annotation_cases
+from acl_motion.cases.models import InjurySide
 from acl_motion.ui.annotation import _case_payload, render_annotation_page
 from acl_motion.ui.comparison import render_comparison_page
 from acl_motion.ui.exploration import render_exploration_page
@@ -139,6 +140,15 @@ def test_case_payload_exposes_completed_analysis_state() -> None:
     assert "/Users/" not in payload["video_path"]
 
 
+def test_builtin_cases_preserve_supplied_injury_laterality() -> None:
+    cases = {case.case_id: case for case in default_annotation_cases()}
+
+    assert cases["case_01_acl_candidate"].injured_side is InjurySide.LEFT
+    assert cases["christen_press_acl"].injured_side is InjurySide.RIGHT
+    assert "human_operator" in cases["case_01_acl_candidate"].injury_laterality_source
+    assert "human_operator" in cases["christen_press_acl"].injury_laterality_source
+
+
 def test_case_payload_can_skip_video_metadata_for_the_case_library() -> None:
     payload = _case_payload(
         default_annotation_cases()[0],
@@ -261,8 +271,19 @@ def test_exploration_page_exposes_evidence_gated_views() -> None:
     assert "function valueAvailable(value)" in html
     assert "statistic === \"pre_late_change\"" in html
     assert "drawLinearTicks" in html
+    assert "Dashed line = median; box = middle 50%; diamond = mean" in html
+    assert "Case breakdowns" in html
+    assert 'id="breakdownBarCanvas"' in html
+    assert 'id="breakdownPieCanvas"' in html
+    assert 'value="preferred_foot_knee_injured"' in html
+    assert "Sample SD" in html
+    assert "if (!app.data) return;" in html
+    assert "renderBreakdowns();\n        redrawActiveCharts();" in html
+    assert 'id="distributionFeatureHelp"' in html
+    assert 'id="relationshipFeatureHelp"' in html
+    assert "renderMeasurementHelp" in html
     assert 'role="tablist"' in html
-    assert html.count('role="tabpanel"') == 5
+    assert html.count('role="tabpanel"') == 6
     assert 'aria-controls="sourcesView"' in html
     assert 'aria-labelledby="sourcesTab"' in html
     assert 'aria-controls="distributionView"' in html

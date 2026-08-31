@@ -8,6 +8,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 
+from acl_motion.persistence import atomic_write_json
+
 ALIGNMENT_VERSION = "optional_multiview_alignment_v1"
 
 
@@ -132,6 +134,4 @@ def save_view_alignment(alignment: ViewAlignmentSet, output_dir: str | Path) -> 
     path = view_alignment_path(output_dir, alignment.case_id)
     if "_human" not in path.stem:
         raise ValueError(f"View alignment filename must include '_human': {path}")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(alignment.to_dict(), indent=2), encoding="utf-8")
-    return path
+    return atomic_write_json(path, alignment.to_dict())

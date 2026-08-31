@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import json
 from collections.abc import Iterable
+from datetime import date
 from pathlib import Path
 from threading import Lock
 from typing import Any
@@ -29,7 +30,7 @@ from acl_motion.annotations.research_metadata import (
 )
 
 SUMMARY_SUFFIX = "_case_feature_summary.parquet"
-EXPLORATION_VERSION = "cross_case_descriptive_eda_v2_angular_range_provenance"
+EXPLORATION_VERSION = "cross_case_descriptive_eda_v3_harmonized_case_metadata"
 DEFAULT_SUMMARY_DIR = Path("data/analytics/human")
 DEFAULT_RESEARCH_METADATA_PATH = Path("data/annotations/human") / RESEARCH_METADATA_FILENAME
 DEFAULT_INJURY_REPORTS_PATH = Path("data/annotations/human/injury_report_sources.json")
@@ -57,6 +58,153 @@ SUMMARY_STATISTICS = (
     "geometry_completeness",
     "dynamic_completeness",
 )
+
+FEATURE_PLAIN_LANGUAGE = {
+    "contralateral_elbow_angle_2d_deg": (
+        "The angle at the elbow on the same side as the knee that was not injured. "
+        "A larger angle means the arm looks straighter in the video."
+    ),
+    "contralateral_hka_angle_2d_deg": (
+        "The angle made by the hip, knee, and ankle on the leg that was not injured. "
+        "A larger angle means that three-point chain looks straighter in the video."
+    ),
+    "elbow_projected_bilateral_absolute_difference_deg": (
+        "The size of the difference between the two elbow angles. It shows how far "
+        "apart the arms look, without saying which arm has the larger angle."
+    ),
+    "elbow_projected_bilateral_difference_deg": (
+        "The elbow angle on the injured-knee side minus the elbow angle on the other "
+        "side. A positive value means the injured-knee side has the larger angle."
+    ),
+    "hka_projected_bilateral_absolute_difference_deg": (
+        "The size of the difference between the injured and opposite hip-knee-ankle "
+        "angles. It ignores which leg has the larger angle."
+    ),
+    "hka_projected_bilateral_difference_deg": (
+        "The injured-leg hip-knee-ankle angle minus the opposite-leg angle. A positive "
+        "value means the injured leg has the larger angle."
+    ),
+    "injured_elbow_angle_2d_deg": (
+        "The angle at the elbow on the same side as the injured knee. A larger angle "
+        "means the arm looks straighter in the video."
+    ),
+    "injured_hka_angle_2d_deg": (
+        "The angle made by the hip, knee, and ankle on the injured leg. A larger angle "
+        "means that three-point chain looks straighter in the video."
+    ),
+    "knee_line_deviation_bilateral_absolute_difference": (
+        "The size of the difference between the two knees' distances from their "
+        "hip-to-ankle lines, measured in image pixels."
+    ),
+    "knee_line_deviation_bilateral_difference": (
+        "The injured knee's line deviation minus the opposite knee's deviation, in "
+        "image pixels. The sign depends on the two-dimensional image direction."
+    ),
+    "knee_line_deviation_normalized_bilateral_absolute_difference": (
+        "The size of the difference between the two knee-line deviations after "
+        "adjusting for the player's visible body size."
+    ),
+    "knee_line_deviation_normalized_bilateral_difference": (
+        "The injured knee's line deviation minus the opposite knee's deviation after "
+        "adjusting for visible body size."
+    ),
+    "left_elbow_angle_2d_deg": (
+        "The angle made by the left shoulder, elbow, and wrist. A larger angle means "
+        "the left arm looks straighter in the video."
+    ),
+    "left_hka_angle_2d_deg": (
+        "The angle made by the left hip, knee, and ankle. A larger angle means the "
+        "left-leg chain looks straighter in the video."
+    ),
+    "left_knee_ankle_distance_normalized": (
+        "The visible distance between the left knee and ankle, adjusted for the "
+        "player's body size. Camera angle can change this value."
+    ),
+    "left_knee_ankle_x_offset_normalized": (
+        "How far left or right the left knee appears from the left ankle, adjusted for "
+        "the player's visible body size."
+    ),
+    "left_knee_line_deviation_2d": (
+        "How far the left knee appears from the straight line joining the left hip and "
+        "ankle, measured in image pixels."
+    ),
+    "left_knee_line_deviation_normalized": (
+        "How far the left knee appears from the left hip-to-ankle line, adjusted for "
+        "the player's visible body size."
+    ),
+    "left_upper_arm_orientation_2d_deg": (
+        "The direction of the line from the left shoulder to the left elbow in the "
+        "video image."
+    ),
+    "left_wrist_pelvis_distance_normalized": (
+        "The visible straight-line distance from the left wrist to the centre of the "
+        "hips, adjusted for body size."
+    ),
+    "left_wrist_pelvis_x_offset_normalized": (
+        "How far left or right the left wrist appears from the centre of the hips, "
+        "adjusted for body size."
+    ),
+    "projected_hip_line_angle_deg": (
+        "The tilt of the line joining the left and right hips in the video image. It is "
+        "not a three-dimensional measure of pelvic rotation."
+    ),
+    "projected_shoulder_line_angle_deg": (
+        "The tilt of the line joining the left and right shoulders in the video image. "
+        "It is not a three-dimensional measure of torso rotation."
+    ),
+    "projected_shoulder_pelvis_orientation_difference_deg": (
+        "The difference between the shoulder-line tilt and the hip-line tilt. It shows "
+        "how differently those two lines are oriented in the image."
+    ),
+    "projected_shoulder_pelvis_x_offset_normalized": (
+        "How far left or right the centre of the shoulders appears from the centre of "
+        "the hips, adjusted for body size."
+    ),
+    "projected_shoulder_pelvis_x_offset_px": (
+        "How far left or right the centre of the shoulders appears from the centre of "
+        "the hips, measured in image pixels."
+    ),
+    "projected_trunk_axis_angle_deg": (
+        "The direction of the line from the centre of the hips to the centre of the "
+        "shoulders in the video image."
+    ),
+    "right_elbow_angle_2d_deg": (
+        "The angle made by the right shoulder, elbow, and wrist. A larger angle means "
+        "the right arm looks straighter in the video."
+    ),
+    "right_hka_angle_2d_deg": (
+        "The angle made by the right hip, knee, and ankle. A larger angle means the "
+        "right-leg chain looks straighter in the video."
+    ),
+    "right_knee_ankle_distance_normalized": (
+        "The visible distance between the right knee and ankle, adjusted for the "
+        "player's body size. Camera angle can change this value."
+    ),
+    "right_knee_ankle_x_offset_normalized": (
+        "How far left or right the right knee appears from the right ankle, adjusted "
+        "for the player's visible body size."
+    ),
+    "right_knee_line_deviation_2d": (
+        "How far the right knee appears from the straight line joining the right hip "
+        "and ankle, measured in image pixels."
+    ),
+    "right_knee_line_deviation_normalized": (
+        "How far the right knee appears from the right hip-to-ankle line, adjusted for "
+        "the player's visible body size."
+    ),
+    "right_upper_arm_orientation_2d_deg": (
+        "The direction of the line from the right shoulder to the right elbow in the "
+        "video image."
+    ),
+    "right_wrist_pelvis_distance_normalized": (
+        "The visible straight-line distance from the right wrist to the centre of the "
+        "hips, adjusted for body size."
+    ),
+    "right_wrist_pelvis_x_offset_normalized": (
+        "How far left or right the right wrist appears from the centre of the hips, "
+        "adjusted for body size."
+    ),
+}
 
 
 def load_exploration_payload(
@@ -486,6 +634,15 @@ def _load_summary_rows(
     for row in combined.itertuples(index=False):
         case = source_lookup.get(str(row.source_id)) or case_lookup.get(str(row.case_id))
         research = metadata.get(str(row.case_id), {})
+        registered_injured_side = (
+            str(case.injured_side.value) if case is not None else "unknown"
+        )
+        researched_injured_side = str(research.get("injured_side", "")).lower()
+        injured_side = (
+            researched_injured_side
+            if researched_injured_side in {"left", "right"}
+            else registered_injured_side
+        )
         mechanism_evidence = injury_reports.get(str(row.case_id), {})
         mechanism_sources = mechanism_evidence.get("sources", [])
         if not isinstance(mechanism_sources, list):
@@ -509,9 +666,7 @@ def _load_summary_rows(
                 "view_label": case.view_label if case else _label_from_identifier(row.source_id),
                 "case_slug": case.slug if case else "",
                 "perspective": case.perspective if case else "unknown",
-                "injured_side": (
-                    str(case.injured_side.value) if case is not None else "unknown"
-                ),
+                "injured_side": injured_side,
                 "primary_view": bool(case.primary_view) if case else False,
                 "contact_mechanism": str(
                     mechanism_evidence.get(
@@ -546,11 +701,33 @@ def _load_summary_rows(
                 ),
                 "mechanism_sources": mechanism_sources,
                 "injury_date": str(research.get("injury_date", "")),
+                "league": str(research.get("league", "")),
                 "competition": str(research.get("competition", "")),
                 "team": str(research.get("team", "")),
                 "position_group": str(research.get("position_group", "unknown")),
                 "match_minute": str(research.get("match_minute", "")),
                 "date_of_birth": str(research.get("date_of_birth", "")),
+                "age_at_injury": _age_at_injury(
+                    research.get("date_of_birth"), research.get("injury_date")
+                ),
+                "age_group": _age_group(
+                    _age_at_injury(
+                        research.get("date_of_birth"), research.get("injury_date")
+                    )
+                ),
+                "preferred_foot": str(research.get("preferred_foot", "unknown")),
+                "preferred_foot_source": str(
+                    research.get("preferred_foot_source", "")
+                ),
+                "preferred_foot_source_url": str(
+                    research.get("preferred_foot_source_url", "")
+                ),
+                "preferred_foot_knee_injured": research.get(
+                    "preferred_foot_knee_injured"
+                ),
+                "ea_fc_audit_status": str(
+                    research.get("ea_fc_audit_status", "not_reviewed")
+                ),
                 "metadata_source": str(research.get("metadata_source", "")),
                 "registered_case_id": str(row.case_id),
                 "statistical_unit_id": str(
@@ -665,11 +842,23 @@ def _event_rows(rows: pd.DataFrame, selected: pd.DataFrame) -> list[dict[str, An
                     else []
                 ),
                 "injury_date": str(first["injury_date"]),
+                "league": str(first["league"]),
                 "competition": str(first["competition"]),
                 "team": str(first["team"]),
                 "position_group": str(first["position_group"]),
                 "match_minute": str(first["match_minute"]),
                 "date_of_birth": str(first["date_of_birth"]),
+                "age_at_injury": _json_safe(first["age_at_injury"]),
+                "age_group": str(first["age_group"]),
+                "preferred_foot": str(first["preferred_foot"]),
+                "preferred_foot_source": str(first["preferred_foot_source"]),
+                "preferred_foot_source_url": str(
+                    first["preferred_foot_source_url"]
+                ),
+                "preferred_foot_knee_injured": _json_safe(
+                    first["preferred_foot_knee_injured"]
+                ),
+                "ea_fc_audit_status": str(first["ea_fc_audit_status"]),
                 "metadata_source": str(first["metadata_source"]),
                 "analysed_view_count": int(source_rows["source_id"].nunique()),
                 "registered_case_ids": sorted(
@@ -716,6 +905,29 @@ def _optional_string(value: Any) -> str | None:
     return text or None
 
 
+def _age_at_injury(date_of_birth: Any, injury_date: Any) -> int | None:
+    """Return completed years at injury, or ``None`` for missing/invalid dates."""
+
+    try:
+        born = date.fromisoformat(str(date_of_birth or ""))
+        injured = date.fromisoformat(str(injury_date or ""))
+    except ValueError:
+        return None
+    return injured.year - born.year - ((injured.month, injured.day) < (born.month, born.day))
+
+
+def _age_group(age: int | None) -> str:
+    if age is None:
+        return "unknown"
+    if age < 21:
+        return "Under 21"
+    if age < 26:
+        return "21–25"
+    if age < 31:
+        return "26–30"
+    return "31+"
+
+
 def _feature_rows(selected: pd.DataFrame) -> list[dict[str, Any]]:
     if selected.empty:
         return []
@@ -733,6 +945,7 @@ def _feature_rows(selected: pd.DataFrame) -> list[dict[str, Any]]:
             {
                 "feature_name": str(feature_name),
                 "label": _feature_label(str(feature_name)),
+                "description": _feature_description(str(feature_name)),
                 "body_region": str(first.get("body_region", "unknown")),
                 "feature_family": str(first.get("feature_family", "unknown")),
                 "supported_case_count": int(valid_mean.sum()),
@@ -881,11 +1094,19 @@ def _json_safe_record(record: dict[str, Any]) -> dict[str, Any]:
         "mechanism_investigation_status",
         "mechanism_investigation_note",
         "injury_date",
+        "league",
         "competition",
         "team",
         "position_group",
         "match_minute",
         "date_of_birth",
+        "age_at_injury",
+        "age_group",
+        "preferred_foot",
+        "preferred_foot_source",
+        "preferred_foot_source_url",
+        "preferred_foot_knee_injured",
+        "ea_fc_audit_status",
         "metadata_source",
         "feature_name",
         "body_region",
@@ -952,6 +1173,16 @@ def _feature_label(feature_name: str) -> str:
     if is_projected_2d:
         label = f"{label} (2D)"
     return label[:1].upper() + label[1:]
+
+
+def _feature_description(feature_name: str) -> str:
+    return FEATURE_PLAIN_LANGUAGE.get(
+        feature_name,
+        (
+            "A two-dimensional measurement taken from the player's visible movement "
+            "in the video. Camera angle and landmark visibility can affect it."
+        ),
+    )
 
 
 def _label_from_identifier(value: object) -> str:

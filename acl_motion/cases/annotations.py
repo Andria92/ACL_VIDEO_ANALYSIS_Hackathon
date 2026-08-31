@@ -11,6 +11,8 @@ from dataclasses import asdict, dataclass
 from enum import StrEnum
 from pathlib import Path
 
+from acl_motion.persistence import atomic_write_json
+
 
 class AnchorType(StrEnum):
     """Supported manual event anchors."""
@@ -75,6 +77,4 @@ def write_event_annotation(annotation: EventAnnotation, path: str | Path) -> Pat
     """Write a manual event annotation JSON file."""
 
     output = Path(path)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(annotation.to_dict(), indent=2), encoding="utf-8")
-    return output
+    return atomic_write_json(output, annotation.to_dict())

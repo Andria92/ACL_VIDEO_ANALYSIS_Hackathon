@@ -11,7 +11,7 @@ import hashlib
 import math
 import re
 from collections import defaultdict
-from collections.abc import Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping
 from typing import Any
 
 import numpy as np
@@ -69,6 +69,10 @@ _UUID_PATTERN = re.compile(
 )
 
 
+class SimilarityComputationCancelled(RuntimeError):
+    """Raised when a newer interactive comparison supersedes this computation."""
+
+
 def build_similarity_payload(
     records: Iterable[Mapping[str, Any]],
     events: Iterable[Mapping[str, Any]],
@@ -79,11 +83,14 @@ def build_similarity_payload(
     reference_scalers: Mapping[str, Mapping[str, float]] | None = None,
     scaler_provenance: str = "",
     resampling_iterations: int = RESAMPLING_ITERATIONS,
+    cancelled: Callable[[], bool] | None = None,
 ) -> dict[str, Any]:
     """Build player choices and per-lens nearest-neighbour rankings."""
 
     record_list = [dict(record) for record in records]
     event_list = [dict(event) for event in events]
+    if cancelled is not None and cancelled():
+        raise SimilarityComputationCancelled("Comparison superseded by a newer request.")
     if resampling_iterations < 0:
         raise ValueError("resampling_iterations cannot be negative.")
     vectors, descriptors = _case_vectors(record_list)
@@ -188,6 +195,8 @@ def build_similarity_payload(
     comparable_pair_count = 0
     case_ids = sorted(public_case_lookup)
     for left_index, left_id in enumerate(case_ids):
+        if cancelled is not None and cancelled():
+            raise SimilarityComputationCancelled("Comparison superseded by a newer request.")
         for right_id in case_ids[left_index + 1 :]:
             if left_id not in reference_ids and right_id not in reference_ids:
                 continue
@@ -225,6 +234,7 @@ def build_similarity_payload(
             scalers,
             result_limit=max(1, int(result_limit)),
             resampling_iterations=int(resampling_iterations),
+            cancelled=cancelled,
         )
         if selected_id
         else {lens["id"]: [] for lens in SIMILARITY_LENSES}
@@ -698,7 +708,7 @@ def _compare_best_view_pair(
 
     comparable = [item for item in comparisons if item[2].get("available")]
     if comparable:
-        left_view_id, right_view_id, best = sorted(
+        left_view_id, right_view_id, best = min(
             comparable,
             key=lambda item: (
                 -float(
@@ -708,9 +718,9 @@ def _compare_best_view_pair(
                 item[0],
                 item[1],
             ),
-        )[0]
+        )
     elif comparisons:
-        left_view_id, right_view_id, best = sorted(
+        left_view_id, right_view_id, best = min(
             comparisons,
             key=lambda item: (
                 -int(item[2].get("shared_descriptor_count") or 0),
@@ -718,7 +728,7 @@ def _compare_best_view_pair(
                 item[0],
                 item[1],
             ),
-        )[0]
+        )
     else:
         return {
             "available": False,
@@ -771,6 +781,7 @@ def _rankings_for_case(
     *,
     result_limit: int,
     resampling_iterations: int,
+    cancelled: Callable[[], bool] | None,
 ) -> dict[str, list[dict[str, Any]]]:
     lens_rankings: dict[str, list[dict[str, Any]]] = {}
     raw_rankings: dict[str, list[tuple[str, Mapping[str, Any], float]]] = {}
@@ -784,6 +795,7 @@ def _rankings_for_case(
         descriptors,
         scalers,
         iterations=resampling_iterations,
+        cancelled=cancelled,
     )
     for lens in SIMILARITY_LENSES:
         lens_id = lens["id"]
@@ -934,6 +946,7 @@ def _resampled_top_rank_frequency(
     scalers: Mapping[str, Mapping[str, float]],
     *,
     iterations: int = RESAMPLING_ITERATIONS,
+    cancelled: Callable[[], bool] | None = None,
 ) -> dict[str, dict[str, Any]]:
     """Measure top-rank sensitivity under deterministic 10% feature dropout."""
 
@@ -956,10 +969,12 @@ def _resampled_top_rank_frequency(
         return output
     keep_count = max(1, round(len(feature_names) * (1.0 - RESAMPLING_FEATURE_DROPOUT)))
     seed_bytes = hashlib.sha256(
-        f"{SIMILARITY_ENGINE_VERSION}:{selected_id}".encode("utf-8")
+        f"{SIMILARITY_ENGINE_VERSION}:{selected_id}".encode()
     ).digest()[:8]
     rng = np.random.default_rng(int.from_bytes(seed_bytes, "big"))
     for _ in range(iterations):
+        if cancelled is not None and cancelled():
+            raise SimilarityComputationCancelled("Comparison superseded by a newer request.")
         kept = set(rng.choice(feature_names, size=keep_count, replace=False).tolist())
         sampled_scalers = {
             descriptor_id: scaler
@@ -986,7 +1001,7 @@ def _resampled_top_rank_frequency(
         for lens_id, candidates in per_lens.items():
             if not candidates:
                 continue
-            winner = sorted(candidates, key=lambda item: (-item[1], item[0]))[0][0]
+            winner = min(candidates, key=lambda item: (-item[1], item[0]))[0]
             output[lens_id]["valid_iterations"] += 1
             output[lens_id]["top_counts"][winner] += 1
     return output

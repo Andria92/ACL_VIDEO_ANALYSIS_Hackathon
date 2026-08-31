@@ -24,5 +24,7 @@
     "source": "human_ui_movement_window",
     "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
   },
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_codex_chat:researcher_01:2026-08-31",
   "notes": ""
 }

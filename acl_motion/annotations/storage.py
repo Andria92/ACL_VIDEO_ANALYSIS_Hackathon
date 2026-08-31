@@ -17,6 +17,7 @@ from acl_motion.annotations.models import (
 )
 from acl_motion.cases.annotations import load_event_annotation, write_event_annotation
 from acl_motion.cases.models import InjurySide
+from acl_motion.persistence import CaseArtifactTransaction, atomic_write_csv, atomic_write_json
 from acl_motion.video.roi import BBox, RoiTimeline
 
 
@@ -61,14 +62,21 @@ def save_human_annotation_session(
     ):
         assert_human_annotation_path(path)
     paths.session_json.parent.mkdir(parents=True, exist_ok=True)
-    write_session_json(session, paths.session_json)
-    if session.roi_keyframes:
-        write_roi_keyframes_csv(session, paths.roi_csv)
-    write_target_unavailable_intervals_csv(session, paths.target_unavailable_csv)
-    if session.movement_window is not None:
-        write_movement_window_json(session, paths.movement_window_json)
-    if session.event_annotation is not None:
-        write_event_annotation(session.event_annotation, paths.event_json)
+    with CaseArtifactTransaction(paths.session_json.parent, slug):
+        write_session_json(session, paths.session_json)
+        if session.roi_keyframes:
+            write_roi_keyframes_csv(session, paths.roi_csv)
+        else:
+            paths.roi_csv.unlink(missing_ok=True)
+        write_target_unavailable_intervals_csv(session, paths.target_unavailable_csv)
+        if session.movement_window is not None:
+            write_movement_window_json(session, paths.movement_window_json)
+        else:
+            paths.movement_window_json.unlink(missing_ok=True)
+        if session.event_annotation is not None:
+            write_event_annotation(session.event_annotation, paths.event_json)
+        else:
+            paths.event_json.unlink(missing_ok=True)
     return paths
 
 
@@ -77,9 +85,7 @@ def write_session_json(session: HumanAnnotationSession, path: str | Path) -> Pat
 
     output = Path(path)
     assert_human_annotation_path(output)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(session.to_dict(), indent=2), encoding="utf-8")
-    return output
+    return atomic_write_json(output, session.to_dict())
 
 
 def load_human_annotation_session(path: str | Path) -> HumanAnnotationSession:
@@ -95,7 +101,6 @@ def write_movement_window_json(session: HumanAnnotationSession, path: str | Path
         raise ValueError("Cannot write movement window: session has no movement_window.")
     output = Path(path)
     assert_human_annotation_path(output)
-    output.parent.mkdir(parents=True, exist_ok=True)
     payload = {
         "provenance": session.provenance.to_dict(),
         "case_id": session.provenance.case_id,
@@ -115,8 +120,7 @@ def write_movement_window_json(session: HumanAnnotationSession, path: str | Path
         "injury_laterality_source": session.injury_laterality_source,
         "notes": session.notes,
     }
-    output.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    return output
+    return atomic_write_json(output, payload)
 
 
 def load_movement_window_json(path: str | Path) -> MovementWindowAnnotation:
@@ -131,40 +135,36 @@ def write_roi_keyframes_csv(session: HumanAnnotationSession, path: str | Path) -
 
     output = Path(path)
     assert_human_annotation_path(output)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with output.open("w", newline="", encoding="utf-8") as handle:
-        fieldnames = [
-            "frame_index",
-            "x",
-            "y",
-            "width",
-            "height",
-            "view_id",
-            "annotation_source",
-            "annotation_session_id",
-            "annotator_id",
-            "flags",
-            "note",
-        ]
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        for keyframe in session.roi_keyframes:
-            writer.writerow(
-                {
-                    "frame_index": keyframe.frame_index,
-                    "x": keyframe.bbox.x,
-                    "y": keyframe.bbox.y,
-                    "width": keyframe.bbox.width,
-                    "height": keyframe.bbox.height,
-                    "view_id": session.provenance.view_id or session.provenance.source_id,
-                    "annotation_source": "human_ui",
-                    "annotation_session_id": session.provenance.annotation_session_id,
-                    "annotator_id": session.provenance.annotator_id,
-                    "flags": "|".join(flag.value for flag in keyframe.flags),
-                    "note": keyframe.note,
-                }
-            )
-    return output
+    fieldnames = [
+        "frame_index",
+        "x",
+        "y",
+        "width",
+        "height",
+        "view_id",
+        "annotation_source",
+        "annotation_session_id",
+        "annotator_id",
+        "flags",
+        "note",
+    ]
+    rows = [
+        {
+            "frame_index": keyframe.frame_index,
+            "x": keyframe.bbox.x,
+            "y": keyframe.bbox.y,
+            "width": keyframe.bbox.width,
+            "height": keyframe.bbox.height,
+            "view_id": session.provenance.view_id or session.provenance.source_id,
+            "annotation_source": "human_ui",
+            "annotation_session_id": session.provenance.annotation_session_id,
+            "annotator_id": session.provenance.annotator_id,
+            "flags": "|".join(flag.value for flag in keyframe.flags),
+            "note": keyframe.note,
+        }
+        for keyframe in session.roi_keyframes
+    ]
+    return atomic_write_csv(output, fieldnames=fieldnames, rows=rows)
 
 
 def load_roi_keyframes_csv(path: str | Path) -> tuple[RoiKeyframeAnnotation, ...]:
@@ -203,36 +203,32 @@ def write_target_unavailable_intervals_csv(
 
     output = Path(path)
     assert_human_annotation_path(output)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    with output.open("w", newline="", encoding="utf-8") as handle:
-        fieldnames = [
-            "start_frame",
-            "end_frame",
-            "frame_count",
-            "reason",
-            "note",
-            "view_id",
-            "annotation_source",
-            "annotation_session_id",
-            "annotator_id",
-        ]
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
-        writer.writeheader()
-        for interval in session.target_unavailable_intervals:
-            writer.writerow(
-                {
-                    "start_frame": interval.start_frame,
-                    "end_frame": interval.end_frame,
-                    "frame_count": interval.frame_count,
-                    "reason": interval.reason.value,
-                    "note": interval.note,
-                    "view_id": session.provenance.view_id or session.provenance.source_id,
-                    "annotation_source": "human_ui",
-                    "annotation_session_id": session.provenance.annotation_session_id,
-                    "annotator_id": session.provenance.annotator_id,
-                }
-            )
-    return output
+    fieldnames = [
+        "start_frame",
+        "end_frame",
+        "frame_count",
+        "reason",
+        "note",
+        "view_id",
+        "annotation_source",
+        "annotation_session_id",
+        "annotator_id",
+    ]
+    rows = [
+        {
+            "start_frame": interval.start_frame,
+            "end_frame": interval.end_frame,
+            "frame_count": interval.frame_count,
+            "reason": interval.reason.value,
+            "note": interval.note,
+            "view_id": session.provenance.view_id or session.provenance.source_id,
+            "annotation_source": "human_ui",
+            "annotation_session_id": session.provenance.annotation_session_id,
+            "annotator_id": session.provenance.annotator_id,
+        }
+        for interval in session.target_unavailable_intervals
+    ]
+    return atomic_write_csv(output, fieldnames=fieldnames, rows=rows)
 
 
 def load_target_unavailable_intervals_csv(

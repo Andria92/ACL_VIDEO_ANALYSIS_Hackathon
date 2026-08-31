@@ -46,13 +46,14 @@ These directories are ignored except for their `.gitkeep` placeholders.
 
 ## Environment
 
-Python 3.12 is the intended runtime.
+Python 3.12 is the required runtime. The launch scripts stop with a clear error on any other
+minor version, and `.python-version` pins compatible version managers to 3.12.
 
 ```bash
 python3.12 -m venv .venv
 source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e ".[dev]"
+.venv/bin/python -m pip install --upgrade pip
+.venv/bin/python -m pip install -e ".[dev]"
 ```
 
 MediaPipe was attempted first, as preferred, but the installed MediaPipe Tasks runtime aborts natively during Pose Landmarker creation on this machine:
@@ -69,7 +70,7 @@ The MediaPipe backend remains in the package with an explicit model path for env
 Download the default lite model:
 
 ```bash
-python scripts/download_mediapipe_pose_model.py
+.venv/bin/python scripts/download_mediapipe_pose_model.py
 ```
 
 By default, scripts look for:
@@ -81,7 +82,7 @@ data/models/pose_landmarker_lite.task
 Download the YOLOv8n pose model:
 
 ```bash
-python scripts/download_yolo_pose_model.py
+.venv/bin/python scripts/download_yolo_pose_model.py
 ```
 
 The annotation and analysis workflow uses:
@@ -99,7 +100,7 @@ placement require visual human review.
 Example with a manually supplied target ROI:
 
 ```bash
-python scripts/extract_pose.py \
+.venv/bin/python scripts/extract_pose.py \
   --video data/videos/test.mp4 \
   --backend yolo \
   --case-id TEST_CASE \
@@ -122,7 +123,7 @@ Coordinates are stored in long tabular format, one row per frame and landmark.
 ## Skeleton Overlay
 
 ```bash
-python scripts/render_overlay.py \
+.venv/bin/python scripts/render_overlay.py \
   --video data/videos/test.mp4 \
   --pose data/pose/test_raw.parquet \
   --roi 320,120,260,520 \
@@ -134,7 +135,7 @@ The overlay is for visual quality control: target bounding box, pose skeleton, l
 ## Coordinate Diagnostics
 
 ```bash
-python scripts/plot_pose_diagnostics.py \
+.venv/bin/python scripts/plot_pose_diagnostics.py \
   --pose data/pose/test_raw.parquet \
   --output data/diagnostics/test_joint_trajectories.png
 ```
@@ -144,7 +145,7 @@ These plots are raw coordinate diagnostics only. They are not biomechanical feat
 ## Tests
 
 ```bash
-pytest
+.venv/bin/python -m pytest
 ```
 
 ## Human Annotation UI
@@ -155,7 +156,7 @@ keyframes and a Movement Window without editing CSV files by hand.
 Launch:
 
 ```bash
-python scripts/run_annotation_ui.py
+.venv/bin/python scripts/run_annotation_ui.py
 ```
 
 Then open:
@@ -174,7 +175,7 @@ The main UI already exposes the cutter at `/video-cutter`. For isolated cutter d
 you can still launch its standalone server:
 
 ```bash
-python scripts/run_video_cutter_ui.py
+.venv/bin/python scripts/run_video_cutter_ui.py
 ```
 
 Then open:
@@ -194,7 +195,7 @@ data/videos/analysis_clips/
 Use `--video-root` to scan a different folder:
 
 ```bash
-python scripts/run_video_cutter_ui.py --video-root /path/to/videos
+.venv/bin/python scripts/run_video_cutter_ui.py --video-root /path/to/videos
 ```
 
 The UI supports Christen Press and Ellie Carpenter as the first validation cases. Draw a box

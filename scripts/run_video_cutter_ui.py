@@ -11,7 +11,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from acl_motion.runtime import ensure_supported_runtime
 from acl_motion.ui.video_cutter import DEFAULT_VIDEO_ROOTS, run_video_cutter_ui, smoke_test
+
+ensure_supported_runtime()
 
 
 def main() -> int:
