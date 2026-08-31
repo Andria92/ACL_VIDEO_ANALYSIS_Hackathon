@@ -1,5 +1,5 @@
 {
-  "metadata_version": "case_research_metadata_v4_player_profiles",
+  "metadata_version": "case_research_metadata_v3_harmonized_taxonomy",
   "cases": {
     "beth_mead_acl": {
       "statistical_unit_id": "beth_mead_acl",
@@ -554,17 +554,17 @@
         "preferred_foot": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030",
         "biometrics": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030"
       },
-      "updated_at": "2026-08-31T00:00:00+00:00",
+      "updated_at": "2026-08-31T18:32:48.561354+00:00",
       "field_provenance": {
         "player_name": "human_operator_annotation_ui:researcher_01",
-        "date_of_birth": "Soccerdonna player profile",
+        "date_of_birth": "human_operator_annotation_ui:researcher_01",
         "position_group": "human_operator_annotation_ui:researcher_01",
         "match_minute": "human_operator_annotation_ui:researcher_01",
         "contact_mechanism": "inference:stored_video+ABC match report",
         "injured_side": "Olympique-et-Lyonnais club injury report",
         "injury_date": "human_operator_annotation_ui:researcher_01",
-        "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31",
+        "competition": "human_operator_annotation_ui:researcher_01",
+        "team": "human_operator_annotation_ui:researcher_01",
         "opponent": "human_operator_annotation_ui:researcher_01",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
@@ -578,7 +578,7 @@
       "preferred_foot_knee_injured": true,
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
-      "league": "Division 1 F\u00e9minine",
+      "league": "",
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "height_cm": 164,
       "weight_kg": 60,
@@ -2109,50 +2109,6 @@
       "biometric_source": "EA SPORTS FC 26",
       "biometric_source_url": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/alex-pfeiffer/70490",
       "biometric_note": ""
-    }
-  },
-  "taxonomy": {
-    "league_definition": "The player's domestic club league at the injury date.",
-    "competition_definition": "The competition in which the injury event occurred.",
-    "preferred_foot_knee_injured_definition": "True when the documented injured knee is on the same side as the sourced preferred foot.",
-    "preferred_foot_source_policy": "EA SPORTS FC for every represented player; labelled Soccerdonna fallback only when EA SPORTS FC has no player record.",
-    "biometric_source_policy": "Selected public-source values are descriptive player-profile metadata, not medical measurements. Missing values remain null and conflicting weights are not estimated.",
-    "height_available_players": 35,
-    "weight_available_players": 32,
-    "ea_fc_verified_players": 33,
-    "ea_fc_archived_mirror_players": 1,
-    "ea_fc_not_listed_players": [
-      "Grace Wisnewski",
-      "Kirsten van de Westeringh"
-    ],
-    "league_values": [
-      "A-League Women",
-      "Division 1 F\u00e9minine",
-      "Frauen-Bundesliga",
-      "Liga F",
-      "National Women's Soccer League",
-      "Vrouwen Eredivisie",
-      "Women's Super League",
-      "Women's Super League 2"
-    ],
-    "competition_values": [
-      "A-League Women",
-      "Division 1 F\u00e9minine",
-      "Frauen-Bundesliga",
-      "Liga F",
-      "National Women's Soccer League",
-      "UEFA Women's Champions League",
-      "UEFA Women's Nations League",
-      "Vrouwen Eredivisie",
-      "Women's FA Cup",
-      "Women's Super League",
-      "Women's Super League 2"
-    ],
-    "team_aliases_applied": {
-      "Manchester City": "Manchester City Women",
-      "Liverpool": "Liverpool Women",
-      "Portland Thorns": "Portland Thorns FC",
-      "Atl\u00e9tico Madrid": "Atl\u00e9tico de Madrid"
     }
   }
 }

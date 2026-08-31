@@ -86,7 +86,7 @@ def test_video_cutter_main_menu_url_is_configurable() -> None:
 
     html = render_video_cutter_page(main_menu_url="http://127.0.0.1:8785/")
 
-    assert 'href="http://127.0.0.1:8785/">Main menu</a>' in html
+    assert 'class="app-brand" href="http://127.0.0.1:8785/"' in html
 
 
 def test_video_cutter_api_base_is_configurable_for_single_port_hosting() -> None:

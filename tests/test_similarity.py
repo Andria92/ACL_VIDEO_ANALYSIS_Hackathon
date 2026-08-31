@@ -102,16 +102,33 @@ def test_query_only_case_can_be_compared_but_cannot_be_a_reference() -> None:
             "reference_pool_reason": "Phases were not supported.",
         }
     ]
+    view_records = []
+    for record in _records() + query_records:
+        item = dict(record)
+        case_id = str(item["case_id"])
+        item["source_id"] = f"{case_id}_view_01"
+        item["view_label"] = f"{case_id} analysed view"
+        item["phase_status"] = (
+            "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION"
+            if case_id == "case_query"
+            else "SUPPORTED"
+        )
+        item["event_comparison_eligible"] = case_id != "case_query"
+        view_records.append(item)
 
     query_payload = build_similarity_payload(
         _records() + query_records,
         events,
+        view_records=view_records,
         selected_case_id="case_query",
+        resampling_iterations=0,
     )
     reference_payload = build_similarity_payload(
         _records() + query_records,
         events,
+        view_records=view_records,
         selected_case_id="case_a",
+        resampling_iterations=0,
     )
 
     assert query_payload["selected_case"]["reference_pool_eligible"] is False
@@ -120,6 +137,16 @@ def test_query_only_case_can_be_compared_but_cannot_be_a_reference() -> None:
     assert query_payload["rankings"]["overall_movement_difference"]
     assert all(
         match["case"]["reference_pool_eligible"]
+        for match in query_payload["rankings"]["overall_movement_difference"]
+    )
+    assert all(
+        match["selected_view_pair"]["selected_case"]["reference_view_eligible"]
+        is False
+        for match in query_payload["rankings"]["overall_movement_difference"]
+    )
+    assert all(
+        match["selected_view_pair"]["candidate_case"]["reference_view_eligible"]
+        is True
         for match in query_payload["rankings"]["overall_movement_difference"]
     )
     assert "case_query" not in {
@@ -210,6 +237,51 @@ def test_multiple_views_use_one_best_pair_without_averaging() -> None:
     assert match["selected_view_pair"]["eligible_view_pair_count"] == 4
     assert match["closest_measurements"][0]["selected_value"] is not None
     assert match["closest_measurements"][0]["candidate_value"] is not None
+
+
+def test_reference_candidates_use_only_phase_supported_event_covered_views() -> None:
+    view_records = []
+    view_offsets = {
+        "case_a": (("source_a_1", 0.0), ("source_a_2", 6.0)),
+        "case_b": (("source_b_1", 4.0), ("source_b_2", 0.1)),
+        "case_c": (("source_c_1", 8.0),),
+        "case_d": (("source_d_1", 12.0),),
+    }
+    for record in _records():
+        case_id = record["case_id"]
+        base_offset = {"case_a": 0.0, "case_b": 0.2, "case_c": 8.0, "case_d": 12.0}[
+            case_id
+        ]
+        for source_id, offset in view_offsets[case_id]:
+            item = dict(record)
+            item["source_id"] = source_id
+            item["view_label"] = source_id
+            item["mean"] = item["mean"] - base_offset + offset
+            item["range"] = item["range"] - base_offset + offset
+            item["phase_status"] = (
+                "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION"
+                if source_id == "source_b_2"
+                else "SUPPORTED"
+            )
+            item["event_comparison_eligible"] = source_id != "source_b_2"
+            view_records.append(item)
+
+    payload = build_similarity_payload(
+        _records(),
+        _events(),
+        view_records=view_records,
+        selected_case_id="case_a",
+        resampling_iterations=0,
+    )
+    match = next(
+        item
+        for item in payload["rankings"]["overall_movement_difference"]
+        if item["case"]["case_id"] == "case_b"
+    )
+
+    assert match["selected_view_pair"]["candidate_case"]["source_id"] == "source_b_1"
+    assert match["selected_view_pair"]["candidate_case"]["reference_view_eligible"] is True
+    assert match["selected_view_pair"]["eligible_view_pair_count"] == 2
 
 
 def _events() -> list[dict]:

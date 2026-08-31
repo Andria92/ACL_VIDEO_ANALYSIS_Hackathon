@@ -1,48 +1,62 @@
 {
   "overall_status": "SUPPORTED",
   "status_counts": {
-    "SUPPORTED": 12
+    "SUPPORTED": 66,
+    "INSUFFICIENT_EVIDENCE": 7,
+    "UNSTABLE_TRANSFORM": 3
   },
-  "supported_samples": 12,
+  "supported_samples": 66,
   "center_source": "pelvis_midpoint",
   "camera_compensation_method": "translation-only sparse optical flow with human ROI masked",
   "heading_method": "mathematical y-up heading from camera-compensated body-center deltas",
   "speed_method": "body-scale-normalized projected speed; not m/s",
-  "mean_normalized_projected_speed_per_s": 3.4890782559047993,
-  "minimum_normalized_projected_speed_per_s": 1.3236776865001694,
-  "time_minimum_projected_speed_ms": -1100.0000000000005,
-  "maximum_normalized_projected_speed_per_s": 6.035209817576483,
+  "mean_normalized_projected_speed_per_s": 3.8485251138859407,
+  "minimum_normalized_projected_speed_per_s": 0.4058724239618441,
+  "time_minimum_projected_speed_ms": -4000.0000000000005,
+  "maximum_normalized_projected_speed_per_s": 7.10910649883745,
   "direction_change": {
     "evidence_status": "SUPPORTED",
-    "incoming_heading_deg": -0.7145217356870089,
-    "late_heading_deg": 1.6053436982425267,
-    "projected_change_of_direction_angle_deg": 2.3198654339295217,
-    "absolute_projected_change_of_direction_angle_deg": 2.3198654339295217,
-    "source_frame_start": 20,
-    "source_frame_end": 103,
+    "incoming_heading_deg": 1.1944693281125762,
+    "late_heading_deg": 3.6199355403918214,
+    "projected_change_of_direction_angle_deg": 2.4254662122792467,
+    "absolute_projected_change_of_direction_angle_deg": 2.4254662122792467,
+    "source_frame_start": 6,
+    "source_frame_end": 133,
     "technical_explanation": "Heading is calculated from early and late camera-compensated body-center windows in the video plane; it is not a calibrated pitch heading."
   },
   "projected_speed_change_final_500ms": {
-    "evidence_status": "UNAVAILABLE",
-    "reason": "Insufficient supported speed samples in comparison windows."
+    "evidence_status": "SUPPORTED",
+    "window_start_ms": -500.0,
+    "mean_prior_projected_speed": 3.977061263517146,
+    "mean_final_projected_speed": 2.691699767205103,
+    "projected_speed_change": -1.285361496312043,
+    "descriptor": "PROJECTED_SLOWDOWN"
   },
   "validation": {
     "validation_status": "SUPPORTED",
     "reason": "",
-    "supported_fraction": 1.0,
+    "supported_fraction": 0.868421052631579,
     "path_segment_counts": {
-      "path_segment_001": 5,
-      "path_segment_002": 7
+      "path_segment_001": 26,
+      "path_segment_002": 6,
+      "path_segment_007": 9,
+      "path_segment_008": 7,
+      "path_segment_009": 11,
+      "path_segment_010": 7
     }
   },
   "candidate_comparison": {
     "translation": {
       "validation_status": "SUPPORTED",
       "reason": "",
-      "supported_fraction": 1.0,
+      "supported_fraction": 0.868421052631579,
       "path_segment_counts": {
-        "path_segment_001": 5,
-        "path_segment_002": 7
+        "path_segment_001": 26,
+        "path_segment_002": 6,
+        "path_segment_007": 9,
+        "path_segment_008": 7,
+        "path_segment_009": 11,
+        "path_segment_010": 7
       }
     },
     "affine": {
@@ -50,8 +64,13 @@
       "reason": "",
       "supported_fraction": 1.0,
       "path_segment_counts": {
-        "path_segment_001": 5,
-        "path_segment_002": 7
+        "path_segment_001": 26,
+        "path_segment_002": 6,
+        "path_segment_003": 6,
+        "path_segment_004": 13,
+        "path_segment_005": 7,
+        "path_segment_006": 11,
+        "path_segment_007": 7
       }
     },
     "chosen_method": "translation"

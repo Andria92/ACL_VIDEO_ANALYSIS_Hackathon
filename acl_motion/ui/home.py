@@ -279,6 +279,7 @@ def render_home_page() -> str:
     .button.tertiary { min-height: 40px; padding: 6px 0; border-color: transparent; background: transparent; color: var(--blue-700); justify-content: flex-start; }
     .button[disabled] { cursor: wait; opacity: .62; transform: none; }
     .selected-action { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .selected-action[hidden] { display: none; }
     .selected-action-note { grid-column: 1 / -1; }
     .selected-action .button { width: 100%; }
     #continueCaseButton { grid-column: 1 / -1; }
@@ -476,7 +477,7 @@ def render_home_page() -> str:
           <details class="selected-technical" id="technicalDetails" hidden>
             <summary>Technical case metadata</summary><code id="technicalCaseId"></code>
           </details>
-          <div class="selected-action">
+          <div class="selected-action" id="selectedAction">
             <p class="selected-action-note" id="selectedActionNote">Loading the next step for this case.</p>
             <a class="button primary" id="continueCaseButton" href="/annotate">Continue case <span aria-hidden="true">→</span></a>
             <a class="button" id="addViewButton" href="/video-cutter">Add video view <span aria-hidden="true">＋</span></a>
@@ -682,7 +683,14 @@ def render_home_page() -> str:
       $("selectedMeta").innerHTML = '<span class="chip">No matching case</span>';
       $("caseFacts").innerHTML = "";
       $("caseViews").innerHTML = "";
+      $("caseViewCount").textContent = "0 visible";
+      $("caseProgressLabel").textContent = "No matching case";
+      $("caseProgressDetail").textContent = "Adjust the search or filter";
+      $("caseProgressBar").style.width = "0%";
+      $("caseProgress").setAttribute("aria-valuemax", "1");
+      $("caseProgress").setAttribute("aria-valuenow", "0");
       $("technicalDetails").hidden = true;
+      $("selectedAction").hidden = true;
       $("deleteCaseButton").disabled = true;
       $("addViewButton").href = "/video-cutter";
       $("continueCaseButton").href = "/";
@@ -769,6 +777,7 @@ def render_home_page() -> str:
       const item = app.cases.find(candidate => candidate.case_id === caseId);
       if (!item) return false;
       app.selectedCaseId = item.case_id;
+      $("selectedAction").hidden = false;
       const details = item.details || {};
       const primaryView = item.views[0];
       $("selectedCaseName").textContent = displayPlayerName(item);
@@ -839,7 +848,10 @@ def render_home_page() -> str:
         $("caseProgress").setAttribute("aria-valuenow", "0");
         $("caseFacts").innerHTML = "";
         $("caseViews").innerHTML = "";
+        $("caseViewCount").textContent = "0 attached";
         $("technicalDetails").hidden = true;
+        $("selectedAction").hidden = false;
+        $("selectedActionNote").textContent = "Create a case and attach its first video view to begin.";
         $("addViewButton").href = "/video-cutter";
         $("continueCaseButton").textContent = "Create the first case →";
         $("continueCaseButton").href = "/video-cutter";
@@ -865,8 +877,13 @@ def render_home_page() -> str:
       $("caseProgressLabel").textContent = "Progress unavailable";
       $("caseProgressDetail").textContent = "Retry loading cases";
       $("caseProgressBar").style.width = "0%";
+      $("caseProgress").setAttribute("aria-valuemax", "1");
+      $("caseProgress").setAttribute("aria-valuenow", "0");
       $("caseFacts").innerHTML = "";
       $("caseViews").innerHTML = "";
+      $("caseViewCount").textContent = "Unavailable";
+      $("technicalDetails").hidden = true;
+      $("selectedAction").hidden = true;
     }
     async function loadCases() {
       $("retryAnalyses").disabled = true;

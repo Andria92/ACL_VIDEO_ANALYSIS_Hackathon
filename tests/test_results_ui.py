@@ -178,8 +178,9 @@ def test_results_page_avoids_front_facing_risk_language() -> None:
     assert "featureCategorySelect" in html
     assert "featureSelect" in html
     assert "featureGraph" in html
-    assert 'id="analysisSwitcherButton"' in html
-    assert "Open another analysis" in html
+    assert 'id="resultsMoreActions"' in html
+    assert "More actions" in html
+    assert 'id="resultsHeaderTitle"' in html
     assert 'id="analysisCaseSelect"' in html
     assert 'id="openAnalysisButton"' in html
     assert 'id="contextVideoButton"' in html
@@ -422,6 +423,20 @@ def test_annotation_ui_protects_unsaved_work_and_explains_recovery() -> None:
     assert "your edits remain on this screen" in html
     assert "annotation is still saved" in html
     assert "Your saved annotation has not been changed" in html
+
+
+def test_annotation_frame_arrows_survive_workspace_button_and_canvas_focus() -> None:
+    html = render_annotation_page()
+
+    assert 'window.addEventListener("keydown", handleWorkspaceKeydown);' in html
+    assert 'document.addEventListener("pointerdown", releaseTypingFocusForWorkspacePointer, true);' in html
+    assert "function isFrameNavigationEditingTarget(target)" in html
+    assert "function releaseTypingFocusForWorkspacePointer(event)" in html
+    assert 'target.closest("textarea, select, input")' in html
+    assert '"button", "checkbox", "radio", "range", "reset", "submit"' in html
+    assert 'event.key !== "ArrowLeft" && event.key !== "ArrowRight"' in html
+    assert 'event.preventDefault();\n  loadFrame(app.frame + (event.key === "ArrowLeft" ? -1 : 1));' in html
+    assert '["TEXTAREA", "INPUT", "SELECT", "BUTTON"].includes(event.target.tagName)' not in html
 
 
 def test_results_ui_uses_one_yolov8n_analysis_path() -> None:

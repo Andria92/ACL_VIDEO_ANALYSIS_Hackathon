@@ -3141,30 +3141,47 @@ SIMPLE_RESULTS_HTML = r"""
     .header-line {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      font-weight: 800;
+      gap: 6px;
       align-items: center;
-    }
-    .header-line span:not(:last-child)::after {
-      content: "|";
-      color: var(--muted);
-      margin-left: 8px;
-      font-weight: 500;
     }
     .header-line span {
       min-width: 0;
       overflow-wrap: anywhere;
     }
+    .results-header-title {
+      margin: 0 0 7px;
+      color: var(--text);
+      font-size: 20px;
+      font-weight: 850;
+      line-height: 1.25;
+    }
+    .header-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f7f9fb;
+      color: #40505f;
+      font-size: 11px;
+      font-weight: 750;
+    }
+    .header-note-callout {
+      max-width: 760px;
+      margin-top: 8px;
+      padding: 7px 9px;
+      border-left: 3px solid #a46a00;
+      background: #fff8e9;
+    }
+    .header-note-callout[hidden] { display: none; }
     .subtle {
       color: var(--muted);
       font-size: 13px;
       line-height: 1.4;
       margin: 4px 0 0;
     }
-    .analysis-switcher {
-      flex: 0 0 auto;
-      position: relative;
-    }
+    .analysis-switcher { display: grid; gap: 6px; width: 100%; }
     .results-header-actions {
       display: flex;
       align-items: flex-end;
@@ -3175,7 +3192,7 @@ SIMPLE_RESULTS_HTML = r"""
     }
     .results-header-actions > .button,
     .results-header-actions > button,
-    .results-header-actions .analysis-switcher > button {
+    .results-header-actions .results-more-actions > summary {
       min-height: 36px;
       padding-block: 5px;
     }
@@ -3220,27 +3237,50 @@ SIMPLE_RESULTS_HTML = r"""
       min-height: 34px;
       padding: 5px 8px;
     }
-    .analysis-switcher-menu {
+    .results-more-actions { position: relative; }
+    .results-more-actions > summary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+      font-weight: 750;
+      list-style: none;
+    }
+    .results-more-actions > summary::-webkit-details-marker { display: none; }
+    .results-more-actions > summary::after { content: "⋯"; margin-left: 7px; }
+    .results-more-menu {
       position: absolute;
       z-index: 20;
       top: calc(100% + 6px);
       right: 0;
       width: min(340px, calc(100vw - 36px));
+      display: grid;
+      gap: 7px;
       padding: 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--panel);
       box-shadow: 0 10px 28px rgba(31, 42, 55, 0.16);
     }
-    .analysis-switcher-menu label {
+    .results-more-menu > .button,
+    .results-more-menu > button { width: 100%; justify-content: flex-start; }
+    .analysis-switcher {
+      margin-top: 3px;
+      padding-top: 9px;
+      border-top: 1px solid var(--line);
+    }
+    .analysis-switcher label {
       display: block;
-      margin-bottom: 6px;
       color: var(--muted);
       font-size: 12px;
       font-weight: 800;
       text-transform: uppercase;
     }
-    .analysis-switcher-menu select {
+    .analysis-switcher select {
       width: 100%;
     }
     .analysis-switcher-actions {
@@ -3248,7 +3288,7 @@ SIMPLE_RESULTS_HTML = r"""
       justify-content: flex-end;
       margin-top: 8px;
     }
-    .analysis-switcher-menu button[disabled] {
+    .analysis-switcher button[disabled] {
       cursor: not-allowed;
     }
     .context-dialog {
@@ -4337,10 +4377,11 @@ SIMPLE_RESULTS_HTML = r"""
             <span>Analysis</span>
           </nav>
           <p class="eyebrow">ACL Movement Analytics Lab · Selected case</p>
-          <div class="header-line" id="compactHeader">
+          <div class="results-header-title" id="resultsHeaderTitle">Loading analysis</div>
+          <div class="header-line" id="compactHeader" aria-label="Analysis status">
             <span>Loading</span>
           </div>
-          <p class="subtle" id="headerNote"></p>
+          <p class="subtle header-note-callout" id="headerNote" hidden></p>
         </div>
         <div class="results-header-actions">
           <div class="results-navigation" id="resultsNavigation">
@@ -4349,21 +4390,22 @@ SIMPLE_RESULTS_HTML = r"""
               <select id="headerClipSelect"></select>
             </div>
           </div>
-          <button type="button" id="contextVideoButton" hidden>Real-time context</button>
           <a class="button primary" id="annotateNextClipButton" href="/annotate" hidden>Annotate next clip</a>
-          <a class="button" id="addCaseViewButton" href="/video-cutter">Cut another subclip</a>
-          <a class="button" id="caseClipsButton" href="/">All case clips</a>
-          <a class="button" href="/">Main menu</a>
-          <div class="analysis-switcher" id="analysisSwitcher" hidden>
-            <button type="button" id="analysisSwitcherButton" aria-expanded="false" aria-controls="analysisSwitcherMenu">Open another analysis</button>
-            <div class="analysis-switcher-menu" id="analysisSwitcherMenu" hidden>
+          <details class="results-more-actions" id="resultsMoreActions">
+            <summary>More actions</summary>
+            <div class="results-more-menu">
+              <button type="button" id="contextVideoButton" hidden>Real-time context</button>
+              <a class="button" id="addCaseViewButton" href="/video-cutter">Cut another subclip</a>
+              <a class="button" id="caseClipsButton" href="/">All case clips</a>
+              <div class="analysis-switcher" id="analysisSwitcher" hidden>
               <label for="analysisCaseSelect">Injury case and video view</label>
               <select id="analysisCaseSelect"></select>
               <div class="analysis-switcher-actions">
                 <button type="button" class="primary" id="openAnalysisButton">Open analysis</button>
               </div>
+              </div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
     </section>
@@ -5157,8 +5199,6 @@ function initialiseAnalysisSwitcher() {
   const analyses = result.available_analyses || [];
   if (analyses.length < 2) return;
   const switcher = $('analysisSwitcher');
-  const toggle = $('analysisSwitcherButton');
-  const menu = $('analysisSwitcherMenu');
   const select = $('analysisCaseSelect');
   const openButton = $('openAnalysisButton');
   const grouped = new Map();
@@ -5178,32 +5218,13 @@ function initialiseAnalysisSwitcher() {
   const syncOpenButton = () => {
     openButton.disabled = !select.value || select.value === result.case.slug;
   };
-  const closeMenu = () => {
-    menu.hidden = true;
-    toggle.setAttribute('aria-expanded', 'false');
-  };
   switcher.hidden = false;
   syncOpenButton();
-  toggle.onclick = () => {
-    const opening = menu.hidden;
-    menu.hidden = !opening;
-    toggle.setAttribute('aria-expanded', String(opening));
-    if (opening) select.focus();
-  };
   select.onchange = syncOpenButton;
   openButton.onclick = () => {
     if (!select.value || select.value === result.case.slug) return;
     window.location.href = '/results?case=' + encodeURIComponent(select.value);
   };
-  document.addEventListener('click', (event) => {
-    if (!menu.hidden && !switcher.contains(event.target)) closeMenu();
-  });
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !menu.hidden) {
-      closeMenu();
-      toggle.focus();
-    }
-  });
 }
 
 function initialiseFeatureSelection() {
@@ -6946,20 +6967,23 @@ function renderHeader() {
       + supportedRanges.map((range) => 'frames ' + range.start_frame + '-' + range.end_frame).join(', ')
     : 'Usable measurement intervals: unavailable';
   const movementSeconds = Number(result.header_metrics?.movement_duration_seconds ?? 0).toFixed(2);
-  $('compactHeader').innerHTML = [
+  $('resultsHeaderTitle').textContent = [
     result.case?.player_name || 'Selected player',
-    result.case?.view_label || 'Primary view',
+    result.case?.view_label || 'Primary view'
+  ].join(' · ');
+  $('compactHeader').innerHTML = [
     'YOLOv8n',
     result.target_annotation?.label || 'Human verified',
     'Movement ' + movementSeconds + ' s',
     supportedText
-  ].filter(Boolean).map((item) => '<span>' + escapeHtml(item) + '</span>').join('');
+  ].filter(Boolean).map((item) => '<span class="header-chip">' + escapeHtml(item) + '</span>').join('');
   $('breadcrumbPlayer').textContent = result.case?.player_name || 'Selected case';
   $('breadcrumbClip').textContent = result.case?.view_label || 'Selected clip';
   const post = coverage.post_supported_frame_range;
   $('headerNote').textContent = post
     ? 'Movement-window frames ' + post.start_frame + '-' + post.end_frame + ' withheld because target identity is unreliable during overlap/occlusion.'
     : '';
+  $('headerNote').hidden = !post;
   const movementEnd = Number(result.movement_window?.movement_end_frame ?? frameBounds().end);
   $('editAnnotationButton').href = '/annotate?case=' + encodeURIComponent(result.case.slug)
     + '&frame=' + encodeURIComponent(movementEnd)

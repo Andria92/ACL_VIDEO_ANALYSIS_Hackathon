@@ -2288,6 +2288,22 @@ def render_annotation_page() -> str:
       align-items: center;
       flex-wrap: wrap;
     }
+    .app-tool-header.annotation-context-toolbar {
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding-block: 10px;
+    }
+    .annotation-load-state {
+      padding-bottom: 0;
+    }
+    .annotation-load-state[hidden] { display: none; }
+    .annotation-load-actions {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
     .row { margin-bottom: 10px; }
     label { font-size: 13px; color: var(--muted); }
     select, input, textarea, button {
@@ -2927,7 +2943,7 @@ def render_annotation_page() -> str:
         grid-column: 1 / -1;
         grid-template-columns: auto minmax(0, 1fr);
       }
-      #caseSelect, #annotatorId {
+      #injuryCaseSelect, #caseViewSelect, #annotatorId {
         min-width: 0;
         width: 100%;
       }
@@ -2955,18 +2971,25 @@ def render_annotation_page() -> str:
 <body>
   <a class="app-skip-link" href="#mainContent">Skip to annotation workspace</a>
   __APP_SITE_HEADER__
-  <header class="app-tool-header">
-    <h1>Human Annotation - ACL Movement Analytics Lab</h1>
+  <section class="annotation-load-state app-page-main" id="annotationLoadState" role="status" aria-live="polite">
+    <div class="app-football-loader">
+      <span class="app-loader-pitch" aria-hidden="true"><span class="app-loader-ball">⚽</span></span>
+      <span class="app-loader-copy"><strong id="annotationLoadTitle">Preparing the annotation workspace…</strong><small id="annotationLoadMessage">Loading the selected case, video view, and saved annotation.</small></span>
+    </div>
+    <div class="annotation-load-actions"><button id="retryAnnotationLoad" type="button" hidden>Try again</button></div>
+  </section>
+  <header class="app-tool-header annotation-context-toolbar" aria-label="Annotation context and actions">
+    <h1 class="app-visually-hidden">Human Annotation</h1>
     <div class="controls">
-      <a class="button" href="/">Main menu</a>
       <a class="button" id="caseClipsLink" href="/">All case clips</a>
-      <label>Case <select id="caseSelect"></select></label>
+      <label>Injury case <select id="injuryCaseSelect"></select></label>
+      <label>Video view <select id="caseViewSelect"></select></label>
       <button id="importVideo" type="button">Add / cut video view</button>
       <button id="openCurrentVideo" type="button">Open selected video</button>
       <label>Annotator <input id="annotatorId" value="researcher_01" /></label>
     </div>
   </header>
-  <main id="mainContent" class="app app-page-main" tabindex="-1">
+  <main id="mainContent" class="app app-page-main" tabindex="-1" aria-busy="true">
     <section class="panel viewer">
       <div class="review-toolbar">
         <div class="review-modes" role="group" aria-label="Frame review display">
@@ -3305,23 +3328,90 @@ async function api(path, options) {
   return data;
 }
 
+async function apiWithTimeout(path, options = {}, timeoutMs = 20000) {
+  const timeoutController = new AbortController();
+  const externalSignal = options.signal;
+  const signal = externalSignal
+    ? AbortSignal.any([externalSignal, timeoutController.signal])
+    : timeoutController.signal;
+  let timedOut = false;
+  const timeout = window.setTimeout(() => {
+    timedOut = true;
+    timeoutController.abort();
+  }, timeoutMs);
+  try {
+    return await api(path, {...options, signal});
+  } catch (error) {
+    if (timedOut && !externalSignal?.aborted) {
+      throw new Error("Loading took longer than expected. Please try again.");
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 function escapeHtml(value) {
   const replacements = {"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"};
   return String(value).replace(/[&<>"']/g, character => replacements[character]);
 }
 
-function caseOptionLabel(caseItem) {
-  const label = caseItem.view_label && caseItem.view_label !== "Primary view"
-    ? `${caseItem.player_name} - ${caseItem.view_label}`
-    : caseItem.player_name;
-  return label;
+function caseGroupKey(caseItem) {
+  return String(caseItem.case_id || caseItem.slug);
 }
 
-function renderCaseSelect(selectedSlug) {
-  $("caseSelect").innerHTML = app.cases
-    .map(c => `<option value="${escapeHtml(c.slug)}">${escapeHtml(caseOptionLabel(c))}</option>`)
+function groupedCases() {
+  const groups = new Map();
+  app.cases.forEach(caseItem => {
+    const key = caseGroupKey(caseItem);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(caseItem);
+  });
+  return groups;
+}
+
+function injuryCaseOptionLabel(caseViews) {
+  const first = caseViews[0] || {};
+  const metadata = first.case_details || first.metadata || {};
+  const details = [metadata.injury_date || first.injury_date, metadata.team || first.team]
+    .map(value => String(value || "").trim())
+    .filter(Boolean);
+  return `${first.player_name || "Player not recorded"}${details.length ? ` — ${details.join(" · ")}` : ""}`;
+}
+
+function caseViewOptionLabel(caseItem) {
+  const view = String(caseItem.view_label || "").trim();
+  if (view) return caseItem.primary_view && view !== "Primary view" ? `${view} · Primary` : view;
+  return caseItem.primary_view ? "Primary view" : "Video view";
+}
+
+function renderCaseViewSelect(caseId, selectedSlug = "") {
+  const caseViews = groupedCases().get(String(caseId)) || [];
+  $("caseViewSelect").innerHTML = caseViews
+    .map(caseItem => `<option value="${escapeHtml(caseItem.slug)}">${escapeHtml(caseViewOptionLabel(caseItem))}</option>`)
     .join("");
-  if (selectedSlug) $("caseSelect").value = selectedSlug;
+  const selected = caseViews.find(caseItem => caseItem.slug === selectedSlug)
+    || caseViews.find(caseItem => caseItem.primary_view)
+    || caseViews[0];
+  if (selected) $("caseViewSelect").value = selected.slug;
+  $("caseViewSelect").disabled = !caseViews.length;
+  return selected || null;
+}
+
+function renderCaseSelectors(selectedSlug = "") {
+  const groups = groupedCases();
+  const selectedCase = app.cases.find(caseItem => caseItem.slug === selectedSlug) || app.cases[0];
+  $("injuryCaseSelect").innerHTML = [...groups.entries()]
+    .map(([caseId, caseViews]) => `<option value="${escapeHtml(caseId)}">${escapeHtml(injuryCaseOptionLabel(caseViews))}</option>`)
+    .join("");
+  if (!selectedCase) {
+    $("injuryCaseSelect").disabled = true;
+    $("caseViewSelect").disabled = true;
+    return null;
+  }
+  $("injuryCaseSelect").disabled = false;
+  $("injuryCaseSelect").value = caseGroupKey(selectedCase);
+  return renderCaseViewSelect(caseGroupKey(selectedCase), selectedCase.slug);
 }
 
 function syncAnnotationUrl(slug, mode = "replace") {
@@ -3345,10 +3435,11 @@ async function init() {
     label.innerHTML = `<input type="checkbox" value="${flag}" /> ${flag.replaceAll("_", " ").toLowerCase()}`;
     $("flagGrid").appendChild(label);
   });
-  const data = await api("/api/cases");
+  const data = await apiWithTimeout("/api/cases?include_video_metadata=0");
   app.cases = data.cases;
-  renderCaseSelect();
-  $("caseSelect").addEventListener("change", handleCaseChange);
+  renderCaseSelectors();
+  $("injuryCaseSelect").addEventListener("change", handleInjuryCaseChange);
+  $("caseViewSelect").addEventListener("change", handleCaseViewChange);
   bindControls();
   const params = new URLSearchParams(window.location.search);
   const requestedCase = params.get("case");
@@ -3359,6 +3450,7 @@ async function init() {
     : null;
   app.editMode = params.get("mode") === "edit";
   const initialCase = app.cases.find(c => c.slug === requestedCase) || app.cases[0];
+  if (!initialCase) throw new Error("No video views are available for annotation yet.");
   await loadCase(initialCase.slug, requestedFrame);
 }
 
@@ -3373,7 +3465,7 @@ async function loadCase(slug, requestedFrame = null, {historyMode = "replace"} =
   app.pendingAcceptedStart = null;
   app.frameImageRequest += 1;
   app.poseReviewRequest += 1;
-  const data = await api(
+  const data = await apiWithTimeout(
     `/api/session?case=${encodeURIComponent(slug)}`,
     {signal: controller.signal}
   );
@@ -3381,7 +3473,7 @@ async function loadCase(slug, requestedFrame = null, {historyMode = "replace"} =
   app.currentCase = data.case;
   app.revision = Number(data.revision || 0);
   $("caseClipsLink").href = `/?case=${encodeURIComponent(app.currentCase.case_id)}`;
-  $("caseSelect").value = app.currentCase.slug;
+  renderCaseSelectors(app.currentCase.slug);
   $("viewAnalysis").href = `/results?case=${encodeURIComponent(app.currentCase.slug)}`;
   app.meta = data.case.metadata || {fps: 0, frame_count: 1, width: 0, height: 0};
   app.keyframes = (data.session.roi_keyframes || []).map(normalizeKeyframe);
@@ -3471,6 +3563,7 @@ async function loadCase(slug, requestedFrame = null, {historyMode = "replace"} =
 
 function bindControls() {
   bindWorkflowAccordion();
+  document.addEventListener("pointerdown", releaseTypingFocusForWorkspacePointer, true);
   document.querySelectorAll("[data-review-mode]").forEach(button => {
     button.onclick = () => setReviewMode(button.dataset.reviewMode);
   });
@@ -3514,15 +3607,7 @@ function bindControls() {
     $(id).addEventListener("input", markAnnotationDirty);
   });
   $("confidence").addEventListener("change", markAnnotationDirty);
-  window.addEventListener("keydown", event => {
-    if (["TEXTAREA", "INPUT", "SELECT", "BUTTON"].includes(event.target.tagName)) return;
-    if (event.key === "ArrowLeft") loadFrame(app.frame - 1);
-    if (event.key === "ArrowRight") loadFrame(app.frame + 1);
-    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
-      event.preventDefault();
-      saveSession(false);
-    }
-  });
+  window.addEventListener("keydown", handleWorkspaceKeydown);
   window.addEventListener("beforeunload", event => {
     if (!app.annotationDirty || app.saveInProgress) return;
     event.preventDefault();
@@ -3547,22 +3632,62 @@ function bindControls() {
   canvas.addEventListener("mouseup", finishDraw);
 }
 
-async function handleCaseChange() {
-  const selectedSlug = $("caseSelect").value;
+function isFrameNavigationEditingTarget(target) {
+  if (!(target instanceof Element)) return false;
+  if (target.closest('[contenteditable="true"], [contenteditable="plaintext-only"]')) return true;
+  const control = target.closest("textarea, select, input");
+  if (!control) return false;
+  if (control.tagName === "TEXTAREA" || control.tagName === "SELECT") return true;
+  const inputType = String(control.getAttribute("type") || "text").toLowerCase();
+  return !["button", "checkbox", "radio", "range", "reset", "submit"].includes(inputType);
+}
+
+function releaseTypingFocusForWorkspacePointer(event) {
+  const active = document.activeElement;
+  if (!isFrameNavigationEditingTarget(active)) return;
+  if (isFrameNavigationEditingTarget(event.target)) return;
+  active.blur();
+}
+
+function handleWorkspaceKeydown(event) {
+  if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
+    event.preventDefault();
+    saveSession(false);
+    return;
+  }
+  if (event.defaultPrevented || event.isComposing) return;
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  if (event.metaKey || event.ctrlKey || event.altKey) return;
+  if (isFrameNavigationEditingTarget(event.target)) return;
+  event.preventDefault();
+  loadFrame(app.frame + (event.key === "ArrowLeft" ? -1 : 1));
+}
+
+async function openSelectedCase(selectedSlug) {
   const currentSlug = app.currentCase?.slug || "";
   if (app.annotationDirty && !window.confirm(
     "This annotation has unsaved changes. Leave them behind and open another clip?"
   )) {
-    $("caseSelect").value = currentSlug;
+    renderCaseSelectors(currentSlug);
     return;
   }
   try {
     await loadCase(selectedSlug, null, {historyMode: "push"});
   } catch (error) {
     if (error.name === "AbortError") return;
-    $("caseSelect").value = currentSlug;
+    renderCaseSelectors(currentSlug);
     setStatus(`Could not open the selected clip. ${error.message}`);
   }
+}
+
+async function handleInjuryCaseChange() {
+  const selectedCase = renderCaseViewSelect($("injuryCaseSelect").value);
+  if (selectedCase) await openSelectedCase(selectedCase.slug);
+}
+
+async function handleCaseViewChange() {
+  const selectedSlug = $("caseViewSelect").value;
+  if (selectedSlug) await openSelectedCase(selectedSlug);
 }
 
 function bindWorkflowAccordion() {
@@ -4696,7 +4821,24 @@ function setStatus(message) {
   $("status").textContent = message;
 }
 
-init().catch(error => setStatus(error.message));
+const annotationLoadWarningTimer = window.setTimeout(() => {
+  $("annotationLoadTitle").textContent = "This case is taking longer than expected…";
+  $("annotationLoadMessage").textContent = "You can keep waiting or safely retry. Saved case and annotation data will not be changed.";
+  $("retryAnnotationLoad").hidden = false;
+}, 15000);
+$("retryAnnotationLoad").addEventListener("click", () => window.location.reload());
+init().then(() => {
+  window.clearTimeout(annotationLoadWarningTimer);
+  $("annotationLoadState").hidden = true;
+  $("mainContent").setAttribute("aria-busy", "false");
+}).catch(error => {
+  window.clearTimeout(annotationLoadWarningTimer);
+  $("annotationLoadTitle").textContent = "The annotation workspace could not be loaded";
+  $("annotationLoadMessage").textContent = error.message || "Try loading the saved case again.";
+  $("retryAnnotationLoad").hidden = false;
+  $("mainContent").setAttribute("aria-busy", "false");
+  setStatus(error.message);
+});
 </script>
 </body>
 </html>

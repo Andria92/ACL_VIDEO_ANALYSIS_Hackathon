@@ -341,8 +341,18 @@ def test_phase_support_marks_reference_pool_eligibility(tmp_path: Path) -> None:
     assert events["case_a"]["reference_pool_eligible"] is True
     assert events["case_b"]["reference_pool_eligible"] is False
     assert events["case_b"]["reference_pool_reason"] == (
-        "No completed event-covered view is eligible for comparison."
+        "Not eligible as a reference because no completed phase-supported, event-covered "
+        "view is available. The case may still be compared as a query when enough "
+        "whole-movement measurements are supported."
     )
+    assert {row["case_id"] for row in payload["similarity_records"]} == {
+        "case_a",
+        "case_b",
+    }
+    assert {row["case_id"] for row in payload["similarity_view_records"]} == {
+        "case_a",
+        "case_b",
+    }
     assert payload["summary"]["phase_supported_case_count"] == 1
 
 

@@ -29,6 +29,11 @@ MINIMUM_SHARED_FAMILIES = 2
 MINIMUM_SCALER_CASES = 3
 RESAMPLING_ITERATIONS = 200
 RESAMPLING_FEATURE_DROPOUT = 0.10
+SUPPORTED_REFERENCE_PHASE_STATUSES = {
+    "SUPPORTED",
+    "SUPPORTED_PARTIAL_WINDOW",
+    "SUPPORTED_EVIDENCE_INTERVAL",
+}
 
 SIMILARITY_LENSES = (
     {
@@ -209,6 +214,7 @@ def build_similarity_payload(
                 descriptors,
                 scalers,
                 len(reference_ids),
+                reference_ids,
             )
             pair_scores[(left_id, right_id)] = comparison
             if (
@@ -252,9 +258,12 @@ def build_similarity_payload(
         "available": available,
         "status": "AVAILABLE" if available else "INSUFFICIENT_COMPARABLE_CASES",
         "reason": (
-            "Injury-event rankings use completed, phase-supported views whose visible event is covered. Each injury appears once and its most similar eligible view pair is retained."
+            "A selected case may be query-only when phases are unavailable. Rankings compare its supported whole-movement measurements only against completed, phase-supported reference views whose visible event is covered."
             if available
-            else "At least two completed, event-covered reference cases with enough shared measurements are required."
+            else (
+                f"At least {MINIMUM_SCALER_CASES} completed, event-covered reference cases "
+                "with enough shared measurements are required."
+            )
         ),
         "cases": public_cases,
         "selected_case": public_case_lookup.get(selected_id),
@@ -275,10 +284,10 @@ def build_similarity_payload(
             "pair with the highest primary-lens similarity."
         ),
         "view_selection_note": (
-            "Each injury is listed once. When either injury has multiple eligible views, all "
-            "eligible view pairs are checked and the pair with the highest weighted robust "
-            "movement similarity is retained. Cases with more views therefore have more "
-            "opportunities to produce a close match; the number checked is disclosed per result."
+            "Each injury is listed once. For a query-only case, all analysed views with enough "
+            "supported measurements can be checked; reference views must additionally have "
+            "supported phases and event coverage. The pair with the highest weighted robust "
+            "movement similarity is retained, and the number checked is disclosed per result."
         ),
         "evidence_support_note": (
             "Evidence support is a categorical audit of overlap, measurement support, camera-view "
@@ -387,6 +396,10 @@ def _view_vectors(
         if not case_id or not source_id or not feature_name:
             continue
         if source_id not in metadata:
+            phase_status = str(record.get("phase_status") or "UNKNOWN").upper()
+            reference_eligibility_supplied = (
+                "phase_status" in record or "event_comparison_eligible" in record
+            )
             metadata[source_id] = {
                 "case_id": case_id,
                 "source_id": source_id,
@@ -399,6 +412,13 @@ def _view_vectors(
                 ),
                 "event_interval_review_status": str(
                     record.get("event_interval_review_status") or ""
+                ),
+                "phase_status": phase_status,
+                "reference_view_eligible": (
+                    phase_status in SUPPORTED_REFERENCE_PHASE_STATUSES
+                    and bool(record.get("event_comparison_eligible", False))
+                    if reference_eligibility_supplied
+                    else True
                 ),
             }
             case_view_ids[case_id].append(source_id)
@@ -456,6 +476,8 @@ def _synthetic_view_vectors(
             "primary_view": True,
             "event_interval_review_decision": "yes",
             "event_interval_review_status": "LEGACY_CALLER",
+            "phase_status": "SUPPORTED",
+            "reference_view_eligible": True,
         }
         case_view_ids[case_id] = [view_id]
     return output, metadata, case_view_ids
@@ -687,11 +709,22 @@ def _compare_best_view_pair(
     descriptors: Mapping[str, Mapping[str, str]],
     scalers: Mapping[str, Mapping[str, float]],
     case_count: int,
+    reference_ids: set[str],
 ) -> dict[str, Any]:
     """Retain one coherent, most-similar eligible view pair for two injuries."""
 
-    left_views = sorted(case_view_ids.get(left_case_id, []))
-    right_views = sorted(case_view_ids.get(right_case_id, []))
+    def comparison_views(case_id: str) -> list[str]:
+        view_ids = sorted(case_view_ids.get(case_id, []))
+        if case_id not in reference_ids:
+            return view_ids
+        return [
+            view_id
+            for view_id in view_ids
+            if bool(view_metadata.get(view_id, {}).get("reference_view_eligible", True))
+        ]
+
+    left_views = comparison_views(left_case_id)
+    right_views = comparison_views(right_case_id)
     eligible_pair_count = len(left_views) * len(right_views)
     comparisons: list[tuple[str, str, dict[str, Any]]] = []
     for left_view_id in left_views:
@@ -792,6 +825,7 @@ def _rankings_for_case(
         view_vectors,
         view_metadata,
         case_view_ids,
+        reference_ids,
         descriptors,
         scalers,
         iterations=resampling_iterations,
@@ -942,6 +976,7 @@ def _resampled_top_rank_frequency(
     view_vectors: Mapping[str, Mapping[str, Mapping[str, Any]]],
     view_metadata: Mapping[str, Mapping[str, Any]],
     case_view_ids: Mapping[str, list[str]],
+    reference_ids: set[str],
     descriptors: Mapping[str, Mapping[str, str]],
     scalers: Mapping[str, Mapping[str, float]],
     *,
@@ -993,6 +1028,7 @@ def _resampled_top_rank_frequency(
                 descriptors,
                 sampled_scalers,
                 len(candidate_ids) + 1,
+                reference_ids,
             )
             if not comparison["available"]:
                 continue
@@ -1068,7 +1104,10 @@ def _public_cases(
                 "reference_pool_eligible": bool(event.get("reference_pool_eligible", False)),
                 "reference_pool_reason": str(
                     event.get("reference_pool_reason")
-                    or "Phase-support evidence was not supplied; this case is query-only."
+                    or (
+                        "Phase-support evidence was not supplied; this case is query-only and "
+                        "may be compared with eligible references when enough measurements overlap."
+                    )
                 ),
                 "phase_supported_view_count": int(
                     event.get("phase_supported_view_count") or 0

@@ -4,14 +4,14 @@
     "annotator_type": "HUMAN",
     "annotator_id": "researcher_01",
     "created_at": "2026-08-26T16:06:05.493221+00:00",
-    "updated_at": "2026-08-26T22:28:30.061886+00:00",
+    "updated_at": "2026-08-31T18:32:48.546959+00:00",
     "case_id": "imported_ellie_carpenter_2000_04_28_acl_candidate",
     "source_id": "imported_ellie_carpenter_2000_04_28_view_01",
     "view_id": "imported_ellie_carpenter_2000_04_28_view_01",
     "video_path": "data/videos/analysis_clips/Ellie Carpenter_s nasty looking injury _ Turned out to be an ACL injury._00m30s300_00m35s392.mp4",
     "ui_tool_version": "m5_5_annotation_ui_v1"
   },
-  "manual_roi_keyframe_count": 31,
+  "manual_roi_keyframe_count": 35,
   "roi_keyframes": [
     {
       "frame_index": 3,
@@ -113,12 +113,23 @@
       "note": ""
     },
     {
+      "frame_index": 38,
+      "bbox": {
+        "x": 366.42857142857144,
+        "y": 117.57143293108258,
+        "width": 255.71428571428567,
+        "height": 584.2857142857143
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
       "frame_index": 39,
       "bbox": {
-        "x": 325.0,
-        "y": 117.14285714285714,
-        "width": 390.0,
-        "height": 590.0
+        "x": 335.0,
+        "y": 154.71429007393974,
+        "width": 291.42857142857144,
+        "height": 557.1428571428571
       },
       "flags": [],
       "note": ""
@@ -126,10 +137,10 @@
     {
       "frame_index": 41,
       "bbox": {
-        "x": 275.0,
-        "y": 102.85714285714286,
-        "width": 420.0,
-        "height": 612.8571428571428
+        "x": 293.57142857142856,
+        "y": 149.000004359654,
+        "width": 337.1428571428571,
+        "height": 561.4285714285714
       },
       "flags": [],
       "note": ""
@@ -146,11 +157,33 @@
       "note": ""
     },
     {
+      "frame_index": 44,
+      "bbox": {
+        "x": 232.14285714285714,
+        "y": 104.71429007393974,
+        "width": 392.8571428571429,
+        "height": 614.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
       "frame_index": 45,
       "bbox": {
         "x": 230.71428571428572,
         "y": 102.85714285714286,
         "width": 429.99999999999994,
+        "height": 607.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 46,
+      "bbox": {
+        "x": 236.42857142857142,
+        "y": 104.71429007393974,
+        "width": 377.1428571428571,
         "height": 607.1428571428571
       },
       "flags": [],
@@ -185,6 +218,17 @@
         "y": 88.57142857142857,
         "width": 377.1428571428571,
         "height": 630.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 54,
+      "bbox": {
+        "x": 212.14285714285714,
+        "y": 90.42857578822544,
+        "width": 317.1428571428572,
+        "height": 622.8571428571429
       },
       "flags": [],
       "note": ""
@@ -357,8 +401,65 @@
   ],
   "manual_target_unavailable_frame_count": 0,
   "target_unavailable_intervals": [],
-  "manual_target_accepted_frame_count": 0,
-  "target_accepted_intervals": [],
+  "manual_target_accepted_frame_count": 71,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 6,
+      "end_frame": 31,
+      "frame_count": 26,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 33,
+      "end_frame": 34,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 40,
+      "end_frame": 45,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 59,
+      "end_frame": 64,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 66,
+      "end_frame": 78,
+      "frame_count": 13,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 106,
+      "end_frame": 116,
+      "frame_count": 11,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 127,
+      "end_frame": 133,
+      "frame_count": 7,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
   "movement_window": {
     "movement_start_frame": 3,
     "movement_start_timestamp_ms": 100.0,

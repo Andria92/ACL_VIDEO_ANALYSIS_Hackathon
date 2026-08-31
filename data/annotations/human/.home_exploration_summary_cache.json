@@ -1,6 +1,6 @@
 {
   "cache_version": "exploration_home_summary_cache_v1",
-  "fingerprint": "4c48e8443c539909e31b07144c5339ba3b51319dfe65648993c67a2ca9895d94",
+  "fingerprint": "58205bee25c95930b7957a876ae74fdce932bcdf076d6c44a61cd4b924716528",
   "payload": {
     "summary": {
       "analysed_case_count": 36,
@@ -10,7 +10,7 @@
       "known_contact_mechanism_count": 36,
       "unclear_contact_mechanism_count": 0,
       "mechanism_source_count": 36,
-      "phase_supported_case_count": 23
+      "phase_supported_case_count": 24
     },
     "similarity": {
       "available": true,

@@ -851,7 +851,7 @@
       "real_time_scale": null,
       "injured_side": "left",
       "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
-      "player_name": "Cloe Lacasse",
+      "player_name": "Clo\u00e9 Lacasse",
       "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/nwsl_705795_48m37s480_48m41s146.mp4",
       "notes": "Cut in Video Cutter and assigned to an injury case before annotation."
     },

@@ -39,17 +39,6 @@ def render_exploration_page() -> str:
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    header {
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 10px 22px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-    }
-    header strong { font-size: 18px; }
     a.button, button, select, input {
       min-height: 44px;
       border: 1px solid var(--line);
@@ -117,14 +106,15 @@ def render_exploration_page() -> str:
       z-index: 10;
       top: 0;
       display: flex;
+      flex-wrap: wrap;
       gap: 6px;
       margin: 18px 0 14px;
       padding: 8px 0;
-      overflow-x: auto;
+      overflow-x: visible;
       background: var(--bg);
       box-shadow: 0 1px 0 var(--line);
     }
-    .tab { white-space: nowrap; }
+    .tab { flex: 0 1 auto; white-space: normal; }
     .view { display: none; }
     .view.active { display: block; }
     .band {
@@ -301,7 +291,6 @@ def render_exploration_page() -> str:
     .muted { color: var(--muted); }
     .empty { padding: 28px; text-align: center; color: var(--muted); }
     @media (max-width: 820px) {
-      header { align-items: flex-start; flex-direction: column; padding: 11px 14px; }
       main { width: min(100% - 20px, 640px); padding-top: 20px; }
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .controls { grid-template-columns: 1fr; }
@@ -319,10 +308,6 @@ def render_exploration_page() -> str:
 <body>
   <a class="app-skip-link" href="#mainContent">Skip to data exploration</a>
   __APP_SITE_HEADER__
-  <header class="app-tool-header">
-    <strong>Explore Data</strong>
-    <a class="button" href="/">Main menu</a>
-  </header>
   <main id="mainContent" class="app-page-main" tabindex="-1">
     <h1>Explore Data</h1>
     <p class="lede">Case-level descriptive analytics with visible evidence coverage and statistical safeguards. Case identity, injury status, and laterality come from supplied metadata, not video inference.</p>
@@ -347,20 +332,20 @@ def render_exploration_page() -> str:
 
     <nav class="tabs" aria-label="Data exploration views" role="tablist">
       <button class="tab active" id="overviewTab" type="button" role="tab" aria-selected="true" aria-controls="overviewView" tabindex="0" data-view="overviewView">Overview</button>
-      <button class="tab" id="sourcesTab" type="button" role="tab" aria-selected="false" aria-controls="sourcesView" tabindex="-1" data-view="sourcesView">Sources / Injury Reports</button>
+      <button class="tab" id="sourcesTab" type="button" role="tab" aria-label="Sources / Injury Reports" aria-selected="false" aria-controls="sourcesView" tabindex="-1" data-view="sourcesView">Sources</button>
       <button class="tab" id="breakdownsTab" type="button" role="tab" aria-selected="false" aria-controls="breakdownsView" tabindex="-1" data-view="breakdownsView">Case breakdowns</button>
-      <button class="tab" id="profilesTab" type="button" role="tab" aria-selected="false" aria-controls="profilesView" tabindex="-1" data-view="profilesView">Height &amp; weight</button>
+      <button class="tab" id="profilesTab" type="button" role="tab" aria-label="Height and weight" aria-selected="false" aria-controls="profilesView" tabindex="-1" data-view="profilesView">Body metrics</button>
       <button class="tab" id="distributionTab" type="button" role="tab" aria-selected="false" aria-controls="distributionView" tabindex="-1" data-view="distributionView">Compare cases</button>
-      <button class="tab" id="relationshipTab" type="button" role="tab" aria-selected="false" aria-controls="relationshipView" tabindex="-1" data-view="relationshipView">Compare two measurements</button>
-      <button class="tab" id="testBuilderTab" type="button" role="tab" aria-selected="false" aria-controls="testBuilderView" tabindex="-1" data-view="testBuilderView">Can these groups be compared?</button>
+      <button class="tab" id="relationshipTab" type="button" role="tab" aria-label="Compare two measurements" aria-selected="false" aria-controls="relationshipView" tabindex="-1" data-view="relationshipView">Compare measurements</button>
+      <button class="tab" id="testBuilderTab" type="button" role="tab" aria-label="Can these groups be compared?" aria-selected="false" aria-controls="testBuilderView" tabindex="-1" data-view="testBuilderView">Group readiness</button>
     </nav>
 
     <section class="view active" id="overviewView" role="tabpanel" aria-labelledby="overviewTab">
       <details class="band overview-disclosure" open>
         <summary><h2>Case Library</h2><span>Completed analyses grouped by registered injury event.</span></summary>
         <div class="table-wrap" role="region" aria-label="Case library table" tabindex="0"><table>
-          <thead><tr><th>Case</th><th>Supplied case metadata</th><th>Team / league / competition</th><th>Position</th><th>Views</th><th>Geometry support</th><th>Dynamic support</th><th>Median frame coverage</th></tr></thead>
-          <tbody id="caseRows"><tr><td colspan="8" class="empty">Loading cases</td></tr></tbody>
+          <thead><tr><th>Case</th><th>Supplied injury metadata</th><th>Team / league / competition</th><th>Views</th><th>Measurement support</th></tr></thead>
+          <tbody id="caseRows"><tr><td colspan="5" class="empty">Loading cases</td></tr></tbody>
         </table></div>
       </details>
       <details class="band overview-disclosure">
@@ -796,16 +781,13 @@ def render_exploration_page() -> str:
             ? "other knee injured"
             : "preferred-foot comparison unavailable";
         return `<tr>
-          <td><strong>${escapeHtml(event.player_name)}</strong></td>
+          <td><strong>${escapeHtml(event.player_name)}</strong><br><span class="muted">Position: ${escapeHtml(readableValue(event.position_group))}</span></td>
           <td>${injuryParts.map(escapeHtml).join(" · ")}<br><span class="badge ${knownContact ? "good" : "caution"}">${escapeHtml(mechanismLabel(contact))}</span><br><span class="muted">${escapeHtml(categoryLabel(event.preferred_foot, ""))} foot · ${escapeHtml(preferredSide)}</span></td>
           <td>${teamCompetition.length ? teamCompetition.map(escapeHtml).join("<br>") : '<span class="muted">Not recorded</span>'}</td>
-          <td>${escapeHtml(readableValue(event.position_group))}</td>
           <td>${event.analysed_view_count}</td>
-          <td>${event.geometry_eligible_feature_count} / ${event.feature_count}</td>
-          <td>${event.dynamic_eligible_feature_count} / ${event.feature_count}</td>
-          <td>Geometry ${percent(event.median_geometry_completeness)}<br><span class="muted">Dynamics ${percent(event.median_dynamic_completeness)}</span></td>
+          <td><strong>Geometry ${event.geometry_eligible_feature_count} / ${event.feature_count}</strong><br><span class="muted">Dynamics ${event.dynamic_eligible_feature_count} / ${event.feature_count}<br>Median frame coverage: geometry ${percent(event.median_geometry_completeness)} · dynamics ${percent(event.median_dynamic_completeness)}</span></td>
         </tr>`;
-      }).join("") || '<tr><td colspan="8" class="empty">No completed case summaries are available.</td></tr>';
+      }).join("") || '<tr><td colspan="5" class="empty">No completed case summaries are available.</td></tr>';
 
       $("featureRows").innerHTML = app.data.features.map(feature => {
         const limited = !valueAvailable(feature.median_geometry_completeness) || feature.median_geometry_completeness < 0.6;
@@ -1580,12 +1562,22 @@ def render_exploration_page() -> str:
     $("checkEligibility").addEventListener("click", checkTestEligibility);
     window.addEventListener("resize", redrawActiveCharts);
 
-    fetch("/api/explore")
-      .then(response => {
+    let exploreLoadController = null;
+    async function loadExploreData() {
+      if (exploreLoadController) exploreLoadController.abort();
+      const controller = new AbortController();
+      exploreLoadController = controller;
+      let timedOut = false;
+      const timeout = window.setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+      }, 20000);
+      $("analysisUnitNote").innerHTML = `<div class="app-football-loader" role="status" aria-live="polite"><span class="app-loader-pitch" aria-hidden="true"><span class="app-loader-ball">⚽</span></span><span class="app-loader-copy"><strong>Surveying the pitch…</strong><small>Loading case-level evidence, coverage, and comparison readiness.</small></span></div>`;
+      $("inferenceStatus").textContent = "Loading";
+      try {
+        const response = await fetch("/api/explore", {signal: controller.signal});
         if (!response.ok) throw new Error("The exploration dataset could not be loaded.");
-        return response.json();
-      })
-      .then(data => {
+        const data = await response.json();
         app.data = data;
         renderSummary();
         renderOverview();
@@ -1597,11 +1589,22 @@ def render_exploration_page() -> str:
         renderProfiles();
         redrawActiveCharts();
         if (window.location.hash === "#sources") activateTab($("sourcesTab"));
-      })
-      .catch(error => {
-        $("analysisUnitNote").innerHTML = `<strong>Data unavailable:</strong> ${escapeHtml(error.message)}`;
+      } catch (error) {
+        if (controller !== exploreLoadController) return;
+        const message = timedOut
+          ? "The exploration dataset took longer than expected. You can safely try again."
+          : error.name === "AbortError"
+            ? "The previous loading attempt was stopped."
+            : error.message;
+        $("analysisUnitNote").innerHTML = `<strong>Data unavailable:</strong> ${escapeHtml(message)} <button type="button" id="retryExploreData">Try again</button>`;
         $("inferenceStatus").textContent = "Unavailable";
-      });
+        $("retryExploreData").addEventListener("click", loadExploreData);
+      } finally {
+        window.clearTimeout(timeout);
+      }
+    }
+
+    loadExploreData();
   </script>
 </body>
 </html>

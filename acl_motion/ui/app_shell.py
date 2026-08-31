@@ -28,6 +28,17 @@ def app_shell_css() -> str:
       box-shadow: 0 14px 38px rgba(7,26,45,.16);
     }
     .app-skip-link:focus { transform: translateY(0); }
+    .app-visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
     .app-site-header {
       min-height: 68px;
       display: flex;

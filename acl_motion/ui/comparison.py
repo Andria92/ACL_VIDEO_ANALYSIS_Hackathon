@@ -325,16 +325,6 @@ COMPARISON_HTML = r"""
       color: var(--ink);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    .tool-header {
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 10px 22px;
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-    }
     .button, button, select, input {
       min-height: 44px;
       border: 1px solid var(--line);
@@ -453,6 +443,20 @@ COMPARISON_HTML = r"""
     .score-box strong { display: block; color: var(--accent); font-size: 30px; line-height: 1; }
     .score-box span { color: var(--muted); font-size: 11px; font-weight: 760; }
     .comparison-details { grid-column: 2 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .match-evidence {
+      grid-column: 2 / -1;
+      margin-top: 1px;
+      border-top: 1px solid var(--line);
+    }
+    .match-evidence > summary {
+      padding: 10px 0 2px;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .match-evidence .view-pair-copy { margin-top: 9px; }
+    .match-evidence .comparison-details { margin-top: 9px; }
     .measurement-group { padding: 10px; border-radius: 8px; background: #f6f8fa; }
     .measurement-group h4 { margin: 0 0 5px; font-size: 12px; }
     .measurement-group ul { margin: 0; padding-left: 17px; color: var(--muted); font-size: 12px; line-height: 1.5; }
@@ -500,7 +504,6 @@ COMPARISON_HTML = r"""
     .state .badge { margin-bottom: 5px; }
     .scope-note { padding: 11px 13px; border-left: 4px solid var(--accent); background: var(--accent-soft); color: #28465f; }
     @media (max-width: 760px) {
-      .tool-header { align-items: flex-start; flex-direction: column; padding: 11px 14px; }
       main { width: min(100% - 20px, 640px); padding-top: 20px; }
       .comparison-layout, .controls, .result-grid, .states, .comparison-details { grid-template-columns: 1fr; }
       .controls { display: grid; }
@@ -511,7 +514,7 @@ COMPARISON_HTML = r"""
       .player-list { max-height: 280px; }
       .match-card { grid-template-columns: 40px minmax(0, 1fr); }
       .score-box { grid-column: 2; text-align: left; }
-      .comparison-details { grid-column: 1 / -1; }
+      .comparison-details, .match-evidence { grid-column: 1 / -1; }
     }
     __APP_SHELL_CSS__
   </style>
@@ -519,13 +522,9 @@ COMPARISON_HTML = r"""
 <body>
   <a class="app-skip-link" href="#mainContent">Skip to movement comparison</a>
   __APP_SITE_HEADER__
-  <header class="tool-header">
-    <strong>Compare Movements</strong>
-    <a class="button" href="/">Main menu</a>
-  </header>
   <main id="mainContent" class="app-page-main" tabindex="-1">
     <h1>Compare Movements</h1>
-    <p class="lede">Choose an injury case with a completed view that covers the visible injury event. Each injury is listed once, even when it has several camera views.</p>
+    <p class="lede">Choose any analysed injury case with enough supported movement measurements. Cases without phases can be investigated as query-only cases; ranked matches come only from phase-supported reference views that cover the visible event.</p>
 
     <div class="comparison-layout">
       <aside class="panel player-picker" aria-labelledby="choosePlayerHeading">
@@ -628,6 +627,7 @@ COMPARISON_HTML = r"""
       selectedCaseId: new URLSearchParams(window.location.search).get("case") || "",
       comparisonRequestId: 0,
       comparisonAbortController: null,
+      indexAbortController: null,
       comparisonClientId: (window.crypto && typeof window.crypto.randomUUID === "function")
         ? window.crypto.randomUUID()
         : `comparison-${Date.now()}-${Math.random().toString(16).slice(2)}`,
@@ -705,7 +705,7 @@ COMPARISON_HTML = r"""
           `<strong>${escapeHtml(item.player_name)}</strong>` +
           `<span>${escapeHtml(caseMeta(item))}</span>` +
           `<span>${item.comparable_descriptor_count} supported movement measurements</span>` +
-          `<span class="pool-label ${item.reference_pool_eligible ? "reference" : "query"}">${item.reference_pool_eligible ? "Eligible injury-event case" : "Not eligible as a reference"}</span>` +
+          `<span class="pool-label ${item.reference_pool_eligible ? "reference" : "query"}">${item.reference_pool_eligible ? "Eligible injury-event reference" : "Query-only · comparable to references"}</span>` +
         `</button>`
       ).join("");
       $("playerList").querySelectorAll("[data-case-id]").forEach(button => {
@@ -738,7 +738,7 @@ COMPARISON_HTML = r"""
       const selected = data.selected_case;
       const matches = data.rankings[selectedLensId] || [];
       $("selectedPlayerHeading").textContent = selected.player_name;
-      $("selectedPlayerMeta").textContent = `${caseMeta(selected)} · ${selected.reference_pool_eligible ? "eligible reference case" : "query-only case; excluded from reference scaling and candidates"}`;
+      $("selectedPlayerMeta").textContent = `${caseMeta(selected)} · ${selected.reference_pool_eligible ? "eligible reference case" : "query-only case; compared with eligible references but excluded from reference scaling and candidates"}`;
       $("engineStatus").className = `badge ${data.available ? "good" : "neutral"}`;
       $("engineStatus").textContent = data.available ? "Comparison ready" : "Unavailable";
       $("engineNote").textContent = mode === "scientific"
@@ -760,21 +760,24 @@ COMPARISON_HTML = r"""
         const candidateView = viewPair.candidate_case || {};
         const pairCount = Number(viewPair.eligible_view_pair_count || 0);
         const pairWord = pairCount === 1 ? "pair" : "pairs";
-        const viewPairText = `Best eligible-view match: ${selectedView.view_label || "eligible view"} ↔ ${candidateView.view_label || "eligible view"} · selected from ${pairCount} eligible view ${pairWord}.`;
+        const viewPairText = `Best supported-view match: ${selectedView.view_label || "analysed query view"} ↔ ${candidateView.view_label || "eligible reference view"} · selected from ${pairCount} supported view ${pairWord}.`;
         return `<article class="match-card ${mode}">` +
           `<div class="match-rank" aria-label="Rank ${match.rank}">#${match.rank}</div>` +
           `<div>` +
             `<div class="match-name"><h3>${escapeHtml(item.player_name)}</h3><span class="badge ${statusClass(support.status)}">${escapeHtml(support.label)} evidence</span></div>` +
             `<p class="match-meta">${escapeHtml(caseMeta(item))}</p>` +
-            `<p class="view-pair-copy"><strong>${escapeHtml(viewPairText)}</strong> No view average is used.</p>` +
             `<p class="reliability-copy">${escapeHtml(support.explanation)}</p>` +
             `<p class="stability-copy"><strong>${escapeHtml(stability.label || "Stability unavailable")}:</strong> ${escapeHtml(stability.explanation || "No resampling result was available.")}</p>` +
           `</div>` +
           (mode === "scientific" ? `<div class="score-box"><strong>${Number(match.similarity_index).toFixed(3)}</strong><span>Best-view index (0–1)</span></div>` : "") +
-          `<div class="comparison-details">` +
-            `<div class="measurement-group"><h4>${mode === "simple" ? "Most alike" : "Smallest robustly scaled gaps"}</h4><ul>${measurementList(match.closest_measurements)}</ul></div>` +
-            `<div class="measurement-group"><h4>${mode === "simple" ? "Largest differences" : "Largest reliability-weighted gaps"}</h4><ul>${measurementList(match.largest_differences)}</ul></div>` +
-          `</div>` +
+          `<details class="match-evidence" ${match.rank === 1 ? "open" : ""}>` +
+            `<summary>View supporting evidence</summary>` +
+            `<p class="view-pair-copy"><strong>${escapeHtml(viewPairText)}</strong> No view average is used.</p>` +
+            `<div class="comparison-details">` +
+              `<div class="measurement-group"><h4>${mode === "simple" ? "Most alike" : "Smallest robustly scaled gaps"}</h4><ul>${measurementList(match.closest_measurements)}</ul></div>` +
+              `<div class="measurement-group"><h4>${mode === "simple" ? "Largest differences" : "Largest reliability-weighted gaps"}</h4><ul>${measurementList(match.largest_differences)}</ul></div>` +
+            `</div>` +
+          `</details>` +
         `</article>`;
       }).join("");
     }
@@ -790,6 +793,11 @@ COMPARISON_HTML = r"""
       if (app.comparisonAbortController) app.comparisonAbortController.abort();
       const controller = new AbortController();
       app.comparisonAbortController = controller;
+      let timedOut = false;
+      const timeout = window.setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+      }, 20000);
       const requestId = ++app.comparisonRequestId;
       app.selectedCaseId = caseId;
       if (historyMode) syncComparisonUrl(caseId, historyMode);
@@ -801,7 +809,7 @@ COMPARISON_HTML = r"""
       }
       $("engineStatus").className = "badge neutral";
       $("engineStatus").textContent = "Comparing";
-      $("rankingList").innerHTML = '<div class="app-football-loader" role="status" aria-live="polite"><span class="app-loader-pitch" aria-hidden="true"><span class="app-loader-ball">⚽</span></span><span class="app-loader-copy"><strong>Checking the match-ups…</strong><small>Comparing only mutually supported movement measurements.</small></span></div>';
+      $("rankingList").innerHTML = '<div class="app-football-loader" role="status" aria-live="polite"><span class="app-loader-pitch" aria-hidden="true"><span class="app-loader-ball">⚽</span></span><span class="app-loader-copy"><strong>Checking the match-ups…</strong><small>Comparing mutually supported measurements. This can take up to 20 seconds.</small></span></div>';
       try {
         const response = await fetch(
           `/api/movement-comparison?case=${encodeURIComponent(caseId)}`
@@ -815,17 +823,29 @@ COMPARISON_HTML = r"""
         app.comparison = comparison;
         renderRankings();
       } catch (error) {
-        if (error.name === "AbortError") return;
+        if (error.name === "AbortError" && !timedOut) return;
         if (requestId !== app.comparisonRequestId || caseId !== app.selectedCaseId) return;
         app.comparison = null;
         $("engineStatus").className = "badge neutral";
         $("engineStatus").textContent = "Unavailable";
-        $("rankingList").innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+        const message = timedOut ? "The comparison took longer than expected." : error.message;
+        $("rankingList").innerHTML = `<div class="empty-state">${escapeHtml(message)} <button type="button" id="retryComparisonCase">Try again</button></div>`;
+        $("retryComparisonCase").addEventListener("click", () => selectCase(caseId, {historyMode: null}));
+      } finally {
+        window.clearTimeout(timeout);
       }
     }
     async function loadComparisonIndex() {
+      if (app.indexAbortController) app.indexAbortController.abort();
+      const controller = new AbortController();
+      app.indexAbortController = controller;
+      let timedOut = false;
+      const timeout = window.setTimeout(() => {
+        timedOut = true;
+        controller.abort();
+      }, 20000);
       try {
-        const response = await fetch('/api/movement-comparison');
+        const response = await fetch('/api/movement-comparison', {signal: controller.signal});
         if (!response.ok) throw new Error("Analysed players could not be loaded.");
         app.index = await response.json();
         app.comparison = null;
@@ -844,10 +864,15 @@ COMPARISON_HTML = r"""
           renderRankings();
         }
       } catch (error) {
+        if (controller !== app.indexAbortController) return;
         app.comparison = null;
         $("engineStatus").textContent = "Unavailable";
-        $("playerList").innerHTML = `<div class="empty-state">${escapeHtml(error.message)}</div>`;
+        const message = timedOut ? "The comparison list took longer than expected." : error.message;
+        $("playerList").innerHTML = `<div class="empty-state">${escapeHtml(message)} <button type="button" id="retryComparisonIndex">Try again</button></div>`;
+        $("retryComparisonIndex").addEventListener("click", loadComparisonIndex);
         renderRankings();
+      } finally {
+        window.clearTimeout(timeout);
       }
     }
     $("comparisonLens").innerHTML = experience.lenses.filter(lens => !lens.future).map(lens =>

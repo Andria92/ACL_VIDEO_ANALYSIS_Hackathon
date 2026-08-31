@@ -180,11 +180,11 @@ def test_case_payload_prefers_saved_case_identity_over_imported_filename() -> No
 
 
 def test_tool_pages_return_to_main_menu() -> None:
-    assert '<a class="button" href="/">Main menu</a>' in render_annotation_page()
-    assert '<a class="button" href="/">Main menu</a>' in render_results_page()
+    assert 'class="app-brand" href="/"' in render_annotation_page()
+    assert 'class="app-brand" href="/"' in render_results_page()
     assert "http://127.0.0.1:8765/" in render_video_cutter_page()
-    assert '<a class="button" href="/">Main menu</a>' in render_comparison_page()
-    assert '<a class="button" href="/">Main menu</a>' in render_exploration_page()
+    assert 'class="app-brand" href="/"' in render_comparison_page()
+    assert 'class="app-brand" href="/"' in render_exploration_page()
     assert '<a class="button" href="/">Main menu</a>' in render_similarity_validation_page()
 
 
@@ -237,7 +237,7 @@ def test_integrated_video_cutter_uses_main_app_routes() -> None:
         api_base="/video-cutter/api",
     )
 
-    assert '<a class="button" href="/">Main menu</a>' in html
+    assert 'class="app-brand" href="/"' in html
     assert 'const apiBase = "/video-cutter/api";' in html
     assert 'fetch(`${apiBase}/videos`)' in html
     assert 'fetch(`${apiBase}/context-cases`)' in html
@@ -297,7 +297,8 @@ def test_exploration_page_exposes_evidence_gated_views() -> None:
     assert 'aria-controls="distributionView"' in html
     assert 'aria-labelledby="distributionTab"' in html
     assert 'item.tabIndex = selected ? 0 : -1;' in html
-    assert 'fetch("/api/explore")' in html
+    assert 'fetch("/api/explore", {signal: controller.signal})' in html
+    assert 'id="retryExploreData"' in html
 
 
 def test_compare_movements_page_owns_similarity_experience() -> None:
@@ -327,7 +328,8 @@ def test_compare_movements_page_owns_similarity_experience() -> None:
     assert 'id="rankingList"' in html
     assert "Closest injury-event movement profiles" in html
     assert "Views are never averaged." in html
-    assert "Best eligible-view match" in html
+    assert "Best supported-view match" in html
+    assert "Query-only · comparable to references" in html
     assert "eligible_view_pair_count" in html
     assert "selected_value" in html
     assert "candidate_value" in html

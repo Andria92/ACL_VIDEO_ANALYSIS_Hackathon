@@ -1012,6 +1012,7 @@ def render_video_cutter_page(
       align-items: flex-start;
       gap: 16px;
     }
+    .case-setup-actions { display: flex; flex-wrap: wrap; gap: 8px; }
     .case-setup h2 { margin: 0 0 4px; font-size: 18px; }
     .case-setup p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.45; }
     .case-setup-form { display: flex; flex-direction: column; gap: 12px; }
@@ -1346,16 +1347,9 @@ def render_video_cutter_page(
 <body>
   <a class="app-skip-link" href="#mainContent">Skip to video preparation</a>
   __APP_SITE_HEADER__
-  <header class="app-tool-header">
-    <h1>Video Cutter</h1>
-    <div class="row">
-      <a class="button" id="cancelCutterLink" href="__MAIN_MENU_URL__" hidden>Cancel and return</a>
-      <a class="button" href="__MAIN_MENU_URL__">Main menu</a>
-      <button id="refreshButton">Refresh</button>
-    </div>
-  </header>
 
   <main id="mainContent" class="shell app-page-main" tabindex="-1">
+    <h1 class="app-visually-hidden">Video Cutter</h1>
     <section id="caseSetupPanel" class="panel case-setup">
       <div id="caseSetupForm" class="case-setup-form">
       <div class="case-setup-header">
@@ -1364,7 +1358,11 @@ def render_video_cutter_page(
           <h2>Create or choose the case before opening video</h2>
           <p>A case represents one player’s injury event. Every clip you cut in this session will be attached as another video view of that case.</p>
         </div>
-        <a class="button" href="__MAIN_MENU_URL__#review">Edit case library</a>
+        <div class="case-setup-actions">
+          <a class="button" id="cancelCutterLink" href="__MAIN_MENU_URL__" hidden>Cancel and return</a>
+          <button id="refreshButton" type="button">Refresh</button>
+          <a class="button" href="__MAIN_MENU_URL__#review">Edit case library</a>
+        </div>
       </div>
       <label>
         What are you working on?
@@ -1729,6 +1727,19 @@ function caseOptionLabel(item) {
   return `${item.player_name}${details.length ? ` — ${details.join(" · ")}` : ""}`;
 }
 
+function disambiguatedCaseOptionLabels() {
+  const baseLabels = app.contextCases.map(caseOptionLabel);
+  const counts = baseLabels.reduce((result, label) => {
+    result.set(label, (result.get(label) || 0) + 1);
+    return result;
+  }, new Map());
+  return baseLabels.map((label, index) => {
+    if ((counts.get(label) || 0) < 2) return label;
+    const caseId = String(app.contextCases[index].case_id || "").trim();
+    return `${label} · Case ${caseId || index + 1}`;
+  });
+}
+
 function caseCategoryLabel(value) {
   const text = String(value || "").trim();
   if (!text || text.toLowerCase() === "unknown") return "Not recorded";
@@ -1760,8 +1771,9 @@ function renderActiveCaseSummary(item, note = "All cuts will be saved as views o
 }
 
 function renderCaseOptions() {
-  const options = app.contextCases.map(item => (
-    `<option value="${escapeHtml(item.case_id)}">${escapeHtml(caseOptionLabel(item))}</option>`
+  const labels = disambiguatedCaseOptionLabels();
+  const options = app.contextCases.map((item, index) => (
+    `<option value="${escapeHtml(item.case_id)}">${escapeHtml(labels[index])}</option>`
   )).join("");
   $("contextCaseSelect").innerHTML = options;
   $("analysisCaseSelect").innerHTML = options || '<option value="">No injury cases yet</option>';

@@ -4,7 +4,7 @@
     "annotator_type": "HUMAN",
     "annotator_id": "researcher_01",
     "created_at": "2026-08-26T16:06:05.493221+00:00",
-    "updated_at": "2026-08-26T22:28:30.061886+00:00",
+    "updated_at": "2026-08-31T18:32:48.546959+00:00",
     "case_id": "imported_ellie_carpenter_2000_04_28_acl_candidate",
     "source_id": "imported_ellie_carpenter_2000_04_28_view_01",
     "view_id": "imported_ellie_carpenter_2000_04_28_view_01",
@@ -14,11 +14,68 @@
   "case_id": "imported_ellie_carpenter_2000_04_28_acl_candidate",
   "source_id": "imported_ellie_carpenter_2000_04_28_view_01",
   "view_id": "imported_ellie_carpenter_2000_04_28_view_01",
-  "manual_roi_keyframe_count": 31,
+  "manual_roi_keyframe_count": 35,
   "manual_target_unavailable_frame_count": 0,
   "target_unavailable_intervals": [],
-  "manual_target_accepted_frame_count": 0,
-  "target_accepted_intervals": [],
+  "manual_target_accepted_frame_count": 71,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 6,
+      "end_frame": 31,
+      "frame_count": 26,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 33,
+      "end_frame": 34,
+      "frame_count": 2,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 40,
+      "end_frame": 45,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 59,
+      "end_frame": 64,
+      "frame_count": 6,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 66,
+      "end_frame": 78,
+      "frame_count": 13,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 106,
+      "end_frame": 116,
+      "frame_count": 11,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 127,
+      "end_frame": 133,
+      "frame_count": 7,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
   "movement_window": {
     "movement_start_frame": 3,
     "movement_start_timestamp_ms": 100.0,

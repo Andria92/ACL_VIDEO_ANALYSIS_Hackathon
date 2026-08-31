@@ -231,17 +231,13 @@ def load_exploration_payload(
     all_rows = _attach_phase_evidence(all_rows, Path(semantics_dir))
     all_rows = _attach_event_interval_reviews(all_rows, case_list, Path(data_root))
     selected = _select_feature_evidence_views(all_rows)
-    similarity_view_rows = all_rows.loc[
-        all_rows["event_comparison_eligible"]
-        & all_rows["phase_status"].isin(SUPPORTED_PHASE_STATUSES)
-    ].copy()
-    similarity_selected = _select_feature_evidence_views(similarity_view_rows)
     records = [_json_safe_record(row) for row in selected.to_dict(orient="records")]
-    similarity_records = [
-        _json_safe_record(row) for row in similarity_selected.to_dict(orient="records")
-    ]
+    # Keep every completed analysed case available as a potential query. The
+    # similarity engine applies the stricter phase/event gate only to reference
+    # candidates and to reference-scaler construction.
+    similarity_records = list(records)
     similarity_view_records = [
-        _json_safe_record(row) for row in similarity_view_rows.to_dict(orient="records")
+        _json_safe_record(row) for row in all_rows.to_dict(orient="records")
     ]
     events = _event_rows(all_rows, selected)
     features = _feature_rows(selected)
@@ -317,17 +313,12 @@ def load_exploration_summary_payload(
     all_rows = _attach_phase_evidence(all_rows, Path(semantics_dir))
     all_rows = _attach_event_interval_reviews(all_rows, case_list, Path(data_root))
     selected = _select_feature_evidence_views(all_rows)
-    similarity_view_rows = all_rows.loc[
-        all_rows["event_comparison_eligible"]
-        & all_rows["phase_status"].isin(SUPPORTED_PHASE_STATUSES)
-    ].copy()
-    similarity_selected = _select_feature_evidence_views(similarity_view_rows)
     events = _event_rows(all_rows, selected)
     similarity_records = [
-        _json_safe_record(row) for row in similarity_selected.to_dict(orient="records")
+        _json_safe_record(row) for row in selected.to_dict(orient="records")
     ]
     similarity_view_records = [
-        _json_safe_record(row) for row in similarity_view_rows.to_dict(orient="records")
+        _json_safe_record(row) for row in all_rows.to_dict(orient="records")
     ]
     return {
         "summary": _summary_counts(all_rows, selected, events),
@@ -915,7 +906,11 @@ def _event_rows(rows: pd.DataFrame, selected: pd.DataFrame) -> list[dict[str, An
                 "reference_pool_reason": (
                     "At least one completed view has supported phases and covers the visible event."
                     if reference_pool_eligible
-                    else "No completed event-covered view is eligible for comparison."
+                    else (
+                        "Not eligible as a reference because no completed phase-supported, "
+                        "event-covered view is available. The case may still be compared as "
+                        "a query when enough whole-movement measurements are supported."
+                    )
                 ),
             }
         )
