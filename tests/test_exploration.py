@@ -159,6 +159,13 @@ def test_exploration_preserves_human_contact_metadata(tmp_path: Path) -> None:
                         "preferred_foot_source": "EA SPORTS FC 26",
                         "preferred_foot_source_url": "https://example.test/ea-fc-player",
                         "preferred_foot_knee_injured": False,
+                        "height_cm": 170,
+                        "weight_kg": 63,
+                        "height_verification_status": "sourced",
+                        "weight_verification_status": "sourced",
+                        "biometric_source": "Example player database",
+                        "biometric_source_url": "https://example.test/player-profile",
+                        "biometric_note": "Example sourced profile values.",
                         "ea_fc_audit_status": "verified",
                     }
                 }
@@ -194,10 +201,37 @@ def test_exploration_preserves_human_contact_metadata(tmp_path: Path) -> None:
     assert payload["events"][0]["age_group"] == "21–25"
     assert payload["events"][0]["preferred_foot"] == "right"
     assert payload["events"][0]["preferred_foot_knee_injured"] is False
+    assert payload["events"][0]["height_cm"] == 170
+    assert payload["events"][0]["weight_kg"] == 63
+    assert payload["events"][0]["biometric_source"] == "Example player database"
     assert payload["records"][0]["preferred_foot_knee_injured"] is False
+    assert payload["records"][0]["height_cm"] == 170
+    assert payload["records"][0]["weight_kg"] == 63
     assert payload["records"][0]["team"] == "Example FC"
     assert payload["summary"]["known_contact_mechanism_count"] == 1
     assert payload["readiness"]["contact_group_comparison"]["eligible"] is False
+
+
+def test_current_player_profile_metadata_keeps_missing_biometrics_nullable() -> None:
+    root = Path(__file__).resolve().parents[1]
+    metadata = json.loads(
+        (root / "data/annotations/human/case_research_metadata_human.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    by_player = {
+        details["player_name"]: details for details in metadata["cases"].values()
+    }
+
+    assert len(by_player) == 36
+    assert sum(row["height_cm"] is not None for row in by_player.values()) == 35
+    assert sum(row["weight_kg"] is not None for row in by_player.values()) == 32
+    assert by_player["Kirsten van de Westeringh"]["height_cm"] is None
+    assert by_player["Kirsten van de Westeringh"]["weight_kg"] is None
+    assert by_player["Holly McNamara"]["weight_kg"] is None
+    assert by_player["Holly McNamara"]["weight_verification_status"] == "source_conflict"
+    assert by_player["Charlotte Newsham"]["height_cm"] == 170
+    assert by_player["Kayla Duran"]["height_cm"] == 178
 
 
 def test_injury_report_evidence_overrides_mechanism_and_exposes_provenance(

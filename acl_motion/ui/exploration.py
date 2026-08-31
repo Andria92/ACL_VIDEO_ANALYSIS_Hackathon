@@ -242,6 +242,10 @@ def render_exploration_page() -> str:
     .measurement-help-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .chart-reference { display: flex; align-items: center; gap: 8px; margin: 2px 4px 8px; color: var(--muted); font-size: 12px; font-weight: 750; }
     .chart-reference-line { width: 28px; border-top: 2px dashed #735b24; }
+    .profile-coverage { margin: 12px 0 18px; }
+    .profile-section { margin-top: 22px; }
+    .profile-section h3 { margin-bottom: 4px; }
+    .profile-table a { color: var(--accent); font-weight: 750; }
     .eligibility-result {
       min-height: 98px;
       margin-top: 12px;
@@ -345,6 +349,7 @@ def render_exploration_page() -> str:
       <button class="tab active" id="overviewTab" type="button" role="tab" aria-selected="true" aria-controls="overviewView" tabindex="0" data-view="overviewView">Overview</button>
       <button class="tab" id="sourcesTab" type="button" role="tab" aria-selected="false" aria-controls="sourcesView" tabindex="-1" data-view="sourcesView">Sources / Injury Reports</button>
       <button class="tab" id="breakdownsTab" type="button" role="tab" aria-selected="false" aria-controls="breakdownsView" tabindex="-1" data-view="breakdownsView">Case breakdowns</button>
+      <button class="tab" id="profilesTab" type="button" role="tab" aria-selected="false" aria-controls="profilesView" tabindex="-1" data-view="profilesView">Height &amp; weight</button>
       <button class="tab" id="distributionTab" type="button" role="tab" aria-selected="false" aria-controls="distributionView" tabindex="-1" data-view="distributionView">Compare cases</button>
       <button class="tab" id="relationshipTab" type="button" role="tab" aria-selected="false" aria-controls="relationshipView" tabindex="-1" data-view="relationshipView">Compare two measurements</button>
       <button class="tab" id="testBuilderTab" type="button" role="tab" aria-selected="false" aria-controls="testBuilderView" tabindex="-1" data-view="testBuilderView">Can these groups be compared?</button>
@@ -391,6 +396,7 @@ def render_exploration_page() -> str:
             <option value="league">Domestic league</option>
             <option value="age_group">Age at injury</option>
             <option value="contact_mechanism">Contact mechanism</option>
+            <option value="preferred_foot_knee_injured">Preferred-foot knee injured</option>
           </select></label>
         </div>
         <div class="chart-grid">
@@ -425,6 +431,59 @@ def render_exploration_page() -> str:
         </div>
         <p class="source-count" id="sourceCount" role="status" aria-live="polite"></p>
         <div class="source-list" id="sourceCards"><div class="empty">Loading injury-report sources.</div></div>
+      </div>
+    </section>
+
+    <section class="view" id="profilesView" role="tabpanel" aria-labelledby="profilesTab">
+      <div class="band">
+        <h2>Player Height &amp; Weight</h2>
+        <p class="section-copy">Sourced player-profile values for the independent injury cases. These are descriptive profile fields—not measurements taken at the injury date—and missing or conflicting values are never estimated or plotted as zero.</p>
+        <div class="summary-grid profile-coverage">
+          <div class="summary-card"><span>Height available</span><strong id="heightCoverage">-</strong><small>of independent cases</small></div>
+          <div class="summary-card"><span>Weight available</span><strong id="weightCoverage">-</strong><small>of independent cases</small></div>
+          <div class="summary-card"><span>Complete pairs</span><strong id="biometricPairCoverage">-</strong><small>height and weight both sourced</small></div>
+          <div class="summary-card"><span>Incomplete profiles</span><strong id="biometricMissingCount">-</strong><small>kept visible below</small></div>
+        </div>
+
+        <div class="profile-section">
+          <h3>Height distribution</h3>
+          <p class="section-copy">The box shows the middle 50%; the diamond is the mean; every named point is one player.</p>
+          <div class="stats-grid" id="heightStats" aria-label="Height descriptive statistics"></div>
+          <div class="chart-shell">
+            <div class="chart-reference"><span class="chart-reference-line" aria-hidden="true"></span><span>Dashed line = median; box = middle 50%; diamond = mean</span></div>
+            <canvas id="heightCanvas" class="tall-chart" role="img" aria-label="Named player height distribution; values are also listed in the table below."></canvas>
+          </div>
+          <p class="chart-summary" id="heightSummary"></p>
+        </div>
+
+        <div class="profile-section">
+          <h3>Weight distribution</h3>
+          <p class="section-copy">Only sourced numeric weights are included. Conflicting and unavailable weights remain visible in the audit table.</p>
+          <div class="stats-grid" id="weightStats" aria-label="Weight descriptive statistics"></div>
+          <div class="chart-shell">
+            <div class="chart-reference"><span class="chart-reference-line" aria-hidden="true"></span><span>Dashed line = median; box = middle 50%; diamond = mean</span></div>
+            <canvas id="weightCanvas" class="tall-chart" role="img" aria-label="Named player weight distribution; values are also listed in the table below."></canvas>
+          </div>
+          <p class="chart-summary" id="weightSummary"></p>
+        </div>
+
+        <div class="profile-section">
+          <h3>Height and weight together</h3>
+          <p class="section-copy">Each numbered point is one player with a complete sourced pair. This is a descriptive profile view, not a relationship with injury risk.</p>
+          <div class="chart-shell">
+            <canvas id="biometricScatterCanvas" role="img" aria-label="Height versus weight for players with complete sourced profiles."></canvas>
+            <ol id="biometricScatterLegend" class="chart-legend" aria-label="Player labels for numbered height and weight points"></ol>
+          </div>
+          <p class="chart-summary" id="biometricScatterSummary"></p>
+        </div>
+
+        <div class="profile-section">
+          <h3>Source and missing-data audit</h3>
+          <div class="table-wrap profile-table" role="region" aria-label="Height and weight source audit" tabindex="0"><table>
+            <thead><tr><th>Player</th><th>Height</th><th>Weight</th><th>Selected source</th><th>Audit note</th></tr></thead>
+            <tbody id="biometricRows"></tbody>
+          </table></div>
+        </div>
       </div>
     </section>
 
@@ -525,6 +584,7 @@ def render_exploration_page() -> str:
       league: "domestic league",
       age_group: "age at injury",
       contact_mechanism: "contact mechanism",
+      preferred_foot_knee_injured: "whether the preferred-foot knee was injured",
     };
     const chartColours = ["#215f9a", "#18744a", "#b26a1b", "#7a4fa3", "#b7435c", "#377f8c", "#6d7f32", "#795548"];
 
@@ -937,6 +997,191 @@ def render_exploration_page() -> str:
       $("breakdownLegend").innerHTML = rows.map((row, index) => `<li><span class="chart-key" style="background:${chartColours[index % chartColours.length]}">${row.count}</span><span>${escapeHtml(row.label)} · ${total ? Math.round(row.count / total * 100) : 0}%</span></li>`).join("");
     }
 
+    function biometricStatusLabel(status) {
+      return ({
+        sourced: "Sourced",
+        source_conflict: "Conflicting sources",
+        not_found: "Not found",
+      })[status] || readableValue(status, "Not reviewed");
+    }
+
+    function biometricFormat(value, unit) {
+      return valueAvailable(value) ? `${Number(value).toFixed(0)} ${unit}` : "Unavailable";
+    }
+
+    function profileStatisticCard(label, value, detail = "") {
+      return `<div class="stat-card"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>${detail ? `<small>${escapeHtml(detail)}</small>` : ""}</div>`;
+    }
+
+    function renderProfileDistribution({field, statusField, label, unit, canvasId, statsId, summaryId, colour}) {
+      const allEvents = [...app.data.events].sort((left, right) => String(left.player_name).localeCompare(String(right.player_name)));
+      const records = allEvents
+        .filter(event => valueAvailable(event[field]))
+        .sort((left, right) => Number(left[field]) - Number(right[field]) || String(left.player_name).localeCompare(String(right.player_name)));
+      const values = records.map(record => Number(record[field]));
+      const canvas = $(canvasId);
+      canvas.style.height = `${Math.max(420, records.length * 27 + 165)}px`;
+      const {context, width, height} = canvasContext(canvas);
+      if (!records.length) {
+        drawNoData(context, width, height, `No sourced ${label.toLowerCase()} values.`);
+        $(statsId).innerHTML = profileStatisticCard("Summary", "No sourced values");
+        $(summaryId).textContent = `0 of ${allEvents.length} independent cases have a sourced ${label.toLowerCase()} value.`;
+        return;
+      }
+
+      const average = mean(values);
+      const centre = median(values);
+      const standardDeviation = sampleStandardDeviation(values);
+      const minimumRecord = records[0];
+      const maximumRecord = records.at(-1);
+      $(statsId).innerHTML = [
+        profileStatisticCard("Mean", biometricFormat(average, unit)),
+        profileStatisticCard("Median", biometricFormat(centre, unit)),
+        profileStatisticCard("Sample SD", standardDeviation === null ? "Needs 2+ players" : biometricFormat(standardDeviation, unit)),
+        profileStatisticCard("Minimum", biometricFormat(minimumRecord[field], unit), minimumRecord.player_name),
+        profileStatisticCard("Maximum", biometricFormat(maximumRecord[field], unit), maximumRecord.player_name),
+      ].join("");
+
+      context.clearRect(0, 0, width, height);
+      const margin = {left: Math.min(220, Math.max(155, width * 0.25)), right: 28, top: 92, bottom: 58};
+      const [minimum, maximum] = numericDomain(values);
+      drawLinearTicks(context, width, height, margin, [minimum, maximum], "x", unit);
+      const plotWidth = width - margin.left - margin.right;
+      const plotHeight = height - margin.top - margin.bottom;
+      const scaleX = value => margin.left + (Number(value) - minimum) / (maximum - minimum) * plotWidth;
+      const q1 = quantile(values, 0.25);
+      const q3 = quantile(values, 0.75);
+      const boxY = 48;
+      const minimumX = scaleX(Math.min(...values));
+      const maximumX = scaleX(Math.max(...values));
+      const q1X = scaleX(q1);
+      const q3X = scaleX(q3);
+      const medianX = scaleX(centre);
+      const meanX = scaleX(average);
+
+      context.save();
+      context.strokeStyle = colour;
+      context.fillStyle = colour === "#18744a" ? "#e9f6ef" : "#e9f2fb";
+      context.lineWidth = 2;
+      context.beginPath(); context.moveTo(minimumX, boxY); context.lineTo(maximumX, boxY); context.stroke();
+      context.beginPath(); context.moveTo(minimumX, boxY - 9); context.lineTo(minimumX, boxY + 9); context.moveTo(maximumX, boxY - 9); context.lineTo(maximumX, boxY + 9); context.stroke();
+      context.fillRect(q1X, boxY - 15, Math.max(q3X - q1X, 1), 30);
+      context.strokeRect(q1X, boxY - 15, Math.max(q3X - q1X, 1), 30);
+      context.beginPath(); context.moveTo(medianX, boxY - 15); context.lineTo(medianX, boxY + 15); context.stroke();
+      context.fillStyle = "#18744a";
+      context.beginPath(); context.moveTo(meanX, boxY - 8); context.lineTo(meanX + 8, boxY); context.lineTo(meanX, boxY + 8); context.lineTo(meanX - 8, boxY); context.closePath(); context.fill();
+      context.restore();
+
+      context.save();
+      context.strokeStyle = "#735b24";
+      context.setLineDash([6, 5]);
+      context.beginPath(); context.moveTo(medianX, margin.top); context.lineTo(medianX, height - margin.bottom); context.stroke();
+      context.setLineDash([]);
+      context.fillStyle = "#735b24";
+      context.font = "700 11px system-ui";
+      context.textAlign = "center";
+      context.fillText("Median", medianX, margin.top + 17);
+      context.restore();
+
+      records.forEach((record, index) => {
+        const x = scaleX(record[field]);
+        const y = records.length === 1
+          ? margin.top + plotHeight / 2
+          : margin.top + index / (records.length - 1) * plotHeight;
+        context.strokeStyle = "#d7e1e8";
+        context.beginPath(); context.moveTo(margin.left, y); context.lineTo(x, y); context.stroke();
+        context.fillStyle = record[statusField] === "source_conflict" ? "#b26a1b" : colour;
+        context.beginPath(); context.arc(x, y, 5.5, 0, Math.PI * 2); context.fill();
+        context.fillStyle = "#1f2a33";
+        context.font = "12px system-ui";
+        context.textAlign = "right";
+        context.fillText(record.player_name, margin.left - 10, y + 4, margin.left - 24);
+      });
+      context.fillStyle = "#1f2a33";
+      context.font = "700 13px system-ui";
+      context.textAlign = "center";
+      context.fillText(`${label} (${unit})`, margin.left + plotWidth / 2, height - 16);
+      canvas.setAttribute("aria-label", `${label} box plot and named player points across ${records.length} independent injury cases. The dashed line is the median and the diamond is the mean.`);
+      const omitted = allEvents.length - records.length;
+      $(summaryId).textContent = `${records.length} of ${allEvents.length} independent cases have a sourced ${label.toLowerCase()} value; ${omitted} ${omitted === 1 ? "profile is" : "profiles are"} unavailable or conflicting and not plotted.`;
+    }
+
+    function renderBiometricScatter() {
+      const allEvents = [...app.data.events].sort((left, right) => String(left.player_name).localeCompare(String(right.player_name)));
+      const points = allEvents.filter(event => valueAvailable(event.height_cm) && valueAvailable(event.weight_kg));
+      const canvas = $("biometricScatterCanvas");
+      const {context, width, height} = canvasContext(canvas);
+      if (!points.length) {
+        drawNoData(context, width, height, "No complete height and weight pairs.");
+        $("biometricScatterLegend").innerHTML = "";
+        $("biometricScatterSummary").textContent = `0 of ${allEvents.length} independent cases have both sourced fields.`;
+        return;
+      }
+      context.clearRect(0, 0, width, height);
+      const margin = drawAxes(context, width, height, "Height (cm)", "Weight (kg)");
+      const xDomain = numericDomain(points.map(point => Number(point.height_cm)));
+      const yDomain = numericDomain(points.map(point => Number(point.weight_kg)));
+      drawLinearTicks(context, width, height, margin, xDomain, "x", "cm");
+      drawLinearTicks(context, width, height, margin, yDomain, "y", "kg");
+      const plotWidth = width - margin.left - margin.right;
+      const plotHeight = height - margin.top - margin.bottom;
+      points.forEach((point, index) => {
+        const x = margin.left + (Number(point.height_cm) - xDomain[0]) / (xDomain[1] - xDomain[0]) * plotWidth;
+        const y = margin.top + (yDomain[1] - Number(point.weight_kg)) / (yDomain[1] - yDomain[0]) * plotHeight;
+        context.fillStyle = "#18744a";
+        context.beginPath(); context.arc(x, y, 10, 0, Math.PI * 2); context.fill();
+        context.fillStyle = "#fff";
+        context.font = "800 10px system-ui";
+        context.textAlign = "center";
+        context.fillText(String(index + 1), x, y + 3.5);
+      });
+      $("biometricScatterLegend").innerHTML = points.map((point, index) => (
+        `<li><span class="chart-key">${index + 1}</span><span>${escapeHtml(point.player_name)} · ${biometricFormat(point.height_cm, "cm")} · ${biometricFormat(point.weight_kg, "kg")}</span></li>`
+      )).join("");
+      $("biometricScatterSummary").textContent = `${points.length} of ${allEvents.length} independent cases have a complete sourced pair. The chart describes the player profiles in this library and does not estimate injury risk.`;
+    }
+
+    function biometricTableCell(event, field, statusField, unit) {
+      const status = String(event[statusField] || "not_found");
+      const available = valueAvailable(event[field]);
+      return `${available ? `<strong>${escapeHtml(biometricFormat(event[field], unit))}</strong><br>` : ""}<span class="badge ${available && status === "sourced" ? "good" : "caution"}">${escapeHtml(biometricStatusLabel(status))}</span>`;
+    }
+
+    function renderProfiles() {
+      const events = [...app.data.events].sort((left, right) => String(left.player_name).localeCompare(String(right.player_name)));
+      const heightCount = events.filter(event => valueAvailable(event.height_cm)).length;
+      const weightCount = events.filter(event => valueAvailable(event.weight_kg)).length;
+      const pairCount = events.filter(event => valueAvailable(event.height_cm) && valueAvailable(event.weight_kg)).length;
+      const incompleteCount = events.length - pairCount;
+      $("heightCoverage").textContent = `${heightCount} / ${events.length}`;
+      $("weightCoverage").textContent = `${weightCount} / ${events.length}`;
+      $("biometricPairCoverage").textContent = `${pairCount} / ${events.length}`;
+      $("biometricMissingCount").textContent = incompleteCount;
+
+      renderProfileDistribution({
+        field: "height_cm", statusField: "height_verification_status", label: "Height", unit: "cm",
+        canvasId: "heightCanvas", statsId: "heightStats", summaryId: "heightSummary", colour: "#215f9a",
+      });
+      renderProfileDistribution({
+        field: "weight_kg", statusField: "weight_verification_status", label: "Weight", unit: "kg",
+        canvasId: "weightCanvas", statsId: "weightStats", summaryId: "weightSummary", colour: "#18744a",
+      });
+      renderBiometricScatter();
+
+      $("biometricRows").innerHTML = events.map(event => {
+        const source = event.biometric_source_url
+          ? `<a href="${escapeHtml(event.biometric_source_url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(event.biometric_source || "Open source")}</a>`
+          : escapeHtml(event.biometric_source || "No source found");
+        return `<tr>
+          <td><strong>${escapeHtml(event.player_name)}</strong></td>
+          <td>${biometricTableCell(event, "height_cm", "height_verification_status", "cm")}</td>
+          <td>${biometricTableCell(event, "weight_kg", "weight_verification_status", "kg")}</td>
+          <td>${source}</td>
+          <td>${escapeHtml(event.biometric_note || "No source conflict noted in the selected-source audit.")}</td>
+        </tr>`;
+      }).join("") || '<tr><td colspan="5" class="empty">No player-profile metadata are available.</td></tr>';
+    }
+
     function canvasContext(canvas) {
       const rect = canvas.getBoundingClientRect();
       const ratio = window.devicePixelRatio || 1;
@@ -1294,6 +1539,7 @@ def render_exploration_page() -> str:
     function redrawActiveCharts() {
       if (!app.data) return;
       if ($("breakdownsView").classList.contains("active")) renderBreakdowns();
+      if ($("profilesView").classList.contains("active")) renderProfiles();
       if ($("distributionView").classList.contains("active")) renderDistribution();
       if ($("relationshipView").classList.contains("active")) renderRelationship();
     }
@@ -1348,6 +1594,7 @@ def render_exploration_page() -> str:
         populateControls();
         renderReadiness();
         renderBreakdowns();
+        renderProfiles();
         redrawActiveCharts();
         if (window.location.hash === "#sources") activateTab($("sourcesTab"));
       })

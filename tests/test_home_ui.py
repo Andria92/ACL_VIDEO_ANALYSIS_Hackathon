@@ -275,15 +275,23 @@ def test_exploration_page_exposes_evidence_gated_views() -> None:
     assert "Case breakdowns" in html
     assert 'id="breakdownBarCanvas"' in html
     assert 'id="breakdownPieCanvas"' in html
+    assert '<option value="preferred_foot_knee_injured">Preferred-foot knee injured</option>' in html
+    assert 'preferred_foot_knee_injured: "whether the preferred-foot knee was injured"' in html
+    assert 'id="profilesTab"' in html
+    assert 'id="heightCanvas" class="tall-chart"' in html
+    assert 'id="weightCanvas" class="tall-chart"' in html
+    assert 'id="biometricScatterCanvas"' in html
+    assert "missing or conflicting values are never estimated or plotted as zero" in html
+    assert "function renderProfiles()" in html
     assert 'value="preferred_foot_knee_injured"' in html
     assert "Sample SD" in html
     assert "if (!app.data) return;" in html
-    assert "renderBreakdowns();\n        redrawActiveCharts();" in html
+    assert "renderBreakdowns();\n        renderProfiles();\n        redrawActiveCharts();" in html
     assert 'id="distributionFeatureHelp"' in html
     assert 'id="relationshipFeatureHelp"' in html
     assert "renderMeasurementHelp" in html
     assert 'role="tablist"' in html
-    assert html.count('role="tabpanel"') == 6
+    assert html.count('role="tabpanel"') == 7
     assert 'aria-controls="sourcesView"' in html
     assert 'aria-labelledby="sourcesTab"' in html
     assert 'aria-controls="distributionView"' in html

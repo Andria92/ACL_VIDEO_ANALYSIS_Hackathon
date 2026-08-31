@@ -1,9 +1,11 @@
-"""Harmonize case taxonomy and add sourced preferred-foot metadata.
+"""Harmonize case taxonomy and add sourced player-profile metadata.
 
 Every registered injury event is reviewed explicitly by player name. Preferred
 foot is checked against EA SPORTS FC for the complete cohort, with the EA edition
 and player page preserved in the record. A clearly labelled Soccerdonna fallback
 is used only when the player is not represented in the EA SPORTS FC database.
+Height and weight remain nullable, retain their selected source, and are never
+estimated when the public-source audit did not find a defensible value.
 """
 
 from __future__ import annotations
@@ -113,6 +115,158 @@ EAFC_NOT_LISTED = {
 }
 
 
+def _biometrics(
+    height_cm: int | None,
+    weight_kg: int | None,
+    source: str,
+    source_url: str,
+    *,
+    height_status: str = "sourced",
+    weight_status: str = "sourced",
+    note: str = "",
+) -> dict[str, object]:
+    return {
+        "height_cm": height_cm,
+        "weight_kg": weight_kg,
+        "height_verification_status": height_status,
+        "weight_verification_status": weight_status,
+        "biometric_source": source,
+        "biometric_source_url": source_url,
+        "biometric_note": note,
+    }
+
+
+def _ea_biometrics(
+    player_name: str,
+    height_cm: int,
+    weight_kg: int,
+    *,
+    note: str = "",
+) -> dict[str, object]:
+    _, edition, url = EAFC_PREFERRED_FOOT[player_name]
+    return _biometrics(height_cm, weight_kg, edition, url, note=note)
+
+
+# Selected-source values for descriptive player-profile visualisation. These are
+# not medical measurements. Public sources sometimes differ by a few centimetres
+# or kilograms, so the linked source and audit note remain visible in the app.
+PLAYER_BIOMETRICS = {
+    "Beth Mead": _ea_biometrics("Beth Mead", 163, 58),
+    "Vivianne Miedema": _ea_biometrics("Vivianne Miedema", 178, 65),
+    "Leah Williamson": _ea_biometrics("Leah Williamson", 170, 57),
+    "Jordan Nobbs": _ea_biometrics("Jordan Nobbs", 160, 52),
+    "Chloe Kelly": _ea_biometrics("Chloe Kelly", 168, 58),
+    "Christen Press": _ea_biometrics("Christen Press", 168, 58),
+    "Delphine Cascarino": _ea_biometrics("Delphine Cascarino", 164, 58),
+    "Ellie Carpenter": _ea_biometrics("Ellie Carpenter", 164, 60),
+    "Kirsten van de Westeringh": _biometrics(
+        None,
+        None,
+        "Public-source audit",
+        "https://www.fotmob.com/nl/players/1356017",
+        height_status="not_found",
+        weight_status="not_found",
+        note="No height or weight was published by the reviewed club, federation, FotMob, PlaymakerStats, or statistics profiles.",
+    ),
+    "Holly McNamara": _biometrics(
+        162,
+        None,
+        "Melbourne City",
+        "https://melbournecityfc.com.au/player/holly-mcnamara/",
+        weight_status="source_conflict",
+        note="The official club profile confirms 162 cm but leaves weight blank; secondary weights conflict substantially, so weight is not plotted.",
+    ),
+    "Caroline Weir": _ea_biometrics("Caroline Weir", 173, 62),
+    "Mary Fowler": _biometrics(
+        170,
+        66,
+        "EA SPORTS FC 26 (FIFACM mirror)",
+        "https://www.fifacm.com/player/248799/mary-fowler",
+        note="The selected EAFC database value is retained consistently; some federation material lists height as 172 cm.",
+    ),
+    "Carmen Menayo": _ea_biometrics("Carmen Menayo", 170, 65),
+    "Grace Wisnewski": _biometrics(
+        164,
+        66,
+        "Wellington Phoenix",
+        "https://wellingtonphoenix.com/player/grace-wisnewski/",
+    ),
+    "Ludmila da Silva": _biometrics(
+        163,
+        60,
+        "Olympedia",
+        "https://www.olympedia.org/athletes/141139",
+        note="Public profiles vary between 160 cm and 163 cm; the Olympic profile value is selected.",
+    ),
+    "Laura Wienroither": _ea_biometrics("Laura Wienroither", 165, 58),
+    "Aurora Galli": _ea_biometrics("Aurora Galli", 168, 56),
+    "Lena Oberdorf": _ea_biometrics("Lena Oberdorf", 174, 68),
+    "Inma Gabarro": _ea_biometrics(
+        "Inma Gabarro",
+        160,
+        57,
+        note="The selected EAFC database height differs from some public player profiles.",
+    ),
+    "Marie Höbinger": _ea_biometrics("Marie Höbinger", 162, 57),
+    "Charlotte Newsham": _biometrics(
+        170,
+        None,
+        "Soccerdonna",
+        "https://www.soccerdonna.de/en/charlotte-newsham/profil/spieler_40814.html",
+        weight_status="not_found",
+        note="A sourced height is available, but no defensible current weight was found in the reviewed sources.",
+    ),
+    "Sofie Lundgaard": _ea_biometrics("Sofie Lundgaard", 172, 63),
+    "Kosovare Asllani": _ea_biometrics("Kosovare Asllani", 166, 58),
+    "Tierna Davidson": _biometrics(
+        177,
+        64,
+        "FBref",
+        "https://fbref.com/en/players/543614ff/Tierna-Davidson",
+    ),
+    "Malou Marcetto": _ea_biometrics("Malou Marcetto", 178, 66),
+    "Kayla Duran": _biometrics(
+        178,
+        None,
+        "National Women's Soccer League",
+        "https://images.nwslsoccer.com/image/private/t_q-good/prd/ffqxlnqw59rmvg05hlrl.pdf",
+        weight_status="not_found",
+        note="The official profile supplies height, but no trustworthy weight was found.",
+    ),
+    "Alana Cook": _ea_biometrics(
+        "Alana Cook",
+        172,
+        63,
+        note="The selected EAFC database height differs from some federation and club profiles.",
+    ),
+    "Julie Dufour": _ea_biometrics("Julie Dufour", 163, 56),
+    "Sophie Schmidt": _ea_biometrics("Sophie Schmidt", 172, 66),
+    "Caiya Hanks": _ea_biometrics("Caiya Hanks", 163, 57),
+    "Midge Purce": _ea_biometrics(
+        "Midge Purce",
+        163,
+        56,
+        note="The selected EAFC database height differs slightly from the U.S. Soccer profile.",
+    ),
+    "Alex Loera": _biometrics(
+        168,
+        61,
+        "FOX Sports",
+        "https://www.foxsports.com/soccer/alex-loera-player-bio",
+    ),
+    "Andi Sullivan": _ea_biometrics(
+        "Andi Sullivan",
+        168,
+        57,
+        note="The selected EAFC database height differs slightly from some public profiles.",
+    ),
+    "Gabrielle Robinson": _ea_biometrics("Gabrielle Robinson", 173, 61),
+    "Cloe Lacasse": _ea_biometrics("Cloe Lacasse", 170, 56),
+    "Cloé Lacasse": _ea_biometrics("Cloé Lacasse", 170, 56),
+    "Alex Pfeiffer": _ea_biometrics("Alex Pfeiffer", 165, 58),
+}
+
+
 def main() -> None:
     payload = json.loads(METADATA_PATH.read_text(encoding="utf-8"))
     cases = payload.get("cases", {})
@@ -143,6 +297,9 @@ def main() -> None:
             ea_fc_audit_note = EAFC_NOT_LISTED[player_name]
             preferred_foot_source = "Soccerdonna fallback (not listed in EA SPORTS FC)"
             preferred_foot_url = soccerdonna_url
+        biometrics = PLAYER_BIOMETRICS.get(player_name)
+        if biometrics is None:
+            raise KeyError(f"No reviewed biometrics row for {player_name!r}")
         record.update(
             {
                 "date_of_birth": date_of_birth,
@@ -156,6 +313,7 @@ def main() -> None:
                 "league": league,
                 "competition": competition,
                 "team": team,
+                **biometrics,
                 "harmonization_source": HARMONIZATION_SOURCE,
                 "updated_at": "2026-08-31T00:00:00+00:00",
             }
@@ -165,6 +323,9 @@ def main() -> None:
         source_urls = dict(record.get("source_urls", {}))
         source_urls["soccerdonna_profile"] = soccerdonna_url
         source_urls["preferred_foot"] = preferred_foot_url
+        biometric_url = str(biometrics.get("biometric_source_url", ""))
+        if biometric_url:
+            source_urls["biometrics"] = biometric_url
         record["source_urls"] = source_urls
         provenance = dict(record.get("field_provenance", {}))
         provenance.update(
@@ -172,6 +333,12 @@ def main() -> None:
                 "date_of_birth": "Soccerdonna player profile",
                 "preferred_foot": preferred_foot_source,
                 "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
+                "height_cm": str(biometrics["biometric_source"]),
+                "weight_kg": (
+                    str(biometrics["biometric_source"])
+                    if biometrics["weight_kg"] is not None
+                    else "not_found_in_reviewed_sources"
+                ),
                 "league": HARMONIZATION_SOURCE,
                 "competition": HARMONIZATION_SOURCE,
                 "team": HARMONIZATION_SOURCE,
@@ -180,12 +347,19 @@ def main() -> None:
         record["field_provenance"] = provenance
         updated += 1
 
-    payload["metadata_version"] = "case_research_metadata_v3_harmonized_taxonomy"
+    payload["metadata_version"] = "case_research_metadata_v4_player_profiles"
     payload["taxonomy"] = {
         "league_definition": "The player's domestic club league at the injury date.",
         "competition_definition": "The competition in which the injury event occurred.",
         "preferred_foot_knee_injured_definition": "True when the documented injured knee is on the same side as the sourced preferred foot.",
         "preferred_foot_source_policy": "EA SPORTS FC for every represented player; labelled Soccerdonna fallback only when EA SPORTS FC has no player record.",
+        "biometric_source_policy": "Selected public-source values are descriptive player-profile metadata, not medical measurements. Missing values remain null and conflicting weights are not estimated.",
+        "height_available_players": sum(
+            values["height_cm"] is not None for values in PLAYER_BIOMETRICS.values()
+        ) - 1,
+        "weight_available_players": sum(
+            values["weight_kg"] is not None for values in PLAYER_BIOMETRICS.values()
+        ) - 1,
         "ea_fc_verified_players": len(EAFC_PREFERRED_FOOT) - 2,
         "ea_fc_archived_mirror_players": 1,
         "ea_fc_not_listed_players": sorted(EAFC_NOT_LISTED),

@@ -725,6 +725,19 @@ def _load_summary_rows(
                 "preferred_foot_knee_injured": research.get(
                     "preferred_foot_knee_injured"
                 ),
+                "height_cm": research.get("height_cm"),
+                "weight_kg": research.get("weight_kg"),
+                "height_verification_status": str(
+                    research.get("height_verification_status", "not_found")
+                ),
+                "weight_verification_status": str(
+                    research.get("weight_verification_status", "not_found")
+                ),
+                "biometric_source": str(research.get("biometric_source", "")),
+                "biometric_source_url": str(
+                    research.get("biometric_source_url", "")
+                ),
+                "biometric_note": str(research.get("biometric_note", "")),
                 "ea_fc_audit_status": str(
                     research.get("ea_fc_audit_status", "not_reviewed")
                 ),
@@ -858,6 +871,17 @@ def _event_rows(rows: pd.DataFrame, selected: pd.DataFrame) -> list[dict[str, An
                 "preferred_foot_knee_injured": _json_safe(
                     first["preferred_foot_knee_injured"]
                 ),
+                "height_cm": _json_safe(first["height_cm"]),
+                "weight_kg": _json_safe(first["weight_kg"]),
+                "height_verification_status": str(
+                    first["height_verification_status"]
+                ),
+                "weight_verification_status": str(
+                    first["weight_verification_status"]
+                ),
+                "biometric_source": str(first["biometric_source"]),
+                "biometric_source_url": str(first["biometric_source_url"]),
+                "biometric_note": str(first["biometric_note"]),
                 "ea_fc_audit_status": str(first["ea_fc_audit_status"]),
                 "metadata_source": str(first["metadata_source"]),
                 "analysed_view_count": int(source_rows["source_id"].nunique()),
@@ -1106,6 +1130,13 @@ def _json_safe_record(record: dict[str, Any]) -> dict[str, Any]:
         "preferred_foot_source",
         "preferred_foot_source_url",
         "preferred_foot_knee_injured",
+        "height_cm",
+        "weight_kg",
+        "height_verification_status",
+        "weight_verification_status",
+        "biometric_source",
+        "biometric_source_url",
+        "biometric_note",
         "ea_fc_audit_status",
         "metadata_source",
         "feature_name",

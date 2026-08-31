@@ -1,5 +1,5 @@
 {
-  "metadata_version": "case_research_metadata_v3_harmonized_taxonomy",
+  "metadata_version": "case_research_metadata_v4_player_profiles",
   "cases": {
     "beth_mead_acl": {
       "statistical_unit_id": "beth_mead_acl",
@@ -31,7 +31,8 @@
         "incident_account": "https://www.fifpro.org/en/articles/2024/09/beth-mead-the-people-who-understand-acl-injuries-are-the-players-who-have-gone-through-it",
         "injury_report": "https://www.sofoot.com/breves/rupture-du-ligament-croise-anterieur-genou-droit-pour-beth-mead-angleterre-arsenal-f",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/beth-mead/profil/spieler_12385.html",
-        "preferred_foot": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/beth-mead/245802"
+        "preferred_foot": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/beth-mead/245802",
+        "biometrics": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/beth-mead/245802"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -46,7 +47,9 @@
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
         "league": "project_taxonomy_harmonization:2026-08-31",
         "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31"
+        "team": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -55,7 +58,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Women's Super League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 163,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/beth-mead/245802",
+      "biometric_note": ""
     },
     "case_01_acl_candidate": {
       "statistical_unit_id": "case_01_acl_candidate",
@@ -87,7 +97,8 @@
         "incident_report": "https://www.skysports.com/football/news/11095/12768861/arsenal-women-0-1-lyon-vivianne-miedema-stretchered-off-as-gunners-reach-champions-league-quarter-finals",
         "injury_report": "https://www.standard.co.uk/sport/football/vivianne-miedema-injury-arsenal-women-b1047733.html",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/vivianne-miedema/profil/spieler_9241.html",
-        "preferred_foot": "https://www.ea.com/id/games/ea-sports-fc/ratings/player-ratings/vivianne-miedema/233746"
+        "preferred_foot": "https://www.ea.com/id/games/ea-sports-fc/ratings/player-ratings/vivianne-miedema/233746",
+        "biometrics": "https://www.ea.com/id/games/ea-sports-fc/ratings/player-ratings/vivianne-miedema/233746"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -100,7 +111,9 @@
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
         "league": "project_taxonomy_harmonization:2026-08-31",
         "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31"
+        "team": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -109,7 +122,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Women's Super League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 178,
+      "weight_kg": 65,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/id/games/ea-sports-fc/ratings/player-ratings/vivianne-miedema/233746",
+      "biometric_note": ""
     },
     "leah_williamson_acl": {
       "statistical_unit_id": "leah_williamson_acl",
@@ -141,7 +161,8 @@
         "injury_report": "https://www.bbc.co.uk/sport/football/65349115",
         "laterality_report": "https://www.espn.com/soccer/story/_/id/37638118/england-captain-leah-williamson-limps-injured-arsenal",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/leah-williamson/profil/spieler_22175.html",
-        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/leah-williamson/246426"
+        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/leah-williamson/246426",
+        "biometrics": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/leah-williamson/246426"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -154,7 +175,9 @@
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
         "league": "project_taxonomy_harmonization:2026-08-31",
         "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31"
+        "team": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -163,7 +186,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Women's Super League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 170,
+      "weight_kg": 57,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/leah-williamson/246426",
+      "biometric_note": ""
     },
     "jordan_nobbs_acl": {
       "statistical_unit_id": "jordan_nobbs_acl",
@@ -196,7 +226,8 @@
         "match_and_incident_report": "https://www.theguardian.com/football/2018/nov/18/arsenal-women-everton-ladies-super-league-match-report",
         "injury_report": "https://www.arsenal.com/news/jordan-nobbs-surgery-update-a2B8B3Y4bf52",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/jordan-nobbs/profil/spieler_2585.html",
-        "preferred_foot": "https://www.fifplay.com/fc-25/players/227257/jordan-nobbs/"
+        "preferred_foot": "https://www.fifplay.com/fc-25/players/227257/jordan-nobbs/",
+        "biometrics": "https://www.fifplay.com/fc-25/players/227257/jordan-nobbs/"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -211,7 +242,9 @@
         "opponent": "human_operator_annotation_ui:researcher_01",
         "preferred_foot": "EA SPORTS FC 25 (FIFPlay mirror)",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 25 (FIFPlay mirror)",
+        "weight_kg": "EA SPORTS FC 25 (FIFPlay mirror)"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 25 (FIFPlay mirror)",
@@ -220,7 +253,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Women's Super League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 160,
+      "weight_kg": 52,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 25 (FIFPlay mirror)",
+      "biometric_source_url": "https://www.fifplay.com/fc-25/players/227257/jordan-nobbs/",
+      "biometric_note": ""
     },
     "chloe_kelly_acl": {
       "statistical_unit_id": "chloe_kelly_acl",
@@ -252,7 +292,8 @@
         "match_and_incident_report": "https://www.mancity.com/news/womens/city-v-birmingham-city-fawsl-match-report-2-may-63755562",
         "injury_report": "https://live.mancity.com/news/womens/chloe-kelly-injury-update-63755717",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/kelly/profil/spieler_22176.html",
-        "preferred_foot": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/chloe-kelly/257001"
+        "preferred_foot": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/chloe-kelly/257001",
+        "biometrics": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/chloe-kelly/257001"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -267,7 +308,9 @@
         "opponent": "human_operator_annotation_ui:researcher_01",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -276,7 +319,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Women's Super League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 168,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/chloe-kelly/257001",
+      "biometric_note": ""
     },
     "christen_press_acl": {
       "statistical_unit_id": "christen_press_acl",
@@ -307,7 +357,8 @@
         "match_report": "https://www.racingloufc.com/news/2022/06/11/racing-winds-up-on-the-wrong-end-of-back-and-forth-battle-with-angel-city/",
         "injury_report": "https://angelcity.com/acfc-post/forward-christen-press-sustains-season-ending-knee-injury",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/press/profil/spieler_8301.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/christen-press/226327"
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/christen-press/226327",
+        "biometrics": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/christen-press/226327"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -322,7 +373,9 @@
         "opponent": "human_operator_annotation_ui:researcher_01",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -331,7 +384,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 168,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/christen-press/226327",
+      "biometric_note": ""
     },
     "delphine_cascarino_acl": {
       "statistical_unit_id": "delphine_cascarino_acl",
@@ -361,7 +421,8 @@
         "player_and_injury_profile": "https://www.fifa.com/en/tournaments/olympicgames/paris2024/articles/delphine-cascarino-france-olympics-paris-2024",
         "match_and_incident_report": "https://www.olympique-et-lyonnais.com/cascarino-touchee-au-genou-lors-de-psg-ol-0-1%2C289143.html",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/delphine-cascarino/profil/spieler_17984.html",
-        "preferred_foot": "https://careers.ea.com/de/games/ea-sports-fc/ratings/player-ratings/delphine-cascarino/232202"
+        "preferred_foot": "https://careers.ea.com/de/games/ea-sports-fc/ratings/player-ratings/delphine-cascarino/232202",
+        "biometrics": "https://careers.ea.com/de/games/ea-sports-fc/ratings/player-ratings/delphine-cascarino/232202"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -375,7 +436,9 @@
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
         "league": "project_taxonomy_harmonization:2026-08-31",
         "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31"
+        "team": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -384,7 +447,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Division 1 F\u00e9minine",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 164,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://careers.ea.com/de/games/ea-sports-fc/ratings/player-ratings/delphine-cascarino/232202",
+      "biometric_note": ""
     },
     "ellie_carpenter_acl": {
       "statistical_unit_id": "ellie_carpenter_acl",
@@ -415,7 +485,8 @@
         "match_report": "https://www.abc.net.au/news/2022-05-24/ellie-carpenter-tears-acl-in-uwcl-final/101093396",
         "injury_report": "https://www.olympique-et-lyonnais.com/ol-rupture-du-ligament-croise-confirmee-pour-ellie-carpenter%2C258542.html",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/ellie-carpenter/profil/spieler_30942.html",
-        "preferred_foot": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030"
+        "preferred_foot": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030",
+        "biometrics": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -429,7 +500,9 @@
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
         "league": "project_taxonomy_harmonization:2026-08-31",
         "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31"
+        "team": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -438,7 +511,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Division 1 F\u00e9minine",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 164,
+      "weight_kg": 60,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030",
+      "biometric_note": ""
     },
     "imported_ellie_carpenter_2000_04_28_acl_candidate": {
       "statistical_unit_id": "imported_ellie_carpenter_2000_04_28_acl_candidate",
@@ -471,7 +551,8 @@
         "match_report": "https://www.abc.net.au/news/2022-05-24/ellie-carpenter-tears-acl-in-uwcl-final/101093396",
         "injury_report": "https://www.olympique-et-lyonnais.com/ol-rupture-du-ligament-croise-confirmee-pour-ellie-carpenter%2C258542.html",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/ellie-carpenter/profil/spieler_30942.html",
-        "preferred_foot": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030"
+        "preferred_foot": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030",
+        "biometrics": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -487,7 +568,9 @@
         "opponent": "human_operator_annotation_ui:researcher_01",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -496,7 +579,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "Division 1 F\u00e9minine",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 164,
+      "weight_kg": 60,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://careers.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/ellie-carpenter/240030",
+      "biometric_note": ""
     },
     "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_acl_candidate": {
       "statistical_unit_id": "imported_3f55f120_abb1_44f1_9352_f9ebe1ec23ec_00m22s800_00m27s098_acl_candidate",
@@ -535,7 +625,8 @@
         "injury_account": "https://www.feyenoordpings.nl/van-de-westeringh-open-heb-maar-twee-weken-kunnen-genieten/",
         "previous_acl_report": "https://adodenhaag.nl/nl/nieuws/laatste-nieuws/ado-vrouwen/17453-van-de-westeringh-naar-feyenoord",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/kirsten-van-de-westeringh/profil/spieler_35149.html",
-        "preferred_foot": "https://www.soccerdonna.de/en/kirsten-van-de-westeringh/profil/spieler_35149.html"
+        "preferred_foot": "https://www.soccerdonna.de/en/kirsten-van-de-westeringh/profil/spieler_35149.html",
+        "biometrics": "https://www.fotmob.com/nl/players/1356017"
       },
       "updated_at": "2026-08-31T00:00:00+00:00",
       "field_provenance": {
@@ -550,7 +641,9 @@
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
         "league": "project_taxonomy_harmonization:2026-08-31",
         "competition": "project_taxonomy_harmonization:2026-08-31",
-        "team": "project_taxonomy_harmonization:2026-08-31"
+        "team": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "Public-source audit",
+        "weight_kg": "not_found_in_reviewed_sources"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "Soccerdonna fallback (not listed in EA SPORTS FC)",
@@ -559,7 +652,14 @@
       "ea_fc_audit_status": "not_listed",
       "ea_fc_audit_note": "Vrouwen Eredivisie player not represented in the EA SPORTS FC ratings database",
       "league": "Vrouwen Eredivisie",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": null,
+      "weight_kg": null,
+      "height_verification_status": "not_found",
+      "weight_verification_status": "not_found",
+      "biometric_source": "Public-source audit",
+      "biometric_source_url": "https://www.fotmob.com/nl/players/1356017",
+      "biometric_note": "No height or weight was published by the reviewed club, federation, FotMob, PlaymakerStats, or statistics profiles."
     },
     "imported_holy_mcnamara_2023_11_19_acl_candidate": {
       "player_name": "Holly McNamara",
@@ -583,7 +683,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "Melbourne City",
+        "weight_kg": "not_found_in_reviewed_sources"
       },
       "injured_side": "right",
       "preferred_foot": "right",
@@ -596,8 +698,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/holly-mcnamara/profil/spieler_64222.html",
-        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/holly-mc-namara/266242"
-      }
+        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/holly-mc-namara/266242",
+        "biometrics": "https://melbournecityfc.com.au/player/holly-mcnamara/"
+      },
+      "height_cm": 162,
+      "weight_kg": null,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "source_conflict",
+      "biometric_source": "Melbourne City",
+      "biometric_source_url": "https://melbournecityfc.com.au/player/holly-mcnamara/",
+      "biometric_note": "The official club profile confirms 162 cm but leaves weight blank; secondary weights conflict substantially, so weight is not plotted."
     },
     "imported_caroline_wier_2023_09_26_acl_candidate": {
       "player_name": "Caroline Weir",
@@ -625,7 +735,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 27",
+        "weight_kg": "EA SPORTS FC 27"
       },
       "injured_side": "left",
       "preferred_foot": "left",
@@ -638,8 +750,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/caroline-weir/profil/spieler_10461.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/caroline-weir/245879"
-      }
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/caroline-weir/245879",
+        "biometrics": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/caroline-weir/245879"
+      },
+      "height_cm": 173,
+      "weight_kg": 62,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 27",
+      "biometric_source_url": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/caroline-weir/245879",
+      "biometric_note": ""
     },
     "imported_mary_fowler_2025_04_13_acl_candidate": {
       "player_name": "Mary Fowler",
@@ -663,7 +783,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26 (FIFACM mirror)",
+        "weight_kg": "EA SPORTS FC 26 (FIFACM mirror)"
       },
       "injured_side": "right",
       "preferred_foot": "left",
@@ -676,8 +798,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/mary-fowler/profil/spieler_39964.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/mary-fowler/248799"
-      }
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/mary-fowler/248799",
+        "biometrics": "https://www.fifacm.com/player/248799/mary-fowler"
+      },
+      "height_cm": 170,
+      "weight_kg": 66,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26 (FIFACM mirror)",
+      "biometric_source_url": "https://www.fifacm.com/player/248799/mary-fowler",
+      "biometric_note": "The selected EAFC database value is retained consistently; some federation material lists height as 172 cm."
     },
     "imported_carmen_menayo_2024_06_15_acl_candidate": {
       "player_name": "Carmen Menayo",
@@ -705,7 +835,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "right",
       "preferred_foot": "left",
@@ -718,8 +850,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/carmen-menayo/profil/spieler_22162.html",
-        "preferred_foot": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/carmen-menayo/272112"
-      }
+        "preferred_foot": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/carmen-menayo/272112",
+        "biometrics": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/carmen-menayo/272112"
+      },
+      "height_cm": 170,
+      "weight_kg": 65,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/fi/games/ea-sports-fc/ratings/player-ratings/carmen-menayo/272112",
+      "biometric_note": ""
     },
     "imported_grace_wisnewski_2023_11_04_acl_candidate": {
       "player_name": "Grace Wisnewski",
@@ -743,7 +883,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "Soccerdonna fallback (not listed in EA SPORTS FC)",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "Wellington Phoenix",
+        "weight_kg": "Wellington Phoenix"
       },
       "injured_side": "left",
       "preferred_foot": "right",
@@ -756,8 +898,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/grace-wisnewski/profil/spieler_37811.html",
-        "preferred_foot": "https://www.soccerdonna.de/en/grace-wisnewski/profil/spieler_37811.html"
-      }
+        "preferred_foot": "https://www.soccerdonna.de/en/grace-wisnewski/profil/spieler_37811.html",
+        "biometrics": "https://wellingtonphoenix.com/player/grace-wisnewski/"
+      },
+      "height_cm": 164,
+      "weight_kg": 66,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "Wellington Phoenix",
+      "biometric_source_url": "https://wellingtonphoenix.com/player/grace-wisnewski/",
+      "biometric_note": ""
     },
     "imported_ludmila_da_silva_2023_03_12_acl_candidate": {
       "player_name": "Ludmila da Silva",
@@ -785,7 +935,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "Olympedia",
+        "weight_kg": "Olympedia"
       },
       "injured_side": "right",
       "preferred_foot": "right",
@@ -798,8 +950,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/ludmila/profil/spieler_24252.html",
-        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/ludmila/241023"
-      }
+        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/ludmila/241023",
+        "biometrics": "https://www.olympedia.org/athletes/141139"
+      },
+      "height_cm": 163,
+      "weight_kg": 60,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "Olympedia",
+      "biometric_source_url": "https://www.olympedia.org/athletes/141139",
+      "biometric_note": "Public profiles vary between 160 cm and 163 cm; the Olympic profile value is selected."
     },
     "imported_laura_wienroither_2023_05_01_acl_candidate": {
       "player_name": "Laura Wienroither",
@@ -823,7 +983,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "left",
       "preferred_foot": "right",
@@ -836,8 +998,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/laura-wienroither/profil/spieler_23374.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/laura-wienroither/264996"
-      }
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/laura-wienroither/264996",
+        "biometrics": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/laura-wienroither/264996"
+      },
+      "height_cm": 165,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/laura-wienroither/264996",
+      "biometric_note": ""
     },
     "imported_aurora_galli_2024_09_21_acl_candidate": {
       "player_name": "Aurora Galli",
@@ -861,7 +1031,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "right",
       "preferred_foot": "right",
@@ -874,8 +1046,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/aurora-galli/profil/spieler_22073.html",
-        "preferred_foot": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/aurora-galli/245443"
-      }
+        "preferred_foot": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/aurora-galli/245443",
+        "biometrics": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/aurora-galli/245443"
+      },
+      "height_cm": 168,
+      "weight_kg": 56,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/aurora-galli/245443",
+      "biometric_note": ""
     },
     "imported_lena_oberdorf_2025_10_19_acl_candidate": {
       "player_name": "Lena Oberdorf",
@@ -899,7 +1079,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "right",
       "preferred_foot": "right",
@@ -912,8 +1094,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/lena-oberdorf/profil/spieler_31601.html",
-        "preferred_foot": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/lena-oberdorf/248717"
-      }
+        "preferred_foot": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/lena-oberdorf/248717",
+        "biometrics": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/lena-oberdorf/248717"
+      },
+      "height_cm": 174,
+      "weight_kg": 68,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/cs/games/ea-sports-fc/ratings/player-ratings/lena-oberdorf/248717",
+      "biometric_note": ""
     },
     "imported_inma_gabarro_2026_03_28_acl_candidate": {
       "player_name": "Inma Gabarro",
@@ -937,7 +1127,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "left",
       "preferred_foot": "right",
@@ -950,8 +1142,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/gabarro/profil/spieler_43216.html",
-        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/inma-gabarro/272056"
-      }
+        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/inma-gabarro/272056",
+        "biometrics": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/inma-gabarro/272056"
+      },
+      "height_cm": 160,
+      "weight_kg": 57,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/inma-gabarro/272056",
+      "biometric_note": "The selected EAFC database height differs from some public player profiles."
     },
     "imported_marie_h_binger_2025_10_12_acl_candidate": {
       "player_name": "Marie H\u00f6binger",
@@ -975,7 +1175,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "left",
       "preferred_foot": "left",
@@ -988,8 +1190,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/marie-hoebinger/profil/spieler_30366.html",
-        "preferred_foot": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/marie-hobinger/265019"
-      }
+        "preferred_foot": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/marie-hobinger/265019",
+        "biometrics": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/marie-hobinger/265019"
+      },
+      "height_cm": 162,
+      "weight_kg": 57,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/marie-hobinger/265019",
+      "biometric_note": ""
     },
     "imported_charlotte_newsham_2026_05_02_acl_candidate": {
       "player_name": "Charlotte Newsham",
@@ -1013,7 +1223,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "Soccerdonna",
+        "weight_kg": "not_found_in_reviewed_sources"
       },
       "injured_side": "right",
       "preferred_foot": "right",
@@ -1026,8 +1238,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/charlotte-newsham/profil/spieler_40814.html",
-        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/charlotte-newsham/86135"
-      }
+        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/charlotte-newsham/86135",
+        "biometrics": "https://www.soccerdonna.de/en/charlotte-newsham/profil/spieler_40814.html"
+      },
+      "height_cm": 170,
+      "weight_kg": null,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "not_found",
+      "biometric_source": "Soccerdonna",
+      "biometric_source_url": "https://www.soccerdonna.de/en/charlotte-newsham/profil/spieler_40814.html",
+      "biometric_note": "A sourced height is available, but no defensible current weight was found in the reviewed sources."
     },
     "imported_sofie_lundgaard_2024_10_06_acl_candidate": {
       "player_name": "Sofie Lundgaard",
@@ -1055,7 +1275,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "left",
       "preferred_foot": "right",
@@ -1068,8 +1290,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/sofie-lundgaard/profil/spieler_36990.html",
-        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sofie-lundgaard/273050"
-      }
+        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sofie-lundgaard/273050",
+        "biometrics": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sofie-lundgaard/273050"
+      },
+      "height_cm": 172,
+      "weight_kg": 63,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sofie-lundgaard/273050",
+      "biometric_note": ""
     },
     "imported_kosovare_asllani_2026_03_29_acl_candidate": {
       "player_name": "Kosovare Asllani",
@@ -1097,7 +1327,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "left",
       "preferred_foot": "right",
@@ -1110,8 +1342,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/kosovare-asllani/profil/spieler_68.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/kosovare-asllani/226987"
-      }
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/kosovare-asllani/226987",
+        "biometrics": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/kosovare-asllani/226987"
+      },
+      "height_cm": 166,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/kosovare-asllani/226987",
+      "biometric_note": ""
     },
     "imported_tierna_davidson_2025_03_28_acl_candidate": {
       "player_name": "Tierna Davidson",
@@ -1135,7 +1375,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "FBref",
+        "weight_kg": "FBref"
       },
       "injured_side": "left",
       "preferred_foot": "left",
@@ -1148,8 +1390,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/davidson/profil/spieler_33936.html",
-        "preferred_foot": "https://www.ea.com/it/games/ea-sports-fc/ratings/player-ratings/tierna-davidson/244045"
-      }
+        "preferred_foot": "https://www.ea.com/it/games/ea-sports-fc/ratings/player-ratings/tierna-davidson/244045",
+        "biometrics": "https://fbref.com/en/players/543614ff/Tierna-Davidson"
+      },
+      "height_cm": 177,
+      "weight_kg": 64,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "FBref",
+      "biometric_source_url": "https://fbref.com/en/players/543614ff/Tierna-Davidson",
+      "biometric_note": ""
     },
     "imported_malou_marcetto_2026_05_16_acl_candidate": {
       "player_name": "Malou Marcetto",
@@ -1176,7 +1426,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "injured_side": "right",
       "preferred_foot": "right",
@@ -1189,8 +1441,16 @@
       "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
       "source_urls": {
         "soccerdonna_profile": "https://www.soccerdonna.de/en/malou-marcetto/profil/spieler_37423.html",
-        "preferred_foot": "https://www.ea.com/ro/games/ea-sports-fc/ratings/player-ratings/malou-marcetto/276771"
-      }
+        "preferred_foot": "https://www.ea.com/ro/games/ea-sports-fc/ratings/player-ratings/malou-marcetto/276771",
+        "biometrics": "https://www.ea.com/ro/games/ea-sports-fc/ratings/player-ratings/malou-marcetto/276771"
+      },
+      "height_cm": 178,
+      "weight_kg": 66,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/ro/games/ea-sports-fc/ratings/player-ratings/malou-marcetto/276771",
+      "biometric_note": ""
     },
     "imported_kayla_duran_2026_04_04_acl_candidate": {
       "player_name": "Kayla Duran",
@@ -1214,7 +1474,8 @@
         "match_report": "https://www.gothamfc.com/news/gotham-fc-falls-21-to-kansas-city-current",
         "footage": "https://www.cbssports.com/watch/nwsl/video/nwsl-highlights-kansas-city-current-vs-gotham-fc-44?ftag=CBS-16-10aci9g",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/kayla-duran/profil.html/spieler_110390",
-        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/kayla-duran/80331"
+        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/kayla-duran/80331",
+        "biometrics": "https://images.nwslsoccer.com/image/private/t_q-good/prd/ffqxlnqw59rmvg05hlrl.pdf"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1231,7 +1492,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "National Women's Soccer League",
+        "weight_kg": "not_found_in_reviewed_sources"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 27",
@@ -1240,7 +1503,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 178,
+      "weight_kg": null,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "not_found",
+      "biometric_source": "National Women's Soccer League",
+      "biometric_source_url": "https://images.nwslsoccer.com/image/private/t_q-good/prd/ffqxlnqw59rmvg05hlrl.pdf",
+      "biometric_note": "The official profile supplies height, but no trustworthy weight was found."
     },
     "imported_alana_cook_2025_05_16_acl_candidate": {
       "player_name": "Alana Cook",
@@ -1263,7 +1533,8 @@
         "injury_report": "https://www.kansascitycurrent.com/news/kansas-city-current-defender-alana-cook-placed-on-season-end",
         "mechanism_report": "https://www.si.com/soccer/kansas-city-current-confirms-alana-cook-s-season-ending-acl-injury",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/cook/profil/spieler_38784.html",
-        "preferred_foot": "https://www.ea.com/es-mx/games/ea-sports-fc/ratings/player-ratings/alana-cook/264011"
+        "preferred_foot": "https://www.ea.com/es-mx/games/ea-sports-fc/ratings/player-ratings/alana-cook/264011",
+        "biometrics": "https://www.ea.com/es-mx/games/ea-sports-fc/ratings/player-ratings/alana-cook/264011"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1281,7 +1552,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 27",
+        "weight_kg": "EA SPORTS FC 27"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 27",
@@ -1290,7 +1563,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 172,
+      "weight_kg": 63,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 27",
+      "biometric_source_url": "https://www.ea.com/es-mx/games/ea-sports-fc/ratings/player-ratings/alana-cook/264011",
+      "biometric_note": "The selected EAFC database height differs from some federation and club profiles."
     },
     "imported_julie_dufour_2025_09_20_acl_candidate": {
       "player_name": "Julie Dufour",
@@ -1313,7 +1593,8 @@
         "injury_report": "https://portland-thorns.webflow.io/news/portland-thorns-forward-julie-dufour-placed-on-sei-list",
         "match_report": "https://www.thorns.com/news/thorns-and-wave-share-points-in-1-1-draw",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/julie-dufour/profil/spieler_33453.html",
-        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/julie-dufour/265860"
+        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/julie-dufour/265860",
+        "biometrics": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/julie-dufour/265860"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1331,7 +1612,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1340,7 +1623,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 163,
+      "weight_kg": 56,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/julie-dufour/265860",
+      "biometric_note": ""
     },
     "imported_sophie_schmidt_2025_09_07_acl_candidate": {
       "player_name": "Sophie Schmidt",
@@ -1362,7 +1652,8 @@
       "source_urls": {
         "injury_report": "https://www.houstondynamofc.com/houstondash/news/houston-dash-midfielder-sophie-schmidt-placed-on-sei-list",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/sophie-schmidt/profil/spieler_1700.html",
-        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sophie-schmidt/227405"
+        "preferred_foot": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sophie-schmidt/227405",
+        "biometrics": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sophie-schmidt/227405"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1380,7 +1671,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1389,7 +1682,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 172,
+      "weight_kg": 66,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/nl/games/ea-sports-fc/ratings/player-ratings/sophie-schmidt/227405",
+      "biometric_note": ""
     },
     "imported_caiya_hanks_2025_06_15_acl_candidate": {
       "player_name": "Caiya Hanks",
@@ -1412,7 +1712,8 @@
         "injury_report": "https://www.thorns.com/news/an-update-on-caiya-hanks",
         "match_report": "https://www.seattlepi.com/sports/article/thorns-beat-spirit-2-0-snapping-spirit-s-5-game-20378543.php",
         "soccerdonna_profile": "https://www.soccerdonna.de/de/caiya-hanks/profil/spieler_107515.html",
-        "preferred_foot": "https://www.ea.com/games/ea-sports-fc/ratings/player-ratings/caiya-hanks/77865"
+        "preferred_foot": "https://www.ea.com/games/ea-sports-fc/ratings/player-ratings/caiya-hanks/77865",
+        "biometrics": "https://www.ea.com/games/ea-sports-fc/ratings/player-ratings/caiya-hanks/77865"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1430,7 +1731,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 27",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 27",
+        "weight_kg": "EA SPORTS FC 27"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 27",
@@ -1439,7 +1742,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 163,
+      "weight_kg": 57,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 27",
+      "biometric_source_url": "https://www.ea.com/games/ea-sports-fc/ratings/player-ratings/caiya-hanks/77865",
+      "biometric_note": ""
     },
     "imported_midge_purce_2024_03_24_acl_candidate": {
       "player_name": "Midge Purce",
@@ -1462,7 +1772,8 @@
         "injury_report": "https://www.gothamfc.com/news/gotham-fc-forward-midge-purce-suffers-season-ending-injury",
         "laterality_report": "https://www.goal.com/en-us/lists/gotham-fc-paying-consequences-concacaf-w-gold-cup--uswnt-star-midge-purce-early-season-injury/bltf07011fac967b824",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/midge-purce/profil/spieler_17926.html",
-        "preferred_foot": "https://www.ea.com/th/games/ea-sports-fc/ratings/player-ratings/midge-purce/243769"
+        "preferred_foot": "https://www.ea.com/th/games/ea-sports-fc/ratings/player-ratings/midge-purce/243769",
+        "biometrics": "https://www.ea.com/th/games/ea-sports-fc/ratings/player-ratings/midge-purce/243769"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1480,7 +1791,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1489,7 +1802,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 163,
+      "weight_kg": 56,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/th/games/ea-sports-fc/ratings/player-ratings/midge-purce/243769",
+      "biometric_note": "The selected EAFC database height differs slightly from the U.S. Soccer profile."
     },
     "imported_alex_loera_2024_04_20_acl_candidate": {
       "player_name": "Alex Loera",
@@ -1512,7 +1832,8 @@
         "injury_report": "https://bayfc.com/press-releases/bay-fc-midfielder-alex-loera-to-miss-remainder-of-2024-season-with-knee-injury/",
         "match_report": "https://sportsradioservice.com/2024/04/20/kc-opens-up-offense-on-bay-fc-at-cpkc-stadium-5-2/",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/loera/profil/spieler_67462.html",
-        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/alex-loera/267338"
+        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/alex-loera/267338",
+        "biometrics": "https://www.foxsports.com/soccer/alex-loera-player-bio"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1530,7 +1851,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "FOX Sports",
+        "weight_kg": "FOX Sports"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1539,7 +1862,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 168,
+      "weight_kg": 61,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "FOX Sports",
+      "biometric_source_url": "https://www.foxsports.com/soccer/alex-loera-player-bio",
+      "biometric_note": ""
     },
     "imported_andi_sullivan_2024_10_06_acl_candidate": {
       "player_name": "Andi Sullivan",
@@ -1562,7 +1892,8 @@
         "injury_report": "https://washingtonspirit.com/blog/2024/10/09/washington-spirit-midfielder-andi-sullivan-to-miss-remainder-of-2024-season-with-injury/",
         "incident_report": "https://www.washingtonpost.com/sports/2024/10/09/andi-sullivan-acl-injury/",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/andi-sullivan/profil/spieler_17930.html",
-        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/andi-sullivan/243261"
+        "preferred_foot": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/andi-sullivan/243261",
+        "biometrics": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/andi-sullivan/243261"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1580,7 +1911,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1589,7 +1922,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 168,
+      "weight_kg": 57,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/es/games/ea-sports-fc/ratings/player-ratings/andi-sullivan/243261",
+      "biometric_note": "The selected EAFC database height differs slightly from some public profiles."
     },
     "imported_gabrielle_robinson_2024_05_25_acl_candidate": {
       "player_name": "Gabrielle Robinson",
@@ -1612,7 +1952,8 @@
         "injury_report": "https://www.kansascitycurrent.com/news/kansas-city-current-defender-gabrielle-robinson-suffers-torn",
         "mechanism_report": "https://www.kansascity.com/sports/soccer/kc-current/article285969476.html",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/gabrielle-robinson/leistungsdaten/spieler_84607_2025.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/gabrielle-robinson/273480"
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/gabrielle-robinson/273480",
+        "biometrics": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/gabrielle-robinson/273480"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1630,7 +1971,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1639,7 +1982,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 173,
+      "weight_kg": 61,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/gabrielle-robinson/273480",
+      "biometric_note": ""
     },
     "imported_cloe_lacasse_2024_10_20_acl_candidate": {
       "player_name": "Clo\u00e9 Lacasse",
@@ -1661,7 +2011,8 @@
       "source_urls": {
         "injury_report": "https://www.rsl.com/utahroyals/news/urfc-forward-cloe-lacasse-added-to-season-ending-injury-list",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/cloe-lacasse/profil/spieler_34363.html",
-        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/cloe-lacasse/265571"
+        "preferred_foot": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/cloe-lacasse/265571",
+        "biometrics": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/cloe-lacasse/265571"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1679,7 +2030,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1688,7 +2041,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 170,
+      "weight_kg": 56,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/de/games/ea-sports-fc/ratings/player-ratings/cloe-lacasse/265571",
+      "biometric_note": ""
     },
     "imported_alex_pfeiffer_2024_06_28_acl_candidate": {
       "player_name": "Alex Pfeiffer",
@@ -1711,7 +2071,8 @@
         "injury_report": "https://www.kansascitycurrent.com/news/kansas-city-current-forward-alex-pfeiffer-placed-on-season-e",
         "match_report": "https://www.kansascitycurrent.com/news/match-report-kansas-city-current-extends-unbeaten-streak-to-nwsl-record-17-matches-with-2-0-victory-over-houston-dash",
         "soccerdonna_profile": "https://www.soccerdonna.de/en/alex-pfeiffer/profil/spieler_74052.html",
-        "preferred_foot": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/alex-pfeiffer/70490"
+        "preferred_foot": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/alex-pfeiffer/70490",
+        "biometrics": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/alex-pfeiffer/70490"
       },
       "metadata_source": "human_operator_annotation_ui:researcher_01",
       "updated_at": "2026-08-31T00:00:00+00:00",
@@ -1729,7 +2090,9 @@
         "date_of_birth": "Soccerdonna player profile",
         "preferred_foot": "EA SPORTS FC 26",
         "preferred_foot_knee_injured": "derived:preferred_foot+injured_side",
-        "league": "project_taxonomy_harmonization:2026-08-31"
+        "league": "project_taxonomy_harmonization:2026-08-31",
+        "height_cm": "EA SPORTS FC 26",
+        "weight_kg": "EA SPORTS FC 26"
       },
       "preferred_foot": "right",
       "preferred_foot_source": "EA SPORTS FC 26",
@@ -1738,7 +2101,14 @@
       "ea_fc_audit_status": "verified",
       "ea_fc_audit_note": "Preferred foot verified against the linked EA SPORTS FC player record.",
       "league": "National Women's Soccer League",
-      "harmonization_source": "project_taxonomy_harmonization:2026-08-31"
+      "harmonization_source": "project_taxonomy_harmonization:2026-08-31",
+      "height_cm": 165,
+      "weight_kg": 58,
+      "height_verification_status": "sourced",
+      "weight_verification_status": "sourced",
+      "biometric_source": "EA SPORTS FC 26",
+      "biometric_source_url": "https://www.ea.com/en/games/ea-sports-fc/ratings/player-ratings/alex-pfeiffer/70490",
+      "biometric_note": ""
     }
   },
   "taxonomy": {
@@ -1746,6 +2116,9 @@
     "competition_definition": "The competition in which the injury event occurred.",
     "preferred_foot_knee_injured_definition": "True when the documented injured knee is on the same side as the sourced preferred foot.",
     "preferred_foot_source_policy": "EA SPORTS FC for every represented player; labelled Soccerdonna fallback only when EA SPORTS FC has no player record.",
+    "biometric_source_policy": "Selected public-source values are descriptive player-profile metadata, not medical measurements. Missing values remain null and conflicting weights are not estimated.",
+    "height_available_players": 35,
+    "weight_available_players": 32,
     "ea_fc_verified_players": 33,
     "ea_fc_archived_mirror_players": 1,
     "ea_fc_not_listed_players": [
