@@ -29,6 +29,9 @@ from acl_motion.analytics.similarity import (
     build_similarity_payload,
 )
 from acl_motion.annotations.event_interval_review import save_event_interval_review
+from acl_motion.annotations.injury_mechanism_review import (
+    save_injury_mechanism_review,
+)
 from acl_motion.annotations.models import (
     ANNOTATION_UI_VERSION,
     AnnotationCase,
@@ -73,9 +76,17 @@ from acl_motion.persistence import (
     path_lock,
 )
 from acl_motion.runtime import ensure_supported_runtime
-from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.ui.app_shell import (
+    app_shell_css,
+    app_site_header,
+    apply_app_brand,
+    brand_asset_path,
+)
 from acl_motion.ui.comparison import render_comparison_page
-from acl_motion.ui.exploration import render_exploration_page
+from acl_motion.ui.exploration import (
+    render_exploration_page,
+    render_feature_correlations_page,
+)
 from acl_motion.ui.home import render_home_page
 from acl_motion.ui.results import (
     clear_result_mask_prompts,
@@ -144,7 +155,7 @@ class AnnotationUiState:
     case_locks: dict[str, RLock] = field(default_factory=dict, repr=False)
     case_locks_lock: Lock = field(default_factory=Lock, repr=False)
     case_revisions: dict[str, int] = field(default_factory=dict)
-    comparison_cache: dict[tuple[int, str], dict] = field(default_factory=dict, repr=False)
+    comparison_cache: dict[tuple[object, ...], dict] = field(default_factory=dict, repr=False)
     comparison_cache_lock: Lock = field(default_factory=Lock, repr=False)
     comparison_generation: int = 0
     comparison_request_lock: Lock = field(default_factory=Lock, repr=False)
@@ -278,6 +289,7 @@ def _movement_comparison_response(
     state: AnnotationUiState,
     selected_case_id: str = "",
     *,
+    measurement_groups: tuple[str, ...] = (),
     client_id: str = "",
     request_id: str = "",
 ) -> dict:
@@ -295,7 +307,7 @@ def _movement_comparison_response(
 
     with state.comparison_cache_lock:
         generation = state.comparison_generation
-        cache_key = (generation, selected_case_id)
+        cache_key = (generation, selected_case_id, *measurement_groups)
         cached = state.comparison_cache.get(cache_key)
         if cached is not None:
             return cached
@@ -314,6 +326,7 @@ def _movement_comparison_response(
                 exploration["events"],
                 view_records=exploration["similarity_view_records"],
                 selected_case_id=selected_case_id,
+                measurement_groups=measurement_groups,
                 cancelled=cancelled,
             )
         except SimilarityComputationCancelled as exc:
@@ -488,7 +501,10 @@ def make_handler(state: AnnotationUiState):
         def do_GET(self) -> None:
             parsed = urlparse(self.path)
             try:
-                if parsed.path == "/":
+                asset_path = brand_asset_path(parsed.path)
+                if asset_path is not None:
+                    self._send_file(asset_path)
+                elif parsed.path == "/":
                     self._send_html(render_home_page())
                 elif parsed.path == "/annotate":
                     self._send_html(render_annotation_page())
@@ -500,6 +516,8 @@ def make_handler(state: AnnotationUiState):
                     self._send_html(render_similarity_validation_page())
                 elif parsed.path == "/explore":
                     self._send_html(render_exploration_page())
+                elif parsed.path == "/correlations":
+                    self._send_html(render_feature_correlations_page())
                 elif parsed.path in {"/video-cutter", "/video-cutter/"}:
                     self._send_html(
                         render_video_cutter_page(
@@ -569,10 +587,16 @@ def make_handler(state: AnnotationUiState):
                 elif parsed.path == "/api/movement-comparison":
                     query = parse_qs(parsed.query)
                     selected_case_id = _one(query, "case", "")
+                    measurement_groups = tuple(
+                        value.strip()
+                        for value in _one(query, "groups", "").split(",")
+                        if value.strip()
+                    )
                     self._send_json(
                         _movement_comparison_response(
                             state,
                             selected_case_id,
+                            measurement_groups=measurement_groups,
                             client_id=_one(query, "client_id", ""),
                             request_id=_one(query, "request_id", ""),
                         )
@@ -686,7 +710,10 @@ def make_handler(state: AnnotationUiState):
         def do_HEAD(self) -> None:
             parsed = urlparse(self.path)
             try:
-                if parsed.path == "/":
+                asset_path = brand_asset_path(parsed.path)
+                if asset_path is not None:
+                    self._send_file(asset_path, send_body=False)
+                elif parsed.path == "/":
                     self._send_html(render_home_page(), send_body=False)
                 elif parsed.path == "/annotate":
                     self._send_html(render_annotation_page(), send_body=False)
@@ -698,6 +725,8 @@ def make_handler(state: AnnotationUiState):
                     self._send_html(render_similarity_validation_page(), send_body=False)
                 elif parsed.path == "/explore":
                     self._send_html(render_exploration_page(), send_body=False)
+                elif parsed.path == "/correlations":
+                    self._send_html(render_feature_correlations_page(), send_body=False)
                 elif parsed.path in {"/video-cutter", "/video-cutter/"}:
                     self._send_html(
                         render_video_cutter_page(
@@ -877,6 +906,24 @@ def make_handler(state: AnnotationUiState):
                         "saving the event-interval review",
                     ):
                         response = save_event_interval_review(
+                            case,
+                            decision=str(payload.get("decision", "")),
+                            reviewer_id=str(payload.get("reviewer_id", "researcher_01")),
+                            data_root=_annotation_data_root(state),
+                        )
+                        _bump_case_revision(state, case.case_id)
+                        _invalidate_comparison_cache(state)
+                    self._send_json(response)
+                    return
+                if parsed.path == "/api/results/injury-mechanism-review":
+                    payload = self._read_json()
+                    case = _case_by_slug(str(payload["case"]), state.cases)
+                    with _guard_case_mutation(
+                        state,
+                        case.case_id,
+                        "saving the injury-mechanism review",
+                    ):
+                        response = save_injury_mechanism_review(
                             case,
                             decision=str(payload.get("decision", "")),
                             reviewer_id=str(payload.get("reviewer_id", "researcher_01")),
@@ -2214,7 +2261,7 @@ def _optional_int(value) -> int | None:
 def render_annotation_page() -> str:
     """Return the self-contained annotation UI page."""
 
-    return r"""
+    return apply_app_brand(r"""
 <!doctype html>
 <html lang="en">
 <head>
@@ -2224,14 +2271,14 @@ def render_annotation_page() -> str:
   <style>
     :root {
       color-scheme: light;
-      --bg: #f5f6f8;
-      --ink: #1f2933;
-      --muted: #5d6673;
-      --line: #d6dbe1;
+      --bg: #f5f8fa;
+      --ink: #142334;
+      --muted: #586879;
+      --line: #d7e0e7;
       --panel: #ffffff;
-      --green: #148a54;
+      --green: #08766d;
       --amber: #c47b00;
-      --blue: #1d68c4;
+      --blue: #0F62FE;
       --red: #b42335;
       --unavailable: #8f2f3f;
     }
@@ -4844,4 +4891,4 @@ init().then(() => {
 </html>
 """.replace("__APP_SHELL_CSS__", app_shell_css()).replace(
         "__APP_SITE_HEADER__", app_site_header("Human Annotation")
-    )
+    ))

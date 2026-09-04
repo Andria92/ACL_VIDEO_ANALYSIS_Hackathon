@@ -1,0 +1,6 @@
+file 'acl_intro_v2_build/01_leah_no_coaches.mp4'
+file 'acl_intro_v2_build/02_press.mp4'
+file 'acl_intro_v2_build/03_ellie.mp4'
+file 'acl_intro_v2_build/04_miedema.mp4'
+file 'acl_intro_v2_build/05_beth_injury.mp4'
+file 'acl_intro_v2_build/06_original_rehab_and_science.mp4'

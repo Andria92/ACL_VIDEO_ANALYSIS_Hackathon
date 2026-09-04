@@ -34,6 +34,84 @@ def test_similarity_engine_ranks_nearest_supported_case() -> None:
     assert overall[0]["largest_differences"]
 
 
+def test_similarity_network_reuses_only_available_pairwise_results() -> None:
+    payload = build_similarity_payload(
+        _records(),
+        _events(),
+        selected_case_id="case_a",
+        resampling_iterations=0,
+    )
+
+    network = payload["network"]
+    assert len(network["nodes"]) == 4
+    assert network["edge_count"] == 6
+    assert len(network["edges"]) == 6
+    assert all(edge["indices"] for edge in network["edges"])
+    assert all(edge["shared_descriptor_count"] >= 6 for edge in network["edges"])
+    assert all(
+        "overall_movement_difference" in edge["evidence_support"]
+        for edge in network["edges"]
+    )
+    assert "does not mean" in network["missing_edge_note"]
+
+
+def test_similarity_measurement_group_filter_is_explicit_and_evidence_gated() -> None:
+    records = _records()
+    for case_id, offset in {
+        "case_a": 0.0,
+        "case_b": 0.2,
+        "case_c": 8.0,
+        "case_d": 12.0,
+    }.items():
+        records.append(
+            {
+                "case_id": case_id,
+                "statistical_unit_id": case_id,
+                "feature_name": "left_elbow_angle_2d_deg",
+                "body_region": "upper_body",
+                "feature_family": "upper_body",
+                "perspective": "oblique",
+                "mean": 70.0 + offset,
+                "range": 15.0 + offset,
+                "range_semantics": "linear",
+                "comparison_statistics_version": (
+                    "comparison_statistics_v1_supported_intervals"
+                ),
+                "comparison_support_scope": "observable_supported_intervals",
+                "pre_late_change": None,
+                "geometry_analytics_eligible": True,
+                "dynamic_analytics_eligible": False,
+                "geometry_completeness": 0.9,
+                "dynamic_completeness": 0.0,
+            }
+        )
+
+    unfiltered = build_similarity_payload(records, _events(), resampling_iterations=0)
+    filtered = build_similarity_payload(
+        records,
+        _events(),
+        selected_case_id="case_a",
+        measurement_groups=("lower_limb", "trunk"),
+        resampling_iterations=0,
+    )
+    one_group = build_similarity_payload(
+        records,
+        _events(),
+        selected_case_id="case_a",
+        measurement_groups=("lower_limb",),
+        resampling_iterations=0,
+    )
+
+    assert unfiltered["summary"]["eligible_descriptor_count"] > filtered["summary"][
+        "eligible_descriptor_count"
+    ]
+    assert filtered["measurement_groups"]["selected"] == ["lower_limb", "trunk"]
+    assert filtered["measurement_groups"]["scope"] == "FILTERED_MEASUREMENT_GROUPS"
+    assert filtered["rankings"]["overall_movement_difference"]
+    assert one_group["available"] is False
+    assert one_group["network"]["edges"] == []
+
+
 def test_similarity_engine_excludes_missing_measurements_instead_of_using_zero() -> None:
     records = _records()
     records = [
@@ -153,6 +231,33 @@ def test_query_only_case_can_be_compared_but_cannot_be_a_reference() -> None:
         match["case"]["case_id"]
         for match in reference_payload["rankings"]["overall_movement_difference"]
     }
+
+
+def test_analysed_case_without_supported_descriptors_remains_visible_query_only() -> None:
+    events = _events() + [
+        {
+            "case_id": "case_occluded",
+            "player_name": "Occluded Player",
+            "reference_pool_eligible": False,
+            "reference_pool_reason": "The incomplete view is excluded from the reference pool.",
+            "analysed_view_count": 1,
+        }
+    ]
+
+    payload = build_similarity_payload(
+        _records(),
+        events,
+        selected_case_id="case_occluded",
+        resampling_iterations=0,
+    )
+
+    selected = payload["selected_case"]
+    assert selected["case_id"] == "case_occluded"
+    assert selected["reference_pool_eligible"] is False
+    assert selected["comparable_descriptor_count"] == 0
+    assert selected["query_comparison_ready"] is False
+    assert payload["rankings"]["overall_movement_difference"] == []
+    assert payload["summary"]["query_only_case_count"] == 1
 
 
 def test_hidden_unidentified_case_cannot_change_scaling_or_ranking() -> None:

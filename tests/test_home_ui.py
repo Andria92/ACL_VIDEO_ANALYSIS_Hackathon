@@ -3,8 +3,12 @@ from __future__ import annotations
 from acl_motion.annotations.registry import default_annotation_cases
 from acl_motion.cases.models import InjurySide
 from acl_motion.ui.annotation import _case_payload, render_annotation_page
+from acl_motion.ui.app_shell import BRAND_ASSET_DIR, brand_asset_path
 from acl_motion.ui.comparison import render_comparison_page
-from acl_motion.ui.exploration import render_exploration_page
+from acl_motion.ui.exploration import (
+    render_exploration_page,
+    render_feature_correlations_page,
+)
 from acl_motion.ui.home import render_home_page
 from acl_motion.ui.results import render_results_page
 from acl_motion.ui.similarity_validation import render_similarity_validation_page
@@ -18,7 +22,38 @@ def test_home_page_connects_current_workflow_tools() -> None:
     assert "Women’s football movement research" in html
     assert "Observe the movement. Follow the evidence." in html
     assert "Not diagnosis, injury-risk calculation, or causation" in html
-    assert 'href="#review">Skip to case library</a>' in html
+    assert 'href="#workflow">Skip to analysis workflow</a>' in html
+    assert '<div class="hero-actions"' not in html
+    assert 'class="button hero-primary"' not in html
+    assert 'class="button hero-secondary"' not in html
+    assert "Core analysis workflow" in html
+    assert "Create, annotate, and review a case" in html
+    assert "Follow the evidence trail" not in html
+    assert 'aria-label="Four-stage evidence workflow"' not in html
+    assert "Stage 01 · Observe" not in html
+    assert "guided demo" not in html.lower()
+    assert "4-minute demo" not in html.lower()
+    assert "four-minute rule" not in html.lower()
+    assert "opening context" not in html.lower()
+    assert "unless a judge asks" not in html.lower()
+    assert "Responsible AI in practice" in html
+    assert "Knowing when not to give an absolute answer" in html
+    assert "evidence-gated restraint built into the workflow" in html
+    assert 'aria-label="Responsible AI safeguards"' in html
+    assert "Humans retain contextual judgement" in html
+    assert "Uncertainty changes the output" in html
+    assert "Comparison must be earned" in html
+    assert 'aria-label="Real case examples of evidence-gated outcomes"' in html
+    assert "Andi Sullivan" in html
+    assert "Charlotte Newsham" in html
+    assert "Jordyn Huitema" in html
+    assert "Caroline Weir" in html
+    assert 'href="/results?case=imported_andi_sullivan_2024_10_06_view_02"' in html
+    assert 'href="/results?case=imported_charlotte_newsham_2026_05_02_view_01"' in html
+    assert 'href="/results?case=imported_jordyn_huitema_2026_07_18_view_01"' in html
+    assert 'href="/results?case=imported_caroline_wier_2023_09_26_view_02"' in html
+    assert "No transition” is a valid result, not a processing failure" in html
+    assert "phase analysis is withheld instead of manufacturing a confident story" in html
     assert "Injury Case Library" in html
     assert 'id="caseSearch"' in html
     assert 'id="caseFilter"' in html
@@ -46,7 +81,8 @@ def test_home_page_connects_current_workflow_tools() -> None:
     assert "Delete view" in html
     assert "View analysis" in html
     assert "Annotate view" in html
-    assert "Create and analyse a case" in html
+    assert "Create, annotate, and review a case" in html
+    assert 'aria-label="Case analysis workflow"' in html
     assert "STEP 01" in html
     assert "Create or choose the injury case" in html
     assert 'href="/video-cutter"' in html
@@ -73,9 +109,63 @@ def test_home_page_connects_current_workflow_tools() -> None:
     assert "Open Statistical Explorer" in html
     assert 'href="/explore#sources"' in html
     assert "Sources / Injury Reports" in html
+    assert "Feature correlations" not in html
+    assert 'href="/correlations"' not in html
+    assert "Open Feature Correlations" not in html
+    assert html.index("Create, annotate, and review a case") < html.index("Injury Case Library")
+    assert html.index("Injury Case Library") < html.index("Responsible AI in practice")
+    assert html.index("Responsible AI in practice") < html.index("Continue from one story to the wider library")
     assert 'role="status" aria-live="polite"' in html
     assert ":focus-visible" in html
     assert "prefers-reduced-motion: reduce" in html
+
+
+def test_approved_brand_identity_is_shared_without_repeating_the_hero() -> None:
+    home = render_home_page()
+    tool_pages = (
+        render_annotation_page(),
+        render_results_page(),
+        render_comparison_page(),
+        render_exploration_page(),
+        render_video_cutter_page(main_menu_url="/"),
+    )
+
+    assert "/assets/brand/acl_movement_analytics_lab_hero_banner.png" in home
+    assert "/assets/brand/acl_brand_tagline.png" in home
+    assert "#0A2540" in home
+    assert "#0F62FE" in home
+    assert "#00D4A6" in home
+    assert "#7CF1BB" in home
+    assert "#E6F6FF" in home
+    for html in (home, *tool_pages):
+        assert "/assets/brand/acl_favicon_runner_32.png" in html
+        assert "/assets/brand/acl_badge_pitch_runner_analytics.png" in html
+    for html in tool_pages:
+        assert "acl_movement_analytics_lab_hero_banner.png" not in html
+
+
+def test_brand_assets_are_local_and_static_resolution_is_constrained() -> None:
+    expected = {
+        "acl_badge_acl_trajectory.png",
+        "acl_badge_kinematic_angle.png",
+        "acl_badge_pitch_runner_analytics.png",
+        "acl_brand_colour_palette.png",
+        "acl_brand_tagline.png",
+        "acl_favicon_acl_trajectory.png",
+        "acl_favicon_kinematic_angle.png",
+        "acl_favicon_runner.png",
+        "acl_favicon_runner_32.png",
+        "acl_favicon_runner_64.png",
+        "acl_favicon_runner_180.png",
+        "acl_movement_analytics_lab_hero_banner.png",
+    }
+
+    assert expected <= {path.name for path in BRAND_ASSET_DIR.iterdir()}
+    assert brand_asset_path("/favicon.ico") == BRAND_ASSET_DIR / "acl_favicon_runner_32.png"
+    assert brand_asset_path("/assets/brand/acl_brand_tagline.png") == (
+        BRAND_ASSET_DIR / "acl_brand_tagline.png"
+    )
+    assert brand_asset_path("/assets/brand/../app_shell.py") is None
 
 
 def test_results_page_preserves_analysis_when_cutting_another_subclip() -> None:
@@ -127,6 +217,20 @@ def test_home_page_uses_existing_api_routes_and_links_gated_comparison() -> None
     assert "Inspect evidence readiness" not in html
     assert "Similarity Analysis" not in html
     assert 'aria-disabled="true"' not in html
+
+
+def test_home_page_exposes_completed_views_inside_selected_case_only() -> None:
+    html = render_home_page()
+
+    assert 'id="caseAnalysisShortcuts"' in html
+    assert "Open any available angle" in html
+    assert "function renderSelectedAnalysisShortcuts(item)" in html
+    assert "item.views.filter(view => view.results_available)" in html
+    assert 'class="case-analysis-shortcut" href="/results?case=' in html
+    assert "View analysis →" in html
+    assert "Browse completed analyses" not in html
+    assert 'id="analysisDirectory"' not in html
+    assert "function renderAnalysisDirectory()" not in html
 
 
 def test_case_payload_exposes_completed_analysis_state() -> None:
@@ -185,6 +289,7 @@ def test_tool_pages_return_to_main_menu() -> None:
     assert "http://127.0.0.1:8765/" in render_video_cutter_page()
     assert 'class="app-brand" href="/"' in render_comparison_page()
     assert 'class="app-brand" href="/"' in render_exploration_page()
+    assert 'class="app-brand" href="/"' in render_feature_correlations_page()
     assert '<a class="button" href="/">Main menu</a>' in render_similarity_validation_page()
 
 
@@ -202,6 +307,7 @@ def test_submenus_share_the_home_application_shell() -> None:
         "Movement Analysis": render_results_page(),
         "Compare Movements": render_comparison_page(),
         "Explore Data": render_exploration_page(),
+        "Feature Correlations": render_feature_correlations_page(),
         "Similarity Validation": render_similarity_validation_page(),
         "Video Cutter": render_video_cutter_page(main_menu_url="/"),
     }
@@ -256,7 +362,13 @@ def test_exploration_page_exposes_evidence_gated_views() -> None:
     assert "Explore Data" in html
     assert "Overview" in html
     assert "Compare cases" in html
-    assert "Compare two measurements" in html
+    assert "Measurement correlations" in html
+    assert "Measurement Correlation Map" in html
+    assert 'id="correlationMap"' in html
+    assert 'id="correlationStatistic"' in html
+    assert "MINIMUM_CORRELATION_CASES = 5" in html
+    assert "Every paired value represents one independent injury event" in html
+    assert "directional-angle pairs are withheld" in html
     assert "Can these groups be compared?" in html
     assert "Sources / Injury Reports" in html
     assert 'id="sourceSearch"' in html
@@ -301,6 +413,18 @@ def test_exploration_page_exposes_evidence_gated_views() -> None:
     assert 'id="retryExploreData"' in html
 
 
+def test_feature_correlation_submenu_is_separate_from_case_similarity() -> None:
+    html = render_feature_correlations_page()
+
+    assert "<title>Feature Correlations - ACL Movement Analytics Lab</title>" in html
+    assert "<h1>Feature Correlations</h1>" in html
+    assert 'data-initial-view="correlations"' in html
+    assert "feature-by-feature analysis, independent of movement-similarity rankings" in html
+    assert "Negative correlation" in html
+    assert "Positive correlation" in html
+    assert 'id="correlationMap"' in html
+
+
 def test_compare_movements_page_owns_similarity_experience() -> None:
     html = render_comparison_page()
 
@@ -326,10 +450,22 @@ def test_compare_movements_page_owns_similarity_experience() -> None:
     assert 'id="playerSearch"' in html
     assert 'id="playerList"' in html
     assert 'id="rankingList"' in html
+    assert 'id="similaritySpectrum"' in html
+    assert 'id="similarityMatrix"' in html
+    assert 'id="similarityMatrixDisclosure"' in html
+    assert "function renderSimilaritySpectrum()" in html
+    assert "function renderSimilarityMatrix()" in html
+    assert "Unavailable cells are not zero" in html
+    assert 'id="neighbourhoodMapButton"' not in html
+    assert 'id="fullNetworkMapButton"' not in html
+    assert 'id="measurementFilterOptions"' in html
+    assert "Keep at least ${minimum} movement areas selected." in html
+    assert 'groups=${encodeURIComponent(app.measurementGroups.join(","))}' in html
     assert "Closest injury-event movement profiles" in html
     assert "Views are never averaged." in html
     assert "Best supported-view match" in html
-    assert "Query-only · comparable to references" in html
+    assert "Query-only · comparison depends on shared evidence" in html
+    assert "Query-only · more supported evidence needed" in html
     assert "eligible_view_pair_count" in html
     assert "selected_value" in html
     assert "candidate_value" in html

@@ -1,0 +1,22 @@
+{
+  "schema_version": "human_event_interval_review_v1",
+  "question": "Does the supported phase interval include the visible event you intended to study?",
+  "case_id": "imported_jordyn_huitema_2026_07_18_acl_candidate",
+  "source_id": "imported_jordyn_huitema_2026_07_18_view_01",
+  "view_id": "imported_jordyn_huitema_2026_07_18_view_01",
+  "case_slug": "imported_jordyn_huitema_2026_07_18_view_01",
+  "decision": "yes",
+  "visible_event_in_supported_phase_interval": true,
+  "eligible_for_injury_event_comparison": true,
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-09-01T13:58:37.493293+00:00",
+  "phase_status": "SUPPORTED_EVIDENCE_INTERVAL",
+  "phase_count": 1,
+  "supported_interval": {
+    "start_frame": 36,
+    "end_frame": 51
+  },
+  "movement_phases_sha256": "782d20eb60be98e7905c1070a48bf4a23f4d61fab6036bf3b1319fe1a3752356"
+}

@@ -485,7 +485,7 @@ def _competing_pose_metadata(boxes: np.ndarray, selected_index: int) -> dict[str
     center_distances = np.linalg.norm(competitor_centers - selected_center, axis=1)
     overlaps = np.asarray([_bbox_iou(selected, other) for other in competitors])
     return {
-        "competing_pose_count": int(len(competitors)),
+        "competing_pose_count": len(competitors),
         "competing_pose_max_iou": float(np.max(overlaps)),
         "competing_pose_min_center_distance_fraction": float(
             np.min(center_distances) / selected_diagonal

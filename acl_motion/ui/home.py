@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from acl_motion.ui.app_shell import app_shell_css
+from acl_motion.ui.app_shell import app_shell_css, apply_app_brand
 
 
 def render_home_page() -> str:
     """Return the connected ACL Movement Analytics Lab workflow home."""
 
-    return r"""
+    return apply_app_brand(r"""
 <!doctype html>
 <html lang="en">
 <head>
@@ -18,14 +18,16 @@ def render_home_page() -> str:
   <style>
     :root {
       color-scheme: light;
-      --navy-950: #071a2d;
-      --navy-900: #0b2239;
+      --navy-950: #0A2540;
+      --navy-900: #0A2540;
       --navy-800: #123a5a;
-      --blue-700: #155f91;
-      --blue-600: #1677ac;
-      --blue-050: #f1f8fc;
+      --blue-700: #0b4dc7;
+      --blue-600: #0F62FE;
+      --blue-050: #eef5ff;
       --teal-700: #08766d;
-      --teal-100: #d9f2ed;
+      --teal-100: #dffaf4;
+      --mint: #7CF1BB;
+      --ice: #E6F6FF;
       --amber-700: #7a5700;
       --amber-100: #fff1c2;
       --red-700: #a12d43;
@@ -92,51 +94,26 @@ def render_home_page() -> str:
       color: #fff;
     }
     .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
-    .brand-mark {
-      position: relative;
-      width: 38px;
-      height: 38px;
-      flex: 0 0 auto;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.34);
-      border-radius: 10px;
-      background:
-        linear-gradient(90deg, transparent 48%, rgba(255,255,255,.28) 48% 52%, transparent 52%),
-        linear-gradient(0deg, transparent 48%, rgba(255,255,255,.28) 48% 52%, transparent 52%),
-        var(--teal-700);
-    }
-    .brand-mark::after {
-      content: "";
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      top: 11px;
-      left: 11px;
-      border: 1px solid rgba(255,255,255,.52);
-      border-radius: 50%;
-    }
+    .brand-badge { width: 66px; height: 47px; flex: 0 0 auto; object-fit: contain; filter: drop-shadow(0 5px 10px rgba(0,0,0,.18)); }
     .brand h1 { margin: 0; font-size: 18px; line-height: 1.15; letter-spacing: -.01em; }
     .brand span { display: block; margin-top: 3px; color: #b9c9d5; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
     .event-label { color: #c9d6df; font-size: 12px; font-weight: 750; white-space: nowrap; }
     main { width: min(1320px, calc(100% - 48px)); margin: 0 auto; padding: 24px 0 56px; }
     .hero {
       position: relative;
-      min-height: 190px;
-      display: grid;
-      align-items: center;
       overflow: hidden;
-      padding: 30px clamp(24px, 4vw, 52px) 0;
       border-radius: 18px;
-      background:
-        radial-gradient(circle at 84% 10%, rgba(34,160,151,.20), transparent 27%),
-        linear-gradient(118deg, var(--navy-900), #0e3653 72%, #0b4761);
-      color: #fff;
+      background: #020b12;
       box-shadow: var(--shadow-md);
     }
-    .hero-copy { position: relative; z-index: 2; max-width: 790px; padding-bottom: 76px; }
-    .eyebrow { margin: 0 0 8px; color: #7fd8cf; font-size: 11px; font-weight: 900; letter-spacing: .105em; text-transform: uppercase; }
-    .hero h2 { margin: 0; max-width: 720px; font-size: clamp(27px, 3vw, 42px); line-height: 1.08; letter-spacing: -.032em; }
-    .hero-lede { max-width: 760px; margin: 10px 0 0; color: #d6e1e8; font-size: 14px; line-height: 1.5; }
+    .hero-brand-media { display: block; overflow: hidden; background: #020b12; line-height: 0; }
+    .hero-brand-art { display: block; width: 100%; height: auto; aspect-ratio: 1460 / 390; object-fit: contain; }
+    .hero-context { display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 310px); align-items: center; gap: 30px; padding: 22px clamp(24px, 4vw, 52px) 76px; background: linear-gradient(110deg, #fff 12%, var(--ice)); }
+    .hero-copy { max-width: 790px; }
+    .eyebrow { margin: 0 0 6px; color: var(--teal-700); font-size: 11px; font-weight: 900; letter-spacing: .105em; text-transform: uppercase; }
+    .hero h2 { margin: 0; max-width: 720px; color: var(--navy-950); font-size: clamp(25px, 2.6vw, 36px); line-height: 1.08; letter-spacing: -.032em; }
+    .hero-lede { max-width: 790px; margin: 9px 0 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .hero-tagline { display: block; width: 100%; height: auto; max-height: 104px; object-fit: contain; }
     .scope-strip {
       position: absolute;
       z-index: 3;
@@ -151,7 +128,6 @@ def render_home_page() -> str:
     .scope-item + .scope-item { border-left: 1px solid rgba(255,255,255,.12); }
     .scope-icon { color: #75d4cb; font-size: 14px; font-weight: 900; }
     .scope-item.limit .scope-icon { color: #f5ce66; }
-    .movement-graphic { position: absolute; z-index: 1; right: 20px; top: 2px; width: 350px; max-width: 30%; height: 178px; opacity: .54; pointer-events: none; }
     .section { margin-top: 28px; scroll-margin-top: 16px; }
     .section-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 13px; }
     .section-kicker { margin: 0 0 4px; color: var(--blue-700); font-size: 11px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
@@ -174,15 +150,16 @@ def render_home_page() -> str:
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; box-shadow: 0 0 0 4px rgba(8,118,109,.10); }
     .review-shell {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, .75fr);
-      min-height: 394px;
+      grid-template-columns: minmax(0, 1.12fr) minmax(380px, .88fr);
+      height: 450px;
+      min-height: 0;
       overflow: hidden;
       border: 1px solid var(--line-strong);
       border-radius: 16px;
       background: var(--panel);
       box-shadow: var(--shadow-sm);
     }
-    .case-browser { min-width: 0; padding: 20px; border-right: 1px solid var(--line); }
+    .case-browser { min-width: 0; padding: 16px; border-right: 1px solid var(--line); }
     .browser-label { display: block; margin-bottom: 10px; font-size: 13px; font-weight: 850; }
     .case-tools { display: grid; grid-template-columns: minmax(0, 1fr) 170px 190px; gap: 10px; margin-bottom: 12px; }
     .input-wrap { position: relative; }
@@ -191,15 +168,15 @@ def render_home_page() -> str:
     input[type="search"] { padding: 10px 12px 10px 40px; }
     select { padding: 9px 34px 9px 11px; }
     input[type="search"]:hover, select:hover { border-color: var(--blue-600); }
-    .case-list { height: 430px; overflow: auto; padding: 2px; scrollbar-color: var(--line-strong) transparent; }
+    .case-list { height: 336px; overflow: auto; padding: 2px; scrollbar-color: var(--line-strong) transparent; }
     .case-option {
       width: 100%;
-      min-height: 70px;
+      min-height: 62px;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
       align-items: center;
       gap: 12px;
-      padding: 12px 13px;
+      padding: 10px 12px;
       border: 1px solid transparent;
       border-radius: 10px;
       background: transparent;
@@ -219,12 +196,12 @@ def render_home_page() -> str:
     .list-message { min-height: 220px; display: grid; place-items: center; padding: 30px; color: var(--muted); text-align: center; }
     .loading-lines { width: min(100%, 520px); }
     .loading-line { height: 54px; margin: 8px 0; border-radius: 9px; background: linear-gradient(90deg, #edf2f5 25%, #f7f9fa 50%, #edf2f5 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite linear; }
-    .selected-case { position: relative; min-width: 0; display: flex; flex-direction: column; padding: 25px; background: linear-gradient(180deg, rgba(220,238,250,.72), rgba(255,255,255,0) 54%), #fff; }
+    .selected-case { position: relative; min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: auto; padding: 20px; background: linear-gradient(180deg, rgba(220,238,250,.72), rgba(255,255,255,0) 54%), #fff; }
     .selected-case::before { content: ""; position: absolute; inset: 0 0 auto; height: 4px; background: linear-gradient(90deg, var(--blue-600), var(--teal-700)); }
     .selected-label { margin: 0 0 12px; color: var(--blue-700); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
     .selected-case h3 { margin: 0; overflow-wrap: anywhere; font-size: clamp(22px, 2vw, 28px); line-height: 1.12; letter-spacing: -.025em; }
     .selected-view { margin: 7px 0 0; color: var(--muted); font-size: 14px; line-height: 1.4; }
-    .case-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 16px 0; }
+    .case-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin: 10px 0; }
     .case-fact { min-width: 0; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: rgba(255,255,255,.82); }
     .case-fact dt { color: var(--subtle); font-size: 10px; font-weight: 850; letter-spacing: .035em; text-transform: uppercase; }
     .case-fact dd { margin: 3px 0 0; overflow-wrap: anywhere; color: var(--ink); font-size: 12px; font-weight: 750; }
@@ -241,7 +218,7 @@ def render_home_page() -> str:
     .view-status.ready { color: var(--teal-700); }
     .case-view-actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .case-view-actions .button { min-height: 32px; padding: 6px 9px; font-size: 10px; }
-    .meta-chips { display: flex; flex-wrap: wrap; gap: 7px; margin: 18px 0; }
+    .meta-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 11px 0; }
     .chip { display: inline-flex; align-items: center; min-height: 28px; padding: 5px 9px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--muted); font-size: 11px; font-weight: 800; }
     .chip.ready { border-color: #a8d5cc; background: var(--teal-100); color: #075c55; }
     .case-progress { display: grid; gap: 7px; margin: -7px 0 15px; }
@@ -250,10 +227,22 @@ def render_home_page() -> str:
     .case-progress-copy span { color: var(--muted); font-size: 10px; }
     .case-progress-track { height: 7px; overflow: hidden; border-radius: 999px; background: #dfe8ee; }
     .case-progress-track span { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--blue-600), var(--teal-700)); transition: width .18s ease; }
+    .case-analysis-shortcuts { margin: -4px 0 12px; padding: 10px; border: 1px solid #a8d5cc; border-left: 4px solid var(--teal-700); border-radius: 10px; background: #f4fcfa; }
+    .case-analysis-shortcuts[hidden] { display: none; }
+    .case-analysis-shortcuts-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 7px; }
+    .case-analysis-shortcuts-head strong { color: var(--navy-900); font-size: 12px; }
+    .case-analysis-shortcuts-head span { color: var(--muted); font-size: 10px; }
+    .case-analysis-shortcut-list { display: grid; gap: 6px; }
+    .case-analysis-shortcut { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); text-decoration: none; }
+    .case-analysis-shortcut:hover { border-color: var(--blue-600); box-shadow: 0 4px 12px rgba(15,98,254,.09); }
+    .case-analysis-shortcut strong, .case-analysis-shortcut small { display: block; overflow-wrap: anywhere; }
+    .case-analysis-shortcut strong { font-size: 11px; }
+    .case-analysis-shortcut small { margin-top: 2px; color: var(--muted); font-size: 9px; line-height: 1.35; }
+    .case-analysis-shortcut > span:last-child { color: var(--blue-700); font-size: 10px; font-weight: 900; white-space: nowrap; }
     .selected-technical { margin-top: 2px; color: var(--muted); font-size: 12px; }
     .selected-technical summary { cursor: pointer; font-weight: 800; }
     .selected-technical code { display: block; margin-top: 7px; overflow-wrap: anywhere; color: var(--subtle); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; }
-    .selected-action { margin-top: auto; padding-top: 16px; }
+    .selected-action { margin-top: 12px; padding-top: 0; }
     .selected-action-note { margin: 0 0 10px; color: var(--muted); font-size: 12px; line-height: 1.4; }
     .button {
       min-height: 46px;
@@ -281,9 +270,9 @@ def render_home_page() -> str:
     .selected-action { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .selected-action[hidden] { display: none; }
     .selected-action-note { grid-column: 1 / -1; }
-    .selected-action .button { width: 100%; }
-    #continueCaseButton { grid-column: 1 / -1; }
-    #deleteCaseButton, #deletionStatus { grid-column: 1 / -1; }
+    .selected-action .button { width: 100%; min-height: 38px; padding: 7px 9px; font-size: 11px; }
+    #continueCaseButton, #deleteCaseButton { grid-column: auto; }
+    #deletionStatus { grid-column: 1 / -1; }
     #deletionStatus { min-height: 18px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.4; }
     .error-panel { padding: 15px; border: 1px solid #e4a5b2; border-radius: 10px; background: var(--red-100); color: var(--red-700); }
     .error-panel p { margin: 0 0 10px; font-size: 13px; line-height: 1.45; }
@@ -304,6 +293,36 @@ def render_home_page() -> str:
     .step-sequence li { display: inline-flex; align-items: center; gap: 6px; }
     .step-sequence li + li::before { content: "→"; color: var(--subtle); }
     .workflow-step .button { width: fit-content; margin-top: auto; }
+    .responsible-ai-panel {
+      margin-top: 0;
+      overflow: hidden;
+      border: 1px solid #b7c8d4;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #f4f9fc, #fff 58%);
+      box-shadow: var(--shadow-sm);
+    }
+    .responsible-ai-header { padding: 16px 18px 13px; border-bottom: 1px solid var(--line); }
+    .responsible-ai-kicker { margin: 0 0 5px; color: var(--teal-700); font-size: 10px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
+    .responsible-ai-header h3 { margin: 0; color: var(--navy-900); font-size: clamp(20px, 2vw, 26px); letter-spacing: -.02em; }
+    .responsible-ai-header p { max-width: 920px; margin: 7px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .responsible-principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+    .responsible-principle { padding: 11px 14px; color: #294154; font-size: 11px; line-height: 1.4; }
+    .responsible-principle + .responsible-principle { border-left: 1px solid var(--line); }
+    .responsible-principle strong { display: block; margin-bottom: 3px; color: var(--navy-900); font-size: 12px; }
+    .responsible-cases { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .responsible-case { min-width: 0; display: flex; flex-direction: column; padding: 13px 14px; border-top: 4px solid var(--line-strong); background: rgba(255,255,255,.72); }
+    .responsible-case + .responsible-case { border-left: 1px solid var(--line); }
+    .responsible-case.supported { border-top-color: var(--teal-700); }
+    .responsible-case.limited { border-top-color: #c18a00; }
+    .responsible-case.no-transition { border-top-color: var(--blue-600); }
+    .responsible-case.withheld { border-top-color: #687b8c; }
+    .responsible-state { width: fit-content; min-height: 24px; display: inline-flex; align-items: center; padding: 4px 7px; border-radius: 999px; background: #edf2f5; color: #42586a; font-size: 9px; font-weight: 900; letter-spacing: .045em; text-transform: uppercase; }
+    .responsible-case.supported .responsible-state { background: var(--teal-100); color: #075c55; }
+    .responsible-case.limited .responsible-state { background: var(--amber-100); color: var(--amber-700); }
+    .responsible-case.no-transition .responsible-state { background: var(--blue-050); color: var(--blue-700); }
+    .responsible-case h4 { margin: 10px 0 0; font-size: 15px; line-height: 1.25; }
+    .responsible-case p { margin: 6px 0 13px; color: var(--muted); font-size: 11px; line-height: 1.45; }
+    .responsible-case a { margin-top: auto; color: var(--blue-700); font-size: 11px; font-weight: 850; text-decoration-thickness: 1px; text-underline-offset: 2px; }
     .advanced-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .research-card { min-width: 0; min-height: 264px; display: flex; flex-direction: column; padding: 21px; border: 1px solid var(--line-strong); border-radius: 14px; background: var(--panel); box-shadow: var(--shadow-sm); }
     .research-card.gated { background: linear-gradient(140deg, #fffaf0, #fff 55%); }
@@ -344,31 +363,39 @@ def render_home_page() -> str:
     @keyframes shimmer { to { background-position: -200% 0; } }
     @media (max-width: 1000px) {
       main { width: min(100% - 32px, 860px); }
-      .movement-graphic { opacity: .34; max-width: 38%; }
+      .hero-context { grid-template-columns: minmax(0, 1fr) minmax(180px, 250px); }
       .review-shell { grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr); }
       .case-tools { grid-template-columns: 1fr; }
       .case-list { height: 318px; }
       .workflow-rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .workflow-step { min-height: 202px; }
+      .responsible-principles { grid-template-columns: 1fr; }
+      .responsible-principle + .responsible-principle { border-left: 0; border-top: 1px solid var(--line); }
+      .responsible-cases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .responsible-case:nth-child(3) { border-left: 0; }
+      .responsible-case:nth-child(n + 3) { border-top-width: 4px; }
     }
     @media (max-width: 720px) {
       html { scroll-behavior: auto; }
       .site-header { align-items: flex-start; padding: 12px 16px; }
       .brand span, .event-label { display: none; }
+      .brand-badge { width: 54px; height: 38px; }
       main { width: min(100% - 24px, 560px); padding-top: 14px; }
-      .hero { min-height: 276px; padding: 24px 20px 0; border-radius: 14px; }
-      .hero-copy { padding-bottom: 126px; }
-      .hero h2 { font-size: clamp(27px, 8vw, 35px); }
-      .movement-graphic { right: -80px; opacity: .23; max-width: 80%; }
+      .hero { border-radius: 14px; }
+      .hero-brand-art { aspect-ratio: 530 / 375; max-height: 330px; }
+      .hero-context { grid-template-columns: 1fr; gap: 10px; padding: 20px 20px 132px; }
+      .hero h2 { font-size: clamp(25px, 7.5vw, 33px); }
+      .hero-tagline { width: min(100%, 250px); max-height: 84px; justify-self: start; }
       .scope-strip { display: grid; grid-template-columns: 1fr; }
       .scope-item { padding: 7px 18px; }
       .scope-item + .scope-item { border-left: 0; border-top: 1px solid rgba(255,255,255,.10); }
       .section { margin-top: 24px; }
       .section-header { align-items: flex-start; flex-direction: column; gap: 10px; }
       .review-shell, .advanced-grid { grid-template-columns: 1fr; }
+      .review-shell { height: auto; }
       .case-browser { padding: 15px; border-right: 0; border-bottom: 1px solid var(--line); }
       .case-list { height: 286px; }
-      .selected-case { min-height: 342px; padding: 21px; }
+      .selected-case { min-height: 342px; overflow: visible; padding: 21px; }
       .case-facts { grid-template-columns: 1fr 1fr; }
       .workflow-rail { grid-template-columns: 1fr; }
       .workflow-step { min-height: 0; padding: 18px; }
@@ -376,12 +403,14 @@ def render_home_page() -> str:
       .workflow-step + .workflow-step::before { content: none; }
       .workflow-step .button, .research-card .button, .locked-action { width: 100%; }
       .research-card { min-height: 0; }
+      .responsible-ai-header { padding: 18px; }
+      .responsible-cases { grid-template-columns: 1fr; }
+      .responsible-case + .responsible-case, .responsible-case:nth-child(3) { border-left: 0; }
     }
     @media (max-width: 390px) {
-      .brand-mark { width: 34px; height: 34px; }
-      .brand-mark::after { top: 9px; left: 9px; }
+      .brand-badge { width: 48px; height: 34px; }
       .brand h1 { font-size: 16px; }
-      .hero { padding-inline: 17px; }
+      .hero-context { padding-inline: 17px; }
       .case-option { grid-template-columns: 1fr; gap: 7px; }
       .case-facts, .selected-action { grid-template-columns: 1fr; }
       .selected-action-note { grid-column: auto; }
@@ -394,31 +423,63 @@ def render_home_page() -> str:
   </style>
 </head>
 <body>
-  <a class="skip-link" href="#review">Skip to case library</a>
+  <a class="skip-link" href="#workflow">Skip to analysis workflow</a>
   <header class="site-header">
     <div class="brand">
-      <span class="brand-mark" aria-hidden="true"></span>
+      <img class="brand-badge" src="/assets/brand/acl_badge_pitch_runner_analytics.png" alt="" width="66" height="47" />
       <div><h1>ACL Movement Analytics Lab</h1><span>Women’s football movement research</span></div>
     </div>
     <span class="event-label">Hack for Humanity · Summer 2026</span>
   </header>
   <main id="mainContent">
     <section class="hero" aria-labelledby="heroTitle">
-      <div class="hero-copy">
-        <p class="eyebrow">Human-guided · Evidence-led · 2D video analysis</p>
-        <h2 id="heroTitle">Observe the movement. Follow the evidence.</h2>
-        <p class="hero-lede">Explore traceable movement stories from documented women’s-football ACL injury clips, with measurement support and evidence gaps kept in view.</p>
+      <picture class="hero-brand-media">
+        <source media="(max-width: 720px)" srcset="/assets/brand/acl_badge_pitch_runner_analytics.png" />
+        <img class="hero-brand-art" src="/assets/brand/acl_movement_analytics_lab_hero_banner.png" alt="ACL Movement Analytics Lab" width="1460" height="390" />
+      </picture>
+      <div class="hero-context">
+        <div class="hero-copy">
+          <p class="eyebrow">Human-guided · Evidence-led · 2D video analysis</p>
+          <h2 id="heroTitle">Observe the movement. Follow the evidence.</h2>
+          <p class="hero-lede">Explore traceable movement stories from documented women’s-football ACL injury clips, with measurement support and evidence gaps kept in view. When the evidence cannot support a result, the system narrows or withholds it.</p>
+        </div>
+        <img class="hero-tagline" src="/assets/brand/acl_brand_tagline.png" alt="Better movement. Clearer insights. Healthier athletes." width="445" height="170" />
       </div>
-      <svg class="movement-graphic" viewBox="0 0 350 178" aria-hidden="true">
-        <path d="M18 140 C78 104,112 153,174 95 S281 56,332 27" fill="none" stroke="#7fd8cf" stroke-width="2" stroke-dasharray="7 8" />
-        <path d="M265 23 L287 54 L270 91 M287 54 L316 72 M287 54 L303 28 M270 91 L245 127 M270 91 L302 126" fill="none" stroke="#d7f3ef" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-        <g fill="#7fd8cf"><circle cx="265" cy="23" r="6"/><circle cx="287" cy="54" r="5"/><circle cx="270" cy="91" r="5"/><circle cx="316" cy="72" r="4"/><circle cx="303" cy="28" r="4"/><circle cx="245" cy="127" r="4"/><circle cx="302" cy="126" r="4"/></g>
-        <path d="M14 151 H334 M50 151 V163 M126 151 V163 M202 151 V163 M278 151 V163" fill="none" stroke="#d7f3ef" stroke-width="1" opacity=".6" />
-      </svg>
       <div class="scope-strip" aria-label="Research scope">
         <div class="scope-item"><span class="scope-icon" aria-hidden="true">✓</span><span>Human-verified athlete and movement window</span></div>
         <div class="scope-item"><span class="scope-icon" aria-hidden="true">◎</span><span>Projected 2D observations with visible support</span></div>
         <div class="scope-item limit"><span class="scope-icon" aria-hidden="true">—</span><span>Not diagnosis, injury-risk calculation, or causation</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="workflow" aria-labelledby="workflowTitle">
+      <div class="section-header"><div>
+        <p class="section-kicker">Core analysis workflow</p>
+        <h2 id="workflowTitle">Create, annotate, and review a case</h2>
+        <p class="section-intro">Bring footage into one connected workspace, verify the visible movement evidence, generate the analysis, and review the resulting Movement Story.</p>
+      </div></div>
+      <div class="workflow-rail" aria-label="Case analysis workflow">
+        <article class="workflow-step">
+          <div class="step-top"><span class="step-number">STEP 01</span><span class="step-state available">Available</span></div>
+          <h3>Create or choose the injury case</h3><p>Record the player and injury-event information before opening source video. One injury case can hold any number of video views.</p>
+          <a class="button" href="/video-cutter">Start case setup <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="workflow-step">
+          <div class="step-top"><span class="step-number">STEP 02</span><span class="step-state available">One workspace</span></div>
+          <h3>Cut and attach video views</h3><p>Cut one or several intervals. Every cut remains attached to the active player injury case instead of becoming a new case.</p>
+          <a class="button primary" href="/video-cutter">Open Video Cutter <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="workflow-step">
+          <div class="step-top"><span class="step-number">STEP 03</span><span class="step-state available">One workspace</span></div>
+          <h3>Annotate, verify and generate</h3><p>Identify the athlete, confirm the movement window and case details, validate the annotation, then generate the human-guided analysis.</p>
+          <ol class="step-sequence" aria-label="Inside the annotation workspace"><li>Annotate</li><li>Verify</li><li>Generate</li></ol>
+          <a class="button primary" href="/annotate">Open Annotation Workspace <span aria-hidden="true">→</span></a>
+        </article>
+        <article class="workflow-step">
+          <div class="step-top"><span class="step-number">STEP 04</span><span class="step-state available" id="reviewStepState">Check status</span></div>
+          <h3>Review the Movement Story</h3><p>Inspect the clip, observations, measurements, limitations, and research detail.</p>
+          <a class="button tertiary" href="#review">Choose a completed analysis <span aria-hidden="true">↓</span></a>
+        </article>
       </div>
     </section>
 
@@ -471,6 +532,10 @@ def render_home_page() -> str:
             <div class="case-progress-copy"><strong id="caseProgressLabel">Analysis progress</strong><span id="caseProgressDetail">Loading</span></div>
             <div class="case-progress-track" aria-hidden="true"><span id="caseProgressBar"></span></div>
           </div>
+          <div class="case-analysis-shortcuts" id="caseAnalysisShortcuts" aria-label="Completed analyses for the selected injury case" hidden>
+            <div class="case-analysis-shortcuts-head"><strong id="caseAnalysisShortcutsHeading">Completed analyses</strong><span>Open any available angle</span></div>
+            <div class="case-analysis-shortcut-list" id="caseAnalysisShortcutList"></div>
+          </div>
           <dl class="case-facts" id="caseFacts"></dl>
           <div class="case-views-heading"><h4>Video views</h4><span id="caseViewCount"></span></div>
           <div class="case-view-list" id="caseViews"></div>
@@ -489,41 +554,51 @@ def render_home_page() -> str:
       </div>
     </section>
 
-    <section class="section" aria-labelledby="workflowTitle">
-      <div class="section-header"><div>
-        <p class="section-kicker">For new material</p>
-        <h2 id="workflowTitle">Create and analyse a case</h2>
-        <p class="section-intro">Use this sequence when adding a new injury event. Existing cases and all their attached views remain available in the library above.</p>
-      </div></div>
-      <div class="workflow-rail" aria-label="Case creation workflow">
-        <article class="workflow-step">
-          <div class="step-top"><span class="step-number">STEP 01</span><span class="step-state available">Available</span></div>
-          <h3>Create or choose the injury case</h3><p>Record the player and injury-event information before opening source video. One injury case can hold any number of video views.</p>
-          <a class="button" href="/video-cutter">Start case setup <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="workflow-step">
-          <div class="step-top"><span class="step-number">STEP 02</span><span class="step-state available">One workspace</span></div>
-          <h3>Cut and attach video views</h3><p>Cut one or several intervals. Every cut remains attached to the active player injury case instead of becoming a new case.</p>
-          <a class="button" href="/video-cutter">Open Video Cutter <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="workflow-step">
-          <div class="step-top"><span class="step-number">STEP 03</span><span class="step-state available">One workspace</span></div>
-          <h3>Annotate, verify and generate</h3><p>Identify the athlete, confirm the movement window and case details, validate the annotation, then generate the human-guided analysis.</p>
-          <ol class="step-sequence" aria-label="Inside the annotation workspace"><li>Annotate</li><li>Verify</li><li>Generate</li></ol>
-          <a class="button" href="/annotate">Open Annotation Workspace <span aria-hidden="true">→</span></a>
-        </article>
-        <article class="workflow-step">
-          <div class="step-top"><span class="step-number">STEP 04</span><span class="step-state available" id="reviewStepState">Check status</span></div>
-          <h3>Review the Movement Story</h3><p>Inspect the clip, observations, measurements, limitations, and research detail.</p>
-          <a class="button tertiary" href="#review">Choose a completed analysis <span aria-hidden="true">↑</span></a>
-        </article>
-      </div>
+    <section class="section" id="responsibleAi" aria-labelledby="responsibleAiTitle">
+      <aside class="responsible-ai-panel" aria-labelledby="responsibleAiTitle">
+        <div class="responsible-ai-header">
+          <p class="responsible-ai-kicker">Responsible AI in practice</p>
+          <h3 id="responsibleAiTitle">Knowing when not to give an absolute answer</h3>
+          <p>Responsible behaviour here is not a disclaimer added after the result. It is evidence-gated restraint built into the workflow: the system can produce a supported result, narrow it to a defensible interval, report that no transition was detected, or withhold the result entirely.</p>
+        </div>
+        <div class="responsible-principles" aria-label="Responsible AI safeguards">
+          <div class="responsible-principle"><strong>Humans retain contextual judgement</strong>Contact mechanism and whether the intended visible event is covered are reviewed by a person, not inferred from 2D pose.</div>
+          <div class="responsible-principle"><strong>Uncertainty changes the output</strong>Unsupported frames stay as gaps; partial support creates a limited result; insufficient continuous evidence stops the phase analysis.</div>
+          <div class="responsible-principle"><strong>Comparison must be earned</strong>Only mutually supported measurements contribute, and a human event-coverage decision can keep a completed view out of injury-event comparisons.</div>
+        </div>
+        <div class="responsible-cases" aria-label="Real case examples of evidence-gated outcomes">
+          <article class="responsible-case supported">
+            <span class="responsible-state">Supported result</span>
+            <h4>Andi Sullivan</h4>
+            <p>Supported evidence covers the full Movement Window and identifies three sustained movement phases.</p>
+            <a href="/results?case=imported_andi_sullivan_2024_10_06_view_02">Open the supported example →</a>
+          </article>
+          <article class="responsible-case limited">
+            <span class="responsible-state">Limited interval</span>
+            <h4>Charlotte Newsham</h4>
+            <p>Phases are reported only inside the continuous supported block; the rest of the Movement Window remains visible and unsegmented.</p>
+            <a href="/results?case=imported_charlotte_newsham_2026_05_02_view_01">Open the limited example →</a>
+          </article>
+          <article class="responsible-case no-transition">
+            <span class="responsible-state">Supported negative finding</span>
+            <h4>Jordyn Huitema</h4>
+            <p>Evidence is sufficient for assessment, but no sustained multivariate transition meets the boundary rule. “No transition” is a valid result, not a processing failure.</p>
+            <a href="/results?case=imported_jordyn_huitema_2026_07_18_view_01">Open the no-transition example →</a>
+          </article>
+          <article class="responsible-case withheld">
+            <span class="responsible-state">Result withheld</span>
+            <h4>Caroline Weir</h4>
+            <p>Too few supported descriptors form a continuous block, so phase analysis is withheld instead of manufacturing a confident story.</p>
+            <a href="/results?case=imported_caroline_wier_2023_09_26_view_02">Open the withheld example →</a>
+          </article>
+        </div>
+      </aside>
     </section>
 
     <section class="section" aria-labelledby="researchTitle">
       <div class="section-header"><div>
-        <p class="section-kicker">Separate research tools</p>
-        <h2 id="researchTitle">Compare and explore the case library</h2>
+        <p class="section-kicker">Cross-case evidence</p>
+        <h2 id="researchTitle">Continue from one story to the wider library</h2>
         <p class="section-intro">Cross-case tools operate on independent injury events and supported measurements. They are not required to create or review an individual case.</p>
       </div></div>
       <div class="advanced-grid">
@@ -538,15 +613,15 @@ def render_home_page() -> str:
           </div>
           <p class="gate-requirement"><strong>Comparison rule:</strong> only mutually supported case-level measurements contribute to a ranking.</p>
           <details>
-            <summary>Scientific scope of a future comparison</summary>
-            <p id="similarityScientificNote">A comparison could describe only the supported projected movement representation—not injury mechanism, tissue loading, biological cause, or clinical condition.</p>
+            <summary>Scientific scope of the comparison</summary>
+            <p id="similarityScientificNote">A comparison describes only the supported projected movement representation—not injury mechanism, tissue loading, biological cause, or clinical condition.</p>
           </details>
           <a class="button primary" href="/compare">Open Compare Movements <span aria-hidden="true">→</span></a>
         </article>
         <article class="research-card" aria-labelledby="exploreTitle">
           <div class="card-status"><span class="status-badge available">Available now</span></div>
           <h3 id="exploreTitle">Explore the dataset</h3>
-          <p>Inspect case-level distributions, measurement relationships, evidence coverage, and test readiness.</p>
+          <p>Inspect case-level distributions, evidence coverage, sources, body metrics, and group-test readiness.</p>
           <div class="dataset-summary" aria-label="Current dataset summary">
             <div class="dataset-stat"><strong id="datasetCaseCount">–</strong><span>independent cases</span></div>
             <div class="dataset-stat"><strong id="datasetViewCount">–</strong><span>analysed views</span></div>
@@ -557,6 +632,7 @@ def render_home_page() -> str:
         </article>
       </div>
     </section>
+
     <p class="page-note">Research interface for observable movement evidence. Outputs require contextual interpretation and are not clinical assessments.</p>
   </main>
 
@@ -689,6 +765,8 @@ def render_home_page() -> str:
       $("caseProgressBar").style.width = "0%";
       $("caseProgress").setAttribute("aria-valuemax", "1");
       $("caseProgress").setAttribute("aria-valuenow", "0");
+      $("caseAnalysisShortcuts").hidden = true;
+      $("caseAnalysisShortcutList").innerHTML = "";
       $("technicalDetails").hidden = true;
       $("selectedAction").hidden = true;
       $("deleteCaseButton").disabled = true;
@@ -734,9 +812,34 @@ def render_home_page() -> str:
       if (view.annotation_saved) return {label: "Annotated", className: ""};
       return {label: "Needs annotation", className: ""};
     }
+    function viewDescription(view) {
+      return [
+        clipWindowLabel(view) ? "Clip " + clipWindowLabel(view) : "",
+        view.perspective && view.perspective !== "unknown" ? String(view.perspective).replaceAll("-", " ") : "",
+        view.slow_motion ? "slow motion" : "",
+      ].filter(Boolean).join(" · ") || "Registered video view";
+    }
+    function renderSelectedAnalysisShortcuts(item) {
+      const readyViews = item.views.filter(view => view.results_available);
+      const panel = $("caseAnalysisShortcuts");
+      if (!readyViews.length) {
+        panel.hidden = true;
+        $("caseAnalysisShortcutList").innerHTML = "";
+        return;
+      }
+      panel.hidden = false;
+      $("caseAnalysisShortcutsHeading").textContent = readyViews.length === 1
+        ? "1 completed analysis"
+        : `${readyViews.length} completed analyses`;
+      $("caseAnalysisShortcutList").innerHTML = readyViews.map(view => (
+        '<a class="case-analysis-shortcut" href="/results?case=' + encodeURIComponent(view.slug) + '">' +
+          '<span><strong>' + escapeHtml(viewLabel(view)) + '</strong><small>' + escapeHtml(viewDescription(view)) + '</small></span>' +
+          '<span>View analysis →</span></a>'
+      )).join("");
+    }
     function renderView(view, allowDelete) {
       const status = viewStatus(view);
-      const description = [clipWindowLabel(view) ? "Clip " + clipWindowLabel(view) : "", view.perspective && view.perspective !== "unknown" ? String(view.perspective).replaceAll("-", " ") : "", view.slow_motion ? "slow motion" : ""].filter(Boolean).join(" · ") || "Registered video view";
+      const description = viewDescription(view);
       const primaryAction = view.results_available
         ? '<a class="button primary" href="/results?case=' + encodeURIComponent(view.slug) + '">View analysis</a>'
         : '<a class="button primary" href="/annotate?case=' + encodeURIComponent(view.slug) + '">' + (view.annotation_saved ? "Generate analysis" : "Annotate view") + '</a>';
@@ -794,6 +897,7 @@ def render_home_page() -> str:
       $("caseProgressLabel").textContent = item.ready_count === item.views.length ? "Case analysis complete" : "Case analysis progress";
       $("caseProgressDetail").textContent = `${item.ready_count} of ${item.views.length} clips analysed`;
       $("caseProgressBar").style.width = `${Math.round(completion * 100)}%`;
+      renderSelectedAnalysisShortcuts(item);
       $("caseFacts").innerHTML = [
         fact("Date of birth", formatDate(details.date_of_birth)),
         fact("Injury date", formatDate(details.injury_date)),
@@ -838,7 +942,7 @@ def render_home_page() -> str:
         app.selectedCaseId = null;
         syncCaseUrl(null, "replace");
         $("caseList").setAttribute("aria-busy", "false");
-        $("caseList").innerHTML = '<div class="list-message"><div><strong>No injury cases yet</strong><br><span>Use the workflow below to create the first case.</span></div></div>';
+        $("caseList").innerHTML = '<div class="list-message"><div><strong>No injury cases yet</strong><br><span>Use the workflow above to create the first case.</span></div></div>';
         $("selectedCaseName").textContent = "No injury case selected";
         $("selectedCaseView").textContent = "Cases and their video views will appear here.";
         $("selectedMeta").innerHTML = '<span class="chip">Awaiting case</span>';
@@ -846,6 +950,8 @@ def render_home_page() -> str:
         $("caseProgressDetail").textContent = "0 clips";
         $("caseProgressBar").style.width = "0%";
         $("caseProgress").setAttribute("aria-valuenow", "0");
+        $("caseAnalysisShortcuts").hidden = true;
+        $("caseAnalysisShortcutList").innerHTML = "";
         $("caseFacts").innerHTML = "";
         $("caseViews").innerHTML = "";
         $("caseViewCount").textContent = "0 attached";
@@ -879,6 +985,8 @@ def render_home_page() -> str:
       $("caseProgressBar").style.width = "0%";
       $("caseProgress").setAttribute("aria-valuemax", "1");
       $("caseProgress").setAttribute("aria-valuenow", "0");
+      $("caseAnalysisShortcuts").hidden = true;
+      $("caseAnalysisShortcutList").innerHTML = "";
       $("caseFacts").innerHTML = "";
       $("caseViews").innerHTML = "";
       $("caseViewCount").textContent = "Unavailable";
@@ -998,4 +1106,4 @@ def render_home_page() -> str:
   </script>
 </body>
 </html>
-""".replace("__APP_SHELL_CSS__", app_shell_css())
+""".replace("__APP_SHELL_CSS__", app_shell_css()))

@@ -68,6 +68,15 @@ def test_human_results_payload_uses_human_namespace() -> None:
         "Does the supported phase interval include the visible event you intended to study?"
     )
     assert payload["event_interval_review"]["decision"] in {None, "yes", "no"}
+    assert payload["injury_mechanism_review"]["question"] == (
+        "Was this injury event contact, non-contact, or indirect contact?"
+    )
+    assert payload["injury_mechanism_review"]["decision"] in {
+        None,
+        "direct_contact",
+        "non_contact",
+        "indirect_contact",
+    }
     coverage = payload["geometry_coverage_evidence"]
     assert coverage["definition_version"] == "feature_aware_geometry_coverage_v1"
     assert coverage["movement_window_total_frames"] > 0
@@ -451,6 +460,13 @@ def test_results_ui_uses_one_yolov8n_analysis_path() -> None:
     assert "Does the supported phase interval include the visible event you intended to study?" in html
     assert 'id="eventIntervalReviewUnclear"' not in html
     assert "/api/results/event-interval-review" in html
+    assert 'id="injuryMechanismReview"' in html
+    assert 'id="injuryMechanismContact"' in html
+    assert 'id="injuryMechanismNonContact"' in html
+    assert 'id="injuryMechanismIndirectContact"' in html
+    assert "Was this injury event contact, non-contact, or indirect contact?" in html
+    assert "/api/results/injury-mechanism-review" in html
+    assert 'id="eventIntervalReview" class="event-interval-review">' in html
     assert "This is an evidence limitation, not a missing or failed analysis." in html
     assert 'id="modelSensitivityPanel"' not in html
     assert 'id="headerModelSelect"' not in html
@@ -758,8 +774,8 @@ def test_results_page_prioritises_story_measurements_and_accessible_states() -> 
     assert 'id="resultOverview"' in html
     assert "Human-guided 2D movement analysis" in html
     assert "Movement at a glance" in html
-    assert "function movementAtAGlance(story, phases)" in html
-    assert "$('overviewStory').textContent = movementAtAGlance(story, phases);" in html
+    assert "function movementAtAGlance(story, phases, measurementsAvailable" in html
+    assert "$('overviewStory').textContent = movementAtAGlance(" in html
     assert "Whole Movement Summary" in html
     assert html.index('id="movementStoryAction"') < html.index('id="overviewMeasurements"')
     assert 'id="overviewStory"' in html
@@ -854,12 +870,60 @@ def test_results_page_distinguishes_one_interval_from_a_phase_story() -> None:
     assert "function isSupportedEvidenceInterval" in html
     assert "function phaseDecisionJustification" in html
     assert "SUPPORTED EVIDENCE INTERVAL" in html
-    assert "Supported Evidence Interval · measurement detail" in html
+    assert "Supported Evidence Interval · no transition detected" in html
     assert "No supported transition detected" in html
     assert "Why phases were not generated" in html
     assert "Why the AI did not generate phases" not in html
     assert "Includes annotated Movement End:" in html
     assert "One supported interval is available; no before/after phase comparison is claimed." in html
+
+
+def test_results_page_separates_measurement_and_phase_statuses() -> None:
+    html = render_results_page()
+
+    assert "function measurementAnalysisPresentation()" in html
+    assert "measurementPresentation.cardClass" in html
+    assert "cardClass: 'measurement-complete'" in html
+    assert "cardClass: 'measurement-unavailable'" in html
+    assert "Measurement Analysis" in html
+    assert "Phase Analysis" in html
+    assert "Measurements ready" in html
+    assert "Unavailable · insufficient measurement evidence" in html
+    assert "no projected measurement has supported samples" in html
+    assert "Inspect measurement limitations" in html
+    assert "Evidence limitations at a glance" in html
+    assert "No phase transition detected" in html
+    assert "Unavailable · insufficient evidence" in html
+    assert (
+        ".analysis-status-card.phase-detected,\n"
+        "    .analysis-status-card.phase-no-transition {"
+    ) in html
+    assert (
+        ".analysis-status-card.phase-limited,\n"
+        "    .analysis-status-card.phase-insufficient,"
+    ) in html
+    assert "Analysis complete · supported measurements" not in html
+    assert "Full analysis ready · Phase story withheld" not in html
+
+
+def test_results_page_guidance_explains_workflow_colours_and_examples() -> None:
+    html = render_results_page()
+
+    assert 'id="analysisGuidanceButton"' in html
+    assert 'id="analysisGuidance"' in html
+    assert 'data-section-target="analysisGuidance"' in html
+    assert "How an analysis moves through the application" in html
+    assert "Green · Complete" in html
+    assert "Blue/teal · Supported analytical result" in html
+    assert "Amber · Limited or insufficient evidence" in html
+    assert "Grey · Measurement unavailable" in html
+    assert "Red · Processing failure" in html
+    assert 'guidance-swatch grey-state' in html
+    assert 'guidance-swatch unavailable' not in html
+    assert "Open Andi Sullivan example · 3 phases" in html
+    assert "Open Charlotte Newsham example · 4 partial-window phases" in html
+    assert "Open Jordyn Huitema example · Supported Evidence Interval" in html
+    assert "Open Caroline Weir example · phase analysis unavailable" in html
 
 
 def test_results_graph_preserves_measurements_from_short_valid_sequences() -> None:
@@ -961,6 +1025,76 @@ def test_phase_withholding_explanation_separates_pose_geometry_and_phase_rules()
     }
     assert "cannot by itself prove" in explanation["cause_note"]
     assert "not silently filled" in explanation["availability_note"]
+
+
+def test_phase_withholding_does_not_claim_measurements_exist_at_zero_coverage() -> None:
+    explanation = _phase_withholding_explanation(
+        {
+            "status": "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION",
+            "phases": [],
+            "eligible_descriptors": [],
+            "excluded_descriptors": [],
+            "metadata": {
+                "configuration": {
+                    "minimum_geometry_completeness": 0.70,
+                    "minimum_eligible_descriptors": 4,
+                }
+            },
+        },
+        {
+            "pose_frame_coverage": 0.0,
+            "frame_status_counts": {"TARGET_NOT_FOUND": 5},
+        },
+        MovementWindowAnnotation(
+            movement_start_frame=0,
+            movement_end_frame=4,
+            movement_start_timestamp_ms=0.0,
+            movement_end_timestamp_ms=133.3,
+        ),
+        {
+            "best_movement_window_feature": {
+                "feature_name": "left_hka_angle_2d_deg",
+                "movement_window_coverage": 0.0,
+            }
+        },
+    )
+
+    assert explanation["best_geometry"]["coverage"] == 0.0
+    assert explanation["availability_note"].startswith(
+        "No supported framewise measurement values are available"
+    )
+    assert "not silently filled" in explanation["availability_note"]
+
+
+def test_phase_withholding_uses_inspectable_measurement_state_for_availability_note() -> None:
+    explanation = _phase_withholding_explanation(
+        {
+            "status": "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION",
+            "phases": [],
+            "eligible_descriptors": [],
+            "excluded_descriptors": [],
+            "metadata": {"configuration": {}},
+        },
+        {"pose_frame_coverage": 0.2, "frame_status_counts": {}},
+        MovementWindowAnnotation(
+            movement_start_frame=0,
+            movement_end_frame=9,
+            movement_start_timestamp_ms=0.0,
+            movement_end_timestamp_ms=300.0,
+        ),
+        {
+            "best_movement_window_feature": {
+                "feature_name": "left_hka_angle_2d_deg",
+                "movement_window_coverage": 0.2,
+            }
+        },
+        supported_framewise_measurements=False,
+    )
+
+    assert explanation["best_geometry"]["coverage"] == 0.2
+    assert explanation["availability_note"].startswith(
+        "No supported framewise measurement values are available"
+    )
 
 
 def test_simplified_results_controls_have_handlers() -> None:

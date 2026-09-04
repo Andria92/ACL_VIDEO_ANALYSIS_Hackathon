@@ -1,0 +1,170 @@
+{
+  "total_frames": 95,
+  "target_tracking_coverage": 0.4,
+  "pose_frame_coverage": 0.7158,
+  "frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 11,
+    "LOW_POSE_CONFIDENCE": 1,
+    "TARGET_IDENTITY_UNCERTAIN": 18,
+    "TARGET_NOT_FOUND": 27,
+    "VALID_TARGET": 38
+  },
+  "low_confidence_intervals": [
+    {
+      "start_frame": 28,
+      "end_frame": 28
+    }
+  ],
+  "target_loss_intervals": [
+    {
+      "start_frame": 52,
+      "end_frame": 52
+    },
+    {
+      "start_frame": 62,
+      "end_frame": 62
+    },
+    {
+      "start_frame": 66,
+      "end_frame": 85
+    },
+    {
+      "start_frame": 87,
+      "end_frame": 91
+    }
+  ],
+  "identity_uncertainty_intervals": [
+    {
+      "start_frame": 1,
+      "end_frame": 1
+    },
+    {
+      "start_frame": 14,
+      "end_frame": 14
+    },
+    {
+      "start_frame": 20,
+      "end_frame": 23
+    },
+    {
+      "start_frame": 25,
+      "end_frame": 26
+    },
+    {
+      "start_frame": 53,
+      "end_frame": 58
+    },
+    {
+      "start_frame": 64,
+      "end_frame": 64
+    },
+    {
+      "start_frame": 92,
+      "end_frame": 94
+    }
+  ],
+  "valid_target_segments": [
+    {
+      "segment_id": 1,
+      "start_frame": 2,
+      "end_frame": 13,
+      "frame_count": 12
+    },
+    {
+      "segment_id": 2,
+      "start_frame": 15,
+      "end_frame": 19,
+      "frame_count": 5
+    },
+    {
+      "segment_id": 3,
+      "start_frame": 30,
+      "end_frame": 34,
+      "frame_count": 5
+    },
+    {
+      "segment_id": 4,
+      "start_frame": 36,
+      "end_frame": 51,
+      "frame_count": 16
+    }
+  ],
+  "interpolated_frame_fraction": 0.1789,
+  "rejected_frame_fraction": 0.8211,
+  "interpolated_landmark_row_fraction": 0.0155,
+  "rejected_landmark_row_fraction": 0.6099,
+  "processing_status_counts": {
+    "INTERPOLATED": 25,
+    "MISSING": 459,
+    "RAW_VALID": 16,
+    "REJECTED_IDENTITY_UNCERTAIN": 306,
+    "REJECTED_INVALID_TRACK_SEGMENT": 187,
+    "REJECTED_LOW_CONFIDENCE": 33,
+    "SMOOTHED": 589
+  },
+  "landmark_status_counts": {
+    "IDENTITY_UNCERTAIN": 306,
+    "LOW_CONFIDENCE": 58,
+    "MISSING": 459,
+    "OBSERVED_VALID": 605,
+    "REJECTED": 187
+  },
+  "automatic_frame_status_counts": {
+    "INVALID_TRACK_SEGMENT": 21,
+    "LOW_POSE_CONFIDENCE": 1,
+    "TARGET_IDENTITY_UNCERTAIN": 46,
+    "TARGET_NOT_FOUND": 27
+  },
+  "manual_review_decision_counts": {
+    "ACCEPTED": 40,
+    "EXCLUDED": 16,
+    "NOT_REVIEWED": 39
+  },
+  "manual_acceptance_override_frame_count": 39,
+  "manual_accepted_frame_count": 40,
+  "manual_accepted_usable_frame_count": 38,
+  "left_ankle_coverage": 0.4,
+  "left_ear_coverage": 0.3684,
+  "left_elbow_coverage": 0.4105,
+  "left_eye_coverage": 0.3579,
+  "left_hip_coverage": 0.4,
+  "left_knee_coverage": 0.4,
+  "left_shoulder_coverage": 0.4105,
+  "left_wrist_coverage": 0.4105,
+  "nose_coverage": 0.3895,
+  "right_ankle_coverage": 0.4,
+  "right_ear_coverage": 0.2947,
+  "right_elbow_coverage": 0.4,
+  "right_eye_coverage": 0.3789,
+  "right_hip_coverage": 0.4,
+  "right_knee_coverage": 0.4,
+  "right_shoulder_coverage": 0.4105,
+  "right_wrist_coverage": 0.4,
+  "core_landmark_coverage": 0.4053,
+  "lower_limb_landmark_coverage": 0.4,
+  "quality_config": {
+    "landmark_confidence_threshold": 0.25,
+    "frame_median_confidence_threshold": 0.35,
+    "core_confidence_threshold": 0.35,
+    "min_observed_landmarks": 8,
+    "min_core_observed": 4,
+    "min_lower_limb_observed": 4,
+    "temporal_jump_body_scale_multiplier": 0.55,
+    "temporal_jump_min_px": 70.0,
+    "temporal_outlier_bridge_ratio": 0.75,
+    "scale_jump_fraction": 0.55,
+    "suspicious_padding_frames": 1,
+    "min_valid_segment_frames": 5,
+    "roi_centroid_padding_fraction": 0.15,
+    "minimum_pose_roi_overlap_fraction": 0.45,
+    "overlap_jump_body_scale_multiplier": 0.35,
+    "competing_pose_iou_threshold": 0.05,
+    "competing_pose_center_distance_fraction_threshold": 0.45
+  },
+  "processing_config": {
+    "max_interpolation_gap_frames": 2,
+    "smoothing_window_frames": 5,
+    "min_smoothing_segment_frames": 5
+  },
+  "raw_pose_path": "data/pose/human/imported_jordyn_huitema_2026_07_18_view_01_raw_pose.parquet"
+}

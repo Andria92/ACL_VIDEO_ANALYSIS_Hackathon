@@ -1,6 +1,6 @@
 {
   "schema_version": "acl_mechanism_evidence_v1",
-  "reviewed_at": "2026-08-31",
+  "reviewed_at": "2026-09-01",
   "review_standard": "Mechanism labels require explicit wording, a detailed incident description, or reviewable injury footage with adequate visibility from a reputable source. A report of a challenge, collision, tackle, or ACL diagnosis alone is not treated as proof of direct or indirect contact. Earlier contact is classified as indirect only when it remains mechanically linked to the apparent injury action; contact followed by restored independent movement does not automatically convert a later unsupported action into indirect contact. Footage-based labels are marked as supported interpretations rather than explicit source labels, and uncertainty is retained when the injured knee or injury timing is obscured.",
   "methodology": {
     "title": "Systematic video analysis of ACL injuries in professional Spanish male football (soccer): injury mechanisms, situational patterns, biomechanics and neurocognitive errors",
@@ -1400,6 +1400,76 @@
           "source_type": "project_stored_video",
           "evidence_form": "two_view_frame_review",
           "evidence": "Earlier contact ends before Pfeiffer takes several controlled, uncontacted steps and collapses on an unsupported plant; the second stored collapse is likewise uncontacted."
+        }
+      ]
+    },
+    "imported_jordyn_huitema_2026_07_18_acl_candidate": {
+      "canonical_player_name": "Jordyn Huitema",
+      "injury_date": "2026-07-18",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_project_stored_official_broadcast_review",
+      "change_status": "newly_classified",
+      "rationale": "Chicago Stars FC confirms a left ACL rupture but does not state the mechanism. The stored official match broadcast shows player interaction mechanically linked to the injury action without a visible direct force to Huitema's left knee. Severe player overlap obscures the knee, so indirect contact is the best-supported low-confidence interpretation rather than an explicit source label.",
+      "last_reviewed_at": "2026-09-01",
+      "review_pass": "official_source_and_occluded_video_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "An unobstructed alternate angle is needed to distinguish indirect contact from hidden direct contact to the left knee.",
+      "sources": [
+        {
+          "title": "Jordyn Huitema Placed on NWSL Season-Ending Injury List",
+          "publisher": "Chicago Stars FC",
+          "published_date": "2026-07-21",
+          "url": "https://chicagostars.com/first-team/jordyn-huitema-nwsl-season-ending-injury-list/",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Chicago Stars FC confirms that Huitema ruptured the ACL in her left leg during the July 18 match against Angel City FC; the report does not state the contact mechanism."
+        },
+        {
+          "title": "Project-stored Chicago Stars FC vs Angel City FC official broadcast sequence",
+          "publisher": "Project video archive",
+          "published_date": "2026-07-18",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "occluded_frame_review",
+          "evidence": "Player interaction remains mechanically linked to the injury action, but overlap obscures Huitema's left knee. No direct knee force is visible, although hidden direct contact cannot be excluded."
+        }
+      ]
+    },
+    "imported_jun_endo_2026_07_11_acl_candidate": {
+      "canonical_player_name": "Jun Endo",
+      "injury_date": "2026-07-11",
+      "previous_classification": null,
+      "classification": "indirect_contact",
+      "confidence": "low",
+      "verification_status": "supported_interpretation",
+      "evidence_basis": "official_medical_report_plus_project_stored_official_broadcast_review",
+      "change_status": "newly_classified",
+      "rationale": "Angel City FC confirms a right ACL injury but does not state the mechanism. The stored official match broadcast shows opponent contact and entanglement mechanically linked to the injury action without a visible direct force to Endo's right knee. Severe player overlap obscures the knee, so indirect contact is the best-supported low-confidence interpretation rather than an explicit source label.",
+      "last_reviewed_at": "2026-09-01",
+      "review_pass": "official_source_and_occluded_video_review",
+      "investigation_status": "needs_further_investigation",
+      "investigation_note": "An unobstructed alternate angle is needed to distinguish indirect contact from hidden direct contact to the right knee.",
+      "sources": [
+        {
+          "title": "ACFC Places Forward Jun Endo on Season-Ending Injury List",
+          "publisher": "Angel City FC",
+          "published_date": "2026-07-30",
+          "url": "https://angelcity.com/acfc-post/acfc-places-forward-jun-endo-on-season-ending-injury-list",
+          "source_type": "official_medical_report",
+          "evidence_form": "tight_paraphrase",
+          "evidence": "Angel City FC confirms that Endo sustained a right ACL injury during the July 11 match at San Diego Wave FC; the report does not state the contact mechanism."
+        },
+        {
+          "title": "Project-stored San Diego Wave FC vs Angel City FC official broadcast sequence",
+          "publisher": "Project video archive",
+          "published_date": "2026-07-11",
+          "url": "",
+          "source_type": "project_stored_video",
+          "evidence_form": "occluded_frame_review",
+          "evidence": "Opponent contact and entanglement remain mechanically linked to the injury action, but overlap obscures Endo's right knee. No direct knee force is visible, although hidden direct contact cannot be excluded."
         }
       ]
     }

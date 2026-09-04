@@ -1,26 +1,26 @@
 {
   "cache_version": "exploration_home_summary_cache_v1",
-  "fingerprint": "58205bee25c95930b7957a876ae74fdce932bcdf076d6c44a61cd4b924716528",
+  "fingerprint": "2f9d11dd01f165a1b1439a956e96b0789d931b7b5a5c56cd1a8cbe8ec1913643",
   "payload": {
     "summary": {
-      "analysed_case_count": 36,
-      "analysed_view_count": 50,
+      "analysed_case_count": 38,
+      "analysed_view_count": 53,
       "feature_count": 36,
-      "known_injury_side_count": 36,
-      "known_contact_mechanism_count": 36,
+      "known_injury_side_count": 38,
+      "known_contact_mechanism_count": 38,
       "unclear_contact_mechanism_count": 0,
-      "mechanism_source_count": 36,
-      "phase_supported_case_count": 24
+      "mechanism_source_count": 37,
+      "phase_supported_case_count": 18
     },
     "similarity": {
       "available": true,
       "status": "AVAILABLE",
-      "comparable_case_count": 18,
+      "comparable_case_count": 14,
       "reference_pool_case_count": 18,
-      "query_only_case_count": 0,
-      "pairwise_output_count": 153,
+      "query_only_case_count": 20,
+      "pairwise_output_count": 91,
       "eligible_descriptor_count": 98,
-      "reason": "Injury-event rankings use completed, phase-supported views whose visible event is covered. Each injury appears once and its most similar eligible view pair is retained.",
+      "reason": "A selected case may be query-only when phases are unavailable. Rankings compare its supported whole-movement measurements only against completed, phase-supported reference views whose visible event is covered.",
       "scientific_note": "Movement similarity is a descriptive comparison of mutually supported projected measurements, not evidence of the same ACL mechanism or biological cause.",
       "signature_case_count": 2,
       "signature_file_count": 2

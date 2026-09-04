@@ -1,0 +1,383 @@
+{
+  "provenance": {
+    "annotation_session_id": "c92481c7-fd04-4c7a-96c0-35d633fd01cd",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-09-01T13:45:08.580780+00:00",
+    "updated_at": "2026-09-01T13:57:20.024681+00:00",
+    "case_id": "imported_jordyn_huitema_2026_07_18_acl_candidate",
+    "source_id": "imported_jordyn_huitema_2026_07_18_view_01",
+    "view_id": "imported_jordyn_huitema_2026_07_18_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Chicago Stars vs. Angel City FC - Replay _982871__32m05s132_32m08s966.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 23,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 500.7142857142857,
+        "y": 207.14285714285714,
+        "width": 111.42857142857139,
+        "height": 227.14285714285714
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 11,
+      "bbox": {
+        "x": 475.0,
+        "y": 197.14285714285714,
+        "width": 132.8571428571429,
+        "height": 272.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 15,
+      "bbox": {
+        "x": 480.7142857142857,
+        "y": 201.42857142857142,
+        "width": 138.5714285714286,
+        "height": 257.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 467.85714285714283,
+        "y": 219.71429007393974,
+        "width": 164.28571428571428,
+        "height": 271.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 19,
+      "bbox": {
+        "x": 477.85714285714283,
+        "y": 229.71429007393974,
+        "width": 157.14285714285717,
+        "height": 265.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 20,
+      "bbox": {
+        "x": 492.14285714285717,
+        "y": 264.7142900739397,
+        "width": 142.85714285714283,
+        "height": 220.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 21,
+      "bbox": {
+        "x": 479.2857142857143,
+        "y": 244.000004359654,
+        "width": 175.71428571428572,
+        "height": 248.57142857142858
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 23,
+      "bbox": {
+        "x": 517.8571428571429,
+        "y": 262.85714285714283,
+        "width": 127.14285714285711,
+        "height": 220.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 30,
+      "bbox": {
+        "x": 565.0,
+        "y": 267.14285714285717,
+        "width": 105.71428571428567,
+        "height": 224.28571428571428
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 35,
+      "bbox": {
+        "x": 565.0,
+        "y": 276.14286150251115,
+        "width": 114.28571428571433,
+        "height": 232.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 38,
+      "bbox": {
+        "x": 622.1428571428571,
+        "y": 270.0,
+        "width": 91.42857142857144,
+        "height": 238.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 45,
+      "bbox": {
+        "x": 596.4285714285714,
+        "y": 274.2857142857143,
+        "width": 115.71428571428567,
+        "height": 235.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 48,
+      "bbox": {
+        "x": 622.1428571428571,
+        "y": 294.2857142857143,
+        "width": 84.28571428571433,
+        "height": 198.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 53,
+      "bbox": {
+        "x": 639.2857142857143,
+        "y": 299.7142900739397,
+        "width": 67.14285714285711,
+        "height": 205.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 54,
+      "bbox": {
+        "x": 627.8571428571429,
+        "y": 297.14285714285717,
+        "width": 98.57142857142856,
+        "height": 194.28571428571428
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 57,
+      "bbox": {
+        "x": 626.4285714285714,
+        "y": 300.42857578822543,
+        "width": 114.28571428571422,
+        "height": 197.14285714285717
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 60,
+      "bbox": {
+        "x": 633.5714285714286,
+        "y": 299.00000435965404,
+        "width": 107.14285714285711,
+        "height": 225.71428571428572
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 62,
+      "bbox": {
+        "x": 620.7142857142857,
+        "y": 300.42857578822543,
+        "width": 115.71428571428578,
+        "height": 231.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 76,
+      "bbox": {
+        "x": 573.5714285714286,
+        "y": 305.42857578822543,
+        "width": 142.8571428571429,
+        "height": 225.71428571428578
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 77,
+      "bbox": {
+        "x": 572.1428571428571,
+        "y": 298.2857186453683,
+        "width": 151.42857142857144,
+        "height": 218.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 83,
+      "bbox": {
+        "x": 545.0,
+        "y": 258.2857186453683,
+        "width": 128.57142857142856,
+        "height": 304.2857142857142
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 93,
+      "bbox": {
+        "x": 442.14285714285717,
+        "y": 209.71429007393974,
+        "width": 194.28571428571428,
+        "height": 431.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 94,
+      "bbox": {
+        "x": 435.0,
+        "y": 311.42857142857144,
+        "width": 238.57142857142856,
+        "height": 215.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 16,
+  "target_unavailable_intervals": [
+    {
+      "start_frame": 67,
+      "end_frame": 75,
+      "frame_count": 9,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 81,
+      "end_frame": 82,
+      "frame_count": 2,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 84,
+      "end_frame": 85,
+      "frame_count": 2,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    },
+    {
+      "start_frame": 87,
+      "end_frame": 89,
+      "frame_count": 3,
+      "reason": "CANNOT_JUDGE",
+      "note": "",
+      "annotation_source": "human_ui"
+    }
+  ],
+  "manual_target_accepted_frame_count": 40,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 2,
+      "end_frame": 13,
+      "frame_count": 12,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 15,
+      "end_frame": 19,
+      "frame_count": 5,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 27,
+      "end_frame": 27,
+      "frame_count": 1,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 30,
+      "end_frame": 34,
+      "frame_count": 5,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 36,
+      "end_frame": 52,
+      "frame_count": 17,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 94,
+    "movement_end_timestamp_ms": 3133.3333333333335,
+    "movement_duration_ms": 3133.3333333333335,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_jordyn_huitema_2026_07_18_acl_candidate",
+    "source_id": "imported_jordyn_huitema_2026_07_18_view_01",
+    "view_id": "imported_jordyn_huitema_2026_07_18_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 94,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 94,
+    "event_anchor_frame": 94,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "left",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

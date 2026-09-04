@@ -21,7 +21,7 @@ from acl_motion.geometry.angular_semantics import (
     range_semantics_for_metric,
 )
 
-SIMILARITY_ENGINE_VERSION = "movement_similarity_v5_angular_ranges"
+SIMILARITY_ENGINE_VERSION = "movement_similarity_v6_group_networks"
 COMPARISON_STATISTICS_VERSION = "comparison_statistics_v1_supported_intervals"
 DEFAULT_SIMILARITY_LENS = "overall_movement_difference"
 MINIMUM_SHARED_DESCRIPTORS = 6
@@ -31,9 +31,13 @@ RESAMPLING_ITERATIONS = 200
 RESAMPLING_FEATURE_DROPOUT = 0.10
 SUPPORTED_REFERENCE_PHASE_STATUSES = {
     "SUPPORTED",
-    "SUPPORTED_PARTIAL_WINDOW",
-    "SUPPORTED_EVIDENCE_INTERVAL",
 }
+MEASUREMENT_GROUP_ORDER = (
+    "lower_limb",
+    "bilateral",
+    "trunk_pelvis",
+    "upper_body",
+)
 
 SIMILARITY_LENSES = (
     {
@@ -84,6 +88,7 @@ def build_similarity_payload(
     *,
     view_records: Iterable[Mapping[str, Any]] | None = None,
     selected_case_id: str = "",
+    measurement_groups: Iterable[str] | None = None,
     result_limit: int = 6,
     reference_scalers: Mapping[str, Mapping[str, float]] | None = None,
     scaler_provenance: str = "",
@@ -93,17 +98,56 @@ def build_similarity_payload(
     """Build player choices and per-lens nearest-neighbour rankings."""
 
     record_list = [dict(record) for record in records]
+    view_record_list = (
+        [dict(record) for record in view_records]
+        if view_records is not None
+        else None
+    )
     event_list = [dict(event) for event in events]
     if cancelled is not None and cancelled():
         raise SimilarityComputationCancelled("Comparison superseded by a newer request.")
     if resampling_iterations < 0:
         raise ValueError("resampling_iterations cannot be negative.")
+    group_source_records = [*record_list, *(view_record_list or [])]
+    available_groups = sorted(
+        {
+            str(record.get("body_region") or record.get("feature_family") or "other")
+            for record in group_source_records
+        },
+        key=lambda value: (
+            MEASUREMENT_GROUP_ORDER.index(value)
+            if value in MEASUREMENT_GROUP_ORDER
+            else len(MEASUREMENT_GROUP_ORDER),
+            value,
+        ),
+    )
+    requested_groups = []
+    for value in measurement_groups or ():
+        normalized = str(value).strip().lower()
+        if normalized in available_groups and normalized not in requested_groups:
+            requested_groups.append(normalized)
+    selected_groups = requested_groups or available_groups
+    selected_group_set = set(selected_groups)
+    record_list = [
+        record
+        for record in record_list
+        if str(record.get("body_region") or record.get("feature_family") or "other")
+        in selected_group_set
+    ]
+    if view_record_list is not None:
+        view_record_list = [
+            record
+            for record in view_record_list
+            if str(record.get("body_region") or record.get("feature_family") or "other")
+            in selected_group_set
+        ]
+
     vectors, descriptors = _case_vectors(record_list)
     if view_records is None:
         view_vectors, view_metadata, case_view_ids = _synthetic_view_vectors(vectors)
     else:
         view_vectors, view_metadata, case_view_ids, view_descriptors = _view_vectors(
-            [dict(record) for record in view_records]
+            view_record_list or []
         )
         descriptors.update(view_descriptors)
     event_lookup = {str(event.get("case_id", "")): event for event in event_list}
@@ -252,6 +296,22 @@ def build_similarity_payload(
         and case["comparable_descriptor_count"] >= MINIMUM_SHARED_DESCRIPTORS
     )
     available = comparable_case_count >= 2 and comparable_pair_count > 0
+    group_descriptor_counts = {
+        group: len(
+            {
+                str(record.get("feature_name") or "")
+                for record in group_source_records
+                if str(
+                    record.get("body_region")
+                    or record.get("feature_family")
+                    or "other"
+                )
+                == group
+                and str(record.get("feature_name") or "")
+            }
+        )
+        for group in available_groups
+    }
     return {
         "engine_version": SIMILARITY_ENGINE_VERSION,
         "analysis_unit": "registered_injury_case",
@@ -268,7 +328,34 @@ def build_similarity_payload(
         "cases": public_cases,
         "selected_case": public_case_lookup.get(selected_id),
         "rankings": rankings,
+        "network": _network_payload(
+            public_case_lookup,
+            pair_scores,
+            reference_ids,
+        ),
         "lenses": [dict(lens) for lens in SIMILARITY_LENSES],
+        "measurement_groups": {
+            "available": [
+                {
+                    "id": group,
+                    "label": _family_label(group),
+                    "feature_count": group_descriptor_counts[group],
+                }
+                for group in available_groups
+            ],
+            "selected": selected_groups,
+            "minimum_selected": MINIMUM_SHARED_FAMILIES,
+            "scope": (
+                "ALL_MEASUREMENT_GROUPS"
+                if set(selected_groups) == set(available_groups)
+                else "FILTERED_MEASUREMENT_GROUPS"
+            ),
+            "note": (
+                "Choose at least two movement areas. Pairwise scores still require at least "
+                f"{MINIMUM_SHARED_DESCRIPTORS} mutually supported descriptors across at least "
+                f"{MINIMUM_SHARED_FAMILIES} selected areas."
+            ),
+        },
         "summary": {
             "analysed_case_count": len(public_cases),
             "reference_pool_case_count": len(reference_ids),
@@ -305,6 +392,78 @@ def build_similarity_payload(
                 "frozen scalers from a separate larger reference cohort",
             ],
         },
+    }
+
+
+def _network_payload(
+    cases: Mapping[str, Mapping[str, Any]],
+    pair_scores: Mapping[tuple[str, str], Mapping[str, Any]],
+    reference_ids: set[str],
+) -> dict[str, Any]:
+    """Expose only defensible pairwise results for the all-case similarity matrix."""
+
+    edges = []
+    for (left_id, right_id), pair in sorted(pair_scores.items()):
+        if not pair.get("available") or left_id not in cases or right_id not in cases:
+            continue
+        indices = {
+            lens["id"]: float(value)
+            for lens in SIMILARITY_LENSES
+            if (value := pair.get("indices", {}).get(lens["id"])) is not None
+        }
+        if not indices:
+            continue
+        support_by_lens = {}
+        for lens_id in indices:
+            support = _evidence_support(
+                pair.get("base_evidence_factors", {}),
+                lens_id=lens_id,
+                case_count=len(reference_ids),
+                shared_count=int(pair.get("shared_descriptor_count") or 0),
+                shared_family_count=int(pair.get("shared_family_count") or 0),
+            )
+            support_by_lens[lens_id] = {
+                "status": support["status"],
+                "label": support["label"],
+            }
+        selected_views = pair.get("selected_views", {})
+        edges.append(
+            {
+                "id": f"{left_id}--{right_id}",
+                "source_case_id": left_id,
+                "target_case_id": right_id,
+                "indices": indices,
+                "evidence_support": support_by_lens,
+                "shared_descriptor_count": int(
+                    pair.get("shared_descriptor_count") or 0
+                ),
+                "shared_family_count": int(pair.get("shared_family_count") or 0),
+                "selected_view_pair": {
+                    "source_view_label": str(
+                        selected_views.get(left_id, {}).get("view_label") or ""
+                    ),
+                    "target_view_label": str(
+                        selected_views.get(right_id, {}).get("view_label") or ""
+                    ),
+                    "eligible_view_pair_count": int(
+                        pair.get("eligible_view_pair_count") or 0
+                    ),
+                },
+            }
+        )
+    return {
+        "nodes": [dict(case) for case in cases.values()],
+        "edges": edges,
+        "edge_count": len(edges),
+        "edge_rule": (
+            "A matrix value is shown only when the pair passes the existing shared-descriptor, "
+            "movement-area, evidence, and reference-eligibility rules."
+        ),
+        "missing_edge_note": (
+            "An unavailable cell means the cases were not responsibly comparable under the "
+            "selected measurement groups; it is not zero and does not mean their movements "
+            "are opposites."
+        ),
     }
 
 
@@ -1086,7 +1245,8 @@ def _public_cases(
     vectors: Mapping[str, Mapping[str, Mapping[str, Any]]],
 ) -> list[dict[str, Any]]:
     cases = []
-    for case_id, vector in vectors.items():
+    for case_id in sorted(set(event_lookup).union(vectors)):
+        vector = vectors.get(case_id, {})
         event = event_lookup.get(case_id, {})
         player_name = _display_player_name(event.get("player_name"), case_id)
         if player_name == "Player not recorded":
@@ -1101,6 +1261,7 @@ def _public_cases(
                 "position_group": str(event.get("position_group") or "unknown"),
                 "analysed_view_count": int(event.get("analysed_view_count") or 0),
                 "comparable_descriptor_count": len(vector),
+                "query_comparison_ready": len(vector) >= MINIMUM_SHARED_DESCRIPTORS,
                 "reference_pool_eligible": bool(event.get("reference_pool_eligible", False)),
                 "reference_pool_reason": str(
                     event.get("reference_pool_reason")
@@ -1209,7 +1370,15 @@ def _feature_label(feature_name: str) -> str:
 
 
 def _family_label(value: str) -> str:
-    return value.replace("_", " ").replace("/", " / ").strip().title() or "Other"
+    return {
+        "lower_limb": "Lower Limb",
+        "bilateral": "Bilateral",
+        "trunk_pelvis": "Trunk & Pelvis",
+        "upper_body": "Upper Body",
+    }.get(
+        value,
+        value.replace("_", " ").replace("/", " / ").strip().title() or "Other",
+    )
 
 
 def _pair_key(left: str, right: str) -> tuple[str, str]:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.ui.app_shell import app_shell_css, app_site_header, apply_app_brand
 
 COMPARISON_EXPERIENCE = {
     "default_mode": "simple",
@@ -288,7 +288,7 @@ COMPARISON_EXPERIENCE = {
 def render_comparison_page() -> str:
     """Return the dedicated movement-comparison experience."""
 
-    return (
+    return apply_app_brand(
         COMPARISON_HTML.replace("__APP_SHELL_CSS__", app_shell_css())
         .replace("__APP_SITE_HEADER__", app_site_header("Compare Movements"))
         .replace("__COMPARISON_EXPERIENCE__", json.dumps(COMPARISON_EXPERIENCE))
@@ -305,15 +305,15 @@ COMPARISON_HTML = r"""
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4f7f9;
+      --bg: #f5f8fa;
       --panel: #ffffff;
-      --ink: #1f2a33;
-      --muted: #617080;
-      --line: #d5dee7;
-      --accent: #215f9a;
-      --accent-soft: #e9f2fb;
-      --green: #18744a;
-      --green-soft: #e9f6ef;
+      --ink: #142334;
+      --muted: #586879;
+      --line: #d7e0e7;
+      --accent: #0F62FE;
+      --accent-soft: #eef5ff;
+      --green: #08766d;
+      --green-soft: #dffaf4;
       --amber: #8a6200;
       --amber-soft: #fff4cf;
     }
@@ -380,6 +380,42 @@ COMPARISON_HTML = r"""
       box-shadow: 0 1px 3px rgba(31, 42, 51, 0.14);
     }
     .lens-help { margin: 12px 0 0; color: var(--muted); }
+    .measurement-filter {
+      margin: 14px 0 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: #f8fafc;
+    }
+    .measurement-filter legend {
+      padding: 0 5px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 850;
+    }
+    .measurement-filter-options { display: flex; gap: 8px; flex-wrap: wrap; }
+    .measurement-filter-option {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 760;
+    }
+    .measurement-filter-option:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .measurement-filter-option input { width: 16px; height: 16px; min-height: 0; margin: 0; }
+    .measurement-filter-note { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+    .measurement-filter-status { margin-left: 5px; color: var(--amber); font-weight: 800; }
     .comparison-layout {
       display: grid;
       grid-template-columns: minmax(245px, .34fr) minmax(0, 1fr);
@@ -414,6 +450,153 @@ COMPARISON_HTML = r"""
     .selection-meta { margin: 0; color: var(--muted); font-size: 13px; }
     .engine-note { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
     .ranking-list { display: grid; gap: 10px; }
+    .similarity-overview-panel { overflow: hidden; }
+    .similarity-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .similarity-heading p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+    .similarity-spectrum {
+      display: grid;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fbfcfd;
+    }
+    .spectrum-axis, .spectrum-row {
+      display: grid;
+      grid-template-columns: minmax(150px, .9fr) minmax(220px, 1.8fr) 68px 118px;
+      gap: 10px;
+      align-items: center;
+    }
+    .spectrum-axis { color: var(--muted); font-size: 11px; font-weight: 760; }
+    .spectrum-axis-scale { display: flex; justify-content: space-between; }
+    .spectrum-row {
+      width: 100%;
+      min-height: 58px;
+      padding: 8px 9px;
+      text-align: left;
+      background: #fff;
+    }
+    .spectrum-row:hover { background: var(--accent-soft); }
+    .spectrum-player strong, .spectrum-player span { display: block; }
+    .spectrum-player span { margin-top: 2px; color: var(--muted); font-size: 11px; font-weight: 650; }
+    .spectrum-track {
+      position: relative;
+      height: 13px;
+      border-radius: 999px;
+      background: repeating-linear-gradient(90deg, #e5ebf0 0, #e5ebf0 1px, transparent 1px, transparent 25%), #f1f4f6;
+      box-shadow: inset 0 0 0 1px #dbe3e9;
+    }
+    .spectrum-fill { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #91b8d9, var(--accent)); }
+    .spectrum-marker {
+      position: absolute;
+      top: 50%;
+      width: 19px;
+      height: 19px;
+      border: 3px solid #fff;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 0 1px #174c7b;
+      transform: translate(-50%, -50%);
+    }
+    .spectrum-score { color: var(--accent); font-size: 18px; font-weight: 900; text-align: right; }
+    .spectrum-support { text-align: right; }
+    .spectrum-rule { margin: 9px 0 0; color: var(--muted); font-size: 11px; }
+    .matrix-disclosure {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+    .matrix-disclosure > summary { padding: 12px 14px; cursor: pointer; font-weight: 850; }
+    .matrix-body { padding: 0 14px 14px; }
+    .similarity-matrix-shell {
+      max-height: 720px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .similarity-matrix { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; }
+    .similarity-matrix th, .similarity-matrix td { padding: 0; border: 0; }
+    .similarity-matrix .corner {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      min-width: 178px;
+      padding: 9px 10px;
+      background: #f4f7fa;
+      text-align: left;
+    }
+    .matrix-column {
+      position: sticky;
+      z-index: 3;
+      top: 0;
+      width: 42px;
+      height: 132px;
+      background: #f4f7fa;
+      vertical-align: bottom;
+    }
+    .matrix-column span {
+      display: block;
+      width: 42px;
+      padding: 7px 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+    .matrix-row-label {
+      position: sticky;
+      z-index: 2;
+      left: 0;
+      width: 178px;
+      max-width: 178px;
+      padding: 7px 10px !important;
+      overflow: hidden;
+      background: #f7f9fb;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .matrix-column.selected, .matrix-row-label.selected { background: var(--accent-soft); color: var(--accent); }
+    .matrix-cell, .matrix-na, .matrix-diagonal {
+      width: 42px;
+      min-width: 42px;
+      height: 42px;
+      min-height: 42px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.8);
+      border-radius: 0;
+      font-size: 10px;
+      font-weight: 850;
+    }
+    .matrix-cell:hover, .matrix-cell:focus-visible { position: relative; z-index: 1; outline: 3px solid #173f67; outline-offset: -3px; }
+    .matrix-cell.selected-axis { box-shadow: inset 0 0 0 2px #173f67; }
+    .matrix-na { display: grid; place-items: center; color: #7d8994; background: repeating-linear-gradient(135deg, #eef1f4, #eef1f4 5px, #e3e8ec 5px, #e3e8ec 7px); }
+    .matrix-diagonal { display: grid; place-items: center; color: #657381; background: #e8edf1; }
+    .matrix-legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .matrix-legend span { display: inline-flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 18px; height: 12px; border-radius: 2px; background: var(--accent); }
+    .legend-swatch.pale { background: #dfeaf4; }
+    .legend-swatch.na { background: repeating-linear-gradient(135deg, #eef1f4, #eef1f4 4px, #dce2e7 4px, #dce2e7 6px); }
+    .matrix-pair-detail { margin-top: 10px; padding: 12px; border-left: 4px solid var(--accent); background: var(--accent-soft); }
+    .matrix-pair-detail p { margin: 4px 0 0; color: #38516a; }
+    .matrix-pair-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 9px; }
+    .matrix-pair-actions button { min-height: 36px; }
     .match-card {
       display: grid;
       grid-template-columns: 44px minmax(0, 1fr) 116px;
@@ -510,6 +693,11 @@ COMPARISON_HTML = r"""
       .control { width: 100%; }
       .mode-toggle { width: 100%; }
       .mode-toggle button { flex: 1; }
+      .similarity-heading { display: grid; }
+      .spectrum-axis { display: none; }
+      .spectrum-row { grid-template-columns: minmax(0, 1fr) 64px; }
+      .spectrum-track { grid-column: 1 / -1; grid-row: 2; }
+      .spectrum-support { grid-column: 1 / -1; text-align: left; }
       .player-picker { position: static; }
       .player-list { max-height: 280px; }
       .match-card { grid-template-columns: 40px minmax(0, 1fr); }
@@ -568,6 +756,39 @@ COMPARISON_HTML = r"""
           </div>
           <p class="lens-help" id="lensHelp" aria-live="polite"></p>
           <p class="engine-note" id="engineNote" hidden></p>
+          <fieldset class="measurement-filter" id="measurementFilter">
+            <legend>Measurements included</legend>
+            <div class="measurement-filter-options" id="measurementFilterOptions"></div>
+            <p class="measurement-filter-note" id="measurementFilterNote">Loading available measurement groups…</p>
+          </fieldset>
+        </section>
+
+        <section class="panel similarity-overview-panel" aria-labelledby="similaritySpectrumHeading">
+          <div class="similarity-heading">
+            <div>
+              <h2 id="similaritySpectrumHeading">Selected-case similarity spectrum</h2>
+              <p id="similaritySpectrumSummary">Choose an injury case to place its closest responsible comparisons on a common 0–1 scale.</p>
+            </div>
+          </div>
+          <div id="similaritySpectrum" class="similarity-spectrum" aria-live="polite">
+            <div class="empty-state">No comparable injury case selected yet.</div>
+          </div>
+          <p class="spectrum-rule">The index shows movement closeness under the selected lens, not a probability, diagnosis, or shared injury mechanism. Every row also discloses its mutually supported evidence.</p>
+
+          <details class="matrix-disclosure" id="similarityMatrixDisclosure">
+            <summary>Open the optional all-case similarity matrix</summary>
+            <div class="matrix-body">
+              <p class="section-copy" id="similarityMatrixSummary">The matrix will show every responsibly comparable pair under the current lens and measurement filter.</p>
+              <div class="similarity-matrix-shell" id="similarityMatrix" role="region" aria-label="All-case movement similarity matrix" tabindex="0"></div>
+              <div class="matrix-legend" aria-label="Similarity matrix legend">
+                <span><i class="legend-swatch"></i> Darker blue = closer</span>
+                <span><i class="legend-swatch pale"></i> Lighter blue = less close</span>
+                <span><i class="legend-swatch na"></i> Not responsibly comparable</span>
+              </div>
+              <p class="spectrum-rule" id="similarityMatrixRule">Unavailable cells are not zero and do not mean that two movements are opposites.</p>
+              <div class="matrix-pair-detail" id="similarityMatrixPairDetail" hidden></div>
+            </div>
+          </details>
         </section>
 
         <section aria-labelledby="rankingHeading">
@@ -632,6 +853,8 @@ COMPARISON_HTML = r"""
         ? window.crypto.randomUUID()
         : `comparison-${Date.now()}-${Math.random().toString(16).slice(2)}`,
       search: "",
+      measurementGroups: [],
+      matrixPair: null,
     };
 
     function escapeHtml(value) {
@@ -705,11 +928,56 @@ COMPARISON_HTML = r"""
           `<strong>${escapeHtml(item.player_name)}</strong>` +
           `<span>${escapeHtml(caseMeta(item))}</span>` +
           `<span>${item.comparable_descriptor_count} supported movement measurements</span>` +
-          `<span class="pool-label ${item.reference_pool_eligible ? "reference" : "query"}">${item.reference_pool_eligible ? "Eligible injury-event reference" : "Query-only · comparable to references"}</span>` +
+          `<span class="pool-label ${item.reference_pool_eligible ? "reference" : "query"}">${item.reference_pool_eligible ? "Eligible injury-event reference" : item.query_comparison_ready ? "Query-only · comparison depends on shared evidence" : "Query-only · more supported evidence needed"}</span>` +
         `</button>`
       ).join("");
       $("playerList").querySelectorAll("[data-case-id]").forEach(button => {
         button.addEventListener("click", () => selectCase(button.dataset.caseId));
+      });
+    }
+    function measurementGroupQuery(separator = "&") {
+      return app.measurementGroups.length
+        ? `${separator}groups=${encodeURIComponent(app.measurementGroups.join(","))}`
+        : "";
+    }
+    function renderMeasurementGroupFilter(message = "") {
+      const config = app.index?.measurement_groups || {};
+      const available = config.available || [];
+      const minimum = Number(config.minimum_selected || 2);
+      if (!available.length) {
+        $("measurementFilterOptions").innerHTML = "";
+        $("measurementFilterNote").textContent = "No measurement groups are currently available.";
+        return;
+      }
+      if (!app.measurementGroups.length) {
+        app.measurementGroups = [...(config.selected || available.map(item => item.id))];
+      }
+      const selected = new Set(app.measurementGroups);
+      $("measurementFilterOptions").innerHTML = available.map(item =>
+        `<label class="measurement-filter-option">` +
+          `<input type="checkbox" value="${escapeHtml(item.id)}" ${selected.has(item.id) ? "checked" : ""} />` +
+          `<span>${escapeHtml(item.label)} · ${Number(item.feature_count || 0)} features</span>` +
+        `</label>`
+      ).join("");
+      $("measurementFilterNote").innerHTML = escapeHtml(config.note || "") +
+        (message ? ` <span class="measurement-filter-status">${escapeHtml(message)}</span>` : "");
+      $("measurementFilterOptions").querySelectorAll("input").forEach(input => {
+        input.addEventListener("change", () => {
+          const next = available
+            .map(item => item.id)
+            .filter(groupId => {
+              if (groupId === input.value) return input.checked;
+              return app.measurementGroups.includes(groupId);
+            });
+          if (next.length < minimum) {
+            input.checked = true;
+            renderMeasurementGroupFilter(`Keep at least ${minimum} movement areas selected.`);
+            return;
+          }
+          app.measurementGroups = next;
+          renderMeasurementGroupFilter("Updating comparisons…");
+          loadComparisonIndex();
+        });
       });
     }
     function measurementList(items) {
@@ -725,6 +993,109 @@ COMPARISON_HTML = r"""
         return `<li>${escapeHtml(item.label)}${escapeHtml(values)} <span class="future">${escapeHtml(item.family)}${escapeHtml(difference)}</span></li>`;
       }).join("");
     }
+    function shortPlayerName(name) {
+      const parts = String(name || "Player").trim().split(/\s+/);
+      if (parts.length < 2 || String(name).length <= 16) return String(name || "Player");
+      return `${parts[0]} ${parts[parts.length - 1][0]}.`;
+    }
+    function edgeScore(edge) {
+      const value = Number(edge?.indices?.[selectedLensId]);
+      return Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : null;
+    }
+    function similarityCellStyle(score) {
+      const lightness = 96 - score * 53;
+      const colour = score >= 0.62 ? "#fff" : "#173f67";
+      return `background:hsl(208 58% ${lightness}%);color:${colour}`;
+    }
+    function pairKey(leftId, rightId) {
+      return [leftId, rightId].sort().join("--");
+    }
+    function renderSimilaritySpectrum() {
+      const data = app.comparison;
+      const spectrum = $("similaritySpectrum");
+      if (!data?.selected_case) {
+        spectrum.innerHTML = '<div class="empty-state">Choose an injury case to see its closest responsible comparisons.</div>';
+        $("similaritySpectrumSummary").textContent = "Choose an injury case to place its closest responsible comparisons on a common 0–1 scale.";
+        return;
+      }
+      const matches = data.rankings?.[selectedLensId] || [];
+      if (!matches.length) {
+        spectrum.innerHTML = '<div class="empty-state">No responsible comparison is available under the selected lens and measurement groups.</div>';
+        $("similaritySpectrumSummary").textContent = `${data.selected_case.player_name} has no responsible match under the current settings.`;
+        return;
+      }
+      spectrum.innerHTML = `<div class="spectrum-axis" aria-hidden="true"><span>Reference injury case</span><span class="spectrum-axis-scale"><i>0</i><i>0.25</i><i>0.50</i><i>0.75</i><i>1</i></span><span>Index</span><span>Evidence</span></div>` + matches.map(match => {
+        const score = Math.max(0, Math.min(1, Number(match.similarity_index)));
+        const support = match.evidence_support || {};
+        const supportLabel = support.label || "Unavailable";
+        return `<button class="spectrum-row" type="button" data-spectrum-case-id="${escapeHtml(match.case.case_id)}" aria-label="Select ${escapeHtml(match.case.player_name)}, similarity index ${score.toFixed(3)}, ${escapeHtml(supportLabel)} evidence">` +
+          `<span class="spectrum-player"><strong>${escapeHtml(match.case.player_name)}</strong><span>${Number(match.shared_descriptor_count || 0)} shared measurements · ${Number(match.shared_family_count || 0)} movement areas</span></span>` +
+          `<span class="spectrum-track" aria-hidden="true"><span class="spectrum-fill" style="width:${(score * 100).toFixed(1)}%"></span><i class="spectrum-marker" style="left:${(score * 100).toFixed(1)}%"></i></span>` +
+          `<span class="spectrum-score">${score.toFixed(3)}</span>` +
+          `<span class="spectrum-support"><span class="badge ${statusClass(support.status)}">${escapeHtml(supportLabel)}</span></span>` +
+        `</button>`;
+      }).join("");
+      spectrum.querySelectorAll("[data-spectrum-case-id]").forEach(button => {
+        button.addEventListener("click", () => selectCase(button.dataset.spectrumCaseId));
+      });
+      $("similaritySpectrumSummary").textContent = `${data.selected_case.player_name}'s ${matches.length} closest eligible matches under ${selectedLens().label.toLowerCase()}, ordered on the same 0–1 index.`;
+    }
+    function renderSimilarityMatrix() {
+      const data = app.comparison;
+      const container = $("similarityMatrix");
+      const detail = $("similarityMatrixPairDetail");
+      if (!data?.selected_case || !data.network) {
+        container.innerHTML = '<div class="empty-state">Choose an injury case to load the all-case matrix.</div>';
+        detail.hidden = true;
+        return;
+      }
+      detail.hidden = true;
+      app.matrixPair = null;
+      const selectedId = data.selected_case.case_id;
+      const nodes = [...(data.network.nodes || [])].sort((left, right) => String(left.player_name).localeCompare(String(right.player_name)));
+      const nodeLookup = new Map(nodes.map(node => [node.case_id, node]));
+      const edgeLookup = new Map((data.network.edges || []).map(edge => [pairKey(edge.source_case_id, edge.target_case_id), edge]));
+      const header = nodes.map(node => `<th class="matrix-column ${node.case_id === selectedId ? "selected" : ""}" scope="col" title="${escapeHtml(node.player_name)}"><span>${escapeHtml(shortPlayerName(node.player_name))}</span></th>`).join("");
+      const rows = nodes.map(left => {
+        const cells = nodes.map(right => {
+          if (left.case_id === right.case_id) return '<td><span class="matrix-diagonal" title="Same injury case">—</span></td>';
+          const edge = edgeLookup.get(pairKey(left.case_id, right.case_id));
+          const score = edgeScore(edge);
+          if (score === null) return `<td><span class="matrix-na" title="${escapeHtml(left.player_name)} and ${escapeHtml(right.player_name)} were not responsibly comparable under the selected measurements">–</span></td>`;
+          const support = edge.evidence_support?.[selectedLensId]?.label || "Unavailable";
+          const title = `${left.player_name} and ${right.player_name}: similarity ${score.toFixed(3)}; ${edge.shared_descriptor_count} shared measurements across ${edge.shared_family_count} movement areas; ${support} evidence.`;
+          const selectedAxis = [left.case_id, right.case_id].includes(selectedId) ? "selected-axis" : "";
+          return `<td><button class="matrix-cell ${selectedAxis}" type="button" data-left-case-id="${escapeHtml(left.case_id)}" data-right-case-id="${escapeHtml(right.case_id)}" style="${similarityCellStyle(score)}" title="${escapeHtml(title)}" aria-label="Inspect ${escapeHtml(title)}">${score.toFixed(2)}</button></td>`;
+        }).join("");
+        return `<tr><th class="matrix-row-label ${left.case_id === selectedId ? "selected" : ""}" scope="row" title="${escapeHtml(left.player_name)}">${escapeHtml(left.player_name)}</th>${cells}</tr>`;
+      }).join("");
+      container.innerHTML = `<table class="similarity-matrix"><thead><tr><th class="corner">Injury case</th>${header}</tr></thead><tbody>${rows}</tbody></table>`;
+      container.querySelectorAll("[data-left-case-id]").forEach(button => {
+        button.addEventListener("click", () => {
+          const left = nodeLookup.get(button.dataset.leftCaseId);
+          const right = nodeLookup.get(button.dataset.rightCaseId);
+          const edge = edgeLookup.get(pairKey(left.case_id, right.case_id));
+          const score = edgeScore(edge);
+          const support = edge.evidence_support?.[selectedLensId]?.label || "Unavailable";
+          const views = edge.selected_view_pair || {};
+          app.matrixPair = [left.case_id, right.case_id];
+          detail.hidden = false;
+          detail.innerHTML = `<strong>${escapeHtml(left.player_name)} ↔ ${escapeHtml(right.player_name)}</strong>` +
+            `<p>Similarity index ${score.toFixed(3)} under ${escapeHtml(selectedLens().label.toLowerCase())} · ${escapeHtml(support)} evidence · ${edge.shared_descriptor_count} shared measurements across ${edge.shared_family_count} movement areas.</p>` +
+            `<p>Best supported views: ${escapeHtml(views.source_view_label || "analysed view")} ↔ ${escapeHtml(views.target_view_label || "analysed view")}. Selected from ${Number(views.eligible_view_pair_count || 0)} eligible view pair${Number(views.eligible_view_pair_count || 0) === 1 ? "" : "s"}; views were not averaged.</p>` +
+            `<div class="matrix-pair-actions"><button type="button" data-matrix-select-case="${escapeHtml(left.case_id)}">Select ${escapeHtml(shortPlayerName(left.player_name))}</button><button type="button" data-matrix-select-case="${escapeHtml(right.case_id)}">Select ${escapeHtml(shortPlayerName(right.player_name))}</button></div>`;
+          detail.querySelectorAll("[data-matrix-select-case]").forEach(action => action.addEventListener("click", () => selectCase(action.dataset.matrixSelectCase)));
+        });
+      });
+      const comparable = [...edgeLookup.values()].filter(edge => edgeScore(edge) !== null).length;
+      const possible = nodes.length * (nodes.length - 1) / 2;
+      $("similarityMatrixSummary").textContent = `${comparable} of ${possible} unique injury-case pairs are responsibly comparable under ${selectedLens().label.toLowerCase()} and the selected measurement groups.`;
+      $("similarityMatrixRule").textContent = data.network.missing_edge_note || "Unavailable cells are not zero and do not mean that two movements are opposites.";
+    }
+    function renderSimilarityVisuals() {
+      renderSimilaritySpectrum();
+      renderSimilarityMatrix();
+    }
     function renderRankings() {
       const data = app.comparison;
       const lens = selectedLens();
@@ -733,6 +1104,7 @@ COMPARISON_HTML = r"""
         $("selectedPlayerMeta").textContent = "";
         $("rankingSummary").textContent = "Choose an injury case to see ranked results.";
         $("rankingList").innerHTML = '<div class="empty-state">No injury case selected.</div>';
+        renderSimilarityVisuals();
         return;
       }
       const selected = data.selected_case;
@@ -749,6 +1121,7 @@ COMPARISON_HTML = r"""
         : "No other case met the minimum shared-information requirements for this lens.";
       if (!matches.length) {
         $("rankingList").innerHTML = '<div class="empty-state">No responsible comparison is available for this injury case and lens.</div>';
+        renderSimilarityVisuals();
         return;
       }
       $("rankingList").innerHTML = matches.map(match => {
@@ -780,6 +1153,7 @@ COMPARISON_HTML = r"""
           `</details>` +
         `</article>`;
       }).join("");
+      renderSimilarityVisuals();
     }
     function syncComparisonUrl(caseId, historyMode = "replace") {
       const url = new URL(window.location.href);
@@ -814,7 +1188,8 @@ COMPARISON_HTML = r"""
         const response = await fetch(
           `/api/movement-comparison?case=${encodeURIComponent(caseId)}`
             + `&client_id=${encodeURIComponent(app.comparisonClientId)}`
-            + `&request_id=${encodeURIComponent(requestId)}`,
+            + `&request_id=${encodeURIComponent(requestId)}`
+            + measurementGroupQuery(),
           {signal: controller.signal},
         );
         if (!response.ok) throw new Error("Movement comparison could not be loaded.");
@@ -837,6 +1212,7 @@ COMPARISON_HTML = r"""
     }
     async function loadComparisonIndex() {
       if (app.indexAbortController) app.indexAbortController.abort();
+      if (app.comparisonAbortController) app.comparisonAbortController.abort();
       const controller = new AbortController();
       app.indexAbortController = controller;
       let timedOut = false;
@@ -845,10 +1221,15 @@ COMPARISON_HTML = r"""
         controller.abort();
       }, 20000);
       try {
-        const response = await fetch('/api/movement-comparison', {signal: controller.signal});
+        const response = await fetch(
+          '/api/movement-comparison' + measurementGroupQuery("?"),
+          {signal: controller.signal},
+        );
         if (!response.ok) throw new Error("Analysed players could not be loaded.");
         app.index = await response.json();
         app.comparison = null;
+        app.measurementGroups = [...(app.index.measurement_groups?.selected || app.measurementGroups)];
+        renderMeasurementGroupFilter();
         const summary = app.index.summary || {};
         $("poolSummary").textContent = `${summary.reference_pool_case_count || 0} eligible reference cases · ${summary.query_only_case_count || 0} query-only cases.`;
         const availableCaseIds = new Set((app.index.cases || []).map(item => item.case_id));

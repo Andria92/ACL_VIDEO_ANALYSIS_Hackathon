@@ -141,7 +141,7 @@ def _draw_dashed_line(
     distance = math.hypot(end[0] - start[0], end[1] - start[1])
     if distance == 0:
         return
-    segment_count = max(int(math.ceil(distance / dash_length)), 1)
+    segment_count = max(math.ceil(distance / dash_length), 1)
     for segment in range(0, segment_count, 2):
         start_fraction = segment / segment_count
         end_fraction = min((segment + 1) / segment_count, 1.0)

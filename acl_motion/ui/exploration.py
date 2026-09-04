@@ -2,31 +2,49 @@
 
 from __future__ import annotations
 
-from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.ui.app_shell import app_shell_css, app_site_header, apply_app_brand
 
 
-def render_exploration_page() -> str:
+def render_exploration_page(*, initial_view: str = "overview") -> str:
     """Return the evidence-gated statistical exploration workspace."""
 
-    return r"""
+    correlation_landing = initial_view == "correlations"
+    page_title = (
+        "Feature Correlations - ACL Movement Analytics Lab"
+        if correlation_landing
+        else "Explore Data - ACL Movement Analytics Lab"
+    )
+    page_heading = "Feature Correlations" if correlation_landing else "Explore Data"
+    page_lede = (
+        "Investigate positive and negative relationships between supported movement "
+        "measurements across the complete case library. This is a feature-by-feature "
+        "analysis, independent of movement-similarity rankings."
+        if correlation_landing
+        else "Case-level descriptive analytics with visible evidence coverage and statistical "
+        "safeguards. Case identity, injury status, and laterality come from supplied metadata, "
+        "not video inference."
+    )
+    section_label = "Feature Correlations" if correlation_landing else "Explore Data"
+
+    return apply_app_brand(r"""
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Explore Data - ACL Movement Analytics Lab</title>
+  <title>__PAGE_TITLE__</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f4f7f9;
+      --bg: #f5f8fa;
       --panel: #ffffff;
-      --ink: #1f2a33;
-      --muted: #617080;
-      --line: #d5dee7;
-      --accent: #215f9a;
-      --accent-soft: #e9f2fb;
-      --green: #18744a;
-      --green-soft: #e9f6ef;
+      --ink: #142334;
+      --muted: #586879;
+      --line: #d7e0e7;
+      --accent: #0F62FE;
+      --accent-soft: #eef5ff;
+      --green: #08766d;
+      --green-soft: #dffaf4;
       --amber: #8a6200;
       --amber-soft: #fff4cf;
       --red: #9a3040;
@@ -205,6 +223,94 @@ def render_exploration_page() -> str:
       font-weight: 850;
     }
     .chart-summary { margin: 10px 0 0; padding: 10px 12px; border-left: 3px solid var(--accent); background: #f7f9fb; }
+    .correlation-map-panel {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+    }
+    .correlation-map-wrap {
+      max-height: 760px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .correlation-map { width: max-content; min-width: 100%; border-collapse: separate; border-spacing: 0; }
+    .correlation-map th, .correlation-map td { padding: 0; border: 0; }
+    .correlation-map .correlation-corner {
+      position: sticky;
+      z-index: 5;
+      top: 0;
+      left: 0;
+      min-width: 205px;
+      padding: 9px 10px;
+      background: #f4f7fa;
+      text-align: left;
+    }
+    .correlation-column {
+      position: sticky;
+      z-index: 3;
+      top: 0;
+      width: 46px;
+      height: 158px;
+      background: #f4f7fa;
+      vertical-align: bottom;
+    }
+    .correlation-column span {
+      display: block;
+      width: 46px;
+      padding: 7px 5px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+    .correlation-row-label {
+      position: sticky;
+      z-index: 2;
+      left: 0;
+      width: 205px;
+      max-width: 205px;
+      padding: 8px 10px !important;
+      overflow: hidden;
+      background: #f7f9fb;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .correlation-column.selected, .correlation-row-label.selected { color: var(--accent); background: var(--accent-soft); }
+    .correlation-cell, .correlation-na, .correlation-diagonal {
+      width: 46px;
+      min-width: 46px;
+      height: 46px;
+      min-height: 46px;
+      padding: 0;
+      border: 1px solid rgba(255,255,255,.82);
+      border-radius: 0;
+      font-size: 10px;
+      font-weight: 850;
+    }
+    .correlation-cell:hover, .correlation-cell:focus-visible { position: relative; z-index: 1; outline: 3px solid #263746; outline-offset: -3px; }
+    .correlation-cell.selected-pair { box-shadow: inset 0 0 0 3px #263746; }
+    .correlation-na {
+      display: grid;
+      place-items: center;
+      color: #74818c;
+      background: repeating-linear-gradient(135deg, #eef1f4, #eef1f4 5px, #e0e5e9 5px, #e0e5e9 7px);
+    }
+    .correlation-diagonal { display: grid; place-items: center; color: #657381; background: #e8edf1; }
+    .correlation-legend { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin: 10px 0 0; color: var(--muted); font-size: 11px; }
+    .correlation-gradient { display: inline-block; flex: none; width: 190px; height: 13px; border-radius: 999px; background: linear-gradient(90deg, #2e6fa3, #fff 50%, #b04a70); box-shadow: inset 0 0 0 1px #cbd5dd; }
+    .correlation-na-key { display: inline-block; width: 20px; height: 13px; margin-right: 4px; vertical-align: -2px; background: repeating-linear-gradient(135deg, #eef1f4, #eef1f4 4px, #dce2e7 4px, #dce2e7 6px); }
+    .correlation-meaning-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin: 0 0 12px; }
+    .correlation-meaning { padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff; font-size: 12px; line-height: 1.4; }
+    .correlation-meaning strong { display: block; margin-bottom: 2px; }
+    .correlation-meaning.negative { border-left: 5px solid #2e6fa3; }
+    .correlation-meaning.weak { border-left: 5px solid #d7dee5; }
+    .correlation-meaning.positive { border-left: 5px solid #b04a70; }
+    .pair-drilldown { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); scroll-margin-top: 90px; }
+    .correlation-safeguard { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
     .chart-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
     .chart-grid h3 { margin: 2px 4px 8px; }
     .stats-grid {
@@ -298,6 +404,7 @@ def render_exploration_page() -> str:
       .source-card-head { flex-direction: column; }
       .source-badges { justify-content: flex-start; }
       .measurement-help-grid { grid-template-columns: 1fr; }
+      .correlation-meaning-grid { grid-template-columns: 1fr; }
       .chart-grid { grid-template-columns: 1fr; }
       .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       canvas { min-height: 240px; aspect-ratio: 1.5 / 1; }
@@ -305,12 +412,12 @@ def render_exploration_page() -> str:
     __APP_SHELL_CSS__
   </style>
 </head>
-<body>
+<body data-initial-view="__INITIAL_VIEW__">
   <a class="app-skip-link" href="#mainContent">Skip to data exploration</a>
   __APP_SITE_HEADER__
   <main id="mainContent" class="app-page-main" tabindex="-1">
-    <h1>Explore Data</h1>
-    <p class="lede">Case-level descriptive analytics with visible evidence coverage and statistical safeguards. Case identity, injury status, and laterality come from supplied metadata, not video inference.</p>
+    <h1>__PAGE_HEADING__</h1>
+    <p class="lede">__PAGE_LEDE__</p>
 
     <div class="summary-grid">
       <div class="summary-card"><span>Registered injury cases</span><strong id="caseCount">-</strong><small>Independent analysis units</small></div>
@@ -336,7 +443,7 @@ def render_exploration_page() -> str:
       <button class="tab" id="breakdownsTab" type="button" role="tab" aria-selected="false" aria-controls="breakdownsView" tabindex="-1" data-view="breakdownsView">Case breakdowns</button>
       <button class="tab" id="profilesTab" type="button" role="tab" aria-label="Height and weight" aria-selected="false" aria-controls="profilesView" tabindex="-1" data-view="profilesView">Body metrics</button>
       <button class="tab" id="distributionTab" type="button" role="tab" aria-selected="false" aria-controls="distributionView" tabindex="-1" data-view="distributionView">Compare cases</button>
-      <button class="tab" id="relationshipTab" type="button" role="tab" aria-label="Compare two measurements" aria-selected="false" aria-controls="relationshipView" tabindex="-1" data-view="relationshipView">Compare measurements</button>
+      <button class="tab" id="relationshipTab" type="button" role="tab" aria-label="Explore measurement correlations" aria-selected="false" aria-controls="relationshipView" tabindex="-1" data-view="relationshipView">Measurement correlations</button>
       <button class="tab" id="testBuilderTab" type="button" role="tab" aria-label="Can these groups be compared?" aria-selected="false" aria-controls="testBuilderView" tabindex="-1" data-view="testBuilderView">Group readiness</button>
     </nav>
 
@@ -496,27 +603,47 @@ def render_exploration_page() -> str:
 
     <section class="view" id="relationshipView" role="tabpanel" aria-labelledby="relationshipTab">
       <div class="band">
-        <h2>Compare Two Measurements</h2>
-        <p class="section-copy">See how two supported measurements appear together in the same injury cases. With a small library, inspect the named cases rather than infer a population relationship.</p>
+        <h2>Measurement Correlation Map</h2>
+        <p class="section-copy">Explore how supported measurements vary together across the complete analysed case library. Every paired value represents one independent injury event, never an extra replay, frame, or camera view.</p>
         <div class="controls">
+          <label><span>How to summarise each case</span><select id="correlationStatistic"></select></label>
+          <label><span>Measurement group</span><select id="correlationGroup"><option value="all">All measurement groups</option></select></label>
+          <label><span>Measurement order</span><select id="correlationOrder"><option value="anatomical">Group by movement area</option><option value="association">Place related measurements together</option></select></label>
+        </div>
+        <div class="correlation-meaning-grid" aria-label="How to read positive and negative correlations">
+          <div class="correlation-meaning negative"><strong>Negative correlation</strong>As one supported measurement increases across cases, the other tends to decrease.</div>
+          <div class="correlation-meaning weak"><strong>Weak or no monotonic correlation</strong>The two measurements show little consistent rank relationship in this case library.</div>
+          <div class="correlation-meaning positive"><strong>Positive correlation</strong>The two supported measurements tend to increase or decrease together across cases.</div>
+        </div>
+        <div class="correlation-map-panel">
+          <div class="correlation-map-wrap" id="correlationMap" role="region" aria-label="Measurement correlation matrix" tabindex="0"></div>
+          <div class="correlation-legend" aria-label="Correlation map colour legend"><span>−1</span><i class="correlation-gradient" aria-hidden="true"></i><span>+1</span><span><i class="correlation-na-key" aria-hidden="true"></i> Insufficient or unsuitable paired evidence</span></div>
+          <p class="chart-summary" id="correlationMapSummary">Loading the independent case-level measurement relationships.</p>
+          <p class="correlation-safeguard">This map reports descriptive Spearman rank correlation, not causation, injury risk, or a biomechanical mechanism. Missing and limited values are never replaced with zero. Some measurements are mathematically related, so strong cells must be interpreted alongside their definitions.</p>
+        </div>
+
+        <div class="pair-drilldown" id="relationshipDrilldown">
+          <h3>Inspect one measurement pair</h3>
+          <p class="section-copy">Choose a pair directly or select any available cell above to open its named-case scatter plot.</p>
+          <div class="controls" style="grid-template-columns:repeat(2,minmax(0,1fr))">
           <label><span>First measurement</span><select id="relationshipX"></select></label>
           <label><span>Second measurement</span><select id="relationshipY"></select></label>
-          <label><span>How to summarise each case</span><select id="relationshipStatistic"></select></label>
+          </div>
+          <div class="measurement-help-grid" id="relationshipFeatureHelp" aria-live="polite"></div>
+          <div class="chart-shell">
+            <canvas id="relationshipCanvas" role="img" aria-label="Two-measurement case comparison chart; values are also listed in the table below."></canvas>
+            <ol id="relationshipLegend" class="chart-legend" aria-label="Case labels for numbered chart points"></ol>
+          </div>
+          <p class="chart-summary" id="relationshipSummary"></p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Case</th><th id="relationshipXHeading">First measurement</th><th id="relationshipYHeading">Second measurement</th><th>Comparison status</th></tr></thead>
+            <tbody id="relationshipRows"></tbody>
+          </table></div>
+          <details class="technical-details">
+            <summary>Technical relationship details</summary>
+            <div id="relationshipTechnicalSummary"></div>
+          </details>
         </div>
-        <div class="measurement-help-grid" id="relationshipFeatureHelp" aria-live="polite"></div>
-        <div class="chart-shell">
-          <canvas id="relationshipCanvas" role="img" aria-label="Two-measurement case comparison chart; values are also listed in the table below."></canvas>
-          <ol id="relationshipLegend" class="chart-legend" aria-label="Case labels for numbered chart points"></ol>
-        </div>
-        <p class="chart-summary" id="relationshipSummary"></p>
-        <div class="table-wrap"><table>
-          <thead><tr><th>Case</th><th id="relationshipXHeading">First measurement</th><th id="relationshipYHeading">Second measurement</th><th>Comparison status</th></tr></thead>
-          <tbody id="relationshipRows"></tbody>
-        </table></div>
-        <details class="technical-details">
-          <summary>Technical relationship details</summary>
-          <div id="relationshipTechnicalSummary"></div>
-        </details>
       </div>
     </section>
 
@@ -895,9 +1022,14 @@ def render_exploration_page() -> str:
       ["distributionFeature", "relationshipX", "relationshipY", "testFeature"].forEach(id =>
         setSelectOptions($(id), features, "value", "label")
       );
-      ["distributionStatistic", "relationshipStatistic", "testStatistic"].forEach(id =>
+      ["distributionStatistic", "correlationStatistic", "testStatistic"].forEach(id =>
         setSelectOptions($(id), statistics, "value", "label")
       );
+      const measurementGroups = [...new Set(app.data.features.map(item => item.body_region || "other"))]
+        .sort((left, right) => String(left).localeCompare(String(right)));
+      $("correlationGroup").innerHTML = '<option value="all">All measurement groups</option>' + measurementGroups.map(group =>
+        `<option value="${escapeHtml(group)}">${escapeHtml(categoryLabel(group))}</option>`
+      ).join("");
       if (features.length > 1) $("relationshipY").selectedIndex = 1;
       renderMeasurementHelp();
     }
@@ -1386,11 +1518,145 @@ def render_exploration_page() -> str:
       return leftScale && rightScale ? numerator / (leftScale * rightScale) : null;
     }
 
+    const MINIMUM_CORRELATION_CASES = 5;
+
+    function wrapSensitiveMean(featureName, statistic) {
+      if (statistic !== "mean") return false;
+      const name = String(featureName || "").toLowerCase();
+      return name.includes("axis_angle_deg") || name.includes("line_angle_deg") ||
+        (name.includes("orientation") && name.includes("deg"));
+    }
+
+    function supportedValuesByFeature(statistic) {
+      const output = new Map(app.data.features.map(feature => [feature.feature_name, new Map()]));
+      app.data.records.forEach(record => {
+        if (!output.has(record.feature_name) || !valueAvailable(record[statistic]) || !statisticEligibility(record, statistic)) return;
+        const caseId = record.statistical_unit_id || record.case_id;
+        output.get(record.feature_name).set(caseId, Number(record[statistic]));
+      });
+      return output;
+    }
+
+    function measurementPairCorrelation(leftFeature, rightFeature, statistic, valuesByFeature) {
+      const leftValues = valuesByFeature.get(leftFeature) || new Map();
+      const rightValues = valuesByFeature.get(rightFeature) || new Map();
+      const sharedCaseIds = [...leftValues.keys()].filter(caseId => rightValues.has(caseId));
+      if (leftFeature === rightFeature) return {rho: 1, n: sharedCaseIds.length, reason: "same_measurement"};
+      if (wrapSensitiveMean(leftFeature, statistic) || wrapSensitiveMean(rightFeature, statistic)) {
+        return {rho: null, n: sharedCaseIds.length, reason: "circular_method_required"};
+      }
+      if (sharedCaseIds.length < MINIMUM_CORRELATION_CASES) {
+        return {rho: null, n: sharedCaseIds.length, reason: "insufficient_paired_cases"};
+      }
+      const left = sharedCaseIds.map(caseId => leftValues.get(caseId));
+      const right = sharedCaseIds.map(caseId => rightValues.get(caseId));
+      const rho = correlation(ranks(left), ranks(right));
+      return {rho, n: sharedCaseIds.length, reason: rho === null ? "constant_values" : "available"};
+    }
+
+    function correlationCellStyle(rho) {
+      const strength = Math.abs(Number(rho));
+      const target = rho < 0 ? [46, 111, 163] : [176, 74, 112];
+      const blend = 0.12 + strength * 0.78;
+      const colour = target.map(channel => Math.round(255 + (channel - 255) * blend));
+      const text = strength >= 0.58 ? "#fff" : "#263746";
+      return `background:rgb(${colour.join(",")});color:${text}`;
+    }
+
+    function correlationPairKey(leftFeature, rightFeature) {
+      return [leftFeature, rightFeature].sort().join("||");
+    }
+
+    function associationOrderedFeatures(features, pairLookup) {
+      if (features.length < 3) return features;
+      const scoreFor = feature => features.reduce((sum, other) => {
+        if (other.feature_name === feature.feature_name) return sum;
+        const pair = pairLookup.get(correlationPairKey(feature.feature_name, other.feature_name));
+        return sum + (pair?.rho === null || pair?.rho === undefined ? 0 : Math.abs(pair.rho));
+      }, 0);
+      const remaining = [...features];
+      remaining.sort((left, right) => scoreFor(right) - scoreFor(left) || left.label.localeCompare(right.label));
+      const ordered = [remaining.shift()];
+      while (remaining.length) {
+        const previous = ordered.at(-1);
+        remaining.sort((left, right) => {
+          const leftPair = pairLookup.get(correlationPairKey(previous.feature_name, left.feature_name));
+          const rightPair = pairLookup.get(correlationPairKey(previous.feature_name, right.feature_name));
+          const leftScore = leftPair?.rho === null || leftPair?.rho === undefined ? -1 : Math.abs(leftPair.rho);
+          const rightScore = rightPair?.rho === null || rightPair?.rho === undefined ? -1 : Math.abs(rightPair.rho);
+          return rightScore - leftScore || left.label.localeCompare(right.label);
+        });
+        ordered.push(remaining.shift());
+      }
+      return ordered;
+    }
+
+    function renderCorrelationMap() {
+      if (!app.data?.features?.length) return;
+      const statistic = $("correlationStatistic").value;
+      const selectedGroup = $("correlationGroup").value;
+      const valuesByFeature = supportedValuesByFeature(statistic);
+      let features = app.data.features.filter(feature => selectedGroup === "all" || feature.body_region === selectedGroup);
+      features = [...features].sort((left, right) =>
+        String(left.body_region).localeCompare(String(right.body_region)) || left.label.localeCompare(right.label)
+      );
+      const pairLookup = new Map();
+      features.forEach((left, leftIndex) => features.slice(leftIndex).forEach(right => {
+        pairLookup.set(
+          correlationPairKey(left.feature_name, right.feature_name),
+          measurementPairCorrelation(left.feature_name, right.feature_name, statistic, valuesByFeature),
+        );
+      }));
+      if ($("correlationOrder").value === "association") features = associationOrderedFeatures(features, pairLookup);
+      const selectedX = $("relationshipX").value;
+      const selectedY = $("relationshipY").value;
+      const header = features.map(feature => `<th class="correlation-column ${[selectedX, selectedY].includes(feature.feature_name) ? "selected" : ""}" scope="col" title="${escapeHtml(feature.label)}"><span>${escapeHtml(feature.label)}</span></th>`).join("");
+      let availablePairCount = 0;
+      let circularPairCount = 0;
+      const rows = features.map(left => {
+        const cells = features.map(right => {
+          const pair = pairLookup.get(correlationPairKey(left.feature_name, right.feature_name));
+          if (left.feature_name === right.feature_name) return `<td><span class="correlation-diagonal" title="${escapeHtml(left.label)}; ${pair.n} supported independent cases">—</span></td>`;
+          if (pair.reason === "circular_method_required") circularPairCount += 0.5;
+          if (pair.rho === null) {
+            const reason = pair.reason === "circular_method_required"
+              ? `Withheld: ${left.label} and ${right.label} include a directional angle mean that requires a circular-aware method. Paired cases: ${pair.n}.`
+              : pair.reason === "constant_values"
+                ? `Unavailable: one measurement is constant across the ${pair.n} paired cases.`
+                : `Insufficient evidence: ${pair.n} paired independent cases; at least ${MINIMUM_CORRELATION_CASES} are required.`;
+            return `<td><span class="correlation-na" title="${escapeHtml(reason)}">–</span></td>`;
+          }
+          availablePairCount += 0.5;
+          const selectedPair = [left.feature_name, right.feature_name].includes(selectedX) && [left.feature_name, right.feature_name].includes(selectedY) ? "selected-pair" : "";
+          const title = `${left.label} and ${right.label}: Spearman rho ${pair.rho.toFixed(2)} across ${pair.n} independent injury cases. Select to inspect the named cases.`;
+          return `<td><button class="correlation-cell ${selectedPair}" type="button" data-correlation-x="${escapeHtml(left.feature_name)}" data-correlation-y="${escapeHtml(right.feature_name)}" style="${correlationCellStyle(pair.rho)}" title="${escapeHtml(title)}" aria-label="${escapeHtml(title)}">${pair.rho.toFixed(2)}</button></td>`;
+        }).join("");
+        const selected = [selectedX, selectedY].includes(left.feature_name) ? "selected" : "";
+        return `<tr><th class="correlation-row-label ${selected}" scope="row" title="${escapeHtml(left.label)}">${escapeHtml(left.label)}</th>${cells}</tr>`;
+      }).join("");
+      $("correlationMap").innerHTML = features.length
+        ? `<table class="correlation-map"><thead><tr><th class="correlation-corner">Measurement</th>${header}</tr></thead><tbody>${rows}</tbody></table>`
+        : '<div class="empty">No measurements are available in this group.</div>';
+      $("correlationMap").querySelectorAll("[data-correlation-x]").forEach(button => {
+        button.addEventListener("click", () => {
+          $("relationshipX").value = button.dataset.correlationX;
+          $("relationshipY").value = button.dataset.correlationY;
+          renderMeasurementHelp();
+          renderCorrelationMap();
+          renderRelationship();
+          $("relationshipDrilldown").scrollIntoView({behavior: "smooth", block: "start"});
+        });
+      });
+      const possiblePairCount = features.length * (features.length - 1) / 2;
+      const groupText = selectedGroup === "all" ? "all measurement groups" : categoryLabel(selectedGroup).toLowerCase();
+      $("correlationMapSummary").textContent = `${Math.round(availablePairCount)} of ${possiblePairCount} unique measurement pairs in ${groupText} meet the evidence rules for descriptive Spearman correlation. Each cell reports a coefficient from mutually supported independent injury cases; hover or focus it to see paired N. ${Math.round(circularPairCount)} directional-angle pairs are withheld pending a circular-aware method.`;
+    }
+
     function renderRelationship() {
       if (!app.data.features.length) return;
       const xFeature = $("relationshipX").value;
       const yFeature = $("relationshipY").value;
-      const statistic = $("relationshipStatistic").value;
+      const statistic = $("correlationStatistic").value;
       const unitId = record => record.statistical_unit_id || record.case_id;
       const rawXRecords = new Map(app.data.records.filter(record => record.feature_name === xFeature).map(record => [unitId(record), record]));
       const rawYRecords = new Map(app.data.records.filter(record => record.feature_name === yFeature).map(record => [unitId(record), record]));
@@ -1441,9 +1707,16 @@ def render_exploration_page() -> str:
         )).join("");
         canvas.setAttribute("aria-label", `Two-measurement comparison with ${points.length} numbered case points. The numbered legend and table identify every player.`);
         $("relationshipSummary").textContent = `${points.length} of ${app.data.events.length} independent cases support both measurements. Inspect the named cases; this small case library does not establish a population relationship, causation, or ACL risk.`;
-        const rho = correlation(ranks(points.map(point => point.x)), ranks(points.map(point => point.y)));
-        const rhoText = rho === null ? "undefined for constant values" : rho.toFixed(2);
-        $("relationshipTechnicalSummary").textContent = `Descriptive Spearman rho: ${rhoText}; paired independent cases: ${points.length}. This is exploratory association, not causation, ACL risk, or confirmatory significance.`;
+        const circularMethodRequired = wrapSensitiveMean(xFeature, statistic) || wrapSensitiveMean(yFeature, statistic);
+        if (circularMethodRequired) {
+          $("relationshipTechnicalSummary").textContent = `Paired independent cases: ${points.length}. An ordinary rank coefficient is withheld because at least one directional-angle mean requires a circular-aware method. The named points remain visible for evidence inspection.`;
+        } else if (points.length < MINIMUM_CORRELATION_CASES) {
+          $("relationshipTechnicalSummary").textContent = `Paired independent cases: ${points.length}. At least ${MINIMUM_CORRELATION_CASES} mutually supported injury cases are required before the descriptive Spearman coefficient is shown.`;
+        } else {
+          const rho = correlation(ranks(points.map(point => point.x)), ranks(points.map(point => point.y)));
+          const rhoText = rho === null ? "undefined for constant values" : rho.toFixed(2);
+          $("relationshipTechnicalSummary").textContent = `Descriptive Spearman rho: ${rhoText}; paired independent cases: ${points.length}. This is exploratory association, not causation, ACL risk, or confirmatory significance.`;
+        }
       }
       $("relationshipXHeading").textContent = featureLabel(xFeature);
       $("relationshipYHeading").textContent = featureLabel(yFeature);
@@ -1523,7 +1796,10 @@ def render_exploration_page() -> str:
       if ($("breakdownsView").classList.contains("active")) renderBreakdowns();
       if ($("profilesView").classList.contains("active")) renderProfiles();
       if ($("distributionView").classList.contains("active")) renderDistribution();
-      if ($("relationshipView").classList.contains("active")) renderRelationship();
+      if ($("relationshipView").classList.contains("active")) {
+        renderCorrelationMap();
+        renderRelationship();
+      }
     }
 
     function activateTab(button) {
@@ -1555,7 +1831,9 @@ def render_exploration_page() -> str:
 
     ["distributionFeature", "distributionStatistic"].forEach(id => $(id).addEventListener("change", () => { renderMeasurementHelp(); renderDistribution(); }));
     $("breakdownVariable").addEventListener("change", renderBreakdowns);
-    ["relationshipX", "relationshipY", "relationshipStatistic"].forEach(id => $(id).addEventListener("change", () => { renderMeasurementHelp(); renderRelationship(); }));
+    ["relationshipX", "relationshipY"].forEach(id => $(id).addEventListener("change", () => { renderMeasurementHelp(); renderCorrelationMap(); renderRelationship(); }));
+    $("correlationStatistic").addEventListener("change", () => { renderCorrelationMap(); renderRelationship(); });
+    ["correlationGroup", "correlationOrder"].forEach(id => $(id).addEventListener("change", renderCorrelationMap));
     $("testFeature").addEventListener("change", renderMeasurementHelp);
     $("sourceSearch").addEventListener("input", renderSources);
     ["sourceMechanismFilter", "sourceEvidenceFilter"].forEach(id => $(id).addEventListener("change", renderSources));
@@ -1588,7 +1866,9 @@ def render_exploration_page() -> str:
         renderBreakdowns();
         renderProfiles();
         redrawActiveCharts();
-        if (window.location.hash === "#sources") activateTab($("sourcesTab"));
+        const requestedView = document.body.dataset.initialView;
+        if (requestedView === "correlations" || window.location.hash === "#correlations") activateTab($("relationshipTab"));
+        else if (window.location.hash === "#sources") activateTab($("sourcesTab"));
       } catch (error) {
         if (controller !== exploreLoadController) return;
         const message = timedOut
@@ -1604,10 +1884,23 @@ def render_exploration_page() -> str:
       }
     }
 
+    if (document.body.dataset.initialView === "correlations" || window.location.hash === "#correlations") activateTab($("relationshipTab"));
+    else if (window.location.hash === "#sources") activateTab($("sourcesTab"));
     loadExploreData();
   </script>
 </body>
 </html>
 """.replace("__APP_SHELL_CSS__", app_shell_css()).replace(
-        "__APP_SITE_HEADER__", app_site_header("Explore Data")
+        "__APP_SITE_HEADER__", app_site_header(section_label)
+    ).replace("__PAGE_TITLE__", page_title).replace(
+        "__PAGE_HEADING__", page_heading
+    ).replace("__PAGE_LEDE__", page_lede).replace(
+        "__INITIAL_VIEW__", "correlations" if correlation_landing else "overview"
     )
+    )
+
+
+def render_feature_correlations_page() -> str:
+    """Return the feature-correlation submenu landing directly on the heatmap."""
+
+    return render_exploration_page(initial_view="correlations")

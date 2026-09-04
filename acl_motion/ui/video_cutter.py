@@ -20,7 +20,12 @@ from acl_motion.annotations.case_intake import injury_case_options, register_ana
 from acl_motion.annotations.registry import analysis_annotation_cases
 from acl_motion.annotations.research_metadata import RESEARCH_METADATA_FILENAME, case_details
 from acl_motion.runtime import ensure_supported_runtime
-from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.ui.app_shell import (
+    app_shell_css,
+    app_site_header,
+    apply_app_brand,
+    brand_asset_path,
+)
 from acl_motion.video.context import (
     CONTEXT_CLIP_ROLE,
     CONTEXT_CLIPS_FILENAME,
@@ -117,7 +122,10 @@ def make_handler(state: VideoCutterState):
         def do_GET(self) -> None:
             parsed = urlparse(self.path)
             try:
-                if parsed.path == "/":
+                asset_path = brand_asset_path(parsed.path)
+                if asset_path is not None:
+                    self._send_file(asset_path)
+                elif parsed.path == "/":
                     self._send_html(
                         render_video_cutter_page(main_menu_url=state.main_menu_url)
                     )
@@ -147,7 +155,10 @@ def make_handler(state: VideoCutterState):
         def do_HEAD(self) -> None:
             parsed = urlparse(self.path)
             try:
-                if parsed.path == "/":
+                asset_path = brand_asset_path(parsed.path)
+                if asset_path is not None:
+                    self._send_file(asset_path, send_body=False)
+                elif parsed.path == "/":
                     self._send_html(
                         render_video_cutter_page(main_menu_url=state.main_menu_url),
                         send_body=False,
@@ -938,7 +949,7 @@ def render_video_cutter_page(
 ) -> str:
     """Return the self-contained video cutter UI page."""
 
-    return r"""
+    return apply_app_brand(r"""
 <!doctype html>
 <html lang="en">
 <head>
@@ -948,13 +959,13 @@ def render_video_cutter_page(
   <style>
     :root {
       color-scheme: light;
-      --bg: #f3f5f7;
+      --bg: #f5f8fa;
       --panel: #ffffff;
-      --ink: #17212f;
-      --muted: #647084;
-      --line: #d4dbe4;
-      --blue: #1d5fa7;
-      --green: #177245;
+      --ink: #142334;
+      --muted: #586879;
+      --line: #d7e0e7;
+      --blue: #0F62FE;
+      --green: #08766d;
       --red: #b42335;
       --amber: #a86700;
       --shadow: 0 12px 30px rgba(23, 33, 47, 0.08);
@@ -2527,4 +2538,5 @@ Promise.all([loadVideos(), loadContextCases()]).catch(error => setStatus(error.m
     ).replace("__APP_SHELL_CSS__", app_shell_css()).replace(
         "__APP_SITE_HEADER__",
         app_site_header("Video Cutter", home_url=main_menu_url),
+    )
     )

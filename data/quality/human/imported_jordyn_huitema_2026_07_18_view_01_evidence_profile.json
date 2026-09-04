@@ -1,0 +1,55 @@
+{
+  "case_id": "imported_jordyn_huitema_2026_07_18_acl_candidate",
+  "source_id": "imported_jordyn_huitema_2026_07_18_view_01",
+  "view_id": "imported_jordyn_huitema_2026_07_18_view_01",
+  "target_annotation_method": "human_movement_window_compatibility",
+  "manual_roi_keyframe_count": 23,
+  "target_tracking_coverage": 0.4,
+  "pose_frame_coverage": 0.7158,
+  "upper_body_landmark_coverage": 0.407,
+  "core_landmark_coverage": 0.40525,
+  "lower_limb_landmark_coverage": 0.39999999999999997,
+  "geometry_feature_coverage": 0.4011695906432749,
+  "dynamic_feature_coverage": 0.6303231369020843,
+  "interpolation_fraction": 0.0155,
+  "rejected_fraction": 0.6099,
+  "identity_uncertainty_fraction": 0.18947368421052632,
+  "target_loss_fraction": 0.28421052631578947,
+  "supported_feature_count": 0,
+  "limited_feature_count": 36,
+  "unavailable_feature_count": 0,
+  "analytics_ready_feature_count": 0,
+  "primary_evidence_limitations": [
+    "target loss intervals",
+    "target identity uncertainty",
+    "low pose confidence intervals",
+    "Feature value is unavailable.",
+    "Feature is not configured for dynamic analysis.",
+    "Frame status is TARGET_NOT_FOUND."
+  ],
+  "evidence_overview": {
+    "supported_features": 0,
+    "limited_features": 36,
+    "unavailable_features": 0,
+    "geometry_coverage": 0.4011695906432749,
+    "dynamic_coverage": 0.6303231369020843,
+    "event_anchor_confidence": 0.6,
+    "primary_limitations": [
+      "target loss intervals",
+      "target identity uncertainty",
+      "low pose confidence intervals",
+      "Feature value is unavailable.",
+      "Feature is not configured for dynamic analysis.",
+      "Frame status is TARGET_NOT_FOUND."
+    ],
+    "human_target_verified": true,
+    "manual_roi_corrections": 23,
+    "overall_quality_label": "LIMITED EVIDENCE",
+    "component_breakdown": {
+      "supported_fraction": 0.0,
+      "limited_fraction": 1.0,
+      "geometry_coverage": 0.4011695906432749,
+      "dynamic_coverage": 0.6303231369020843
+    }
+  }
+}

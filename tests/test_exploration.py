@@ -12,6 +12,9 @@ from acl_motion.analytics.exploration import (
     load_exploration_payload,
     load_exploration_summary_payload,
 )
+from acl_motion.annotations.injury_mechanism_review import (
+    save_injury_mechanism_review,
+)
 from acl_motion.annotations.models import AnnotationCase
 from acl_motion.annotations.research_metadata import (
     case_details,
@@ -27,6 +30,11 @@ def test_explorer_keeps_charts_readable_and_technical_ids_progressive() -> None:
 
     assert 'id="distributionCanvas" class="tall-chart"' in html
     assert 'id="relationshipLegend"' in html
+    assert 'id="correlationMap"' in html
+    assert "function renderCorrelationMap()" in html
+    assert "supportedValuesByFeature" in html
+    assert "Missing and limited values are never replaced with zero." in html
+    assert "circular-aware method" in html
     assert "context.fillText(record.player_name" in html
     assert "context.fillText(shortCaseLabel(record.player_name)" not in html
     assert "function evidenceReasonLabel(value)" in html
@@ -212,6 +220,54 @@ def test_exploration_preserves_human_contact_metadata(tmp_path: Path) -> None:
     assert payload["readiness"]["contact_group_comparison"]["eligible"] is False
 
 
+def test_confirmed_analysis_review_updates_contact_grouping(tmp_path: Path) -> None:
+    summary_dir = tmp_path / "summaries"
+    summary_dir.mkdir()
+    metadata_path = tmp_path / "research.json"
+    metadata_path.write_text(
+        json.dumps(
+            {
+                "cases": {
+                    "case_a": {
+                        "contact_mechanism": "direct_contact",
+                        "contact_mechanism_source": "earlier_research",
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    case = _case("case_a_view_1", "case_a", "source_a_1", "Player A", primary=True)
+    _write_summary(
+        summary_dir / "a1_case_feature_summary.parquet",
+        case_id="case_a",
+        source_id="source_a_1",
+        geometry_completeness=0.80,
+        geometry_eligible=True,
+        mean=135.0,
+    )
+    save_injury_mechanism_review(
+        case,
+        decision="non_contact",
+        reviewer_id="researcher_01",
+        data_root=tmp_path,
+    )
+
+    payload = load_exploration_payload(
+        (case,),
+        summary_dir=summary_dir,
+        research_metadata_path=metadata_path,
+        signature_dir=tmp_path / "signatures",
+        data_root=tmp_path,
+    )
+
+    event = payload["events"][0]
+    assert event["contact_mechanism"] == "non_contact"
+    assert event["contact_mechanism_source"] == "human_operator_analysis_review"
+    assert event["previous_contact_mechanism"] == "direct_contact"
+    assert event["injury_mechanism_review_status"] == "REVIEWED"
+
+
 def test_current_player_profile_metadata_keeps_missing_biometrics_nullable() -> None:
     root = Path(__file__).resolve().parents[1]
     metadata = json.loads(
@@ -223,7 +279,7 @@ def test_current_player_profile_metadata_keeps_missing_biometrics_nullable() -> 
         details["player_name"]: details for details in metadata["cases"].values()
     }
 
-    assert len(by_player) == 36
+    assert len(by_player) == 38
     assert sum(row["height_cm"] is not None for row in by_player.values()) == 35
     assert sum(row["weight_kg"] is not None for row in by_player.values()) == 32
     assert by_player["Kirsten van de Westeringh"]["height_cm"] is None
@@ -311,8 +367,13 @@ def test_phase_support_marks_reference_pool_eligibility(tmp_path: Path) -> None:
     cases = (
         _case("case_a_view_1", "case_a", "source_a_1", "Player A", primary=True),
         _case("case_b_view_1", "case_b", "source_b_1", "Player B", primary=True),
+        _case("case_c_view_1", "case_c", "source_c_1", "Player C", primary=True),
     )
-    for case_id, source_id in (("case_a", "source_a_1"), ("case_b", "source_b_1")):
+    for case_id, source_id in (
+        ("case_a", "source_a_1"),
+        ("case_b", "source_b_1"),
+        ("case_c", "source_c_1"),
+    ):
         _write_summary(
             summary_dir / f"{case_id}_case_feature_summary.parquet",
             case_id=case_id,
@@ -324,6 +385,7 @@ def test_phase_support_marks_reference_pool_eligibility(tmp_path: Path) -> None:
     for source_id, status in (
         ("source_a_1", "SUPPORTED"),
         ("source_b_1", "INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION"),
+        ("source_c_1", "SUPPORTED_EVIDENCE_INTERVAL"),
     ):
         (semantics_dir / f"{source_id}_observable_movement_descriptions.json").write_text(
             json.dumps({"metadata": {"source_id": source_id, "phase_status": status}}),
@@ -340,6 +402,9 @@ def test_phase_support_marks_reference_pool_eligibility(tmp_path: Path) -> None:
 
     assert events["case_a"]["reference_pool_eligible"] is True
     assert events["case_b"]["reference_pool_eligible"] is False
+    assert events["case_c"]["event_covered_view_count"] == 1
+    assert events["case_c"]["complete_event_covered_view_count"] == 0
+    assert events["case_c"]["reference_pool_eligible"] is False
     assert events["case_b"]["reference_pool_reason"] == (
         "Not eligible as a reference because no completed phase-supported, event-covered "
         "view is available. The case may still be compared as a query when enough "
@@ -348,10 +413,12 @@ def test_phase_support_marks_reference_pool_eligibility(tmp_path: Path) -> None:
     assert {row["case_id"] for row in payload["similarity_records"]} == {
         "case_a",
         "case_b",
+        "case_c",
     }
     assert {row["case_id"] for row in payload["similarity_view_records"]} == {
         "case_a",
         "case_b",
+        "case_c",
     }
     assert payload["summary"]["phase_supported_case_count"] == 1
 

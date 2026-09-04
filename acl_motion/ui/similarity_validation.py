@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.ui.app_shell import app_shell_css, app_site_header, apply_app_brand
 
 
 def render_similarity_validation_page() -> str:
     """Return the algorithm-blinded pairwise expert review page."""
 
-    return (
+    return apply_app_brand(
         VALIDATION_HTML.replace("__APP_SHELL_CSS__", app_shell_css())
         .replace("__APP_SITE_HEADER__", app_site_header("Similarity Validation"))
     )
@@ -22,7 +22,7 @@ VALIDATION_HTML = r"""
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Similarity Validation - ACL Movement Analytics Lab</title>
   <style>
-    :root { --bg:#f4f7f9; --panel:#fff; --ink:#1f2a33; --muted:#617080; --line:#d5dee7; --accent:#215f9a; --accent-soft:#e9f2fb; --green:#18744a; }
+    :root { --bg:#f5f8fa; --panel:#fff; --ink:#142334; --muted:#586879; --line:#d7e0e7; --accent:#0F62FE; --accent-soft:#eef5ff; --green:#08766d; }
     * { box-sizing: border-box; }
     body { margin:0; background:var(--bg); color:var(--ink); font-family:Inter,ui-sans-serif,system-ui,sans-serif; }
     main { width:min(1280px,calc(100% - 28px)); margin:0 auto; padding:28px 0 48px; }

@@ -1,0 +1,37 @@
+feature_name,supported_frames,relevant_frames,completeness,unsupported_frames,primary_rejection_reason
+contralateral_elbow_angle_2d_deg,107,134,0.7985074626865671,27,Frame status is TARGET_IDENTITY_UNCERTAIN.
+contralateral_hka_angle_2d_deg,112,134,0.835820895522388,22,Frame status is TARGET_IDENTITY_UNCERTAIN.
+elbow_projected_bilateral_absolute_difference_deg,107,134,0.7985074626865671,27,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+elbow_projected_bilateral_difference_deg,107,134,0.7985074626865671,27,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+hka_projected_bilateral_absolute_difference_deg,109,134,0.8134328358208955,25,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+hka_projected_bilateral_difference_deg,109,134,0.8134328358208955,25,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+injured_elbow_angle_2d_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+injured_hka_angle_2d_deg,110,134,0.8208955223880597,24,Frame status is TARGET_IDENTITY_UNCERTAIN.
+knee_line_deviation_bilateral_absolute_difference,109,134,0.8134328358208955,25,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+knee_line_deviation_bilateral_difference,109,134,0.8134328358208955,25,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+knee_line_deviation_normalized_bilateral_absolute_difference,109,134,0.8134328358208955,25,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+knee_line_deviation_normalized_bilateral_difference,109,134,0.8134328358208955,25,Frame status is TARGET_IDENTITY_UNCERTAIN. | Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_elbow_angle_2d_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_hka_angle_2d_deg,110,134,0.8208955223880597,24,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_knee_ankle_distance_normalized,110,134,0.8208955223880597,24,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_knee_ankle_x_offset_normalized,110,134,0.8208955223880597,24,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_knee_line_deviation_2d,110,134,0.8208955223880597,24,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_knee_line_deviation_normalized,110,134,0.8208955223880597,24,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_upper_arm_orientation_2d_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_wrist_pelvis_distance_normalized,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+left_wrist_pelvis_x_offset_normalized,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_hip_line_angle_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_line_angle_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_pelvis_orientation_difference_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_pelvis_x_offset_normalized,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_shoulder_pelvis_x_offset_px,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+projected_trunk_axis_angle_deg,114,134,0.8507462686567164,20,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_elbow_angle_2d_deg,107,134,0.7985074626865671,27,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_hka_angle_2d_deg,112,134,0.835820895522388,22,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_knee_ankle_distance_normalized,112,134,0.835820895522388,22,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_knee_ankle_x_offset_normalized,112,134,0.835820895522388,22,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_knee_line_deviation_2d,112,134,0.835820895522388,22,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_knee_line_deviation_normalized,112,134,0.835820895522388,22,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_upper_arm_orientation_2d_deg,108,134,0.8059701492537313,26,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_wrist_pelvis_distance_normalized,107,134,0.7985074626865671,27,Frame status is TARGET_IDENTITY_UNCERTAIN.
+right_wrist_pelvis_x_offset_normalized,107,134,0.7985074626865671,27,Frame status is TARGET_IDENTITY_UNCERTAIN.

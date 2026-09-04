@@ -1,0 +1,194 @@
+{
+  "provenance": {
+    "annotation_session_id": "fb442bb3-d78c-4a2a-99d8-fef13f0e44de",
+    "annotator_type": "HUMAN",
+    "annotator_id": "researcher_01",
+    "created_at": "2026-09-01T14:04:39.033868+00:00",
+    "updated_at": "2026-09-01T14:06:37.033096+00:00",
+    "case_id": "imported_jun_endo_2026_07_11_acl_candidate",
+    "source_id": "imported_jun_endo_2026_07_11_view_01",
+    "view_id": "imported_jun_endo_2026_07_11_view_01",
+    "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - San Diego Wave FC vs. Angel City FC - Replay _980808__40m48s611_40m52s111.mp4",
+    "ui_tool_version": "m5_5_annotation_ui_v1"
+  },
+  "manual_roi_keyframe_count": 11,
+  "roi_keyframes": [
+    {
+      "frame_index": 0,
+      "bbox": {
+        "x": 1080.7142857142858,
+        "y": 420.0,
+        "width": 187.1428571428571,
+        "height": 270.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 5,
+      "bbox": {
+        "x": 1027.857142857143,
+        "y": 405.7142857142857,
+        "width": 217.1428571428571,
+        "height": 287.14285714285717
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 9,
+      "bbox": {
+        "x": 963.5714285714286,
+        "y": 400.0,
+        "width": 224.28571428571433,
+        "height": 278.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 14,
+      "bbox": {
+        "x": 930.7142857142857,
+        "y": 415.7142857142857,
+        "width": 217.14285714285722,
+        "height": 248.5714285714286
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 18,
+      "bbox": {
+        "x": 906.4285714285714,
+        "y": 411.42857142857144,
+        "width": 164.28571428571433,
+        "height": 242.8571428571429
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 25,
+      "bbox": {
+        "x": 860.7142857142857,
+        "y": 371.42857142857144,
+        "width": 155.71428571428578,
+        "height": 268.57142857142856
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 43,
+      "bbox": {
+        "x": 843.5714285714286,
+        "y": 371.42857142857144,
+        "width": 157.1428571428571,
+        "height": 235.71428571428567
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 56,
+      "bbox": {
+        "x": 783.5714285714286,
+        "y": 321.42857142857144,
+        "width": 164.28571428571433,
+        "height": 230.0
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 62,
+      "bbox": {
+        "x": 785.0,
+        "y": 295.7142857142857,
+        "width": 144.28571428571433,
+        "height": 279.99999999999994
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 68,
+      "bbox": {
+        "x": 713.5714285714286,
+        "y": 300.0,
+        "width": 174.28571428571433,
+        "height": 151.42857142857144
+      },
+      "flags": [],
+      "note": ""
+    },
+    {
+      "frame_index": 76,
+      "bbox": {
+        "x": 669.2857142857143,
+        "y": 271.42857142857144,
+        "width": 231.42857142857133,
+        "height": 157.1428571428571
+      },
+      "flags": [],
+      "note": ""
+    }
+  ],
+  "manual_target_unavailable_frame_count": 0,
+  "target_unavailable_intervals": [],
+  "manual_target_accepted_frame_count": 27,
+  "target_accepted_intervals": [
+    {
+      "start_frame": 27,
+      "end_frame": 42,
+      "frame_count": 16,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    },
+    {
+      "start_frame": 55,
+      "end_frame": 65,
+      "frame_count": 11,
+      "decision": "ACCEPTED",
+      "note": "",
+      "annotation_source": "human_ui_pose_review"
+    }
+  ],
+  "movement_window": {
+    "movement_start_frame": 0,
+    "movement_start_timestamp_ms": 0.0,
+    "movement_end_frame": 76,
+    "movement_end_timestamp_ms": 2533.333333333333,
+    "movement_duration_ms": 2533.333333333333,
+    "confidence": "moderate",
+    "rationale": "",
+    "source": "human_ui_movement_window",
+    "terminology_note": "Movement End is the visible end of the selected movement sequence, not an ACL rupture or injury instant."
+  },
+  "event_annotation": {
+    "case_id": "imported_jun_endo_2026_07_11_acl_candidate",
+    "source_id": "imported_jun_endo_2026_07_11_view_01",
+    "view_id": "imported_jun_endo_2026_07_11_view_01",
+    "analysis_start_frame": 0,
+    "analysis_end_frame": 76,
+    "initial_contact_frame": null,
+    "critical_plant_frame": null,
+    "estimated_event_start_frame": null,
+    "estimated_event_end_frame": 76,
+    "event_anchor_frame": 76,
+    "event_anchor_type": "estimated_event_end",
+    "collapse_frame": null,
+    "annotation_confidence": 0.6,
+    "annotation_method": "human_movement_window_compatibility",
+    "annotator": "researcher_01",
+    "notes": "Compatibility timing anchor for computation only: 0 ms is Movement End, not an ACL rupture, injury frame, critical plant, or biomechanical event."
+  },
+  "event_confidence_label": "moderate",
+  "injured_side": "right",
+  "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+  "operator_flags": [],
+  "notes": "",
+  "finalized": true
+}

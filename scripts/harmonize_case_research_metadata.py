@@ -15,7 +15,6 @@ from pathlib import Path
 
 from acl_motion.persistence import atomic_write_json
 
-
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 METADATA_PATH = PROJECT_ROOT / "data/annotations/human/case_research_metadata_human.json"
 HARMONIZATION_SOURCE = "project_taxonomy_harmonization:2026-08-31"

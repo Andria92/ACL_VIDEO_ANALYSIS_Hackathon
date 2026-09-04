@@ -24,3 +24,15 @@ data/diagnostics/*
 !data/pose/.gitkeep
 !data/overlays/.gitkeep
 !data/diagnostics/.gitkeep
+
+# Keep video binaries local; do not include them in repository pushes.
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.avi
+*.m4v
+*.mpeg
+*.mpg
+*.wmv
+*.flv

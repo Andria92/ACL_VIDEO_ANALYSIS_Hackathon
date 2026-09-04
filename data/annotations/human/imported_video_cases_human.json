@@ -736,7 +736,7 @@
       "cropped_or_zoomed": false,
       "real_time_scale": null,
       "injured_side": "left",
-      "injury_laterality_source": "human_operator_case_intake:researcher_01",
+      "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
       "player_name": "Midge Purce",
       "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/nwsl_601184_59m40s468_59m45s301.mp4",
       "notes": "Cut in Video Cutter and assigned to an injury case before annotation."
@@ -891,6 +891,44 @@
       "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
       "player_name": "Alex Pfeiffer",
       "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/nwsl_654714_01h47m57s791_01h48m01s791.mp4",
+      "notes": "Cut in Video Cutter and assigned to an injury case before annotation."
+    },
+    {
+      "slug": "imported_jordyn_huitema_2026_07_18_view_01",
+      "case_id": "imported_jordyn_huitema_2026_07_18_acl_candidate",
+      "source_id": "imported_jordyn_huitema_2026_07_18_view_01",
+      "view_id": "imported_jordyn_huitema_2026_07_18_view_01",
+      "view_label": "Primary video view",
+      "primary_view": true,
+      "perspective": "unknown",
+      "occlusion_level": "unknown",
+      "view_quality": "human_annotation_pending",
+      "slow_motion": false,
+      "cropped_or_zoomed": false,
+      "real_time_scale": null,
+      "injured_side": "left",
+      "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+      "player_name": "Jordyn Huitema",
+      "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - Chicago Stars vs. Angel City FC - Replay _982871__32m05s132_32m08s966.mp4",
+      "notes": "Cut in Video Cutter and assigned to an injury case before annotation."
+    },
+    {
+      "slug": "imported_jun_endo_2026_07_11_view_01",
+      "case_id": "imported_jun_endo_2026_07_11_acl_candidate",
+      "source_id": "imported_jun_endo_2026_07_11_view_01",
+      "view_id": "imported_jun_endo_2026_07_11_view_01",
+      "view_label": "Primary video view",
+      "primary_view": true,
+      "perspective": "unknown",
+      "occlusion_level": "unknown",
+      "view_quality": "human_annotation_pending",
+      "slow_motion": false,
+      "cropped_or_zoomed": false,
+      "real_time_scale": null,
+      "injured_side": "right",
+      "injury_laterality_source": "human_operator_annotation_ui:researcher_01",
+      "player_name": "Jun Endo",
+      "video_path": "/Users/andriagryffinpro/Documents/ChatGPT/HACKATHON ACL VIDEO ANALYSIS/data/videos/analysis_clips/NWSL - San Diego Wave FC vs. Angel City FC - Replay _980808__40m48s611_40m52s111.mp4",
       "notes": "Cut in Video Cutter and assigned to an injury case before annotation."
     }
   ]

@@ -1,0 +1,29 @@
+{
+  "schema_version": "human_injury_mechanism_review_v1",
+  "question": "Was this injury event contact, non-contact, or indirect contact?",
+  "case_id": "imported_midge_purce_2024_03_24_acl_candidate",
+  "decision": "non_contact",
+  "decision_label": "Non-contact",
+  "review_status": "REVIEWED",
+  "decision_source": "human_operator",
+  "review_required": false,
+  "reviewer_id": "researcher_01",
+  "reviewed_at": "2026-09-04T20:29:54.793227+00:00",
+  "reviewed_from_source_id": "imported_midge_purce_2024_03_24_view_02",
+  "reviewed_from_view_id": "imported_midge_purce_2024_03_24_view_02",
+  "shared_across_case_views": true,
+  "options": {
+    "direct_contact": {
+      "label": "Contact",
+      "definition": "Force was applied directly to the injured knee."
+    },
+    "non_contact": {
+      "label": "Non-contact",
+      "definition": "No external contact was mechanically linked to the injury action."
+    },
+    "indirect_contact": {
+      "label": "Indirect contact",
+      "definition": "Contact away from the injured knee remained mechanically linked to the injury action."
+    }
+  }
+}

@@ -19,6 +19,7 @@ SUPPORTED_PHASE_STATUSES = {
     "SUPPORTED_PARTIAL_WINDOW",
     "SUPPORTED_EVIDENCE_INTERVAL",
 }
+REFERENCE_POOL_PHASE_STATUSES = {"SUPPORTED"}
 
 
 def event_interval_review_path(data_root: str | Path, slug: str) -> Path:

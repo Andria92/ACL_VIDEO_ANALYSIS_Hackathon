@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import math
 import os
-import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -16,8 +15,10 @@ from typing import Any
 import pandas as pd
 
 from acl_motion.analytics.evidence_coverage import build_geometry_coverage_evidence
-from acl_motion.analytics.similarity import build_similarity_payload
 from acl_motion.annotations.event_interval_review import load_event_interval_review
+from acl_motion.annotations.injury_mechanism_review import (
+    load_injury_mechanism_review,
+)
 from acl_motion.annotations.models import AnnotationCase, MovementWindowAnnotation
 from acl_motion.annotations.movement_window import movement_window_to_event_annotation
 from acl_motion.annotations.propagation import propagated_bbox
@@ -48,7 +49,7 @@ from acl_motion.segmentation.target_mask import (
 )
 from acl_motion.semantics.metric_explorer import build_metric_explorer_payload
 from acl_motion.semantics.visual_story import build_movement_visual_story
-from acl_motion.ui.app_shell import app_shell_css, app_site_header
+from acl_motion.ui.app_shell import app_shell_css, app_site_header, apply_app_brand
 from acl_motion.video.context import (
     context_clip_registry_path,
     context_video_clip_by_id,
@@ -739,11 +740,19 @@ def load_human_results_payload(
         "observable_movement_descriptions": observable_descriptions,
         "movement_story": movement_story,
         "event_interval_review": load_event_interval_review(case, data_root=root),
+        "injury_mechanism_review": load_injury_mechanism_review(
+            case,
+            data_root=root,
+        ),
         "phase_withholding_explanation": _phase_withholding_explanation(
             movement_story,
             reliability,
             movement_window,
             geometry_coverage_evidence,
+            supported_framewise_measurements=_has_supported_framewise_measurements(
+                metric_explorer,
+                observable_descriptions,
+            ),
         ),
         "movement_visual_story": build_movement_visual_story(
             movement_story=movement_story,
@@ -1783,8 +1792,10 @@ def result_frame_for_time(payload: dict, movement_end_relative_ms: float) -> int
 def render_results_page() -> str:
     """Return the self-contained first Results experience."""
 
-    return SIMPLE_RESULTS_HTML.replace("__APP_SHELL_CSS__", app_shell_css()).replace(
-        "__APP_SITE_HEADER__", app_site_header("Movement Analysis")
+    return apply_app_brand(
+        SIMPLE_RESULTS_HTML.replace("__APP_SHELL_CSS__", app_shell_css()).replace(
+            "__APP_SITE_HEADER__", app_site_header("Movement Analysis")
+        )
     )
 
 
@@ -2649,6 +2660,8 @@ def _phase_withholding_explanation(
     reliability: dict,
     movement_window: MovementWindowAnnotation,
     geometry_coverage_evidence: dict | None = None,
+    *,
+    supported_framewise_measurements: bool | None = None,
 ) -> dict:
     """Explain a withheld phase result without inferring an image-quality cause."""
 
@@ -2815,11 +2828,56 @@ def _phase_withholding_explanation(
             "a missed pose."
         ),
         "availability_note": (
-            "Supported framewise measurements remain available below. Missing intervals stay "
-            "visible and were not silently filled. No continuous block met every configured "
-            "partial-window phase safeguard."
+            (
+                "Supported framewise measurements remain available below. Missing intervals stay "
+                "visible and were not silently filled. No continuous block met every configured "
+                "partial-window phase safeguard."
+            )
+            if (
+                supported_framewise_measurements
+                if supported_framewise_measurements is not None
+                else best_geometry_coverage is not None and best_geometry_coverage > 0
+            )
+            else (
+                "No supported framewise measurement values are available below. The evidence "
+                "shortfall remains visible, and missing values were not silently filled or "
+                "displayed as zero."
+            )
         ),
     }
+
+
+def _has_supported_framewise_measurements(
+    metric_explorer: dict,
+    observable_descriptions: dict,
+) -> bool:
+    """Match the Results UI rule for whether a supported value can be inspected."""
+
+    coverage = observable_descriptions.get("clip_evidence_coverage", {})
+    ranges = coverage.get("supported_source_ranges") or []
+
+    def frame_is_supported(frame: int) -> bool:
+        if not ranges:
+            return coverage.get("status") != "AVAILABLE"
+        return any(
+            int(item["start_frame"]) <= frame <= int(item["end_frame"])
+            for item in ranges
+        )
+
+    for series in (metric_explorer.get("series") or {}).values():
+        for point in series or []:
+            value = _optional_float(point.get("value"))
+            status = str(
+                point.get("evidence_status") or point.get("feature_status") or ""
+            )
+            if (
+                value is not None
+                and math.isfinite(value)
+                and status in {"SUPPORTED", "VALID_TARGET"}
+                and frame_is_supported(int(point.get("source_frame_index") or 0))
+            ):
+                return True
+    return False
 
 
 def _bbox_for_result_frame(
@@ -2995,17 +3053,21 @@ SIMPLE_RESULTS_HTML = r"""
   <style>
     :root {
       color-scheme: light;
-      --ink: #1f2a33;
-      --muted: #627181;
-      --line: #d7dfe7;
-      --bg: #f5f7fa;
+      --ink: #142334;
+      --muted: #586879;
+      --line: #d7e0e7;
+      --bg: #f5f8fa;
       --panel: #ffffff;
-      --accent: #215f9a;
-      --accent-soft: #e9f2fb;
+      --accent: #0F62FE;
+      --accent-soft: #eef5ff;
+      --phase: #08766d;
+      --phase-soft: #dffaf4;
       --good: #176d4d;
       --good-soft: #e9f5ef;
       --warn: #9a6400;
+      --warn-soft: #fff8e9;
       --bad: #9d2735;
+      --bad-soft: #fbecef;
     }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
@@ -3445,7 +3507,8 @@ SIMPLE_RESULTS_HTML = r"""
     #resultOverview,
     #featurePanel,
     #phaseStoryPanel,
-    #evidenceSection { scroll-margin-top: 72px; }
+    #evidenceSection,
+    #analysisGuidance { scroll-margin-top: 72px; }
     .evidence-section { display: grid; gap: 10px; min-width: 0; }
     body.analysis-focus-active { overflow: hidden; }
     body.analysis-focus-active .analysis-focus-workspace {
@@ -4233,32 +4296,216 @@ SIMPLE_RESULTS_HTML = r"""
     .status.good { background: var(--good-soft); color: var(--good); }
     .status.limited { background: #fff4e0; color: #805300; }
     .status.unavailable-state { background: #eef1f4; color: #526170; }
-    .analysis-availability-notice {
+    .analysis-status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0 4px;
+    }
+    .analysis-status-card {
+      min-width: 0;
       border: 1px solid var(--line);
       border-left: 4px solid var(--good);
-      border-radius: 7px;
+      border-radius: 8px;
       background: var(--good-soft);
-      padding: 10px 12px;
-      margin: 12px 0 4px;
+      padding: 11px 12px;
+    }
+    .analysis-status-card.phase-detected,
+    .analysis-status-card.phase-no-transition {
+      border-left-color: var(--phase);
+      background: var(--phase-soft);
+    }
+    .analysis-status-card.phase-limited,
+    .analysis-status-card.phase-insufficient,
+    .analysis-status-card.phase-unknown {
+      border-left-color: var(--warn);
+      background: var(--warn-soft);
+    }
+    .analysis-status-card.measurement-limited {
+      border-left-color: var(--warn);
+      background: var(--warn-soft);
+    }
+    .analysis-status-card.measurement-unavailable {
+      border-left-color: #667585;
+      background: #f2f4f6;
+    }
+    .analysis-status-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 7px;
+    }
+    .analysis-status-card-label {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+    .analysis-state-pill {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #fff;
+      color: var(--good);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .035em;
+      text-transform: uppercase;
+    }
+    .phase-detected .analysis-state-pill,
+    .phase-no-transition .analysis-state-pill { color: var(--phase); }
+    .phase-limited .analysis-state-pill,
+    .phase-insufficient .analysis-state-pill,
+    .phase-unknown .analysis-state-pill,
+    .measurement-limited .analysis-state-pill { color: var(--warn); }
+    .measurement-unavailable .analysis-state-pill { color: #526170; }
+    .analysis-status-card h2 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.25;
+    }
+    .analysis-status-card p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.42;
+    }
+    .analysis-status-card .status-card-metric {
       color: var(--text);
+      font-weight: 800;
     }
-    .analysis-availability-notice.limited {
-      border-left-color: #a46a00;
-      background: #fff8e9;
+    .status-guide-link {
+      display: inline-flex;
+      margin-top: 7px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 800;
+      text-decoration: none;
     }
-    .analysis-availability-notice p { margin: 4px 0 0; color: var(--muted); }
+    .status-guide-link:hover { text-decoration: underline; }
+    .guidance-intro { max-width: 900px; }
+    .guidance-section { margin-top: 20px; }
+    .guidance-section > h3 { margin-bottom: 5px; font-size: 17px; }
+    .guidance-workflow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+      padding: 0;
+      list-style: none;
+      counter-reset: guidance-step;
+    }
+    .guidance-workflow li {
+      position: relative;
+      min-width: 0;
+      padding: 12px 12px 12px 48px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfd;
+      counter-increment: guidance-step;
+    }
+    .guidance-workflow li::before {
+      content: counter(guidance-step);
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .guidance-workflow strong { display: block; font-size: 13px; }
+    .guidance-workflow span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+    }
+    .guidance-colour-grid,
+    .guidance-outcome-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .guidance-colour,
+    .guidance-outcome {
+      min-width: 0;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+    .guidance-colour-header,
+    .guidance-outcome-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 5px;
+    }
+    .guidance-swatch {
+      width: 12px;
+      height: 12px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: var(--good);
+    }
+    .guidance-swatch.supported { background: var(--phase); }
+    .guidance-swatch.limited { background: var(--warn); }
+    .guidance-swatch.failed { background: var(--bad); }
+    .guidance-swatch.grey-state { background: #667585; }
+    .guidance-colour p,
+    .guidance-outcome p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.42;
+    }
+    .guidance-outcome.detected { border-left: 4px solid var(--phase); }
+    .guidance-outcome.no-transition { border-left: 4px solid var(--phase); }
+    .guidance-outcome.partial { border-left: 4px solid var(--warn); }
+    .guidance-outcome.insufficient { border-left: 4px solid var(--warn); }
+    .guidance-example-link {
+      display: inline-flex;
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 850;
+      text-decoration: none;
+    }
+    .guidance-example-link:hover { text-decoration: underline; }
     .event-interval-review {
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #fff;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px 18px;
-      align-items: center;
       margin: 10px 0 4px;
       padding: 12px;
     }
     .event-interval-review[hidden] { display: none; }
+    .human-review-heading {
+      margin-bottom: 2px;
+    }
+    .human-review-heading .subtle {
+      margin-top: 3px;
+    }
+    .human-review-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px 18px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+    .human-review-row[hidden] { display: none; }
     .event-interval-review h2 {
       font-size: 15px;
       line-height: 1.35;
@@ -4267,6 +4514,8 @@ SIMPLE_RESULTS_HTML = r"""
     .event-interval-review p { margin-bottom: 0; }
     .event-review-actions {
       display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
       gap: 8px;
     }
     .event-review-actions button {
@@ -4284,6 +4533,20 @@ SIMPLE_RESULTS_HTML = r"""
       font-weight: 700;
       grid-column: 1 / -1;
     }
+    .event-review-definitions {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+    .event-review-unavailable {
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 12px;
+      padding-top: 12px;
+    }
+    .event-review-unavailable[hidden] { display: none; }
     .responsible-list {
       margin: 6px 0 0;
       padding-left: 18px;
@@ -4336,7 +4599,8 @@ SIMPLE_RESULTS_HTML = r"""
         box-shadow: none;
       }
       .selector-grid, .headline-values, .stats-grid, .phase-grid, .operator-grid, .filmstrip,
-      .story-change-grid, .phase-snapshots, .audit-grid, .overview-grid {
+      .story-change-grid, .phase-snapshots, .audit-grid, .overview-grid,
+      .analysis-status-grid, .guidance-workflow, .guidance-colour-grid, .guidance-outcome-grid {
         grid-template-columns: 1fr;
       }
       .overview-heading { flex-direction: column; }
@@ -4394,6 +4658,7 @@ SIMPLE_RESULTS_HTML = r"""
           <details class="results-more-actions" id="resultsMoreActions">
             <summary>More actions</summary>
             <div class="results-more-menu">
+              <a class="button" id="analysisGuidanceButton" href="#analysisGuidance">Analysis guidance</a>
               <button type="button" id="contextVideoButton" hidden>Real-time context</button>
               <a class="button" id="addCaseViewButton" href="/video-cutter">Cut another subclip</a>
               <a class="button" id="caseClipsButton" href="/">All case clips</a>
@@ -4458,8 +4723,9 @@ SIMPLE_RESULTS_HTML = r"""
       <div>
         <a class="results-section-link active" href="#resultOverview" data-section-target="resultOverview" aria-current="location">Overview</a>
         <a class="results-section-link" href="#featurePanel" data-section-target="featurePanel">Measurements</a>
-        <a class="results-section-link" href="#phaseStoryPanel" data-section-target="phaseStoryPanel">Movement Story</a>
+        <a class="results-section-link" id="movementStoryNavLink" href="#phaseStoryPanel" data-section-target="phaseStoryPanel">Movement Story</a>
         <a class="results-section-link" href="#evidenceSection" data-section-target="evidenceSection">Evidence</a>
+        <a class="results-section-link" href="#analysisGuidance" data-section-target="analysisGuidance">Guidance</a>
       </div>
     </nav>
 
@@ -4476,17 +4742,35 @@ SIMPLE_RESULTS_HTML = r"""
         and measurement support kept visible. This is descriptive research evidence, not a diagnosis or risk score.
       </p>
       <div id="analysisAvailabilityNotice" class="analysis-availability-notice" role="status"></div>
-      <div id="eventIntervalReview" class="event-interval-review" hidden>
-        <div>
+      <div id="eventIntervalReview" class="event-interval-review">
+        <div class="human-review-heading">
           <p class="eyebrow">Human event-coverage review</p>
-          <h2 id="eventIntervalReviewQuestion">Does the supported phase interval include the visible event you intended to study?</h2>
-          <p class="subtle">Judge the visible event against the segmented frames. This does not identify an ACL rupture frame.</p>
+          <p class="subtle">Record the human context that cannot be inferred safely from projected movement measurements alone.</p>
         </div>
-        <div class="event-review-actions" role="group" aria-labelledby="eventIntervalReviewQuestion">
-          <button id="eventIntervalReviewYes" type="button" aria-pressed="false">Yes</button>
-          <button id="eventIntervalReviewNo" type="button" aria-pressed="false">No</button>
+        <div class="human-review-row" id="injuryMechanismReview">
+          <div>
+            <h2 id="injuryMechanismReviewQuestion">Was this injury event contact, non-contact, or indirect contact?</h2>
+            <p class="event-review-definitions">Contact = force directly to the injured knee · Non-contact = no mechanically linked contact · Indirect contact = linked contact elsewhere on the body.</p>
+          </div>
+          <div class="event-review-actions" role="group" aria-labelledby="injuryMechanismReviewQuestion">
+            <button id="injuryMechanismContact" type="button" aria-pressed="false">Contact</button>
+            <button id="injuryMechanismNonContact" type="button" aria-pressed="false">Non-contact</button>
+            <button id="injuryMechanismIndirectContact" type="button" aria-pressed="false">Indirect contact</button>
+          </div>
+          <p id="injuryMechanismReviewStatus" class="event-review-status" role="status"></p>
         </div>
-        <p id="eventIntervalReviewStatus" class="event-review-status" role="status"></p>
+        <div class="human-review-row" id="eventIntervalDecisionBlock" hidden>
+          <div>
+            <h2 id="eventIntervalReviewQuestion">Does the supported phase interval include the visible event you intended to study?</h2>
+            <p class="subtle">Judge the visible event against the segmented frames. This does not identify an ACL rupture frame.</p>
+          </div>
+          <div class="event-review-actions" role="group" aria-labelledby="eventIntervalReviewQuestion">
+            <button id="eventIntervalReviewYes" type="button" aria-pressed="false">Yes</button>
+            <button id="eventIntervalReviewNo" type="button" aria-pressed="false">No</button>
+          </div>
+          <p id="eventIntervalReviewStatus" class="event-review-status" role="status"></p>
+        </div>
+        <p id="eventIntervalUnavailableNote" class="event-review-unavailable" hidden>Phase-interval coverage cannot be reviewed because this analysis does not contain a supported phase interval.</p>
       </div>
       <div class="overview-grid">
         <div class="overview-story">
@@ -4569,7 +4853,7 @@ SIMPLE_RESULTS_HTML = r"""
       <summary>
         <span class="workspace-summary-copy">
           <strong id="movementStoryDetailTitle">Movement Story · interpretive phase detail</strong>
-          <span>Whole-movement interpretation, phase method, and phase-by-phase evidence</span>
+          <span id="movementStoryDetailSubtitle">Whole-movement interpretation, phase method, and phase-by-phase evidence</span>
         </span>
       </summary>
       <div class="workspace-disclosure-body">
@@ -4657,6 +4941,89 @@ SIMPLE_RESULTS_HTML = r"""
       </div>
     </details>
     </section>
+
+    <details class="panel workspace-disclosure" id="analysisGuidance">
+      <summary>
+        <span class="workspace-summary-copy">
+          <strong>Analysis Guidance</strong>
+          <span>Follow the workflow, interpret status colours, and open representative cases</span>
+        </span>
+      </summary>
+      <div class="workspace-disclosure-body">
+        <p class="subtle guidance-intro">
+          The application workflow and the movement phases are different concepts. These six workflow
+          stages explain how a video becomes evidence. The phase-result guide then explains what the
+          Phase Analysis status means for a completed case.
+        </p>
+
+        <section class="guidance-section" aria-labelledby="guidanceWorkflowTitle">
+          <h3 id="guidanceWorkflowTitle">How an analysis moves through the application</h3>
+          <ol class="guidance-workflow">
+            <li><strong>Select the evidence</strong><span>Register the case and choose the short video clip and view to analyse.</span></li>
+            <li><strong>Guide the target</strong><span>Confirm the athlete, target region, Movement Window, and any corrections required during overlap or occlusion.</span></li>
+            <li><strong>Build measurements</strong><span>Extract 2D pose landmarks, run frame and landmark quality checks, and calculate supported projected measurements.</span></li>
+            <li><strong>Assess movement phases</strong><span>Use supported geometry, movement rates, and path evidence to test for sustained multivariate transitions.</span></li>
+            <li><strong>Compare similar cases</strong><span>Compare only mutually supported case-level descriptors and keep replay views from being counted as separate injuries.</span></li>
+            <li><strong>Explore the evidence</strong><span>Review synchronized trajectories, descriptive statistics, phase summaries, similarity contributors, and limitations.</span></li>
+          </ol>
+        </section>
+
+        <section class="guidance-section" aria-labelledby="guidanceColoursTitle">
+          <h3 id="guidanceColoursTitle">What the colours mean</h3>
+          <p class="subtle">Colour communicates workflow or evidence state; it never represents injury likelihood or diagnostic confidence.</p>
+          <div class="guidance-colour-grid">
+            <article class="guidance-colour">
+              <div class="guidance-colour-header"><span class="guidance-swatch"></span><strong>Green · Complete</strong></div>
+              <p>The processing step completed and its available outputs are ready to inspect. It does not mean every measurement or phase is supported.</p>
+            </article>
+            <article class="guidance-colour">
+              <div class="guidance-colour-header"><span class="guidance-swatch supported"></span><strong>Blue/teal · Supported analytical result</strong></div>
+              <p>The evidence supports the displayed result. Both a detected phase sequence and “no transition detected” can be valid supported outcomes.</p>
+            </article>
+            <article class="guidance-colour">
+              <div class="guidance-colour-header"><span class="guidance-swatch limited"></span><strong>Amber · Limited or insufficient evidence</strong></div>
+              <p>The result covers only part of the Movement Window, or the continuous evidence requirements were not met.</p>
+            </article>
+            <article class="guidance-colour">
+              <div class="guidance-colour-header"><span class="guidance-swatch grey-state"></span><strong>Grey · Measurement unavailable</strong></div>
+              <p>A particular measurement cannot be shown from the available landmarks or view. Missing values are not converted to zero.</p>
+            </article>
+            <article class="guidance-colour">
+              <div class="guidance-colour-header"><span class="guidance-swatch failed"></span><strong>Red · Processing failure</strong></div>
+              <p>The requested processing did not complete. Red is reserved for an actual error, not for a valid inconclusive result.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="guidance-section" aria-labelledby="guidanceOutcomesTitle">
+          <h3 id="guidanceOutcomesTitle">Phase Analysis outcomes with real examples</h3>
+          <p class="subtle">These cases demonstrate the four distinct outcomes currently represented in the analysed case library.</p>
+          <div class="guidance-outcome-grid">
+            <article class="guidance-outcome detected">
+              <div class="guidance-outcome-header"><span class="guidance-swatch supported"></span><strong>Phases detected</strong></div>
+              <p>The phase assessment covers the complete Movement Window and identifies sustained multivariate transitions; unsupported measurement gaps remain visible.</p>
+              <a class="guidance-example-link" href="/results?case=imported_andi_sullivan_2024_10_06_view_02">Open Andi Sullivan example · 3 phases</a>
+            </article>
+            <article class="guidance-outcome partial">
+              <div class="guidance-outcome-header"><span class="guidance-swatch limited"></span><strong>Phases detected · limited interval</strong></div>
+              <p>Phases are supported inside one continuous evidence block; frames outside that block remain visible and unsegmented.</p>
+              <a class="guidance-example-link" href="/results?case=imported_charlotte_newsham_2026_05_02_view_01">Open Charlotte Newsham example · 4 partial-window phases</a>
+            </article>
+            <article class="guidance-outcome no-transition">
+              <div class="guidance-outcome-header"><span class="guidance-swatch supported"></span><strong>No phase transition detected</strong></div>
+              <p>Evidence is sufficient for assessment within the supported interval, but no sustained multivariate transition meets the boundary rule.</p>
+              <a class="guidance-example-link" href="/results?case=imported_jordyn_huitema_2026_07_18_view_01">Open Jordyn Huitema example · Supported Evidence Interval</a>
+            </article>
+            <article class="guidance-outcome insufficient">
+              <div class="guidance-outcome-header"><span class="guidance-swatch limited"></span><strong>Unavailable · insufficient evidence</strong></div>
+              <p>Too few supported descriptors form a continuous block, so the application withholds phase segmentation rather than inventing a story.</p>
+              <a class="guidance-example-link" href="/results?case=imported_caroline_wier_2023_09_26_view_02">Open Caroline Weir example · phase analysis unavailable</a>
+            </article>
+          </div>
+          <p class="scope-note">No completed Results-page case is used as a red example because a processing failure does not produce a completed analysis result.</p>
+        </section>
+      </div>
+    </details>
     </div>
     </div>
     </div>
@@ -4699,6 +5066,7 @@ const WORKSPACE_DISCLOSURE_IDS = [
   'phaseComparisonDetails',
   'phaseStoryPanel',
   'phaseEvidenceDetails',
+  'analysisGuidance',
   'operatorAnalyticsPanel',
   'unsupportedIntervalDetails',
   'responsibleAIDetails',
@@ -5003,6 +5371,20 @@ function initialiseControls() {
 
 function initialiseWorkspaceDisclosures() {
   applyWorkspaceState();
+  const openGuidance = (event) => {
+    if (event) event.preventDefault();
+    const guidance = $('analysisGuidance');
+    guidance.open = true;
+    $('resultsMoreActions').open = false;
+    requestAnimationFrame(() => guidance.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start'
+    }));
+  };
+  $('analysisGuidanceButton').onclick = openGuidance;
+  document.querySelectorAll('[data-open-guidance]').forEach((link) => {
+    link.onclick = openGuidance;
+  });
   $('measurementsAction').onclick = () => {
     $('featurePanel').open = true;
     requestAnimationFrame(renderSelectedFeature);
@@ -5388,7 +5770,7 @@ function renderPhaseStory() {
   const scope = story?.metadata?.analysis_scope || {};
   const panel = $('phaseStoryPanel');
   const legend = $('phaseStoryLegend');
-  configureMovementStoryPresentation(evidenceInterval);
+  configureMovementStoryPresentation(story);
   if (!phases.length) {
     panel.hidden = false;
     $('phaseEvidenceDetails').open = true;
@@ -5493,10 +5875,141 @@ function isSupportedEvidenceInterval(story = result?.movement_story || {}) {
     || story?.metadata?.presentation_mode === 'SUPPORTED_EVIDENCE_INTERVAL';
 }
 
+function measurementAnalysisPresentation() {
+  const features = Object.values(FEATURE_CATEGORIES).flat()
+    .filter((feature) => Array.isArray(feature.metrics) && feature.metrics.length > 0);
+  const supported = features
+    .map((feature) => featureStats(feature))
+    .filter((stats) => stats.status !== 'Unavailable' && Number(stats.supportedN || 0) > 0);
+  const bestCoverage = supported.length
+    ? Math.max(...supported.map((stats) => Number(stats.completeness || 0)))
+    : 0;
+  if (!supported.length) {
+    return {
+      available: false,
+      availableCount: 0,
+      bestCoverage: 0,
+      cardClass: 'measurement-unavailable',
+      pill: 'Unavailable',
+      title: 'Unavailable · insufficient measurement evidence',
+      detail: 'Processing completed, but no projected measurement has supported samples in this movement window. Frame-level evidence reasons remain available; no missing value is displayed as zero.',
+    };
+  }
+  if (bestCoverage < 0.80) {
+    return {
+      available: true,
+      availableCount: supported.length,
+      bestCoverage,
+      cardClass: 'measurement-limited',
+      pill: 'Limited evidence',
+      title: 'Measurements available · limited support',
+      detail: 'Some projected measurements have supported samples, but coverage is limited. Their available intervals, gaps, and visualizations can be inspected.',
+    };
+  }
+  return {
+    available: true,
+    availableCount: supported.length,
+    bestCoverage,
+    cardClass: 'measurement-complete',
+    pill: 'Complete',
+    title: 'Measurements ready',
+    detail: 'Pose output, frame and landmark quality checks, supported measurements, and visualizations are available to inspect.',
+  };
+}
+
+function phaseAnalysisPresentation(story = result?.movement_story || {}) {
+  const phases = story?.phases || [];
+  const partialScope = story?.metadata?.analysis_scope?.type === 'PARTIAL_MOVEMENT_WINDOW';
+  if (isSupportedEvidenceInterval(story)) {
+    return {
+      state: 'NO_TRANSITION',
+      cardClass: 'phase-no-transition',
+      pill: 'Supported result',
+      title: 'No phase transition detected',
+      navLabel: 'Evidence Interval',
+      overviewTitle: 'Supported evidence at a glance',
+      actionLabel: 'Explore the Supported Evidence Interval',
+      detailTitle: 'Supported Evidence Interval · no transition detected',
+      detailSubtitle: 'Supported interval, phase decision, observable changes, and evidence scope',
+      methodTitle: 'Why phases were not produced',
+      evidenceSummary: 'Explore interval evidence',
+      comparisonTitle: 'Interval measurement summary',
+    };
+  }
+  if (phases.length && partialScope) {
+    return {
+      state: 'PARTIAL_PHASE_SEQUENCE',
+      cardClass: 'phase-limited',
+      pill: 'Limited interval',
+      title: phases.length + ' phases detected',
+      navLabel: 'Movement Story',
+      overviewTitle: 'Movement at a glance',
+      actionLabel: 'Explore the Limited Phase Story',
+      detailTitle: 'Movement Story · limited supported interval',
+      detailSubtitle: 'Partial-window phase interpretation, boundaries, and evidence scope',
+      methodTitle: 'How phases were divided inside the supported interval',
+      evidenceSummary: 'Explore limited phase-by-phase evidence',
+      comparisonTitle: 'Phase comparison',
+    };
+  }
+  if (phases.length) {
+    return {
+      state: 'PHASE_SEQUENCE',
+      cardClass: 'phase-detected',
+      pill: 'Supported result',
+      title: phases.length + ' phases detected',
+      navLabel: 'Movement Story',
+      overviewTitle: 'Movement at a glance',
+      actionLabel: 'Explore the Movement Story',
+      detailTitle: 'Movement Story · detected phases',
+      detailSubtitle: 'Whole-movement interpretation, phase method, and phase-by-phase evidence',
+      methodTitle: 'How phases were divided',
+      evidenceSummary: 'Explore phase-by-phase evidence',
+      comparisonTitle: 'Phase comparison',
+    };
+  }
+  if (story?.status === 'INSUFFICIENT_EVIDENCE_FOR_PHASE_SEGMENTATION') {
+    return {
+      state: 'INSUFFICIENT_EVIDENCE',
+      cardClass: 'phase-insufficient',
+      pill: 'Insufficient evidence',
+      title: 'Unavailable · insufficient evidence',
+      navLabel: 'Phase Evidence',
+      overviewTitle: 'Available measurements at a glance',
+      actionLabel: 'Inspect Evidence Gaps',
+      detailTitle: 'Phase Analysis · unavailable due to insufficient evidence',
+      detailSubtitle: 'Evidence shortfall, available measurements, and the reason phases were withheld',
+      methodTitle: 'Why phase analysis is unavailable',
+      evidenceSummary: 'Inspect evidence gaps',
+      comparisonTitle: 'Phase comparison unavailable',
+    };
+  }
+  return {
+    state: 'UNKNOWN',
+    cardClass: 'phase-unknown',
+    pill: 'Unavailable',
+    title: 'Phase result unavailable',
+    navLabel: 'Phase Evidence',
+    overviewTitle: 'Available measurements at a glance',
+    actionLabel: 'Inspect Phase Evidence',
+    detailTitle: 'Phase Analysis · unavailable',
+    detailSubtitle: 'Available measurements and phase-analysis limitations',
+    methodTitle: 'Why phase analysis is unavailable',
+    evidenceSummary: 'Inspect phase evidence',
+    comparisonTitle: 'Phase comparison unavailable',
+  };
+}
+
 function phaseDecisionJustification(story = result?.movement_story || {}) {
+  const measurementsAvailable = measurementAnalysisPresentation().available;
   const saved = story?.metadata?.phase_decision_rationale
     || story?.metadata?.responsible_ai_phase_decision;
-  if (saved?.explanation) return saved;
+  if (saved?.explanation) {
+    return measurementsAvailable ? saved : {
+      ...saved,
+      evidence_preserved: 'Frame-level evidence reasons remain visible. No unsupported measurement values were substituted or presented as available.',
+    };
+  }
   if (isSupportedEvidenceInterval(story)) {
     return {
       decision: 'PHASES_NOT_PRODUCED',
@@ -5512,33 +6025,37 @@ function phaseDecisionJustification(story = result?.movement_story || {}) {
     reason_code: 'INSUFFICIENT_CONTINUOUS_MULTIVARIATE_EVIDENCE',
     explanation: 'The rule-based phase procedure did not produce phases because too few supported movement descriptors formed a continuous block that satisfied the configured evidence safeguards.',
     safety_rationale: 'Withholding phases avoids turning unsupported values or fragmented evidence into a seemingly complete movement story.',
-    evidence_preserved: 'Available measurements and frame-level support reasons remain visible for human inspection.',
+    evidence_preserved: measurementsAvailable
+      ? 'Available measurements and frame-level support reasons remain visible for human inspection.'
+      : 'Frame-level support reasons remain visible for human inspection. No unsupported measurement values were substituted or presented as available.',
     method_note: 'This decision was made by a deterministic rule-based procedure. No AI or generative model was used.',
   };
 }
 
-function configureMovementStoryPresentation(evidenceInterval) {
-  $('overviewStoryTitle').textContent = evidenceInterval
-    ? 'Supported evidence at a glance'
-    : 'Movement at a glance';
-  $('movementStoryAction').textContent = evidenceInterval
-    ? 'Explore the Supported Evidence Interval'
-    : 'Explore the Movement Story';
-  $('movementStoryDetailTitle').textContent = evidenceInterval
-    ? 'Supported Evidence Interval · measurement detail'
-    : 'Movement Story · interpretive phase detail';
-  $('phaseMethodTitle').textContent = evidenceInterval
-    ? 'How this interval was selected'
-    : 'How phases were divided';
-  $('phaseMethodText').textContent = evidenceInterval
-    ? 'This is one continuous block that met the measurement-support, duration, and scope safeguards. No sustained multivariate transition met the phase-boundary rule, so the block is not presented as a phase sequence. It does not identify injury timing.'
-    : 'Within the human-selected movement window, a new phase begins only when several supported 2D movement measurements change together and the changed pattern persists. A one-frame spike or a gap in evidence does not create a boundary. These are measurement-based boundaries; they do not identify foot contact, force, ACL loading, or injury timing.';
-  $('phaseEvidenceSummary').textContent = evidenceInterval
-    ? 'Explore interval evidence'
-    : 'Explore phase-by-phase evidence';
-  $('phaseComparisonTitle').textContent = evidenceInterval
-    ? 'Interval measurement summary'
-    : 'Phase comparison';
+function configureMovementStoryPresentation(story = result?.movement_story || {}) {
+  const presentation = phaseAnalysisPresentation(story);
+  const measurementsAvailable = measurementAnalysisPresentation().available;
+  const evidenceUnavailable = !measurementsAvailable
+    && (presentation.state === 'INSUFFICIENT_EVIDENCE' || presentation.state === 'UNKNOWN');
+  $('overviewStoryTitle').textContent = evidenceUnavailable
+    ? 'Evidence limitations at a glance'
+    : presentation.overviewTitle;
+  $('movementStoryNavLink').textContent = presentation.navLabel;
+  $('movementStoryAction').textContent = presentation.actionLabel;
+  $('movementStoryDetailTitle').textContent = presentation.detailTitle;
+  $('movementStoryDetailSubtitle').textContent = presentation.detailSubtitle;
+  $('phaseMethodTitle').textContent = presentation.methodTitle;
+  if (presentation.state === 'NO_TRANSITION') {
+    $('phaseMethodText').textContent = 'This is one continuous block that met the measurement-support, duration, and scope safeguards. No sustained multivariate transition met the phase-boundary rule, so the block is not presented as a phase sequence. It does not identify injury timing.';
+  } else if (presentation.state === 'INSUFFICIENT_EVIDENCE' || presentation.state === 'UNKNOWN') {
+    $('phaseMethodText').textContent = measurementsAvailable
+      ? 'Phase analysis requires enough supported movement descriptors to form a continuous multivariate evidence block. When that rule is not met, the application keeps supported frame measurements visible but does not invent phase boundaries.'
+      : 'Phase analysis requires enough supported movement descriptors to form a continuous multivariate evidence block. No projected measurement has supported samples in this movement window, so the application shows the evidence shortfall and does not invent values or phase boundaries.';
+  } else {
+    $('phaseMethodText').textContent = 'Within the human-selected movement window, a new phase begins only when several supported 2D movement measurements change together and the changed pattern persists. A one-frame spike or a gap in evidence does not create a boundary. These are measurement-based boundaries; they do not identify foot contact, force, ACL loading, or injury timing.';
+  }
+  $('phaseEvidenceSummary').textContent = presentation.evidenceSummary;
+  $('phaseComparisonTitle').textContent = presentation.comparisonTitle;
 }
 
 function evidenceIntervalHtml(interval, scope) {
@@ -5583,6 +6100,7 @@ function intervalPositionLabel(value) {
 function phaseWithholdingHtml(story) {
   const explanation = result?.phase_withholding_explanation || {};
   const decision = phaseDecisionJustification(story);
+  const measurementsAvailable = measurementAnalysisPresentation().available;
   if (!explanation.withheld) {
     return '<h3>Phase segmentation unavailable</h3><p>'
       + escapeHtml(story.sequence_summary || 'There is not enough supported movement evidence to divide this sequence into defensible phases.')
@@ -5642,7 +6160,9 @@ function phaseWithholdingHtml(story) {
     + '<div><h4>What the software can and cannot conclude</h4><p class="phase-withheld-note">'
     + escapeHtml(explanation.cause_note || '') + '</p><p class="subtle">'
     + escapeHtml(explanation.availability_note || '') + '</p></div></div>'
-    + '<button id="inspectSupportedMeasurementsButton" type="button">Inspect supported measurements</button>'
+    + '<button id="inspectSupportedMeasurementsButton" type="button">'
+    + (measurementsAvailable ? 'Inspect supported measurements' : 'Inspect measurement limitations')
+    + '</button>'
     + '</div>';
 }
 
@@ -5721,9 +6241,11 @@ function wholeMovementSummary(story, phases) {
   ].filter(Boolean).join(' ');
 }
 
-function movementAtAGlance(story, phases) {
+function movementAtAGlance(story, phases, measurementsAvailable = measurementAnalysisPresentation().available) {
   if (!phases.length) {
-    return 'No defensible phase sequence was produced. Supported framewise measurements remain available.';
+    return measurementsAvailable
+      ? 'No defensible phase sequence was produced. Supported framewise measurements remain available.'
+      : 'No defensible phase sequence or supported projected measurement is available. The evidence gaps and reasons for withholding results remain visible.';
   }
   const scope = story?.metadata?.analysis_scope || {};
   if (isSupportedEvidenceInterval(story)) {
@@ -7056,41 +7578,69 @@ function renderResultOverview() {
   $('analysisModeEyebrow').textContent = 'Human-guided 2D movement analysis';
   $('overviewIntro').textContent = 'Observable movement from a documented football video, with human-verified target tracking and measurement support kept visible. This is descriptive research evidence, not a diagnosis or risk score.';
   const phaseExplanation = result?.phase_withholding_explanation || {};
+  const phasePresentation = phaseAnalysisPresentation(story);
+  const measurementPresentation = measurementAnalysisPresentation();
   const availabilityNotice = $('analysisAvailabilityNotice');
-  if (phases.length && evidenceInterval) {
+  let phaseDetail = '';
+  if (phasePresentation.state === 'NO_TRANSITION') {
     const interval = phases[0];
     const start = scope.start_frame ?? interval.start_frame;
     const end = scope.end_frame ?? interval.end_frame;
     const position = intervalPositionLabel(scope.position_in_movement_window);
-    availabilityNotice.className = 'analysis-availability-notice limited';
-    availabilityNotice.innerHTML = `<strong>Full analysis ready · Supported Evidence Interval available</strong>
-      <p>Supported measurements form one continuous interval at frames ${escapeHtml(start)}-${escapeHtml(end)}. ${escapeHtml(position)}. Includes annotated Movement End: ${scope.includes_annotated_movement_end ? 'Yes' : 'No'}. No supported transition was detected, so this is not presented as a phase story.</p>`;
-  } else if (phases.length && partialScope) {
-    availabilityNotice.className = 'analysis-availability-notice limited';
-    availabilityNotice.innerHTML = `<strong>Full analysis ready · Partial-window phase story available (${phases.length} phase${phases.length === 1 ? '' : 's'})</strong>
-      <p>Phase analysis is limited to the continuous supported block at frames ${escapeHtml(scope.start_frame)}-${escapeHtml(scope.end_frame)} (${phasePercent(scope.movement_window_fraction)} of the Movement Window). Frames outside this block remain visible and unsegmented.</p>`;
-  } else if (phases.length) {
-    availabilityNotice.className = 'analysis-availability-notice';
-    availabilityNotice.innerHTML = `<strong>Full analysis ready · Phase story available (${phases.length} phase${phases.length === 1 ? '' : 's'})</strong>
-      <p>The frame measurements, evidence checks, explanations, and phase-by-phase story below are available for this analysis.</p>`;
-  } else if (phaseExplanation.withheld) {
+    phaseDetail = `Evidence was sufficient for phase assessment within the supported interval, but no sustained multi-measure transition met the phase-boundary rule.
+      <span class="status-card-metric">Supported interval: frames ${escapeHtml(start)}-${escapeHtml(end)} · ${escapeHtml(position)}.</span>`;
+  } else if (phasePresentation.state === 'PARTIAL_PHASE_SEQUENCE') {
+    phaseDetail = `A phase sequence was detected inside the continuous supported block at frames ${escapeHtml(scope.start_frame)}-${escapeHtml(scope.end_frame)} (${phasePercent(scope.movement_window_fraction)} of the Movement Window). Frames outside this interval remain visible and unsegmented.`;
+  } else if (phasePresentation.state === 'PHASE_SEQUENCE') {
+    phaseDetail = `The phase assessment covers the complete Movement Window and detected sustained multivariate transitions. Any unsupported measurement gaps remain visible in the evidence views.`;
+  } else if (phasePresentation.state === 'INSUFFICIENT_EVIDENCE' && phaseExplanation.withheld) {
     const rule = phaseExplanation.phase_rule || {};
     const best = phaseExplanation.best_geometry || {};
     const descriptorText = Number.isFinite(Number(rule.minimum_eligible_descriptors))
       ? `${Number(rule.eligible_descriptors || 0)} of ${Number(rule.minimum_eligible_descriptors || 0)} required movement descriptors met the phase rule`
       : 'the phase evidence rule was not met';
     const coverageText = Number.isFinite(Number(best.coverage)) && Number.isFinite(Number(rule.minimum_geometry_coverage))
-      ? ` Best geometry coverage was ${(Number(best.coverage) * 100).toFixed(1)}%, below the ${(Number(rule.minimum_geometry_coverage) * 100).toFixed(0)}% rule.`
+      ? ` Best geometry coverage: ${(Number(best.coverage) * 100).toFixed(1)}% · Required: ${(Number(rule.minimum_geometry_coverage) * 100).toFixed(0)}%.`
       : '';
-    availabilityNotice.className = 'analysis-availability-notice limited';
-    availabilityNotice.innerHTML = `<strong>Full analysis ready · Phase story withheld</strong>
-      <p>The frame measurements, support checks, skeleton output, and supported explanations are available. A phase story is not shown because ${escapeHtml(descriptorText)}.${escapeHtml(coverageText)} This is an evidence limitation, not a missing or failed analysis.</p>`;
+    phaseDetail = `Too few supported descriptors formed a continuous evidence block, so the application withheld phase segmentation rather than inventing boundaries. <span class="status-card-metric">${escapeHtml(descriptorText)}.${escapeHtml(coverageText)}</span> This is an evidence limitation, not a missing or failed analysis.`;
   } else {
-    availabilityNotice.className = 'analysis-availability-notice limited';
-    availabilityNotice.innerHTML = '<strong>Full analysis ready · Phase story unavailable</strong><p>Supported frame measurements remain available, but no defensible phase story was produced for this model.</p>';
+    phaseDetail = 'Supported frame measurements remain available, but no defensible phase result was produced for this analysis.';
+  }
+  availabilityNotice.className = 'analysis-status-grid';
+  availabilityNotice.innerHTML = `
+    <article class="analysis-status-card ${escapeHtml(measurementPresentation.cardClass)}">
+      <div class="analysis-status-card-header">
+        <span class="analysis-status-card-label">Measurement Analysis</span>
+        <span class="analysis-state-pill">${escapeHtml(measurementPresentation.pill)}</span>
+      </div>
+      <h2>${escapeHtml(measurementPresentation.title)}</h2>
+      <p>${escapeHtml(measurementPresentation.detail)}</p>
+    </article>
+    <article class="analysis-status-card ${escapeHtml(phasePresentation.cardClass)}">
+      <div class="analysis-status-card-header">
+        <span class="analysis-status-card-label">Phase Analysis</span>
+        <span class="analysis-state-pill">${escapeHtml(phasePresentation.pill)}</span>
+      </div>
+      <h2>${escapeHtml(phasePresentation.title)}</h2>
+      <p>${phaseDetail}</p>
+      <a class="status-guide-link" data-open-guidance href="#analysisGuidance">What do these statuses and colours mean?</a>
+    </article>`;
+  const statusGuideLink = availabilityNotice.querySelector('[data-open-guidance]');
+  if (statusGuideLink) {
+    statusGuideLink.onclick = (event) => {
+      event.preventDefault();
+      $('analysisGuidanceButton').click();
+    };
   }
   renderEventIntervalReview();
-  $('overviewStory').textContent = movementAtAGlance(story, phases);
+  $('overviewStory').textContent = movementAtAGlance(
+    story,
+    phases,
+    measurementPresentation.available
+  );
+  $('measurementsAction').textContent = measurementPresentation.available
+    ? 'Inspect measurements & graph'
+    : 'Inspect measurement limitations';
 
   const priorities = [
     'injured_hka',
@@ -7104,8 +7654,8 @@ function renderResultOverview() {
     .map((id) => allFeatures.find((feature) => feature.id === id))
     .filter(Boolean)
     .map((feature) => ({feature, stats: featureStats(feature)}));
-  const available = candidates.filter((item) => item.stats.status !== 'Unavailable');
-  const selected = available.slice(0, 3);
+  const priorityAvailable = candidates.filter((item) => item.stats.status !== 'Unavailable');
+  const selected = priorityAvailable.slice(0, 3);
   if (selected.length < 3) {
     selected.push(...candidates.filter((item) => item.stats.status === 'Unavailable').slice(0, 3 - selected.length));
   }
@@ -7115,21 +7665,21 @@ function renderResultOverview() {
       + '<span class="status unavailable-state">Unavailable</span>'
       + '<small>No defensible projected measurement is available for this case.</small></div>';
 
-  const bestCoverage = available.length
-    ? Math.max(...available.map((item) => Number(item.stats.completeness || 0)))
-    : 0;
-  const supportLabel = !available.length
+  const bestCoverage = measurementPresentation.bestCoverage;
+  const supportLabel = !measurementPresentation.available
     ? 'Measurements unavailable'
     : bestCoverage >= 0.80
-      ? 'Analysis complete · supported measurements'
-      : 'Analysis complete · limited measurements';
-  const supportClass = !available.length ? 'unavailable-state' : bestCoverage >= 0.80 ? 'good' : 'limited';
+      ? 'Measurement support · good'
+      : 'Measurement support · limited';
+  const supportClass = !measurementPresentation.available ? 'unavailable-state' : bestCoverage >= 0.80 ? 'good' : 'limited';
   $('overviewSupportStatus').className = 'status ' + supportClass;
   $('overviewSupportStatus').textContent = supportLabel;
 }
 
 function renderEventIntervalReview() {
   const card = $('eventIntervalReview');
+  card.hidden = false;
+  renderInjuryMechanismReview();
   const story = result?.movement_story || {};
   const phases = story.phases || [];
   const supportedStatuses = new Set([
@@ -7138,7 +7688,8 @@ function renderEventIntervalReview() {
     'SUPPORTED_EVIDENCE_INTERVAL'
   ]);
   const available = phases.length > 0 && supportedStatuses.has(String(story.status || ''));
-  card.hidden = !available;
+  $('eventIntervalDecisionBlock').hidden = !available;
+  $('eventIntervalUnavailableNote').hidden = available;
   if (!available) return;
 
   const review = result?.event_interval_review || {};
@@ -7161,6 +7712,65 @@ function renderEventIntervalReview() {
     status.textContent = 'The analysis changed after the previous answer. Please review this interval again.';
   } else {
     status.textContent = 'Not reviewed yet. Choose Yes or No before using this view in injury-event comparisons.';
+  }
+}
+
+function renderInjuryMechanismReview() {
+  const review = result?.injury_mechanism_review || {};
+  const decision = review.decision || null;
+  const buttons = {
+    direct_contact: $('injuryMechanismContact'),
+    non_contact: $('injuryMechanismNonContact'),
+    indirect_contact: $('injuryMechanismIndirectContact')
+  };
+  $('injuryMechanismReviewQuestion').textContent = review.question
+    || 'Was this injury event contact, non-contact, or indirect contact?';
+  Object.entries(buttons).forEach(([value, button]) => {
+    button.setAttribute('aria-pressed', String(decision === value));
+    button.onclick = () => saveInjuryMechanismReview(value);
+  });
+
+  const status = $('injuryMechanismReviewStatus');
+  const label = review.decision_label
+    || ({direct_contact: 'Contact', non_contact: 'Non-contact', indirect_contact: 'Indirect contact'}[decision]);
+  if (review.review_status === 'REVIEWED' && decision) {
+    status.textContent = `Saved: ${label}. This case-level answer applies to every analysed view of this injury.`;
+  } else if (review.review_status === 'EXISTING_RESEARCH_LABEL' && decision) {
+    status.textContent = `Existing research label: ${label}. Confirm or change it after reviewing the video.`;
+  } else if (review.review_status === 'REVIEW_FILE_INVALID') {
+    status.textContent = 'The saved mechanism review could not be read. Please choose one of the three options again.';
+  } else {
+    status.textContent = 'Not reviewed yet. Choose one option after reviewing the visible injury event.';
+  }
+}
+
+async function saveInjuryMechanismReview(decision) {
+  const buttons = [
+    $('injuryMechanismContact'),
+    $('injuryMechanismNonContact'),
+    $('injuryMechanismIndirectContact')
+  ];
+  const status = $('injuryMechanismReviewStatus');
+  buttons.forEach((button) => { button.disabled = true; });
+  status.textContent = 'Saving the injury mechanism…';
+  try {
+    const response = await fetch('/api/results/injury-mechanism-review', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        case: caseSlug,
+        decision,
+        reviewer_id: 'researcher_01'
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok) throw new Error(payload.error || 'The injury mechanism could not be saved.');
+    result.injury_mechanism_review = payload;
+    renderInjuryMechanismReview();
+  } catch (error) {
+    status.textContent = error.message || 'The injury mechanism could not be saved.';
+  } finally {
+    buttons.forEach((button) => { button.disabled = false; });
   }
 }
 

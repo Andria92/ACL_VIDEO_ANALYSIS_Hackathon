@@ -27,6 +27,9 @@ dev = [
 [tool.setuptools.packages.find]
 include = ["acl_motion*"]
 
+[tool.setuptools.package-data]
+"acl_motion.ui" = ["static/brand/*.png"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-q"

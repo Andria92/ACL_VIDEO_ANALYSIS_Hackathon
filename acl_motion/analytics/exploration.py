@@ -20,8 +20,13 @@ import pandas as pd
 
 from acl_motion.analytics.similarity import similarity_readiness
 from acl_motion.annotations.event_interval_review import (
+    REFERENCE_POOL_PHASE_STATUSES,
     SUPPORTED_PHASE_STATUSES,
     load_event_interval_review,
+)
+from acl_motion.annotations.injury_mechanism_review import (
+    INJURY_MECHANISM_OPTIONS,
+    load_injury_mechanism_review,
 )
 from acl_motion.annotations.models import AnnotationCase
 from acl_motion.annotations.research_metadata import (
@@ -228,6 +233,11 @@ def load_exploration_payload(
         metadata,
         injury_reports.get("cases", {}),
     )
+    all_rows = _attach_injury_mechanism_reviews(
+        all_rows,
+        case_list,
+        Path(data_root),
+    )
     all_rows = _attach_phase_evidence(all_rows, Path(semantics_dir))
     all_rows = _attach_event_interval_reviews(all_rows, case_list, Path(data_root))
     selected = _select_feature_evidence_views(all_rows)
@@ -309,6 +319,11 @@ def load_exploration_summary_payload(
         case_list,
         metadata,
         injury_reports.get("cases", {}),
+    )
+    all_rows = _attach_injury_mechanism_reviews(
+        all_rows,
+        case_list,
+        Path(data_root),
     )
     all_rows = _attach_phase_evidence(all_rows, Path(semantics_dir))
     all_rows = _attach_event_interval_reviews(all_rows, case_list, Path(data_root))
@@ -431,6 +446,9 @@ def _home_summary_fingerprint(
         *(data_root / "annotations" / "human").glob(
             "*_event_interval_review_human.json"
         ),
+        *(data_root / "annotations" / "human").glob(
+            "*_injury_mechanism_review_human.json"
+        ),
         *(data_root / "phases" / "human").glob("*_movement_phases.json"),
     }
     for path in sorted(paths, key=lambda item: str(item)):
@@ -552,6 +570,69 @@ def _attach_event_interval_reviews(
             for source_id, review in review_by_source.items()
         }
     ).fillna(False).astype(bool)
+    return output
+
+
+def _attach_injury_mechanism_reviews(
+    rows: pd.DataFrame,
+    cases: tuple[AnnotationCase, ...],
+    data_root: Path,
+) -> pd.DataFrame:
+    """Let a confirmed case-level human decision override research defaults."""
+
+    output = rows.copy()
+    if output.empty:
+        output["injury_mechanism_review_status"] = pd.Series(dtype="object")
+        output["injury_mechanism_reviewed_at"] = pd.Series(dtype="object")
+        return output
+
+    review_by_case: dict[str, dict[str, Any]] = {}
+    for case in cases:
+        review_by_case.setdefault(
+            case.case_id,
+            load_injury_mechanism_review(case, data_root=data_root),
+        )
+    output["injury_mechanism_review_status"] = output["case_id"].map(
+        {
+            case_id: review.get("review_status")
+            for case_id, review in review_by_case.items()
+        }
+    ).fillna("CASE_NOT_REGISTERED")
+    output["injury_mechanism_reviewed_at"] = output["case_id"].map(
+        {
+            case_id: review.get("reviewed_at")
+            for case_id, review in review_by_case.items()
+        }
+    )
+
+    for case_id, review in review_by_case.items():
+        decision = str(review.get("decision") or "")
+        if (
+            review.get("review_status") != "REVIEWED"
+            or decision not in INJURY_MECHANISM_OPTIONS
+        ):
+            continue
+        mask = output["case_id"].astype(str).eq(str(case_id))
+        previous = output.loc[mask, "contact_mechanism"].astype(str)
+        output.loc[mask, "previous_contact_mechanism"] = previous
+        output.loc[mask, "contact_mechanism"] = decision
+        output.loc[mask, "contact_mechanism_source"] = "human_operator_analysis_review"
+        output.loc[mask, "mechanism_confidence"] = "human_reviewed"
+        output.loc[mask, "mechanism_verification_status"] = "human_operator_reviewed"
+        output.loc[mask, "mechanism_evidence_basis"] = "analysis_video_review"
+        output.loc[mask, "mechanism_change_status"] = [
+            "unchanged" if old == decision else "changed" for old in previous
+        ]
+        output.loc[mask, "mechanism_rationale"] = (
+            "A human operator classified the visible injury event during the analysis review."
+        )
+        output.loc[mask, "mechanism_investigation_status"] = "reviewer_resolved"
+        output.loc[mask, "mechanism_investigation_note"] = ""
+        output.loc[mask, "mechanism_sources"] = pd.Series(
+            [[] for _ in range(int(mask.sum()))],
+            index=output.index[mask],
+            dtype="object",
+        )
     return output
 
 
@@ -816,7 +897,14 @@ def _event_rows(rows: pd.DataFrame, selected: pd.DataFrame) -> list[dict[str, An
                 "source_id",
             ].nunique()
         )
-        reference_pool_eligible = event_covered_views > 0
+        complete_event_covered_views = int(
+            source_rows.loc[
+                source_rows["phase_status"].isin(REFERENCE_POOL_PHASE_STATUSES)
+                & source_rows["event_comparison_eligible"],
+                "source_id",
+            ].nunique()
+        )
+        reference_pool_eligible = complete_event_covered_views > 0
         events.append(
             {
                 "case_id": str(case_id),
@@ -844,6 +932,12 @@ def _event_rows(rows: pd.DataFrame, selected: pd.DataFrame) -> list[dict[str, An
                     first["mechanism_sources"]
                     if isinstance(first["mechanism_sources"], list)
                     else []
+                ),
+                "injury_mechanism_review_status": str(
+                    first.get("injury_mechanism_review_status", "NOT_REVIEWED")
+                ),
+                "injury_mechanism_reviewed_at": _optional_string(
+                    first.get("injury_mechanism_reviewed_at")
                 ),
                 "injury_date": str(first["injury_date"]),
                 "league": str(first["league"]),
@@ -897,6 +991,7 @@ def _event_rows(rows: pd.DataFrame, selected: pd.DataFrame) -> list[dict[str, An
                 "phase_statuses": phase_statuses,
                 "phase_supported_view_count": supported_phase_views,
                 "event_covered_view_count": event_covered_views,
+                "complete_event_covered_view_count": complete_event_covered_views,
                 "event_excluded_view_count": int(
                     source_rows.loc[
                         ~source_rows["event_comparison_eligible"], "source_id"
@@ -1160,6 +1255,8 @@ def _json_safe_record(record: dict[str, Any]) -> dict[str, Any]:
         "event_interval_review_decision",
         "event_interval_review_status",
         "event_comparison_eligible",
+        "injury_mechanism_review_status",
+        "injury_mechanism_reviewed_at",
     }
     output = {key: _json_safe(value) for key, value in record.items() if key in keep}
     if output.get("summary_path"):

@@ -3,12 +3,54 @@
 from __future__ import annotations
 
 from html import escape
+from pathlib import Path
+
+BRAND_ASSET_URL_PREFIX = "/assets/brand/"
+BRAND_ASSET_DIR = Path(__file__).resolve().parent / "static" / "brand"
+
+
+def brand_asset_path(request_path: str) -> Path | None:
+    """Resolve a public brand asset without exposing arbitrary local files."""
+
+    if request_path == "/favicon.ico":
+        filename = "acl_favicon_runner_32.png"
+    elif request_path.startswith(BRAND_ASSET_URL_PREFIX):
+        filename = request_path.removeprefix(BRAND_ASSET_URL_PREFIX)
+    else:
+        return None
+    if not filename or "/" in filename or "\\" in filename:
+        return None
+    candidate = BRAND_ASSET_DIR / filename
+    return candidate if candidate.is_file() else None
+
+
+def app_brand_head() -> str:
+    """Return shared browser identity metadata for every application page."""
+
+    return f"""
+  <meta name="theme-color" content="#0A2540" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{BRAND_ASSET_URL_PREFIX}acl_favicon_runner_32.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="{BRAND_ASSET_URL_PREFIX}acl_favicon_runner_64.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="{BRAND_ASSET_URL_PREFIX}acl_favicon_runner_180.png" />"""
+
+
+def apply_app_brand(html: str) -> str:
+    """Inject shared browser identity metadata into one rendered page."""
+
+    return html.replace("</head>", f"{app_brand_head()}\n</head>", 1)
 
 
 def app_shell_css() -> str:
     """Return the home-page header and page-frame styles used by submenus."""
 
     return r"""
+    :root {
+      --brand-navy: #0A2540;
+      --brand-blue: #0F62FE;
+      --brand-teal: #00D4A6;
+      --brand-mint: #7CF1BB;
+      --brand-ice: #E6F6FF;
+    }
     :focus-visible {
       outline: 3px solid #e6a500;
       outline-offset: 3px;
@@ -49,7 +91,7 @@ def app_shell_css() -> str:
       border: 0;
       border-bottom: 1px solid rgba(255,255,255,.10);
       border-radius: 0;
-      background: #071a2d;
+      background: var(--brand-navy);
       color: #fff;
       box-shadow: none;
     }
@@ -61,28 +103,13 @@ def app_shell_css() -> str:
       color: inherit;
       text-decoration: none;
     }
-    .app-site-header .app-brand-mark {
-      position: relative;
-      width: 38px;
-      height: 38px;
+    .app-site-header .app-brand-badge {
+      width: 66px;
+      height: 47px;
       flex: 0 0 auto;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,.34);
-      border-radius: 10px;
-      background:
-        linear-gradient(90deg, transparent 48%, rgba(255,255,255,.28) 48% 52%, transparent 52%),
-        linear-gradient(0deg, transparent 48%, rgba(255,255,255,.28) 48% 52%, transparent 52%),
-        #08766d;
-    }
-    .app-site-header .app-brand-mark::after {
-      content: "";
-      position: absolute;
-      width: 14px;
-      height: 14px;
-      top: 11px;
-      left: 11px;
-      border: 1px solid rgba(255,255,255,.52);
-      border-radius: 50%;
+      display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 5px 10px rgba(0,0,0,.18));
     }
     .app-site-header .app-brand-copy { min-width: 0; }
     .app-site-header .app-brand-title {
@@ -134,9 +161,9 @@ def app_shell_css() -> str:
       gap: 14px;
       margin: 0 auto;
       padding: 13px 15px;
-      border: 1px solid #c9ddd8;
+      border: 1px solid #b9ded8;
       border-radius: 12px;
-      background: linear-gradient(135deg, #f5fbf9, #eef7fb);
+      background: linear-gradient(135deg, #f8fffd, var(--brand-ice));
       color: #142334;
       text-align: left;
     }
@@ -146,43 +173,16 @@ def app_shell_css() -> str:
       padding: 10px 11px;
     }
     .app-loader-pitch {
-      position: relative;
       width: 72px;
-      height: 46px;
-      overflow: hidden;
-      border: 2px solid #5caa9c;
-      border-radius: 7px;
-      background: #dff2ed;
+      height: 51px;
+      border: 0;
+      background: transparent url("/assets/brand/acl_badge_pitch_runner_analytics.png") center / contain no-repeat;
+      filter: drop-shadow(0 5px 9px rgba(10,37,64,.17));
+      animation: app-loader-breathe 1.8s ease-in-out infinite alternate;
     }
-    .compact .app-loader-pitch { width: 58px; height: 38px; }
-    .app-loader-pitch::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      border-left: 1px solid rgba(8,118,109,.42);
-    }
-    .app-loader-pitch::after {
-      content: "";
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(8,118,109,.42);
-      border-radius: 50%;
-    }
+    .compact .app-loader-pitch { width: 58px; height: 41px; }
     .app-loader-ball {
-      position: absolute;
-      z-index: 1;
-      top: 50%;
-      left: 7px;
-      transform: translateY(-50%);
-      font-size: 15px;
-      line-height: 1;
-      animation: app-loader-dribble 2.2s ease-in-out infinite alternate;
+      display: none;
     }
     .app-loader-copy strong { display: block; color: #0b4f55; font-size: 14px; line-height: 1.3; }
     .app-loader-copy small { display: block; margin-top: 4px; color: #586879; font-size: 12px; line-height: 1.4; }
@@ -190,8 +190,12 @@ def app_shell_css() -> str:
       from { left: 7px; transform: translateY(-50%) rotate(0deg); }
       to { left: calc(100% - 22px); transform: translateY(-50%) rotate(300deg); }
     }
+    @keyframes app-loader-breathe {
+      from { opacity: .72; transform: translateY(1px); }
+      to { opacity: 1; transform: translateY(-1px); }
+    }
     @media (prefers-reduced-motion: reduce) {
-      .app-loader-ball { animation: none; left: calc(50% - 7px); }
+      .app-loader-pitch { animation: none; }
     }
     @media (max-width: 720px) {
       .app-site-header {
@@ -201,6 +205,7 @@ def app_shell_css() -> str:
       }
       .app-site-header .app-brand-subtitle,
       .app-site-header .app-section-label { display: none; }
+      .app-site-header .app-brand-badge { width: 54px; height: 38px; }
       .app-tool-header {
         width: min(100% - 24px, 560px);
         margin-top: 12px;
@@ -220,7 +225,7 @@ def app_site_header(section_label: str, *, home_url: str = "/") -> str:
     return f"""
   <header class="site-header app-site-header">
     <a class="app-brand" href="{escape(home_url, quote=True)}" aria-label="ACL Movement Analytics Lab home">
-      <span class="app-brand-mark" aria-hidden="true"></span>
+      <img class="app-brand-badge" src="{BRAND_ASSET_URL_PREFIX}acl_badge_pitch_runner_analytics.png" alt="" width="66" height="47" />
       <span class="app-brand-copy">
         <span class="app-brand-title">ACL Movement Analytics Lab</span>
         <span class="app-brand-subtitle">Women’s football movement research</span>

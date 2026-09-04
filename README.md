@@ -1,14 +1,14 @@
 # ACL Movement Analytics Lab
 
-Fresh hackathon prototype for exploring markerless 2D pose feasibility around documented ACL injury events in professional women's football.
+Hackathon research prototype for turning documented ACL injury-event video in professional women’s football into traceable, human-guided 2D movement evidence.
 
-This project is exploratory. It does not diagnose ACL injuries, predict ACL risk, estimate forces, infer true 3D joint angles, or classify safe/dangerous movement. Milestone 1 focuses only on whether stable, auditable whole-body 2D coordinates can be recovered from short clips.
+This project is exploratory. It does not diagnose ACL injuries, predict ACL risk, estimate forces, infer true 3D joint angles, or classify safe/dangerous movement. The current demo follows one completed Movement Story into evidence-aware case comparison and case-level dataset exploration while keeping human review, provenance, and unsupported measurements visible.
 
 The project-specific intended use, uncertainty behavior, similarity interpretation, human
 oversight, bias/generalization limitations, and privacy/provenance requirements are documented in
 [`RESPONSIBLE_AI_V1.md`](RESPONSIBLE_AI_V1.md).
 
-## Milestone 1 Scope
+## Current Scope
 
 Implemented foundation:
 
@@ -20,11 +20,15 @@ Implemented foundation:
 - raw frame-by-landmark coordinate export;
 - skeleton overlay rendering;
 - raw coordinate diagnostic plots;
+- human-reviewed injury cases, target-athlete regions, movement windows, injury-mechanism labels, and supported phase intervals;
+- phase-based Movement Stories with frame traceability, research measurements, and quality limitations;
+- evidence-aware cross-case movement rankings with explicit comparison lenses, shared-measurement support, and internal validation views;
+- a case-level explorer for source provenance, distributions, measurement correlations, and group-readiness gates;
 - pytest coverage for the introduced core code.
 
 Not implemented yet:
 
-- ACL similarity, clustering, prediction, risk scores, automatic injury detection, 3D biomechanics, forces, torques, joint moments, or conditional biomechanical labels.
+- diagnostic or clinical similarity, clustering, prediction, risk scores, automatic injury detection, 3D biomechanics, forces, torques, joint moments, or conditional biomechanical labels.
 
 ## Local Data
 
@@ -169,6 +173,22 @@ This single server hosts the dashboard, annotation workspace, results, statistic
 and video cutter. All dashboard navigation uses same-origin routes, so `--port` may be changed
 without starting or reconfiguring a second UI process.
 
+For the recommended four-minute evidence-first presentation sequence, use
+[`DEMO_WALKTHROUGH.md`](DEMO_WALKTHROUGH.md). Presenter timing and speaking notes remain outside
+the application. The script follows the product's actual hierarchy: operational workflow, case
+library, Responsible AI outcomes, and cross-case evidence.
+
+The home-page Responsible AI panel demonstrates uncertainty through real analysed cases rather
+than disclaimer copy alone: supported, limited-interval, no-transition, and withheld outcomes are
+all first-class results. Human review retains authority over contact context and intended-event
+coverage, while unsupported frames remain missing and insufficient evidence stops downstream
+interpretation or comparison.
+
+The four-minute script reserves its first 30 seconds for a sourced plain-language explanation of
+the ACL, the possible return-to-sport burden of a rupture, and the higher exposure-adjusted injury
+rate reported for women footballers. The remaining 3:30 covers the connected workflow, one case
+story, the Responsible AI decision ladder, one comparison, and one cohort view.
+
 ## Standalone Video Review Cutter (optional)
 
 The main UI already exposes the cutter at `/video-cutter`. For isolated cutter development,
@@ -247,8 +267,9 @@ http://127.0.0.1:8765/results?case=christen_press
 
 The Christen Press Results view consumes only HUMAN namespace outputs. It shows the analysed
 Movement Window, synchronized video and movement graphs, feature evidence cards, exact
-source-frame traceability, and quality limitations. Cross-case similarity, UMAP, clustering, and
-association rules remain unavailable until additional human-validated cases exist.
+source-frame traceability, and quality limitations. Evidence-aware cross-case movement comparison
+is available when two cases share enough supported case-level measurements. UMAP, clustering, and
+association rules remain outside the implemented scope.
 
 Milestone 5.7 adds a deterministic semantic movement layer on top of the same human outputs.
 It produces user-facing MovementObservation records for movement path, hip-knee-ankle chain,
@@ -329,15 +350,16 @@ human positive-target / negative-opponent point prompts for refinement. This is 
 human-correctable target-mask path; it does not claim SAM 2 quality or treat a rectangle ROI
 as proof that every pixel or joint inside the crop belongs to the target.
 
-Future cohort comparison hooks are architectural only. The UI and payload use the phrase
-"ACL case-library reference" for future aggregate comparisons and do not run similarity, UMAP,
-clustering, association rules, or archetype assignment.
+The comparison workspace ranks responsibly comparable injury-event profiles under explicit
+movement lenses, discloses shared evidence and selected view pairs, and includes internal
+sensitivity and expert-review workflows. It does not run UMAP, clustering, association rules, or
+movement-archetype assignment.
 
 ## Scientific Boundary
 
 Outputs describe observable image-plane geometry from markerless pose estimates. Unavailable measurements should remain unavailable rather than being filled or inferred. Raw pose rows are never overwritten by smoothing or later processing.
 
-Similarity, if enabled after the current evidence gate, means similarity only within the mutually
+Similarity, when available under the current evidence gate, means similarity only within the mutually
 supported measured movement representation. It does not imply an identical injury mechanism,
 biological cause, tissue loading, or clinical condition. Public availability of source footage does
 not by itself grant unrestricted reuse rights; source and rights provenance must be recorded rather
